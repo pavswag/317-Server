@@ -1,0 +1,3 @@
+[CommandLog] [2025-04-02T13:58:32.7298] mercyfdgfg typed command train at X: 3213 Y:3216
+[CommandLog] [2025-04-02T14:10:58.6473544] mercyfdgfg typed command train at X: 3213 Y:3217
+[CommandLog] [2025-04-02T14:11:41.9687001] mercyfdgfg typed command train at X: 3212 Y:3218

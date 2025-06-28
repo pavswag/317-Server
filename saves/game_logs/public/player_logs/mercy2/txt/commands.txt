@@ -1,0 +1,5 @@
+[CommandLog] [2024-09-04T13:14:02.0896719] mercy2 typed command toa at X: 3212 Y:3218
+[CommandLog] [2024-09-04T13:14:23.1631664] mercy2 typed command godmode at X: 3357 Y:9115
+[CommandLog] [2024-09-04T13:14:24.9660381] mercy2 typed command item 773 at X: 3357 Y:9115
+[CommandLog] [2024-09-04T13:14:50.1041835] mercy2 typed command tele 3805 5283 at X: 3794 Y:5280
+[CommandLog] [2024-09-04T13:14:57.9242373] mercy2 typed command pos at X: 3682 Y:5406

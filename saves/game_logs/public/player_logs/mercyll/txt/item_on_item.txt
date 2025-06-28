@@ -1,0 +1,2 @@
+[ItemOnItemLog] [2025-03-22T11:00:17.0978788] Used GameItem{name=Zulrah's scales, id=12934, amount=500} on GameItem{name=Blazing blowpipe, id=28688, amount=500} at Position{x=2673, y=3714, z=0}
+[ItemOnItemLog] [2025-03-22T11:00:20.1137635] Used GameItem{name=Dragon dart, id=11230, amount=500} on GameItem{name=Blazing blowpipe, id=28688, amount=500} at Position{x=2673, y=3714, z=0}

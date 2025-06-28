@@ -1,0 +1,1 @@
+[CommandLog] [2025-03-22T10:50:00.2811429] mercyll typed command train at X: 3211 Y:3216

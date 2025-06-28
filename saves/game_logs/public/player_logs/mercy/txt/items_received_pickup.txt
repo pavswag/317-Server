@@ -1,0 +1,28 @@
+[ItemPickupLog] [2024-08-31T20:42:24.9976405] Picked up GameItem{name=Dwarf remains, id=30244, amount=1} at Position{x=2460, y=5713, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:15.3280569] Picked up GameItem{name=Wrath Rune, id=21880, amount=35} at Position{x=1827, y=3108, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:15.3280569] Picked up GameItem{name=1 Nomad Point Certificate, id=33237, amount=72,937} at Position{x=1827, y=3108, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:20.7160474] Picked up GameItem{name=Big bones, id=532, amount=1} at Position{x=1829, y=3106, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:20.7160474] Picked up GameItem{name=Shark, id=385, amount=5} at Position{x=1829, y=3106, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:20.7160474] Picked up GameItem{name=Yew logs, id=1516, amount=32} at Position{x=1829, y=3106, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:20.7170467] Picked up GameItem{name=Mystic robe top, id=4111, amount=1} at Position{x=1829, y=3106, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:46.5986234] Picked up GameItem{name=Wrath Rune, id=21880, amount=33} at Position{x=1825, y=3108, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:46.5986234] Picked up GameItem{name=1 Nomad Point Certificate, id=33237, amount=17,314} at Position{x=1825, y=3108, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:46.5986234] Picked up GameItem{name=Mini Mystery Box, id=6679, amount=29} at Position{x=1825, y=3108, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:46.5996207] Picked up GameItem{name=Mystic cards, id=27645, amount=1} at Position{x=1825, y=3108, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:52.0083088] Picked up GameItem{name=Big bones, id=532, amount=1} at Position{x=1829, y=3106, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:52.0093056] Picked up GameItem{name=Shark, id=385, amount=4} at Position{x=1829, y=3106, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:52.0093056] Picked up GameItem{name=Magic logs, id=1514, amount=8} at Position{x=1829, y=3106, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T10:55:52.0093056] Picked up GameItem{name=Mystic robe top, id=4101, amount=1} at Position{x=1829, y=3106, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T11:15:43.6468741] Picked up GameItem{name=Dragon bones, id=536, amount=1} at Position{x=2463, y=5715, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T11:15:43.6468741] Picked up GameItem{name=1 Nomad Point Certificate, id=33237, amount=31,192} at Position{x=2463, y=5715, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T11:15:43.6483802] Picked up GameItem{name=Uncut emerald, id=1622, amount=6} at Position{x=2463, y=5715, z=0}, owner mercy
+[ItemPickupLog] [2024-09-01T11:15:43.6494035] Picked up GameItem{name=Red dragonhide, id=1750, amount=28} at Position{x=2463, y=5715, z=0}, owner mercy
+[ItemPickupLog] [2024-09-04T11:52:41.1607926] Picked up GameItem{name=25,000 Nomad Point Certificate, id=692, amount=5} at Position{x=2679, y=3718, z=0}, owner mercy
+[ItemPickupLog] [2024-09-04T11:53:14.2551773] Picked up GameItem{name=Shark, id=385, amount=1} at Position{x=2675, y=3718, z=0}, owner mercy
+[ItemPickupLog] [2024-09-04T15:16:36.1421808] Picked up GameItem{name=Lobster, id=379, amount=1} at Position{x=2675, y=3717, z=0}, owner mercy
+[ItemPickupLog] [2024-09-04T16:34:09.1343505] Picked up GameItem{name=1 Nomad Point Certificate, id=33237, amount=5,908} at Position{x=2681, y=3719, z=0}, owner mercy
+[ItemPickupLog] [2024-09-25T10:23:23.5635887] Picked up GameItem{name=Daul Reapers, id=30260, amount=1} at Position{x=2683, y=3720, z=0}, owner mercy
+[ItemPickupLog] [2024-09-25T10:23:47.0639202] Picked up GameItem{name=Daul Reapers, id=30260, amount=1} at Position{x=2683, y=3720, z=0}, owner mercy
+[ItemPickupLog] [2024-09-25T12:38:01.6253786] Picked up GameItem{name=Dwarf remains, id=30272, amount=1} at Position{x=3210, y=3221, z=0}, owner mercy
+[ItemPickupLog] [2024-09-25T12:38:09.4173007] Picked up GameItem{name=Dwarf remains, id=30272, amount=1} at Position{x=3210, y=3221, z=0}, owner mercy
+[ItemPickupLog] [2024-09-25T12:55:33.629679] Picked up GameItem{name=Dwarf remains, id=30314, amount=1} at Position{x=3173, y=3203, z=0}, owner mercy

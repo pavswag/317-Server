@@ -1,0 +1,748 @@
+[LoginRequestLog] [2024-08-31T10:44:31.3532934] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T10:44:31.3578332] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T10:44:31.4130253] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T10:44:31.4982077] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T10:44:31.5377942] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T10:44:31.5397916] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-08-31T10:44:31.7657412] [ip=127.0.0.1] Success [time=227ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T10:45:01.8956401] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T10:45:01.8971417] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T10:45:01.9001462] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T10:45:01.9166442] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T10:45:01.9231784] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T10:45:01.9231784] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T10:45:02.9367029] [ip=127.0.0.1] Success [time=1,013ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T11:11:38.373421] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T11:11:38.3819171] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T11:11:38.4349505] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T11:11:38.6067498] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T11:11:38.6455433] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T11:11:38.6495398] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T11:11:39.9009286] [ip=127.0.0.1] Success [time=1,251ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T19:13:34.3566076] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T19:13:34.3614895] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T19:13:34.3822318] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T19:13:34.4813135] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T19:13:34.4918564] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T19:13:34.4939703] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T19:13:34.8498555] [ip=127.0.0.1] Success [time=357ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T19:30:29.1639981] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T19:30:29.1695285] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T19:30:29.2074686] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T19:30:29.2902641] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T19:30:29.316056] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T19:30:29.3185623] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-08-31T19:30:29.6275839] [ip=127.0.0.1] Success [time=310ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T19:32:18.2600219] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T19:32:18.2640116] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T19:32:18.2650103] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T19:32:18.3297635] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T19:32:18.3317576] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T19:32:18.333752] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-08-31T19:32:18.6221596] [ip=127.0.0.1] Success [time=289ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T19:45:40.5267509] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T19:45:40.5327427] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T19:45:40.5771423] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T19:45:40.7129407] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T19:45:40.7234269] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T19:45:40.7269517] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-08-31T19:45:41.1904064] [ip=127.0.0.1] Success [time=465ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T20:12:39.456484] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T20:12:39.4605086] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T20:12:39.4932426] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T20:12:39.5733832] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T20:12:39.5858825] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T20:12:39.5878776] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T20:12:40.0291894] [ip=127.0.0.1] Success [time=443ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T20:28:24.6434089] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T20:28:24.6718567] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T20:28:24.6793133] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T20:28:24.7393828] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T20:28:24.7443976] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T20:28:24.7453942] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T20:28:24.9447908] [ip=127.0.0.1] Success [time=200ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T20:30:06.6202558] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T20:30:06.629116] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T20:30:06.637905] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T20:30:06.6726731] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T20:30:06.6792409] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T20:30:06.6812408] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T20:30:06.8395327] [ip=127.0.0.1] Success [time=160ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T20:32:47.1258265] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T20:32:47.774297] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T20:32:47.7820085] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T20:32:47.7940014] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T20:32:47.8010718] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T20:32:47.8030915] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T20:32:48.0270717] [ip=127.0.0.1] Success [time=225ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T20:36:15.6887561] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T20:36:15.7050874] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T20:36:15.7116111] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T20:36:15.8860891] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T20:36:15.8928103] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T20:36:15.8953874] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T20:36:16.0583825] [ip=127.0.0.1] Success [time=166ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T21:18:00.1289095] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T21:18:00.1344485] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T21:18:00.1754472] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T21:18:00.2714867] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T21:18:00.3001067] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T21:18:00.3021027] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-08-31T21:18:00.6663714] [ip=127.0.0.1] Success [time=366ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T21:28:29.212894] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T21:28:29.2555563] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T21:28:29.2756541] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T21:28:29.3179926] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T21:28:29.3299026] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T21:28:29.3353752] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T21:28:29.9572231] [ip=127.0.0.1] Success [time=628ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T22:04:56.140174] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T22:04:56.1471631] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T22:04:56.1854428] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T22:04:56.282355] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T22:04:56.3138194] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T22:04:56.3158171] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T22:04:56.7507096] [ip=127.0.0.1] Success [time=436ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T22:31:37.6377255] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T22:31:37.6426789] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T22:31:37.6948347] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T22:31:37.9387367] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T22:31:37.9750131] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T22:31:37.9782322] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T22:31:38.4038996] [ip=127.0.0.1] Success [time=427ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T22:34:28.7647514] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T22:34:28.7669907] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T22:34:28.7734868] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T22:34:28.7849842] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T22:34:28.7955636] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T22:34:28.7955636] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-08-31T22:34:28.9541991] [ip=127.0.0.1] Success [time=159ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T22:58:56.3282567] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T22:58:56.3377468] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T22:58:56.3987774] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T22:58:56.6248622] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T22:58:56.6609011] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T22:58:56.6658923] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-08-31T22:58:57.9294573] [ip=127.0.0.1] Success [time=1,267ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T23:13:25.1718795] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T23:13:25.1768659] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T23:13:25.2192196] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T23:13:25.257237] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T23:13:25.2827665] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T23:13:25.2857594] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-08-31T23:13:25.7128264] [ip=127.0.0.1] Success [time=430ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-08-31T23:28:26.5065368] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-08-31T23:28:26.5147416] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-08-31T23:28:26.539289] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-08-31T23:28:26.6580962] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-08-31T23:28:26.681142] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-08-31T23:28:26.6851308] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-08-31T23:28:27.1925773] [ip=127.0.0.1] Success [time=510ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-01T00:42:57.271373] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-01T00:42:57.2848523] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-01T00:42:57.3040969] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-01T00:42:57.3430856] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-01T00:42:57.3601459] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-01T00:42:57.3646441] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-01T00:42:58.0038745] [ip=127.0.0.1] Success [time=642ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-01T00:57:36.4168731] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-01T00:57:36.4223896] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-01T00:57:36.4816854] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-01T00:57:36.8224958] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-01T00:57:36.8518962] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-01T00:57:36.8538909] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-01T00:57:37.2661336] [ip=127.0.0.1] Success [time=413ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-01T01:04:52.4699179] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-01T01:04:52.4729089] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-01T01:04:52.5295103] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-01T01:04:52.6281712] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-01T01:04:52.6527296] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-01T01:04:52.6537264] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-01T01:04:52.9176578] [ip=127.0.0.1] Success [time=265ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-01T01:10:46.0428148] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-01T01:10:46.0468368] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-01T01:10:46.0650378] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-01T01:10:46.1139369] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-01T01:10:46.1272822] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-01T01:10:46.1292865] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-01T01:10:46.4187359] [ip=127.0.0.1] Success [time=291ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-01T10:49:37.1250007] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-01T10:49:37.1387997] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-01T10:49:37.1650317] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-01T10:49:37.2626141] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-01T10:49:37.2934661] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-01T10:49:37.3019674] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-01T10:49:37.8943569] [ip=127.0.0.1] Success [time=598ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-01T11:14:50.8742417] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-01T11:14:50.9162413] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-01T11:14:50.9306945] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-01T11:14:50.9936324] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-01T11:14:51.0082626] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-01T11:14:51.0115563] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-01T11:14:55.8834762] [ip=127.0.0.1] Success [time=4,855ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-01T20:35:30.1011886] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-01T20:35:30.1081942] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-01T20:35:30.166964] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-01T20:35:30.2487519] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-01T20:35:30.2707501] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-01T20:35:30.2732788] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-01T20:35:30.7447072] [ip=127.0.0.1] Success [time=473ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-01T20:35:32.6579235] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-01T20:35:32.658919] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-01T20:35:32.6609124] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-01T20:35:32.665934] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-01T20:35:32.6689249] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-01T20:35:32.6689249] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-01T20:35:32.8273329] [ip=127.0.0.1] Success [time=159ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T10:18:24.2652038] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T10:18:24.2693099] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T10:18:24.3023499] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T10:18:24.4414028] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T10:18:24.4629695] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T10:18:24.4659961] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T10:18:24.7967408] [ip=127.0.0.1] Success [time=334ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T10:53:46.7358029] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T10:53:46.740793] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T10:53:46.7756442] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T10:53:46.8825452] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T10:53:46.9093246] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T10:53:46.9113195] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-04T10:53:47.2672972] [ip=127.0.0.1] Success [time=357ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T11:12:26.4345162] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T11:12:26.4395025] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T11:12:26.4877026] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T11:12:27.0121186] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T11:12:27.0594709] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T11:12:27.0637547] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T11:12:27.6033944] [ip=127.0.0.1] Success [time=543ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T11:51:45.7899684] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T11:51:45.7949571] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T11:51:45.8543995] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T11:51:45.9747274] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T11:51:46.0187912] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T11:51:46.0207612] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-04T11:51:46.3246628] [ip=127.0.0.1] Success [time=306ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T12:32:38.3496315] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T12:32:38.3687515] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T12:32:38.4192469] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T12:32:38.523293] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T12:32:38.5798147] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T12:32:38.5903279] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T12:32:39.7044174] [ip=127.0.0.1] Success [time=1,124ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T12:39:36.5584723] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T12:39:36.6087315] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T12:39:37.2386513] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T12:39:38.2570577] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T12:39:38.9643523] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T12:39:38.9683404] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-04T12:39:39.6256558] [ip=127.0.0.1] Success [time=660ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T12:53:17.9158825] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T12:53:17.9296881] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T12:53:17.9459957] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T12:53:18.008939] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T12:53:18.0231361] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T12:53:18.0271256] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T12:53:18.5495686] [ip=127.0.0.1] Success [time=525ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T13:05:51.1943367] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T13:05:51.198463] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T13:05:51.2434421] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T13:05:51.5802629] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T13:05:51.6095193] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T13:05:51.6125146] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-04T13:05:51.9684784] [ip=127.0.0.1] Success [time=358ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T13:06:41.7833001] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T13:06:41.7852968] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T13:06:41.795794] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T13:06:41.8038638] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T13:06:41.8093426] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T13:06:41.8093426] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T13:06:41.9402537] [ip=127.0.0.1] Success [time=131ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T13:11:56.815247] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T13:11:56.826311] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T13:11:56.9151041] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T13:11:57.1061172] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T13:11:57.1770261] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T13:11:57.1770261] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T13:11:57.3037026] [ip=127.0.0.1] Success [time=126ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T13:11:57.4470615] [ip=127.0.0.1,mac=D4-D2-52-36-34-C2,mac=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] Login rejected with code ACCOUNT_ALREADY_ONLINE for player player[loginName=mercy, displayName=mercy, ip=127.0.0.1, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] 
+[LoginRequestLog] [2024-09-04T13:11:59.5054579] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T13:11:59.5064558] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T13:11:59.507698] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T13:11:59.5972039] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T13:11:59.6002006] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T13:11:59.6002006] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-04T13:11:59.7061369] [ip=127.0.0.1] Success [time=106ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T13:11:59.8713988] [ip=127.0.0.1,mac=D4-D2-52-36-34-C2,mac=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] Login rejected with code ACCOUNT_ALREADY_ONLINE for player player[loginName=mercy, displayName=mercy, ip=127.0.0.1, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] 
+[LoginRequestLog] [2024-09-04T13:12:03.7116598] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T13:12:03.7126561] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T13:12:03.7136532] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T13:12:03.7700876] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T13:12:03.7720821] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T13:12:03.7720821] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T13:12:03.7965904] [ip=127.0.0.1] Success [time=24ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T13:13:53.7307205] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T13:13:53.7317178] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T13:13:53.7414318] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T13:13:53.9605314] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T13:13:53.9683964] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T13:13:53.9683964] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T13:13:54.0883394] [ip=127.0.0.1] Success [time=120ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T14:46:15.4778897] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T14:46:15.4868152] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T14:46:15.5083225] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T14:46:15.7434521] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T14:46:15.7579761] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T14:46:15.7594824] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T14:46:16.2439907] [ip=127.0.0.1] Success [time=485ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:04:05.0557567] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:04:05.0628769] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:04:05.1050801] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:04:05.2045634] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:04:05.2257798] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:04:05.229276] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:04:05.6601332] [ip=127.0.0.1] Success [time=434ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:15:06.9447501] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:15:06.9522678] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:15:06.9814277] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:15:07.1086233] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:15:07.1402861] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:15:07.1432813] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:15:07.7176375] [ip=127.0.0.1] Success [time=577ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:16:45.7306252] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:16:45.7316217] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:16:45.7346127] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:16:45.7811392] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:16:45.7841309] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:16:45.7841309] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:16:45.9324145] [ip=127.0.0.1] Success [time=148ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:20:25.0136799] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:20:25.0217392] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:20:25.2376138] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:20:26.2776369] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:20:26.31313] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:20:26.3151249] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:20:26.7940111] [ip=127.0.0.1] Success [time=480ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:25:47.4521449] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:25:47.4607225] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:25:47.4801363] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:25:47.6383882] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:25:47.6625025] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:25:47.6660546] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:25:48.1932348] [ip=127.0.0.1] Success [time=530ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:31:49.7777508] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:31:49.7817396] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:31:49.8173753] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:31:49.9484619] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:31:49.9895404] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:31:49.9925358] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:31:50.4026549] [ip=127.0.0.1] Success [time=412ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:37:11.4198872] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:37:11.4343971] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:37:11.4793339] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:37:11.6842787] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:37:11.724261] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:37:11.7297622] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:37:12.4517162] [ip=127.0.0.1] Success [time=726ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:40:10.7998065] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:40:10.8027986] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:40:10.8067119] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:40:10.811702] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:40:10.8182242] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:40:10.8182242] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:40:11.1324883] [ip=127.0.0.1] Success [time=314ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:45:09.6218926] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:45:09.627908] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:45:09.6518094] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:45:09.7807109] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:45:09.8053353] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:45:09.8083333] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:45:10.1533538] [ip=127.0.0.1] Success [time=346ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T15:50:49.8213837] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T15:50:49.8285864] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T15:50:49.8729833] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T15:50:49.9685201] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T15:50:50.0079398] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T15:50:50.011927] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T15:50:50.6127463] [ip=127.0.0.1] Success [time=604ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T16:02:13.9604097] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T16:02:13.9655611] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T16:02:14.0045234] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T16:02:14.0755173] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T16:02:14.1162163] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T16:02:14.1182114] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T16:02:14.6156668] [ip=127.0.0.1] Success [time=498ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T16:07:17.7993272] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T16:07:17.8039009] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T16:07:17.8475788] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T16:07:17.9755617] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T16:07:18.0069292] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T16:07:18.008925] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T16:07:18.3340409] [ip=127.0.0.1] Success [time=328ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T16:31:27.8376782] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T16:31:27.8506998] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T16:31:27.8956063] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T16:31:27.9689767] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T16:31:28.0003808] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T16:31:28.0053567] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T16:31:28.5760711] [ip=127.0.0.1] Success [time=576ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T16:40:58.8029801] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T16:40:58.8105158] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T16:40:58.8564976] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T16:40:59.0646269] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T16:40:59.1076707] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T16:40:59.1106583] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T16:40:59.9234684] [ip=127.0.0.1] Success [time=815ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T16:47:11.0458097] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T16:47:11.0521221] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T16:47:11.1430941] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T16:47:11.2606872] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T16:47:11.3497549] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T16:47:11.3537442] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-04T16:47:11.8239355] [ip=127.0.0.1] Success [time=474ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T18:13:19.964862] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T18:13:19.9879192] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T18:13:20.0696002] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T18:13:20.1747477] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T18:13:20.290344] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T18:13:20.295871] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T18:13:21.4628435] [ip=127.0.0.1] Success [time=1,170ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T19:14:07.8131882] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T19:14:07.817486] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T19:14:07.8421272] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T19:14:07.8754238] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T19:14:07.8832097] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T19:14:07.8851725] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T19:14:08.458354] [ip=127.0.0.1] Success [time=574ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T19:22:21.2447314] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T19:22:21.2515861] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T19:22:21.2670597] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T19:22:21.3182606] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T19:22:21.3311818] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T19:22:21.3331764] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-04T19:22:21.4561223] [ip=127.0.0.1] Success [time=125ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-04T19:27:23.8502041] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-04T19:27:23.857695] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-04T19:27:23.9016682] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-04T19:27:23.9490886] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-04T19:27:23.9834853] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-04T19:27:23.9865428] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-04T19:27:24.3918047] [ip=127.0.0.1] Success [time=407ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-25T10:22:16.7459452] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-25T10:22:16.750937] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-25T10:22:16.7959302] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-25T10:22:17.0476196] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-25T10:22:17.0650154] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-25T10:22:17.0660134] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-25T10:22:17.3786701] [ip=127.0.0.1] Success [time=312ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-25T12:08:22.6064564] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-25T12:08:22.6099595] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-25T12:08:22.7323251] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-25T12:08:22.8981491] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-25T12:08:22.9157862] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-25T12:08:22.9172938] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-25T12:08:23.2410878] [ip=127.0.0.1] Success [time=325ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-25T12:59:24.8272824] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-25T12:59:24.8471537] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-25T12:59:24.8561503] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-25T12:59:24.8872943] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-25T12:59:24.8940902] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-25T12:59:24.8950884] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-09-25T12:59:25.0752054] [ip=127.0.0.1,mac=D4-D2-52-36-34-C2,mac=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] Login rejected with code INVALID_USERNAME_OR_PASSWORD for player player[loginName=mercy, displayName=null, ip=127.0.0.1, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] 
+[LoginRequestLog] [2024-09-25T12:59:25.0997006] [ip=127.0.0.1] Failure [time=197ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-25T12:59:28.6772481] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-25T12:59:28.6782701] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-25T12:59:28.6802658] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-25T12:59:28.7174594] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-25T12:59:28.7189149] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-25T12:59:28.7189149] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-25T12:59:28.8272933] [ip=127.0.0.1] Success [time=109ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-25T13:01:49.5435881] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-25T13:01:49.5511537] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-25T13:01:49.5571353] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-25T13:01:49.6198833] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-25T13:01:49.6251603] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-25T13:01:49.6251603] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-25T13:01:49.8124745] [ip=127.0.0.1] Success [time=186ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-25T13:18:02.7990588] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-25T13:18:02.8096772] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-25T13:18:02.8658526] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-25T13:18:03.0471545] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-25T13:18:03.0706722] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-25T13:18:03.0736642] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-25T13:18:03.5758748] [ip=127.0.0.1] Success [time=504ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-09-30T07:53:48.7730803] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-09-30T07:53:48.7815715] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-09-30T07:53:48.8074261] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-09-30T07:53:48.8559771] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-09-30T07:53:48.8789014] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-09-30T07:53:48.8828903] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-09-30T07:53:49.542567] [ip=127.0.0.1] Success [time=663ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-10-07T08:16:02.4412679] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-10-07T08:16:02.5018911] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-10-07T08:16:02.6001221] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-10-07T08:16:02.9771927] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-10-07T08:16:03.0641803] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-10-07T08:16:03.0783448] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-10-07T08:16:04.915926] [ip=127.0.0.1] Success [time=1,848ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-10-26T18:42:47.6772874] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-10-26T18:42:47.685772] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-10-26T18:42:47.756484] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-10-26T18:42:47.9038193] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-10-26T18:42:47.9237053] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-10-26T18:42:47.9292013] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-10-26T18:42:48.6045905] [ip=127.0.0.1] Success [time=680ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-10-26T18:50:01.056585] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-10-26T18:50:01.0630781] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-10-26T18:50:01.0806696] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-10-26T18:50:01.2076235] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-10-26T18:50:01.2516338] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-10-26T18:50:01.253635] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-10-26T18:50:01.4421448] [ip=127.0.0.1] Success [time=190ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-03T08:53:03.255215] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-03T08:53:03.2814583] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-03T08:53:03.3090078] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-03T08:53:03.3926464] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-03T08:53:03.4158648] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-03T08:53:03.4226449] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-03T08:53:04.2760909] [ip=127.0.0.1] Success [time=860ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T12:29:15.5852097] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T12:29:15.5895879] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T12:29:15.6109078] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T12:29:15.6640162] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T12:29:15.6810474] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T12:29:15.684027] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T12:29:15.9826233] [ip=127.0.0.1,mac=D4-D2-52-36-34-C2,mac=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] Login rejected with code INVALID_USERNAME_OR_PASSWORD for player player[loginName=mercy, displayName=null, ip=127.0.0.1, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] 
+[LoginRequestLog] [2024-11-16T12:29:15.9846173] [ip=127.0.0.1] Failure [time=303ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T12:29:21.316345] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T12:29:21.3173616] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T12:29:21.3193594] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T12:29:21.324348] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T12:29:21.3263431] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T12:29:21.3263431] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T12:29:21.4776558] [ip=127.0.0.1] Success [time=151ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T13:00:30.0923912] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T13:00:30.100473] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T13:00:30.1244639] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T13:00:30.1639478] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T13:00:30.1704674] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T13:00:30.1704674] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T13:00:30.3022796] [ip=127.0.0.1] Success [time=132ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T13:07:36.5894668] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T13:07:36.5965253] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T13:07:36.603877] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T13:07:36.6405093] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T13:07:36.6460013] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T13:07:36.6460013] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-11-16T13:07:36.8400301] [ip=127.0.0.1] Success [time=194ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T13:12:14.5279988] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T13:12:14.5339851] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T13:12:14.5460059] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T13:12:14.6208091] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T13:12:14.6338024] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T13:12:14.6353115] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T13:12:15.0464034] [ip=127.0.0.1] Success [time=412ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T13:16:18.7778973] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T13:16:18.7818879] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T13:16:18.7874692] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T13:16:18.809829] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T13:16:18.8133861] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T13:16:18.815382] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T13:16:19.2594463] [ip=127.0.0.1] Success [time=446ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T13:26:14.1623344] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T13:26:14.1703135] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T13:26:14.2028346] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T13:26:14.4026061] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T13:26:14.4213566] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T13:26:14.4233514] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T13:26:14.7361317] [ip=127.0.0.1] Success [time=313ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T13:37:23.56257] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T13:37:23.5669758] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T13:37:23.5774911] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T13:37:23.7226835] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T13:37:23.7302397] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T13:37:23.7332319] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T13:37:24.2180154] [ip=127.0.0.1] Success [time=487ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T13:47:35.5243903] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T13:47:35.5287239] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T13:47:35.5316828] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T13:47:35.5641632] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T13:47:35.5694027] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T13:47:35.5713959] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T13:47:35.9318626] [ip=127.0.0.1] Success [time=361ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T14:10:43.1980468] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T14:10:43.2020704] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T14:10:43.2369593] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T14:10:43.2722381] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T14:10:43.3008756] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T14:10:43.3028342] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T14:10:43.8473021] [ip=127.0.0.1] Success [time=546ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T14:25:14.7154757] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T14:25:14.7214236] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T14:25:14.7587563] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T14:25:14.7924232] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T14:25:14.8175833] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T14:25:14.8195775] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T14:25:15.1831996] [ip=127.0.0.1] Success [time=365ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T14:30:04.6069105] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T14:30:04.609933] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T14:30:04.6574822] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T14:30:04.7273129] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T14:30:04.7757249] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T14:30:04.7777236] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-11-16T14:33:03.4933991] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T14:33:03.501409] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T14:33:03.5343215] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T14:33:03.7502554] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T14:33:03.7763408] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T14:33:03.7793333] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-11-16T14:33:04.2905599] [ip=127.0.0.1] Success [time=513ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-11-16T14:50:21.1680861] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-11-16T14:50:21.1735419] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-11-16T14:50:21.2150615] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-11-16T14:50:21.2753443] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-11-16T14:50:21.3000063] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-11-16T14:50:21.3020015] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-11-16T14:50:21.847334] [ip=127.0.0.1] Success [time=547ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-12-05T14:58:55.787242] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-12-05T14:58:55.7975387] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-12-05T14:58:55.8773339] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-12-05T14:58:55.9839446] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-12-05T14:58:56.0261291] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-12-05T14:58:56.029154] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-12-05T14:58:56.4355804] [ip=127.0.0.1,mac=D4-D2-52-36-34-C2,mac=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] Login rejected with code INVALID_USERNAME_OR_PASSWORD for player player[loginName=mercy, displayName=null, ip=127.0.0.1, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] 
+[LoginRequestLog] [2024-12-05T14:58:56.4390256] [ip=127.0.0.1] Failure [time=413ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-12-05T14:58:58.2578812] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-12-05T14:58:58.258879] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-12-05T14:58:58.2608732] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-12-05T14:58:58.2818144] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-12-05T14:58:58.2838144] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-12-05T14:58:58.2838144] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-12-05T14:58:58.3676373] [ip=127.0.0.1,mac=D4-D2-52-36-34-C2,mac=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] Login rejected with code INVALID_USERNAME_OR_PASSWORD for player player[loginName=mercy, displayName=null, ip=127.0.0.1, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] 
+[LoginRequestLog] [2024-12-05T14:58:58.3676373] [ip=127.0.0.1] Failure [time=84ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-12-05T14:59:02.3507322] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-12-05T14:59:02.3519416] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-12-05T14:59:02.3529015] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-12-05T14:59:02.3568946] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-12-05T14:59:02.3578917] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-12-05T14:59:02.3578917] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2024-12-05T14:59:02.4248156] [ip=127.0.0.1,mac=D4-D2-52-36-34-C2,mac=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] Login rejected with code INVALID_USERNAME_OR_PASSWORD for player player[loginName=mercy, displayName=null, ip=127.0.0.1, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3] 
+[LoginRequestLog] [2024-12-05T14:59:02.42578] [ip=127.0.0.1] Failure [time=68ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2024-12-05T14:59:07.049322] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2024-12-05T14:59:07.0508297] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2024-12-05T14:59:07.0518546] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2024-12-05T14:59:07.0749387] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2024-12-05T14:59:07.0759361] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2024-12-05T14:59:07.0759361] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2024-12-05T14:59:07.2571743] [ip=127.0.0.1] Success [time=181ms, mac=D4-D2-52-36-34-C2, uuid=87e671f7-4a78-4e3f-b529-c14ca6ba26c3]
+[LoginRequestLog] [2025-03-22T10:49:38.0965763] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-03-22T10:49:38.1035764] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-03-22T10:49:38.170987] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-03-22T10:49:38.2690104] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-03-22T10:49:38.2970253] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-03-22T10:49:38.3000163] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2025-03-22T10:49:38.5301284] [ip=127.0.0.1] Success [time=232ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-03-22T10:51:53.1681875] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-03-22T10:51:53.1681875] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-03-22T10:51:53.1701878] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-03-22T10:51:53.1911957] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-03-22T10:51:53.1931927] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-03-22T10:51:53.1931927] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-03-22T10:51:53.3552296] [ip=127.0.0.1] Success [time=162ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-03-22T10:55:23.0702578] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-03-22T10:55:23.0772586] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-03-22T10:55:23.0792614] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-03-22T10:55:23.1042649] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-03-22T10:55:23.106265] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-03-22T10:55:23.1102706] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-03-22T10:55:23.5083577] [ip=127.0.0.1] Success [time=401ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-03-22T10:56:14.1138707] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-03-22T10:56:14.114871] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-03-22T10:56:14.1158716] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-03-22T10:56:14.1618822] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-03-22T10:56:14.1638828] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-03-22T10:56:14.1638828] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-03-22T10:56:14.1798868] [ip=127.0.0.1] Success [time=15ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-03-22T10:59:55.9329754] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-03-22T10:59:55.9339747] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-03-22T10:59:55.9349745] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-03-22T10:59:55.9369752] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-03-22T10:59:55.9389782] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-03-22T10:59:55.9389782] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2025-03-22T10:59:56.033] [ip=127.0.0.1] Success [time=95ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-03-22T11:00:13.5862965] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-03-22T11:00:13.5862965] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-03-22T11:00:13.5872941] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-03-22T11:00:13.5962964] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-03-22T11:00:13.6002998] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-03-22T11:00:13.6002998] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2025-03-22T11:00:13.6923187] [ip=127.0.0.1] Success [time=92ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-03-22T11:00:38.9064248] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-03-22T11:00:38.9064248] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-03-22T11:00:38.9074176] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-03-22T11:00:38.9324193] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-03-22T11:00:38.9354214] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-03-22T11:00:38.9354214] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2025-03-22T11:00:39.0294433] [ip=127.0.0.1] Success [time=94ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-04-02T13:56:47.9431695] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-04-02T13:56:47.9541708] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-04-02T13:56:48.0211881] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-04-02T13:56:48.0882028] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-04-02T13:56:48.1022069] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-04-02T13:56:48.1062085] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-04-02T13:56:48.5593101] [ip=127.0.0.1] Success [time=456ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-04-02T13:58:19.0739783] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-04-02T13:58:19.0739783] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-04-02T13:58:19.0759687] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-04-02T13:58:19.0968231] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-04-02T13:58:19.0994279] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-04-02T13:58:19.0994279] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2025-04-02T13:58:19.1154158] [ip=127.0.0.1] Success [time=16ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-04-02T14:10:44.6633069] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-04-02T14:10:44.6713182] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-04-02T14:10:44.6733093] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-04-02T14:10:44.7123197] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-04-02T14:10:44.7143191] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-04-02T14:10:44.7173208] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-04-02T14:10:44.9203731] [ip=127.0.0.1] Success [time=205ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-05-02T13:31:33.7262627] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-05-02T13:31:33.733268] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-05-02T13:31:33.739267] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-05-02T13:31:33.8522906] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-05-02T13:31:33.8572926] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-05-02T13:31:33.8612933] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-05-02T13:31:34.2522616] [ip=127.0.0.1] Success [time=394ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-05-02T13:33:17.0098192] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-05-02T13:33:17.0108207] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-05-02T13:33:17.0168209] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-05-02T13:33:17.1198442] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-05-02T13:33:17.1258454] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-05-02T13:33:17.1258454] [ip=127.0.0.1] loginType=16, loginPacketSize=170, loginEncryptPackSize=130
+[LoginRequestLog] [2025-05-02T13:33:17.2378699] [ip=127.0.0.1] Success [time=112ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-05-18T11:58:49.0729823] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-05-18T11:58:49.0788722] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-05-18T11:58:49.0828674] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-05-18T11:58:49.1268771] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-05-18T11:58:49.1318804] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-05-18T11:58:49.1338793] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-05-18T11:58:49.4825997] [ip=127.0.0.1] Success [time=351ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-05-18T12:02:41.9963712] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-05-18T12:02:42.0033749] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-05-18T12:02:42.0043735] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-05-18T12:02:42.0863919] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-05-18T12:02:42.0883919] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-05-18T12:02:42.0904034] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-05-18T12:02:42.4534752] [ip=127.0.0.1] Success [time=364ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-05-18T12:03:21.3330276] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-05-18T12:03:21.3340284] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-05-18T12:03:21.335026] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-05-18T12:03:21.3460318] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-05-18T12:03:21.3490292] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-05-18T12:03:21.3500324] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-05-18T12:03:21.458053] [ip=127.0.0.1] Success [time=109ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]
+[LoginRequestLog] [2025-06-27T00:34:36.2957092] [ip=127.0.0.1] Handshake
+[LoginRequestLog] [2025-06-27T00:34:36.3037123] [ip=127.0.0.1] Passed handshake
+[LoginRequestLog] [2025-06-27T00:34:36.3157142] [ip=127.0.0.1] Passed POW request
+[LoginRequestLog] [2025-06-27T00:34:36.3457206] [ip=127.0.0.1] Passed POW check
+[LoginRequestLog] [2025-06-27T00:34:36.3587257] [ip=127.0.0.1] Login block
+[LoginRequestLog] [2025-06-27T00:34:36.3607265] [ip=127.0.0.1] loginType=16, loginPacketSize=169, loginEncryptPackSize=129
+[LoginRequestLog] [2025-06-27T00:34:36.9638601] [ip=127.0.0.1] Success [time=603ms, mac=B0-52-16-62-C1-4D, uuid=84ee4594-a3ec-499a-bec7-8f164d2f195a]

@@ -1,0 +1,14 @@
+[ClickButtonLog] [2024-09-04T13:12:22.757779] Clicked: 9157, real id: 2461,new: false
+[ClickButtonLog] [2024-09-04T13:12:27.5562079] Clicked: 95011, real id: 24331,new: false
+[ClickButtonLog] [2024-09-04T13:12:27.5639651] Clicked: 95011, real id: 24331,new: false
+[ClickButtonLog] [2024-09-04T13:12:27.5649627] Clicked: 95011, real id: 24331,new: false
+[ClickButtonLog] [2024-09-04T13:12:29.3638688] Clicked: 9157, real id: 2461,new: false
+[ClickButtonLog] [2024-09-04T13:12:29.3648658] Clicked: 9157, real id: 2461,new: false
+[ClickButtonLog] [2024-09-04T13:12:31.1703125] Clicked: 9190, real id: 2494,new: false
+[ClickButtonLog] [2024-09-04T13:12:31.1817937] Clicked: 9190, real id: 2494,new: false
+[ClickButtonLog] [2024-09-04T13:12:32.9763992] Clicked: 9157, real id: 2461,new: false
+[ClickButtonLog] [2024-09-04T13:12:33.0289436] Clicked: 9157, real id: 2461,new: false
+[ClickButtonLog] [2024-09-04T13:12:37.7815084] Clicked: 9154, real id: 2458,new: false
+[ClickButtonLog] [2024-09-04T13:14:09.3197587] Clicked: 83158, real id: 21406,new: false
+[ClickButtonLog] [2024-09-04T13:14:17.1414891] Clicked: 30374, real id: 30374,new: true
+[ClickButtonLog] [2024-09-04T13:14:32.7905431] Clicked: 9157, real id: 2461,new: false

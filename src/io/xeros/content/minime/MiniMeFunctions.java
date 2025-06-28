@@ -1,0 +1,147 @@
+package io.xeros.content.minime;
+
+import io.xeros.Configuration;
+import io.xeros.Server;
+import io.xeros.content.combat.melee.MeleeData;
+import io.xeros.model.entity.player.Player;
+import io.xeros.model.entity.player.PlayerHandler;
+import io.xeros.model.items.ContainerUpdate;
+import io.xeros.net.login.LoginReturnCode;
+import io.xeros.net.login.RS2LoginProtocol;
+import io.xeros.util.ISAACCipher;
+import io.xeros.util.Misc;
+import io.xeros.util.Stream;
+
+import java.util.Optional;
+
+public class MiniMeFunctions {
+
+    public static void create(Player p) {
+        Player mini = new Player(null);
+        if (p.getMiniMe() != null) {
+            p.sendMessage("@red@You call your mini-me!");
+            startFollowing(p);
+            return;
+        }
+
+        p.setMiniMe(mini);
+        //TODO register in world?, add miniMe check to player file, Clone all skill levels
+        p.sendMessage("@red@You call your mini-me!");
+
+       // mini.getRights().setPrimary(p.getRights().getPrimary());
+        mini.setMode(p.getMode());
+        mini.saveCharacter = true;
+        mini.setCompletedTutorial(true);
+        mini.setLoginName("Mini " + p.getDisplayName());
+        mini.setDisplayName("Mini " + p.getDisplayName());
+        mini.macAddress = "";
+        mini.setNameAsLong(Misc.playerNameToInt64("Mini " + p.getDisplayName()));
+        mini.playerPass = "playerbot123";
+        mini.setIpAddress("");
+        mini.isMiniMe = true;
+        mini.bot = true;
+        mini.MiniMeOwner = p;
+        mini.playerAppearance = p.playerAppearance;
+        mini.appearanceUpdateRequired = true;
+
+        mini.addQueuedAction(plr -> plr.moveTo(p.getPosition()));
+
+        p.getMiniMe().playerAttackingIndex = 0;
+        p.getMiniMe().npcAttackingIndex = 0;
+        p.getMiniMe().usingBow = false;
+        p.getMiniMe().usingRangeWeapon = false;
+        p.getMiniMe().followDistance = 1;
+        p.getMiniMe().playerFollowingIndex = p.getIndex();
+        p.getMiniMe().combatFollowing = false;
+
+        p.getMiniMe().getPA().followPlayer();
+        startFollowing(p);
+        Server.getIoExecutorService().submit(() -> {
+            try {
+                LoginReturnCode code = RS2LoginProtocol.loadPlayer(mini, mini.getLoginNameLower(), LoginReturnCode.SUCCESS, true);
+                if (code != LoginReturnCode.SUCCESS) {
+                    System.out.println("Could not login bot, return code was "+ code);
+                    return;
+                }
+
+                PlayerHandler.addLoginQueue(mini);
+            } catch (Exception e) {
+                System.out.println("Error loading MiniMe " + e);
+            }
+        });
+
+    }
+
+
+    public static void startFollowing(Player owner) {
+
+        if (owner.getMiniMe() == null) {
+            owner.sendMessage("You need to summon your mini me first.");
+            return;
+        }
+
+//        if (owner.getMiniMe().playerFollowingIndex == owner.getIndex()) {
+//            owner.sendMessage("Your minime is already following you.");
+//            return;
+//        }
+
+
+        owner.getMiniMe().moveTo(owner.getPosition());
+        owner.sendMessage("Your minime begins to follow you.");
+        owner.getMiniMe().playerAttackingIndex = 0;
+        owner.getMiniMe().npcAttackingIndex = 0;
+        owner.getMiniMe().usingBow = false;
+        owner.getMiniMe().usingRangeWeapon = false;
+        owner.getMiniMe().followDistance = 1;
+        owner.getMiniMe().playerFollowingIndex = owner.getIndex();
+        owner.getMiniMe().combatFollowing = false;
+        owner.getMiniMe().getPA().followPlayer();
+        for (int i = 0; i < owner.playerEquipment.length; i++) {
+            owner.getMiniMe().playerEquipment[i] = owner.playerEquipment[i];
+        }
+
+        for (int i = 0; i < owner.playerEquipmentN.length; i++) {
+            owner.getMiniMe().playerEquipmentN[i] = owner.playerEquipmentN[i];
+        }
+
+        owner.getItems().getInventoryItems().forEach(item -> {
+            owner.getMiniMe().getItems().setInventoryItemSlot(item.getSlot(), item.getId(), item.getAmount());
+        });
+
+        for (int i = 0; i < owner.playerLevel.length; i++) {
+            owner.getMiniMe().playerLevel[i] = owner.playerLevel[i];
+        }
+
+        for (int i = 0; i < owner.playerXP.length; i++) {
+            owner.getMiniMe().playerXP[i] = owner.playerXP[i];
+        }
+
+        owner.getMiniMe().getPA().refreshSkills();
+        owner.getMiniMe().getItems().addContainerUpdate(ContainerUpdate.EQUIPMENT);
+        owner.getMiniMe().getItems().addContainerUpdate(ContainerUpdate.INVENTORY);
+        owner.getMiniMe().getItems().calculateBonuses();
+        owner.getMiniMe().getPA().requestUpdates();
+        MeleeData.setWeaponAnimations(owner.getMiniMe());
+        owner.getMiniMe().getItems().calculateBonuses();
+        owner.getMiniMe().getItems().sendEquipmentContainer();
+        owner.getMiniMe().getPA().requestUpdates();
+    }
+
+    public static void stopFollowing(Player owner) {
+        if (owner.getMiniMe() == null) {
+            owner.sendMessage("You need to summon your mini me first.");
+            return;
+        }
+
+        owner.getMiniMe().playerAttackingIndex = 0;
+        owner.getMiniMe().npcAttackingIndex = 0;
+        owner.getMiniMe().usingBow = false;
+        owner.getMiniMe().usingRangeWeapon = false;
+        owner.getMiniMe().followDistance = 1;
+        owner.getMiniMe().playerFollowingIndex = 0;
+        owner.getMiniMe().combatFollowing = false;
+        owner.sendMessage("Your minime stops following you.");
+
+    }
+
+}

@@ -1,0 +1,257 @@
+[ReceivedPacketLog] [2025-04-02T13:58:20.6856937] Opcode '210':  'data type: 210, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T13:58:20.6856937] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T13:58:20.6856937] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T13:58:21.2891033] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:21.2891033] Opcode '185':  'actionbutton: 9157, DialogueID: 0, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T13:58:22.4943687] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:23.0969344] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:24.3011993] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:24.3011993] Opcode '185':  'actionbutton: 95011, DialogueID: -1, real id: 24331'.
+[ReceivedPacketLog] [2025-04-02T13:58:24.3032011] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:24.3042067] Opcode '185':  'actionbutton: 95011, DialogueID: -1, real id: 24331'.
+[ReceivedPacketLog] [2025-04-02T13:58:25.5034728] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:25.5044721] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T13:58:25.5044721] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T13:58:26.1077194] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:26.1077194] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T13:58:26.1087191] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:26.1087191] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T13:58:27.3159929] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:27.9161347] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:27.9161347] Opcode '185':  'actionbutton: 9194, DialogueID: -1, real id: 2498'.
+[ReceivedPacketLog] [2025-04-02T13:58:27.9171252] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:27.9171252] Opcode '185':  'actionbutton: 9194, DialogueID: -1, real id: 2498'.
+[ReceivedPacketLog] [2025-04-02T13:58:28.5185636] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:29.1194322] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:29.1194322] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T13:58:29.1262101] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:29.1262101] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T13:58:30.3209216] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T13:58:30.9202663] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T13:58:32.7287998] Opcode '103':  'data type: 103, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T13:58:33.9285619] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T13:58:33.9285619] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T13:58:35.7372666] Opcode '210':  'data type: 210, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T13:58:35.7382654] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T13:58:35.7382654] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T13:58:36.9388186] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T13:58:36.9388186] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T13:58:38.141773] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T13:58:38.141773] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:44.7619674] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:47.1699526] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:48.9763892] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:51.3858046] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:51.3858046] Opcode '185':  'actionbutton: 30091, DialogueID: -1, real id: 7771'.
+[ReceivedPacketLog] [2025-04-02T13:58:53.792476] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:58:56.2000223] Opcode '41':  'data type: 41, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T13:58:56.203024] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T13:58:56.2040229] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T13:58:56.8031638] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T13:58:56.8041636] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:59:08.2289822] Opcode '145':  'data type: 145, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T13:59:08.2299846] Opcode '145':  'i=1688/3/28688'.
+[ReceivedPacketLog] [2025-04-02T13:59:10.0347129] Opcode '134':  'data type: 134, data length: 8'.
+[ReceivedPacketLog] [2025-04-02T13:59:13.6473163] Opcode '41':  'data type: 41, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T13:59:14.8487633] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T13:59:14.8497536] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:59:17.2548257] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:59:17.2548257] Opcode '185':  'actionbutton: 17102, DialogueID: -1, real id: 4454'.
+[ReceivedPacketLog] [2025-04-02T13:59:17.8556055] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T13:59:17.8556055] Opcode '185':  'actionbutton: 17101, DialogueID: -1, real id: 4453'.
+[ReceivedPacketLog] [2025-04-02T13:59:20.2617037] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T13:59:20.2617037] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T13:59:26.2985296] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T13:59:26.2985296] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T13:59:56.4810229] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T13:59:56.4810229] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:00:27.2528084] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:00:27.2528084] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:00:51.957931] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:00:51.957931] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:00:53.1623414] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:00:53.1633437] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:00:54.9678067] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:00:57.3726278] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:00:57.3736267] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:00:58.5752618] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:01:02.1869875] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:01:02.1869875] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:01:28.1146857] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:01:28.1146857] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:01:58.2371388] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:01:58.2371388] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:02:28.3053141] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:02:28.3053141] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:02:58.4194118] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:02:58.4194118] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:10:46.6139614] Opcode '210':  'data type: 210, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:10:46.6139614] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:10:46.6589748] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:10:47.2130972] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:10:47.2130972] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:10:47.2130972] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:10:47.2130972] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:10:47.814743] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:47.8167441] Opcode '185':  'actionbutton: 9157, DialogueID: 0, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T14:10:47.8457528] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:47.8457528] Opcode '185':  'actionbutton: 9157, DialogueID: 0, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T14:10:48.4178997] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:49.6238319] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:51.4280582] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:51.4280582] Opcode '185':  'actionbutton: 95011, DialogueID: -1, real id: 24331'.
+[ReceivedPacketLog] [2025-04-02T14:10:51.431061] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:51.431061] Opcode '185':  'actionbutton: 95011, DialogueID: -1, real id: 24331'.
+[ReceivedPacketLog] [2025-04-02T14:10:52.0297516] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:10:52.6308883] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:53.2343943] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:53.2343943] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T14:10:53.8368847] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:54.4370626] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:54.4370626] Opcode '185':  'actionbutton: 9191, DialogueID: -1, real id: 2495'.
+[ReceivedPacketLog] [2025-04-02T14:10:54.4380536] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:54.4380536] Opcode '185':  'actionbutton: 9191, DialogueID: -1, real id: 2495'.
+[ReceivedPacketLog] [2025-04-02T14:10:54.4380536] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:54.4380536] Opcode '185':  'actionbutton: 9191, DialogueID: -1, real id: 2495'.
+[ReceivedPacketLog] [2025-04-02T14:10:55.0377993] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:55.6419348] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:55.6419348] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T14:10:55.6509391] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:55.6519391] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-04-02T14:10:56.2401553] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:10:56.8416329] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:10:57.4426302] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:10:57.4436215] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:10:57.4436215] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:10:58.6453636] Opcode '103':  'data type: 103, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.0544592] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.0544592] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.6546345] Opcode '41':  'data type: 41, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.6586372] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.6596363] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.6596363] Opcode '210':  'data type: 210, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.6596363] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.6596363] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.6596363] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:01.6596363] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:02.2669068] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:02.2669068] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:02.8553473] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:11:02.8553473] Opcode '98':  'data type: 98, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:11:02.8563476] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:04.0575998] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:04.0575998] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:04.0575998] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:04.0575998] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:04.6579693] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:04.6579693] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:05.2602261] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:05.2602261] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:05.2602261] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:05.2602261] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:05.8603601] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:05.8603601] Opcode '86':  'data type: 86, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:08.8760881] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:13.0857566] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:13.6889171] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:11:14.2883597] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:14.2893502] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:17.3062361] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:11:17.3062361] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:11:19.7096595] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:19.7096595] Opcode '185':  'actionbutton: 17101, DialogueID: 0, real id: 4453'.
+[ReceivedPacketLog] [2025-04-02T14:11:20.9127354] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:11:21.5153308] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:21.5153308] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:21.5153308] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:21.5153308] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:22.7230739] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:22.7230739] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:25.7239099] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:27.5295332] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:28.734975] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:28.734975] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:29.936931] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:11:30.5385834] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:30.5385834] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:33.5463682] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:35.953565] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:35.953565] Opcode '185':  'actionbutton: 9154, DialogueID: -1, real id: 2458'.
+[ReceivedPacketLog] [2025-04-02T14:11:36.5547108] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:36.5547108] Opcode '185':  'actionbutton: 9154, DialogueID: -1, real id: 2458'.
+[ReceivedPacketLog] [2025-04-02T14:11:36.5547108] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:36.5547108] Opcode '185':  'actionbutton: 9154, DialogueID: -1, real id: 2458'.
+[ReceivedPacketLog] [2025-04-02T14:11:38.3572063] Opcode '185':  'data type: 185, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:38.3582053] Opcode '185':  'actionbutton: 75010, DialogueID: -1, real id: 19210'.
+[ReceivedPacketLog] [2025-04-02T14:11:41.3675626] Opcode '210':  'data type: 210, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:41.3675626] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:41.3675626] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:41.9687001] Opcode '103':  'data type: 103, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T14:11:44.9827024] Opcode '210':  'data type: 210, data length: 4'.
+[ReceivedPacketLog] [2025-04-02T14:11:44.9827024] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:44.9827024] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:46.1969686] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:46.1969686] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:46.1979688] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:11:46.1979688] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:11:46.7978872] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:46.7978872] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:11:48.0042178] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:11:48.0052284] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:11:48.6053541] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:48.6063539] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:11:58.825027] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:11:58.8260173] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:04.8404657] Opcode '98':  'data type: 98, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:12:04.8404657] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:06.6489044] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:12:06.6489044] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:12:18.1005851] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:12:18.1005851] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:12:29.5254928] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:12:29.5254928] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:12:30.7272202] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:31.3293548] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:12:33.1334397] Opcode '164':  'data type: 164, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:12:33.1334397] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:12:33.1334397] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:35.539048] Opcode '41':  'data type: 41, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T14:12:36.145187] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:12:36.145187] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:37.9485427] Opcode '41':  'data type: 41, data length: 6'.
+[ReceivedPacketLog] [2025-04-02T14:12:38.5503535] Opcode '98':  'data type: 98, data length: 5'.
+[ReceivedPacketLog] [2025-04-02T14:12:38.5513523] Opcode '72':  'data type: 72, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:39.1514882] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:40.3543591] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:42.1575158] Opcode '209':  'data type: 209, data length: 2'.
+[ReceivedPacketLog] [2025-04-02T14:12:48.1694554] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:12:48.1694554] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:12:49.3731877] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:12:49.3741908] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:12.2440105] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:12.2440105] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:13.4468477] Opcode '164':  'data type: 164, data length: 7'.
+[ReceivedPacketLog] [2025-04-02T14:13:13.4468477] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:13:13.4468477] Opcode '78':  'data type: 78, data length: 0'.
+[ReceivedPacketLog] [2025-04-02T14:13:14.6511422] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:14.6511422] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:18.2639923] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:13:18.2639923] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:13:19.4681372] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:19.4681372] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:20.069275] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:20.069275] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:13:48.9511683] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:13:48.9511683] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:14:19.0420975] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:14:19.0420975] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:14:50.32263] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:14:50.32263] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2025-04-02T14:15:20.4127138] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:15:20.4127138] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:15:33.6399357] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:15:33.6399357] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:15:35.4431236] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:15:35.4431236] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2025-04-02T14:15:50.4738587] Opcode '77':  'data type: 77, data length: 14'.
+[ReceivedPacketLog] [2025-04-02T14:15:50.4748482] Opcode '77':  'data type: 77, data length: 14'.

@@ -1,0 +1,88 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "org.jetbrains.kotlin.jvm" version "1.8.22"
+}
+
+mainClassName = "io.xeros.Server"
+
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'resources'
+        }
+    }
+}
+
+dependencies {
+    implementation group: 'com.mchange', name: 'c3p0', version: '0.10.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.17.1'
+    implementation group: 'com.sun.jna', name: 'jna', version: '3.0.9'
+    implementation group: 'org.json', name: 'json', version: '20240303'
+    implementation("com.googlecode.json-simple:json-simple:1.1")
+    implementation group: 'org.apache.clerezza.ext', name: 'org.json.simple', version: '0.4'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.23.1'
+    implementation group: 'org.python', name: 'jython', version: '2.7.3'
+    implementation group: 'com.mchange', name: 'mchange-commons-java', version: '0.3.1'
+    implementation group: 'com.github.oshi', name: 'oshi-core', version: '6.6.0'
+    implementation group: 'net.java.dev.jna', name: 'jna-platform', version: '5.14.0'
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.11.0-M2'
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.2.5'
+    implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.20'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '2.2'
+    implementation 'com.google.code.gson:gson:2.10'
+    implementation fileTree(dir: 'deps', include: ['*.jar'])
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+    implementation 'org.projectlombok:lombok:1.18.22'
+    implementation group: 'org.reflections', name: 'reflections', version: '0.9.12'
+    implementation group: 'com.paypal.sdk', name: 'rest-api-sdk', version: '1.14.0'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.1.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.17.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.1'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.1'
+    implementation group: 'de.svenkubiak', name: 'jBCrypt', version: '0.4.1'
+    implementation group: 'com.github.cage', name: 'cage', version: '1.0'
+    implementation group: 'org.slf4j', name:'slf4j-api', version: '1.7.25'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.14'
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.4.0'
+    implementation 'net.dv8tion:JDA:4.2.1_253'
+    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.170'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.11.0'
+    implementation group: 'commons-net', name: 'commons-net', version: '3.10.0'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
+    implementation 'org.jsoup:jsoup:1.15.3'
+    implementation group: 'io.netty', name: 'netty-all', version: '4.1.110.Final'
+    implementation 'com.google.oauth-client:google-oauth-client:1.34.1'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev182-1.22.0'
+    implementation 'com.google.http-client:google-http-client-jackson2:1.20.0'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.34'
+    implementation 'com.twilio.sdk:twilio:8.9.0'
+    implementation 'it.unimi.dsi:fastutil:8.5.13'
+
+}
+
+
+distZip {
+    into(project.name) {
+        from '.'
+        into project.name + '/bin/'
+        include 'etc/'
+    }
+}

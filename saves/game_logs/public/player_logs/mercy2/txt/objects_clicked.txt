@@ -1,0 +1,3 @@
+[ClickObjectLog] [2024-09-04T13:14:09.9264603] Clicked object WorldObject{x=3358, y=9119, height=0, id=46068, type=10, face=2} option 1
+[ClickObjectLog] [2024-09-04T13:14:30.3890215] Clicked object WorldObject{x=3357, y=9112, height=0, id=46089, type=10, face=2} option 1
+[ClickObjectLog] [2024-09-04T13:14:31.0520963] Clicked object WorldObject{x=3357, y=9112, height=0, id=46089, type=10, face=2} option 1

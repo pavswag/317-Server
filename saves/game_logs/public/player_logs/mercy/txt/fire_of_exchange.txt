@@ -1,0 +1,1 @@
+[FireOfExchangeLog] [2024-09-04T10:38:08.5098547] Burned GameItem{name=Golden statuette, id=9034, amount=1}

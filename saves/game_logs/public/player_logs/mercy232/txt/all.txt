@@ -1,0 +1,13 @@
+[ConnectionLog] [2024-08-31T10:44:32.2187612] Logged in
+[ReceivedPacketLog] [2024-08-31T10:44:35.8328313] Opcode '210':  'data type: 210, data length: 4'.
+[ReceivedPacketLog] [2024-08-31T10:44:35.8328313] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2024-08-31T10:44:35.8393443] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2024-08-31T10:44:35.8393443] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2024-08-31T10:44:35.840327] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2024-08-31T10:44:52.7172248] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2024-08-31T10:44:52.7172248] Opcode '3':  'data type: 3, data length: 1'.
+[ReceivedPacketLog] [2024-08-31T10:44:53.3168546] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2024-08-31T10:44:53.3168546] Opcode '77':  'data type: 77, data length: 12'.
+[ReceivedPacketLog] [2024-08-31T10:44:54.5202862] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2024-08-31T10:44:54.5212825] Clicked: 9154, real id: 2458,new: false
+[ReceivedPacketLog] [2024-08-31T10:44:54.5222805] Opcode '185':  'actionbutton: 9154, DialogueID: 0, real id: 2458'.
