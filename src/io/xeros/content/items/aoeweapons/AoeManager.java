@@ -21,7 +21,7 @@ public class AoeManager {
 
     public static boolean canAOE(Player player) {
 
-        return Boundary.isIn(player, Boundary.AOEInstance) &&
+        return (Boundary.isIn(player, Boundary.AOEInstance) || Boundary.isIn(player, Boundary.AOE_INSTANCE_2)) &&
                 Arrays.stream(AoeWeapons.values()).anyMatch(i -> i.ID == player.playerEquipment[Player.playerWeapon]);
     }
 

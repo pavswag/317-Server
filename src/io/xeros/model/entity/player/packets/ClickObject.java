@@ -234,6 +234,9 @@ public class ClickObject implements PacketType {
         if (c.getArboContainer().handleClickObject(worldObject)) {
             return;
         }
+        if (c.getArboRaidContainer().handleClickObject(worldObject)) {
+            return;
+        }
         if (c.getTombsOfAmascutContainer().handleClickObject(worldObject, option)) return;
         if (LarrensKey.clickObject(c, worldObject)) {
             return;
