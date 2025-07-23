@@ -79,6 +79,7 @@ import io.xeros.content.leaderboards.LeaderboardUtils;
 import io.xeros.content.lootbag.LootingBag;
 import io.xeros.content.minigames.arbograve.ArbograveConstants;
 import io.xeros.content.minigames.arbograve.ArbograveContainer;
+import io.xeros.content.minigames.arborraid.ArboRaidContainer;
 import io.xeros.content.minigames.blastfurnance.BlastFurnace;
 import io.xeros.content.minigames.bounty_hunter.BountyHunter;
 import io.xeros.content.minigames.dz.Bloody_Battle;
@@ -632,6 +633,7 @@ public class Player extends Entity {
     private final TobContainer tobContainer = new TobContainer(this);
 
     private final ArbograveContainer arbograveContainer = new ArbograveContainer(this);
+    private final ArboRaidContainer arboRaidContainer = new ArboRaidContainer(this);
     private final TombsOfAmascutContainer TombsOfAmascutContainer = new TombsOfAmascutContainer(this);
 
     public TombsOfAmascutContainer getTombsOfAmascutContainer() {
@@ -6188,6 +6190,10 @@ public class Player extends Entity {
 
     public ArbograveContainer getArboContainer() {
         return arbograveContainer;
+    }
+
+    public ArboRaidContainer getArboRaidContainer() {
+        return arboRaidContainer;
     }
 
     @Getter

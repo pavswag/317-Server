@@ -8,6 +8,7 @@ import io.xeros.content.bonus.BoostScrolls;
 import io.xeros.content.bosses.Cerberus;
 import io.xeros.content.bosses.Durial321;
 import io.xeros.content.bosses.mimic.MimicCasket;
+import io.xeros.content.bosses.example.ExampleBoss;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.magic.NonCombatSpellData;
 import io.xeros.content.combat.magic.SanguinestiStaff;
@@ -902,6 +903,9 @@ public class ItemOptionOne implements PacketType {
                 return;
             case Items.MIMIC:
                 MimicCasket.open(c);
+                break;
+            case Items.MAGIC_WHISTLE:
+                new ExampleBoss().enter(c);
                 break;
             case 26886:
                 c.sendMessage("This will give you a 50% extra chance at upgrading any item! One time use!");

@@ -317,7 +317,7 @@ public class AttackEntity {
                 }
             }
             return;
-        } else if (Boundary.isIn(attacker, Boundary.AOEInstance) && aoeData == null) {
+        } else if ((Boundary.isIn(attacker, Boundary.AOEInstance) || Boundary.isIn(attacker, Boundary.AOE_INSTANCE_2)) && aoeData == null) {
             attacker.sendMessage("You cannot use this weapon inside the instance!");
             return;
         }

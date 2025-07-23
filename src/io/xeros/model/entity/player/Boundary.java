@@ -522,7 +522,8 @@ public class Boundary {
 
 	public static final Boundary OBOR_AREA = new Boundary(3072, 9792, 3110, 9818);
 
-	public static final Boundary BRYOPHYTA_ROOM = new Boundary(3198, 9918, 3239, 9945);
+        public static final Boundary BRYOPHYTA_ROOM = new Boundary(3198, 9918, 3239, 9945);
+        public static final Boundary EXAMPLE_BOSS_ROOM = new Boundary(3000, 9200, 3040, 9235);
 
 	public static final Boundary WATERBIRTH_CAVES_1 = new Boundary(2424, 10097, 2569, 10185);
 	public static final Boundary WATERBIRTH_CAVES_2 = new Boundary(1778, 4316, 2047, 4420);
@@ -542,6 +543,7 @@ public class Boundary {
 
 	public static final Boundary Wilderness_Slayer = new Boundary(3328, 10048, 3455, 10175);
 	public static final	Boundary AOEInstance = new Boundary(2880, 5440, 2943, 5503);
+	public static final Boundary AOE_INSTANCE_2 = new Boundary(2950, 5504, 3010, 5567);
 	public static final Boundary WILDERNESS = new Boundary(2941, 3525, 3392, 3968);
 	public static final Boundary WILDERNESS_UNDERGROUND = new Boundary(2980, 10048, 3473, 10373);
 	public static final Boundary[] WILDERNESS_PARAMETERS = {WILDERNESS, WILDERNESS_UNDERGROUND, WILDERNESS_GOD_WARS_BOUNDARY, REV_CAVE};
