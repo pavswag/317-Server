@@ -9,10 +9,12 @@ import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.model.entity.player.Position;
 import io.xeros.model.entity.player.Right;
 import io.xeros.model.entity.player.bot.BotBehaviour;
+import io.xeros.model.EquipmentSetup;
 import io.xeros.util.Captcha;
 import io.xeros.util.Misc;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,19 +23,19 @@ public class Bots extends Command {
 
     private static int botCounter = 0;
 
-    private static final String[] ADJECTIVES = {
-        "Silly", "Goofy", "Wacky", "Crazy", "Clumsy", "Funky", "Bouncy", "Nifty"
+    private static final String[] PREFIXES = {
+        "Iron", "Rune", "Dark", "Sir", "Lady", "Lord", "Swift", "Mystic"
     };
-    private static final String[] NOUNS = {
-        "Goblin", "Gnome", "Troll", "Wizard", "Chicken", "Penguin", "Pirate", "Ninja"
+    private static final String[] SUFFIXES = {
+        "Knight", "Mage", "Scaper", "Hunter", "Ranger", "Warrior", "Slayer", "Druid"
     };
 
     private static String randomBotName() {
-        String adj = ADJECTIVES[Misc.random(ADJECTIVES.length - 1)];
-        String noun = NOUNS[Misc.random(NOUNS.length - 1)];
-        int num = Misc.random(1000);
-        return adj + noun + num;
-    }
+        String prefix = PREFIXES[Misc.random(PREFIXES.length - 1)];
+        String suffix = SUFFIXES[Misc.random(SUFFIXES.length - 1)];
+        int num = Misc.random(99);
+        return prefix + suffix + String.format("%02d", num);
+
 
     @Override
     public void execute(Player player, String commandName, String input) {
@@ -45,6 +47,13 @@ public class Bots extends Command {
         String[] args = input.split(" ");
         switch (args[0]) {
             case "spawn":
+                spawnBots(player, Integer.parseInt(args[1]), null);
+                break;
+            case "spawnfighter":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FIGHT_NEAREST_NPC);
+                break;
+            case "spawnwoodcutter":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
                 int amount = Integer.parseInt(args[1]);
                 player.sendMessage("Adding " + amount + " bots.");
                 for (int i = 0; i < amount; i++) {
@@ -52,12 +61,6 @@ public class Bots extends Command {
                     int y = 3530 + Misc.random(0, 25);
                     Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
                 }
-                break;
-            case "spawnfighter":
-                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FIGHT_NEAREST_NPC);
-                break;
-            case "spawnwoodcutter":
-                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
                 break;
             case "talk":
                 CycleEventHandler.getSingleton().addEvent(player, new CycleEvent() {
@@ -78,6 +81,36 @@ public class Bots extends Command {
             int x = player.getX() + Misc.random(-2, 2);
             int y = player.getY() + Misc.random(-2, 2);
             Player bot = Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
+            bot.addQueuedLoginAction(Bots::randomizeStats);
+            bot.addQueuedLoginAction(Bots::equipRandomSetup);
+            if (type != null) {
+                bot.addQueuedLoginAction(plr -> plr.addTickable(new BotBehaviour(type)));
+            }
+        }
+    }
+
+    private static void randomizeStats(Player bot) {
+        for (int i = 0; i < bot.playerLevel.length; i++) {
+            int level = Misc.random(1, 99);
+            bot.playerLevel[i] = level;
+            bot.playerXP[i] = bot.getPA().getXPForLevel(level) + 1;
+            bot.getPA().setSkillLevel(i, bot.playerLevel[i], bot.playerXP[i]);
+        }
+        bot.getPA().refreshSkills();
+    }
+
+    private static void equipRandomSetup(Player bot) {
+        List<String> setups = EquipmentSetup.listSetups().stream()
+                .map(s -> s.split(" \\(")[0])
+                .collect(Collectors.toList());
+        if (setups.isEmpty()) {
+            return;
+        }
+        String setup = setups.get(Misc.random(setups.size() - 1));
+        try {
+            EquipmentSetup.equip(bot, setup);
+        } catch (IOException e) {
+            e.printStackTrace();
             bot.addQueuedAction(plr -> plr.addTickable(new BotBehaviour(type)));
         }
     }
