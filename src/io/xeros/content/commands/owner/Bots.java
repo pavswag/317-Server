@@ -21,6 +21,20 @@ public class Bots extends Command {
 
     private static int botCounter = 0;
 
+    private static final String[] ADJECTIVES = {
+        "Silly", "Goofy", "Wacky", "Crazy", "Clumsy", "Funky", "Bouncy", "Nifty"
+    };
+    private static final String[] NOUNS = {
+        "Goblin", "Gnome", "Troll", "Wizard", "Chicken", "Penguin", "Pirate", "Ninja"
+    };
+
+    private static String randomBotName() {
+        String adj = ADJECTIVES[Misc.random(ADJECTIVES.length - 1)];
+        String noun = NOUNS[Misc.random(NOUNS.length - 1)];
+        int num = Misc.random(1000);
+        return adj + noun + num;
+    }
+
     @Override
     public void execute(Player player, String commandName, String input) {
         if (!player.getRights().isOrInherits(Right.STAFF_MANAGER)) {
@@ -36,7 +50,7 @@ public class Bots extends Command {
                 for (int i = 0; i < amount; i++) {
                     int x = 3085 + Misc.random(0, 25);
                     int y = 3530 + Misc.random(0, 25);
-                    Player.createBot("Bot " + botCounter++, Right.PLAYER, new Position(x, y));
+                    Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
                 }
                 break;
             case "spawnfighter":
@@ -63,7 +77,7 @@ public class Bots extends Command {
         for (int i = 0; i < amount; i++) {
             int x = player.getX() + Misc.random(-2, 2);
             int y = player.getY() + Misc.random(-2, 2);
-            Player bot = Player.createBot("Bot " + botCounter++, Right.PLAYER, new Position(x, y));
+            Player bot = Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
             bot.addQueuedAction(plr -> plr.addTickable(new BotBehaviour(type)));
         }
     }

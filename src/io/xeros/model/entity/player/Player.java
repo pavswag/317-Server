@@ -1281,6 +1281,7 @@ public class Player extends Entity {
         player.playerPass = "ArkCaneDoesntHaveBotsExiled";
         player.setIpAddress("");
         player.addQueuedAction(plr -> plr.moveTo(position));
+        player.addQueuedLoginAction(plr -> Server.clanManager.getHelpClan().addMember(plr));
 
         Server.getIoExecutorService().submit(() -> {
             try {
