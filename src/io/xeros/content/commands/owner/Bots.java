@@ -8,6 +8,7 @@ import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.model.entity.player.Position;
 import io.xeros.model.entity.player.Right;
+import io.xeros.model.entity.player.bot.BotBehaviour;
 import io.xeros.util.Captcha;
 import io.xeros.util.Misc;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +39,12 @@ public class Bots extends Command {
                     Player.createBot("Bot " + botCounter++, Right.PLAYER, new Position(x, y));
                 }
                 break;
+            case "spawnfighter":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FIGHT_NEAREST_NPC);
+                break;
+            case "spawnwoodcutter":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
+                break;
             case "talk":
                 CycleEventHandler.getSingleton().addEvent(player, new CycleEvent() {
                     @Override
@@ -48,6 +55,16 @@ public class Bots extends Command {
                 break;
             default:
                 player.sendMessage("No actionable command with '{}'", args[0]);
+        }
+    }
+
+    private void spawnBots(Player player, int amount, BotBehaviour.Type type) {
+        player.sendMessage("Spawning " + amount + " bots.");
+        for (int i = 0; i < amount; i++) {
+            int x = player.getX() + Misc.random(-2, 2);
+            int y = player.getY() + Misc.random(-2, 2);
+            Player bot = Player.createBot("Bot " + botCounter++, Right.PLAYER, new Position(x, y));
+            bot.addQueuedAction(plr -> plr.addTickable(new BotBehaviour(type)));
         }
     }
 
