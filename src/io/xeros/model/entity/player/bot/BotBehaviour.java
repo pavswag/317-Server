@@ -43,7 +43,6 @@ public class BotBehaviour implements Tickable<Player> {
             return;
         }
         nextActionTick = container.getTicks() + Misc.random(3, 7);
-
         switch (type) {
             case FIGHT_NEAREST_NPC:
                 fightNearestNpc(bot);
@@ -54,7 +53,7 @@ public class BotBehaviour implements Tickable<Player> {
         }
     }
 
-    private void fightNearestNpc(Player bot) {
+      private void fightNearestNpc(Player bot) {
         NPC nearest = null;
         double best = Double.MAX_VALUE;
         for (NPC npc : NPCHandler.npcs) {
