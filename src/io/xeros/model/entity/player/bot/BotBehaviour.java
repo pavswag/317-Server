@@ -10,6 +10,7 @@ import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Position;
 import io.xeros.model.tickable.Tickable;
 import io.xeros.model.tickable.TickableContainer;
+import io.xeros.util.Misc;
 import io.xeros.model.world.objects.GlobalObject;
 
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class BotBehaviour implements Tickable<Player> {
     }
 
     private final Type type;
+    private int nextActionTick = 0;
 
     public BotBehaviour(Type type) {
         this.type = type;
@@ -36,6 +38,11 @@ public class BotBehaviour implements Tickable<Player> {
             container.stop();
             return;
         }
+
+        if (container.getTicks() < nextActionTick) {
+            return;
+        }
+        nextActionTick = container.getTicks() + Misc.random(3, 7);
 
         switch (type) {
             case FIGHT_NEAREST_NPC:
@@ -59,14 +66,29 @@ public class BotBehaviour implements Tickable<Player> {
                 nearest = npc;
             }
         }
-        if (nearest != null && best <= 10) {
+
+        if (nearest == null || best > 10) {
+            randomWalk(bot);
+            return;
+        }
+
+        if (best > 1) {
+            bot.getPA().playerWalk(nearest.getX(), nearest.getY());
+        } else if (bot.npcAttackingIndex == 0) {
             bot.attackEntity(nearest);
         }
     }
 
     private void chopNearestTree(Player bot) {
-        WorldObject tree = findNearbyTree(bot, 4);
-        if (tree != null) {
+        WorldObject tree = findNearbyTree(bot, 6);
+        if (tree == null) {
+            randomWalk(bot);
+            return;
+        }
+
+        if (bot.distanceToPoint(tree.getX(), tree.getY()) > 1) {
+            bot.getPA().playerWalk(tree.getX(), tree.getY());
+        } else {
             Woodcutting.getInstance().chop(bot, tree.getId(), tree.getX(), tree.getY());
         }
     }
@@ -88,5 +110,13 @@ public class BotBehaviour implements Tickable<Player> {
             }
         }
         return null;
+    }
+
+    private void randomWalk(Player bot) {
+        int dx = Misc.random(-1, 1);
+        int dy = Misc.random(-1, 1);
+        if (dx != 0 || dy != 0) {
+            bot.getPA().playerWalk(bot.getX() + dx, bot.getY() + dy);
+        }
     }
 }

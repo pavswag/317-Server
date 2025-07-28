@@ -21,18 +21,18 @@ public class Bots extends Command {
 
     private static int botCounter = 0;
 
-    private static final String[] ADJECTIVES = {
-        "Silly", "Goofy", "Wacky", "Crazy", "Clumsy", "Funky", "Bouncy", "Nifty"
+    private static final String[] PREFIXES = {
+        "Iron", "Rune", "Dark", "Sir", "Lady", "Lord", "Swift", "Mystic"
     };
-    private static final String[] NOUNS = {
-        "Goblin", "Gnome", "Troll", "Wizard", "Chicken", "Penguin", "Pirate", "Ninja"
+    private static final String[] SUFFIXES = {
+        "Knight", "Mage", "Scaper", "Hunter", "Ranger", "Warrior", "Slayer", "Druid"
     };
 
     private static String randomBotName() {
-        String adj = ADJECTIVES[Misc.random(ADJECTIVES.length - 1)];
-        String noun = NOUNS[Misc.random(NOUNS.length - 1)];
-        int num = Misc.random(1000);
-        return adj + noun + num;
+        String prefix = PREFIXES[Misc.random(PREFIXES.length - 1)];
+        String suffix = SUFFIXES[Misc.random(SUFFIXES.length - 1)];
+        int num = Misc.random(99);
+        return prefix + suffix + String.format("%02d", num);
     }
 
     @Override
