@@ -8,6 +8,7 @@ import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.model.entity.player.Position;
 import io.xeros.model.entity.player.Right;
+import io.xeros.model.entity.player.bot.BotBehaviour;
 import io.xeros.util.Captcha;
 import io.xeros.util.Misc;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,20 @@ import java.util.stream.Collectors;
 public class Bots extends Command {
 
     private static int botCounter = 0;
+
+    private static final String[] ADJECTIVES = {
+        "Silly", "Goofy", "Wacky", "Crazy", "Clumsy", "Funky", "Bouncy", "Nifty"
+    };
+    private static final String[] NOUNS = {
+        "Goblin", "Gnome", "Troll", "Wizard", "Chicken", "Penguin", "Pirate", "Ninja"
+    };
+
+    private static String randomBotName() {
+        String adj = ADJECTIVES[Misc.random(ADJECTIVES.length - 1)];
+        String noun = NOUNS[Misc.random(NOUNS.length - 1)];
+        int num = Misc.random(1000);
+        return adj + noun + num;
+    }
 
     @Override
     public void execute(Player player, String commandName, String input) {
@@ -35,8 +50,14 @@ public class Bots extends Command {
                 for (int i = 0; i < amount; i++) {
                     int x = 3085 + Misc.random(0, 25);
                     int y = 3530 + Misc.random(0, 25);
-                    Player.createBot("Bot " + botCounter++, Right.PLAYER, new Position(x, y));
+                    Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
                 }
+                break;
+            case "spawnfighter":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FIGHT_NEAREST_NPC);
+                break;
+            case "spawnwoodcutter":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
                 break;
             case "talk":
                 CycleEventHandler.getSingleton().addEvent(player, new CycleEvent() {
@@ -48,6 +69,16 @@ public class Bots extends Command {
                 break;
             default:
                 player.sendMessage("No actionable command with '{}'", args[0]);
+        }
+    }
+
+    private void spawnBots(Player player, int amount, BotBehaviour.Type type) {
+        player.sendMessage("Spawning " + amount + " bots.");
+        for (int i = 0; i < amount; i++) {
+            int x = player.getX() + Misc.random(-2, 2);
+            int y = player.getY() + Misc.random(-2, 2);
+            Player bot = Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
+            bot.addQueuedAction(plr -> plr.addTickable(new BotBehaviour(type)));
         }
     }
 
