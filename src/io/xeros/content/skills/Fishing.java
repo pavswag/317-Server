@@ -76,13 +76,15 @@ public class Fishing extends SkillHandler {
 		int bottleRoll = Misc.random(chance);
 		if (Misc.random(chance) == 1) {
 			player.sendMessage("You catch a clue bottle!");
-			if (bottleRoll < easyChance) {
-				player.getItems().addItemUnderAnyCircumstance(13648, rewardAmount);
-			} else if (bottleRoll >= easyChance && bottleRoll < medChance) {
-				player.getItems().addItemUnderAnyCircumstance(13649, rewardAmount);
-			} else {
-				player.getItems().addItemUnderAnyCircumstance(13650, rewardAmount);
-			}
+                        if (!player.isBot()) {
+                                if (bottleRoll < easyChance) {
+                                        player.getItems().addItemUnderAnyCircumstance(13648, rewardAmount);
+                                } else if (bottleRoll >= easyChance && bottleRoll < medChance) {
+                                        player.getItems().addItemUnderAnyCircumstance(13649, rewardAmount);
+                                } else {
+                                        player.getItems().addItemUnderAnyCircumstance(13650, rewardAmount);
+                                }
+                        }
 		}
 	}
 
@@ -91,13 +93,16 @@ public class Fishing extends SkillHandler {
 		int artefactRoll = Misc.random(100);
 		if (Misc.random(chance) == 1) {
 			if (artefactRoll <65) {//1/300
-				player.getItems().addItemUnderAnyCircumstance(11180, 1);//ancient coin foe for 200
+                                if (!player.isBot())
+                                        player.getItems().addItemUnderAnyCircumstance(11180, 1);//ancient coin foe for 200
 				player.sendMessage("You found a coin that can be dissolved, speak to Nomad!");
 			} else if (artefactRoll >= 65 && artefactRoll < 99) {//1/600
-				player.getItems().addItemUnderAnyCircumstance(681, 1);//anicent talisman foe for 300
+                                if (!player.isBot())
+                                        player.getItems().addItemUnderAnyCircumstance(681, 1);//anicent talisman foe for 300
 				player.sendMessage("You found a talisman that can be dissolved, speak to Nomad!");
 			} else if (artefactRoll > 99){//1/1000
-				player.getItems().addItemUnderAnyCircumstance(9034, 1);//golden statuette foe for 500
+                                if (!player.isBot())
+                                        player.getItems().addItemUnderAnyCircumstance(9034, 1);//golden statuette foe for 500
 				PlayerHandler.executeGlobalMessage("@bla@[@red@Fishing@bla@]@blu@ " + player.getDisplayName() + " @red@just found a Golden statuette while fishing!");
 			}
 		}
@@ -120,26 +125,26 @@ public class Fishing extends SkillHandler {
 			multiplier += 0.250;
 		}
 
-		if (!noInventorySpace(player, "fishing")) {
-			player.sendMessage("You must have space in your inventory to start fishing.");
-			return;
-		}
+                if (!player.isBot() && !noInventorySpace(player, "fishing")) {
+                        player.sendMessage("You must have space in your inventory to start fishing.");
+                        return;
+                }
 		// resetFishing(c);
 		for (int i = 0; i < data.length; i++) {
 			if (npcId == data[i][0]) {
-				if (player.playerLevel[Player.playerFishing] < data[i][1]) {
-					player.sendMessage("You haven't got high enough fishing level to fish here!");
-					player.sendMessage("You at least need the fishing level of " + data[i][1] + ".");
-					player.getPA().sendStatement("You need the fishing level of " + data[i][1] + " to fish here.");
-					return;
-				}
-				if (data[i][3] > 0) {
-					if (!player.getItems().playerHasItem(data[i][3])) {
-						player.sendMessage("You haven't got any " + ItemAssistant.getItemName(data[i][3]) + "!");
-						player.sendMessage("You need " + ItemAssistant.getItemName(data[i][3]) + " to fish here.");
-						return;
-					}
-				}
+                                if (!player.isBot() && player.playerLevel[Player.playerFishing] < data[i][1]) {
+                                        player.sendMessage("You haven't got high enough fishing level to fish here!");
+                                        player.sendMessage("You at least need the fishing level of " + data[i][1] + ".");
+                                        player.getPA().sendStatement("You need the fishing level of " + data[i][1] + " to fish here.");
+                                        return;
+                                }
+                                if (data[i][3] > 0 && !player.isBot()) {
+                                        if (!player.getItems().playerHasItem(data[i][3])) {
+                                                player.sendMessage("You haven't got any " + ItemAssistant.getItemName(data[i][3]) + "!");
+                                                player.sendMessage("You need " + ItemAssistant.getItemName(data[i][3]) + " to fish here.");
+                                                return;
+                                        }
+                                }
 				if (player.playerSkilling[10]) {
 					return;
 				}
@@ -172,11 +177,11 @@ public class Fishing extends SkillHandler {
 				Server.getEventHandler().submit(new Event<Player>("skilling", player,  getTotalFishingTime(player,npcId)) {
 					@Override
 					public void execute() {
-						if (player.getItems().freeSlots() == 0) {
-							player.sendMessage("Your inventory is full.");
-							player.fishing = false;
-							return;
-						}
+                                                if (!player.isBot() && player.getItems().freeSlots() == 0) {
+                                                        player.sendMessage("Your inventory is full.");
+                                                        player.fishing = false;
+                                                        return;
+                                                }
 						if (player.playerSkillProp[10][5] > 0) {
 							if (player.playerLevel[Player.playerFishing] >= player.playerSkillProp[10][6]) {
 								player.playerSkillProp[10][1] = player.playerSkillProp[10][Misc.random(1) == 0 ? 7 : 5];
@@ -188,12 +193,12 @@ public class Fishing extends SkillHandler {
 							resetFishing(player);
 							return;
 						}
-						if ((SkillcapePerks.FISHING.isWearing(player) || SkillcapePerks.isWearingMaxCape(player)) && player.getItems().freeSlots() < 2) {
-							stop();
-							player.sendMessage("Your inventory is full.");
-							player.fishing = false;
-							return;
-						}
+                                                if (!player.isBot() && (SkillcapePerks.FISHING.isWearing(player) || SkillcapePerks.isWearingMaxCape(player)) && player.getItems().freeSlots() < 2) {
+                                                        stop();
+                                                        player.sendMessage("Your inventory is full.");
+                                                        player.fishing = false;
+                                                        return;
+                                                }
 
 						if (player.playerSkillProp[10][1] > 0) {
 							//player.sendMessage("You catch a " + ItemAssistant.getItemName(player.playerSkillProp[10][1]) + ".");
@@ -213,23 +218,24 @@ public class Fishing extends SkillHandler {
 								}
 							}
 
-							if (player.getItems().hasItemOnOrInventory(25059)
-									|| player.getItems().hasItemOnOrInventory(21031) && Misc.random(4) == 0) { //Infernal Harpoon (or) chance to cook fish
+                                                        if (!player.isBot() && (player.getItems().hasItemOnOrInventory(25059)
+                                                                        || player.getItems().hasItemOnOrInventory(21031) && Misc.random(4) == 0)) { //Infernal Harpoon (or) chance to cook fish
+                                                                for (Cooking.cook raw : Cooking.cook.values()) {
+                                                                        if (raw.raw == player.playerSkillProp[10][1]) {
+                                                                               player.getItems().addItemUnderAnyCircumstance(raw.cooked, 1);
+
+                                                                               player.getPA().addSkillXPMultiplied(50, Skill.COOKING.getId(), true);
+                                                                               break;
+                                                                        }
+                                                                }
+                                                                cooked = true;
+                                                        } else if (!player.isBot() && (attachment.playerEquipment[Player.playerWeapon] == 25114 || attachment.playerEquipmentCosmetic[Player.playerWeapon] == 25114)) {
 								for (Cooking.cook raw : Cooking.cook.values()) {
 									if (raw.raw == player.playerSkillProp[10][1]) {
-										player.getItems().addItemUnderAnyCircumstance(raw.cooked, 1);
+                                                                if (!player.isBot())
+                                                                        player.getItems().addItemToBankOrDrop(raw.cooked, 1);
 
-										player.getPA().addSkillXPMultiplied(50, Skill.COOKING.getId(), true);
-										break;
-									}
-								}
-								cooked = true;
-							} else if (attachment.playerEquipment[Player.playerWeapon] == 25114 || attachment.playerEquipmentCosmetic[Player.playerWeapon] == 25114) {
-								for (Cooking.cook raw : Cooking.cook.values()) {
-									if (raw.raw == player.playerSkillProp[10][1]) {
-										player.getItems().addItemToBankOrDrop(raw.cooked, 1);
-
-										player.getPA().addSkillXPMultiplied(50, Skill.COOKING.getId(), true);
+                                                                player.getPA().addSkillXPMultiplied(50, Skill.COOKING.getId(), true);
 										break;
 									}
 								}
@@ -242,21 +248,24 @@ public class Fishing extends SkillHandler {
 								if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33100) && Misc.random(0,100) <= 10) {
 									amt *= 3;
 								}
-								player.getItems().addItem(player.playerSkillProp[10][1], amt);
+                                                                if (!player.isBot())
+                                                                        player.getItems().addItem(player.playerSkillProp[10][1], amt);
 
 							}
-							player.startAnimation(player.playerSkillProp[10][0]);
-							clueBottles(player, player.playerSkillProp[10][10]);
-							foeArtefact(player, player.playerSkillProp[10][10]);
+                                                        player.startAnimation(player.playerSkillProp[10][0]);
+                                                        clueBottles(player, player.playerSkillProp[10][10]);
+                                                        foeArtefact(player, player.playerSkillProp[10][10]);
 
 							if (Misc.random(player.playerSkillProp[10][10] / 6 ) == 1) {
-								player.getItems().addItemUnderAnyCircumstance(anglerOuftit[Misc.random(anglerOuftit.length - 1)], 1);
+                                                                if (!player.isBot())
+                                                                        player.getItems().addItemUnderAnyCircumstance(anglerOuftit[Misc.random(anglerOuftit.length - 1)], 1);
 								player.sendMessage("You notice a angler piece floating in the water and pick it up.");
 							}
 							int petRate = attachment.skillingPetRateScroll ? (int) (2500 * .75) : 2500;
 							if (Misc.random(petRate) == 2 && player.getItems().getItemCount(13320, true) == 0 && player.petSummonId != 13320) {
 								 PlayerHandler.executeGlobalMessage("[<col=CC0000>News</col>] <col=255>" + player.getDisplayName() + "</col> caught a fish and a <col=CC0000>Heron</col> pet!");
-								 player.getItems().addItemUnderAnyCircumstance(13320, 1);
+                                                                 if (!player.isBot())
+                                                                         player.getItems().addItemUnderAnyCircumstance(13320, 1);
 								 player.getCollectionLog().handleDrop(player, 5, 13320, 1);
 							 }
 						}
