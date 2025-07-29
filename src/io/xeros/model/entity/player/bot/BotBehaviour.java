@@ -15,7 +15,6 @@ import io.xeros.model.entity.player.Position;
 import io.xeros.model.tickable.Tickable;
 import io.xeros.model.tickable.TickableContainer;
 import io.xeros.util.Misc;
-import io.xeros.model.world.objects.GlobalObject;
 
 import java.util.Optional;
 
@@ -60,7 +59,6 @@ public class BotBehaviour implements Tickable<Player> {
         FISHING_DATA.put(321, 7);
         FISHING_DATA.put(324, 7);
         FISHING_DATA.put(329, 6);
-        CHOP_NEAREST_TREE
     }
 
     private final Type type;
@@ -72,7 +70,7 @@ public class BotBehaviour implements Tickable<Player> {
 
     @Override
     public void tick(TickableContainer<Player> container, Player bot) {
-        if (bot == null || bot.disconnected || !bot.isBot()) {
+        if (bot == null || !bot.isBot()) {
             container.stop();
             return;
         }
@@ -81,6 +79,7 @@ public class BotBehaviour implements Tickable<Player> {
             return;
         }
         nextActionTick = container.getTicks() + Misc.random(3, 7);
+
         switch (type) {
             case FIGHT_NEAREST_NPC:
                 fightNearestNpc(bot);
@@ -98,11 +97,6 @@ public class BotBehaviour implements Tickable<Player> {
     }
 
     private void fightNearestNpc(Player bot) {
-        }
-    }
-
-
-      private void fightNearestNpc(Player bot) {
         NPC nearest = null;
         double best = Double.MAX_VALUE;
         for (NPC npc : NPCHandler.npcs) {
@@ -165,7 +159,7 @@ public class BotBehaviour implements Tickable<Player> {
         if (bot.distanceToPoint(spot.getX(), spot.getY()) > 1) {
             bot.getPA().playerWalk(spot.getX(), spot.getY());
         } else {
-            Integer data = FISHING_DATA.get(spot.npcType);
+            Integer data = FISHING_DATA.get(spot.getNpcId());
             if (data != null)
                 Fishing.attemptdata(bot, data);
         }
@@ -215,7 +209,7 @@ public class BotBehaviour implements Tickable<Player> {
         for (NPC npc : NPCHandler.npcs) {
             if (npc == null || npc.isDeadOrDying() || npc.heightLevel != bot.getHeight())
                 continue;
-            if (!FISHING_DATA.containsKey(npc.npcType))
+            if (!FISHING_DATA.containsKey(npc.getNpcId()))
                 continue;
             double distance = bot.getPosition().distanceTo(npc.getPosition());
             if (distance < best && distance <= radius) {
