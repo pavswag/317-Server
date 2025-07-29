@@ -127,14 +127,20 @@ public class WoodcuttingEvent extends Event<Player> {
             attachment.canLeaveHespori = true;
             attachment.moveTo(new Position(3101, 3497, 0));
             //attachment.getPA().teleport(3072 + randomTele2, 3505 + randomTele2, 0, "modern",false);
-            if (!attachment.isBot())
+            if (attachment.isBot())
+                attachment.getItems().addItemToBankOrDrop(tree.getWood(), 3);
+            else
                 attachment.getItems().addItem(tree.getWood(), 3);
             if ((Configuration.DOUBLE_DROPS_TIMER > 0 || Configuration.DOUBLE_DROPS) && Misc.random(2) == 1) {
-                if (!attachment.isBot())
+                if (attachment.isBot())
+                    attachment.getItems().addItemToBankOrDrop(tree.getWood(), 3);
+                else
                     attachment.getItems().addItem(tree.getWood(), 3);
             }
             if (PrestigePerks.hasRelic(attachment, PrestigePerks.TRIPLE_HESPORI_KEYS) && Misc.isLucky(10)) {
-                if (!attachment.isBot())
+                if (attachment.isBot())
+                    attachment.getItems().addItemToBankOrDrop(tree.getWood(), 9);
+                else
                     attachment.getItems().addItem(tree.getWood(), 9);
             }
             attachment.getPA().addSkillXPMultiplied((int) osrsExperience, Skill.WOODCUTTING.getId(), true);
@@ -181,7 +187,9 @@ public class WoodcuttingEvent extends Event<Player> {
             Server.getGlobalObjects().add(new GlobalObject(tree.equals(Tree.REDWOOD) ? stumpId : tree.getStumpId(), x, y, attachment.heightLevel, face, 10, tree.getRespawnTime(), objectId));
 
 
-            if (!attachment.isBot())
+            if (attachment.isBot())
+                attachment.getItems().addItemToBankOrDrop(tree.getWood(), 1);
+            else
                 attachment.getItems().addItem(tree.getWood(), 1);
             attachment.sendSpamMessage("You get some logs.");
             attachment.getEventCalendar().progress(EventChallenge.CUT_DOWN_X_MAGIC_LOGS);
@@ -213,10 +221,12 @@ public class WoodcuttingEvent extends Event<Player> {
                         || SkillcapePerks.isWearingMaxCape(attachment)
                         && attachment.getWoodcuttingEffect() ? 2 : 1;
 
-                if (!attachment.isBot() && (attachment.playerEquipment[Player.playerWeapon] == TRAILBLAZER_AXE
-                        || attachment.playerEquipmentCosmetic[Player.playerWeapon] == TRAILBLAZER_AXE))
+                if (attachment.isBot()) {
                     attachment.getItems().addItemToBankOrDrop(tree.getWood(), amountOfLogs);
-                else if (!attachment.isBot())
+                } else if (attachment.playerEquipment[Player.playerWeapon] == TRAILBLAZER_AXE
+                        || attachment.playerEquipmentCosmetic[Player.playerWeapon] == TRAILBLAZER_AXE)
+                    attachment.getItems().addItemToBankOrDrop(tree.getWood(), amountOfLogs);
+                else
                     attachment.getItems().addItem(tree.getWood(), amountOfLogs);
                 if ((SkillcapePerks.WOODCUTTING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment))
                         && attachment.getItems().freeSlots() < amountOfLogs) {
