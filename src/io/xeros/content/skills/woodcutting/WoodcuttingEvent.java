@@ -127,12 +127,21 @@ public class WoodcuttingEvent extends Event<Player> {
             attachment.canLeaveHespori = true;
             attachment.moveTo(new Position(3101, 3497, 0));
             //attachment.getPA().teleport(3072 + randomTele2, 3505 + randomTele2, 0, "modern",false);
-            attachment.getItems().addItem(tree.getWood(), 3);
-            if ((Configuration.DOUBLE_DROPS_TIMER > 0 || Configuration.DOUBLE_DROPS) && Misc.random(2) == 1) {
+            if (attachment.isBot())
+                attachment.getItems().addItemToBankOrDrop(tree.getWood(), 3);
+            else
                 attachment.getItems().addItem(tree.getWood(), 3);
+            if ((Configuration.DOUBLE_DROPS_TIMER > 0 || Configuration.DOUBLE_DROPS) && Misc.random(2) == 1) {
+                if (attachment.isBot())
+                    attachment.getItems().addItemToBankOrDrop(tree.getWood(), 3);
+                else
+                    attachment.getItems().addItem(tree.getWood(), 3);
             }
             if (PrestigePerks.hasRelic(attachment, PrestigePerks.TRIPLE_HESPORI_KEYS) && Misc.isLucky(10)) {
-                attachment.getItems().addItem(tree.getWood(), 9);
+                if (attachment.isBot())
+                    attachment.getItems().addItemToBankOrDrop(tree.getWood(), 9);
+                else
+                    attachment.getItems().addItem(tree.getWood(), 9);
             }
             attachment.getPA().addSkillXPMultiplied((int) osrsExperience, Skill.WOODCUTTING.getId(), true);
             handleRewards();
@@ -152,7 +161,10 @@ public class WoodcuttingEvent extends Event<Player> {
                 super.stop();
                 return;
             }
-            attachment.getItems().addItem(tree.getWood(), SkillcapePerks.WOODCUTTING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment) ? 2 : 1);
+            if (attachment.isBot())
+                attachment.getItems().addItemToBankOrDrop(tree.getWood(), SkillcapePerks.WOODCUTTING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment) ? 2 : 1);
+            else
+                attachment.getItems().addItem(tree.getWood(), SkillcapePerks.WOODCUTTING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment) ? 2 : 1);
             attachment.getPA().addSkillXPMultiplied(attachment.playerLevel[Skill.WOODCUTTING.getId()] * 4, 8, true);
             attachment.startAnimation(hatchet.getAnimation());
             return;
@@ -175,7 +187,10 @@ public class WoodcuttingEvent extends Event<Player> {
             Server.getGlobalObjects().add(new GlobalObject(tree.equals(Tree.REDWOOD) ? stumpId : tree.getStumpId(), x, y, attachment.heightLevel, face, 10, tree.getRespawnTime(), objectId));
 
 
-            attachment.getItems().addItem(tree.getWood(), 1);
+            if (attachment.isBot())
+                attachment.getItems().addItemToBankOrDrop(tree.getWood(), 1);
+            else
+                attachment.getItems().addItem(tree.getWood(), 1);
             attachment.sendSpamMessage("You get some logs.");
             attachment.getEventCalendar().progress(EventChallenge.CUT_DOWN_X_MAGIC_LOGS);
             attachment.getPA().addSkillXPMultiplied((int) osrsExperience, Skill.WOODCUTTING.getId(), true);
@@ -206,7 +221,9 @@ public class WoodcuttingEvent extends Event<Player> {
                         || SkillcapePerks.isWearingMaxCape(attachment)
                         && attachment.getWoodcuttingEffect() ? 2 : 1;
 
-                if (attachment.playerEquipment[Player.playerWeapon] == TRAILBLAZER_AXE
+                if (attachment.isBot()) {
+                    attachment.getItems().addItemToBankOrDrop(tree.getWood(), amountOfLogs);
+                } else if (attachment.playerEquipment[Player.playerWeapon] == TRAILBLAZER_AXE
                         || attachment.playerEquipmentCosmetic[Player.playerWeapon] == TRAILBLAZER_AXE)
                     attachment.getItems().addItemToBankOrDrop(tree.getWood(), amountOfLogs);
                 else
@@ -251,7 +268,7 @@ public class WoodcuttingEvent extends Event<Player> {
             super.stop();
             return true;
         }
-        if (attachment.getItems().freeSlots() == 0) {
+        if (!attachment.isBot() && attachment.getItems().freeSlots() == 0) {
             attachment.sendMessage("You have run out of free inventory space.");
             super.stop();
             return true;

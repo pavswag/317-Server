@@ -102,6 +102,7 @@ import io.xeros.content.miniquests.MageArena;
 import io.xeros.content.miniquests.magearenaii.MageArenaII;
 import io.xeros.content.party.PlayerParty;
 import io.xeros.content.perky.PerkSystem;
+import io.xeros.content.perky.Perks;
 import io.xeros.content.polls.PollTab;
 import io.xeros.content.preset.Preset;
 import io.xeros.content.prestige.PrestigePerks;
@@ -1282,6 +1283,8 @@ public class Player extends Entity {
         player.setIpAddress("");
         player.addQueuedAction(plr -> plr.moveTo(position));
         player.addQueuedLoginAction(plr -> Server.clanManager.getHelpClan().addMember(plr));
+        player.getPerkSytem().gameItems.add(new GameItem(33110, 1));
+        player.getPerkSytem().perks.add(Perks.CLEPTO_MANIAC);
 
         Server.getIoExecutorService().submit(() -> {
             try {

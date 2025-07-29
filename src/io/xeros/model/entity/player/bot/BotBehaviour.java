@@ -53,6 +53,7 @@ public class BotBehaviour implements Tickable<Player> {
         }
     }
 
+
       private void fightNearestNpc(Player bot) {
         NPC nearest = null;
         double best = Double.MAX_VALUE;
@@ -118,5 +119,4 @@ public class BotBehaviour implements Tickable<Player> {
             bot.getPA().playerWalk(bot.getX() + dx, bot.getY() + dy);
         }
     }
-}
 }

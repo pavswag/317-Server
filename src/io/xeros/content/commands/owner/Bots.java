@@ -114,46 +114,6 @@ public class Bots extends Command {
         }
     }
 
-    private void spawnBots(Player player, int amount, BotBehaviour.Type type) {
-        player.sendMessage("Spawning " + amount + " bots.");
-        for (int i = 0; i < amount; i++) {
-            int x = player.getX() + Misc.random(-2, 2);
-            int y = player.getY() + Misc.random(-2, 2);
-            Player bot = Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
-            bot.addQueuedLoginAction(Bots::randomizeStats);
-            bot.addQueuedLoginAction(Bots::equipRandomSetup);
-            if (type != null) {
-                bot.addQueuedLoginAction(plr -> plr.addTickable(new BotBehaviour(type)));
-            }
-        }
-    }
-
-    private static void randomizeStats(Player bot) {
-        for (int i = 0; i < bot.playerLevel.length; i++) {
-            int level = Misc.random(1, 99);
-            bot.playerLevel[i] = level;
-            bot.playerXP[i] = bot.getPA().getXPForLevel(level) + 1;
-            bot.getPA().setSkillLevel(i, bot.playerLevel[i], bot.playerXP[i]);
-        }
-        bot.getPA().refreshSkills();
-    }
-
-    private static void equipRandomSetup(Player bot) {
-        List<String> setups = EquipmentSetup.listSetups().stream()
-                .map(s -> s.split(" \\(")[0])
-                .collect(Collectors.toList());
-        if (setups.isEmpty()) {
-            return;
-        }
-        String setup = setups.get(Misc.random(setups.size() - 1));
-        try {
-            EquipmentSetup.equip(bot, setup);
-        } catch (IOException e) {
-            e.printStackTrace();
-            bot.addQueuedAction(plr -> plr.addTickable(new BotBehaviour(type)));
-        }
-    }
-
     @Override
     public boolean hasPrivilege(Player player) {
         return Right.GAME_DEVELOPER.equals(player.getRights().getPrimary());
