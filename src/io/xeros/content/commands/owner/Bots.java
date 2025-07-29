@@ -54,6 +54,13 @@ public class Bots extends Command {
                 break;
             case "spawnwoodcutter":
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
+                int amount = Integer.parseInt(args[1]);
+                player.sendMessage("Adding " + amount + " bots.");
+                for (int i = 0; i < amount; i++) {
+                    int x = 3085 + Misc.random(0, 25);
+                    int y = 3530 + Misc.random(0, 25);
+                    Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
+                }
                 break;
             case "talk":
                 CycleEventHandler.getSingleton().addEvent(player, new CycleEvent() {
