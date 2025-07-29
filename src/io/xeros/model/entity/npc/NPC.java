@@ -627,13 +627,15 @@ public class NPC extends Entity {
 
             if (npcId == Npcs.CORPOREAL_BEAST) {
                 CorporealBeast.targets = PlayerHandler.getPlayers().stream().filter(plr ->
-                        !plr.isDead && Boundary.isIn(plr, Boundary.CORPOREAL_BEAST_LAIR)).collect(Collectors.toList());
+                        !plr.isDead && Boundary.isIn(plr, Boundary.CORPOREAL_BEAST_LAIR)
+                                && plr.getInstance() == npc.getInstance()).collect(Collectors.toList());
                 CorporealBeast.checkCore(npc);
                 CorporealBeast.healWhenNoPlayers(npc);
             }
             if (npcId == 12821) {
                 Sol.targets = PlayerHandler.getPlayers().stream().filter(plr ->
-                        !plr.isDead && Boundary.isIn(plr, Boundary.SOL)).collect(Collectors.toList());
+                        !plr.isDead && Boundary.isIn(plr, Boundary.SOL)
+                                && plr.getInstance() == npc.getInstance()).collect(Collectors.toList());
                 Sol.checkCore(npc);
                 Sol.healWhenNoPlayers(npc);
             }

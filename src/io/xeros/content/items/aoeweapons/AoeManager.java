@@ -43,13 +43,16 @@ public class AoeManager {
 
             player.startAnimation(anim);
 
-            Iterator<NPC> it;
             if (player.isPlayer() && victim.isNPC()) {
-//                it = Arrays.stream(NPCHandler.npcs).filter(i -> i.getPosition().withinDistance(player.getPosition(), range)).iterator();
                 for (NPC next : NPCHandler.npcs) {
                     if (next != null) {
-                        if (player.getPosition().withinDistance(next.getPosition(), range) && next.getHealth().getCurrentHealth() > 0) {
-                            if (next.isNPC() && next.getHealth().getCurrentHealth() <= 0 && next.isDead()) {
+                        if (player.getInstance() != next.getInstance()) {
+                            continue;
+                        }
+                        if (player.getPosition().withinDistance(next.getPosition(), range)
+                                && next.getHealth().getCurrentHealth() > 0
+                                && player.getHeight() == next.getHeight()) {
+                            if (next.getHealth().getCurrentHealth() <= 0 && next.isDead()) {
                                 continue;
                             }
                             if (victim != next) {
@@ -57,7 +60,6 @@ public class AoeManager {
                                 int calc = Misc.random(dmg);
                                 victim.appendDamage(calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
                             }
-//                            RangeData.fireProjectileNpc(player, next.asNPC(), 50, 70, gfx, 43, 31, 37, 10);
                             next.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
                             int calc = Misc.random(dmg);
                             next.appendDamage(calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
