@@ -83,10 +83,10 @@ public class Bots extends Command {
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FIGHT_NEAREST_NPC);
                 break;
             case "miner":
-                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.MINE_NEAREST_ROCK);
+               // spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.MINE_NEAREST_ROCK);
                 break;
             case "fish":
-                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FISH_NEAREST_SPOT);
+               // spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FISH_NEAREST_SPOT);
                 break;
             case "wc":
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
