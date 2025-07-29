@@ -963,17 +963,20 @@ public class NpcOptionOne {
 			break;
 
 
-		case 7913:
-			if (player.getMode().isIronmanType()
-					|| player.getRights().isOrInherits(Right.GAME_DEVELOPER)) {
-				player.getShops().openShop(41);
-			} else {
-				player.sendMessage("You must be an Iron Man to access this shop.");
-			}
-			break;
-		case 7769:
-			player.getShops().openShop(2);
-			break;
+                case 7913:
+                        if (player.getMode().isIronmanType()
+                                        || player.getRights().isOrInherits(Right.GAME_DEVELOPER)) {
+                                player.getShops().openShop(41);
+                        } else {
+                                player.sendMessage("You must be an Iron Man to access this shop.");
+                        }
+                        break;
+                case Npcs.INSTANCE_MASTER:
+                        player.start(new io.xeros.content.dialogue.impl.BossInstanceDialogue(player));
+                        break;
+                case 7769:
+                        player.getShops().openShop(2);
+                        break;
 
 		
 

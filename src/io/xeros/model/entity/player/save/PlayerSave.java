@@ -1104,6 +1104,16 @@ public class PlayerSave {
                                         e.printStackTrace();
                                     }
                                 }
+                            } else if (token.equals("instance-unlocks")) {
+                                for (String s : token3) {
+                                    try {
+                                        io.xeros.content.instances.BossInstance bi = io.xeros.content.instances.BossInstance.valueOf(s);
+                                        p.getUnlockedInstances().add(bi);
+                                    } catch (Exception e) {
+                                        logger.error("Error while loading {}", playerName, e);
+                                        e.printStackTrace();
+                                    }
+                                }
                             } else if (token.startsWith("removedTask")) {
                                 int value = Integer.parseInt(token2);
                                 if (value > -1) {
@@ -1722,6 +1732,17 @@ public class PlayerSave {
                 for (int index = 0; index < unlocks.size(); index++) {
                     characterfile.write(unlocks.get(index).toString());
                     if (index < removed.length - 1) {
+                        characterfile.write("\t");
+                    }
+                }
+            }
+            characterfile.newLine();
+            if (!p.getUnlockedInstances().isEmpty()) {
+                characterfile.write("instance-unlocks = ");
+                int i = 0;
+                for (io.xeros.content.instances.BossInstance bi : p.getUnlockedInstances()) {
+                    characterfile.write(bi.name());
+                    if (i++ < p.getUnlockedInstances().size() - 1) {
                         characterfile.write("\t");
                     }
                 }

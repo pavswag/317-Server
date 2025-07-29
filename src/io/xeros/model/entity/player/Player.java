@@ -827,6 +827,10 @@ public class Player extends Entity {
     public int xpMaxSkills;
     public int exchangePoints;
     public long foundryPoints;
+    /**
+     * Boss instances the player has unlocked.
+     */
+    private java.util.EnumSet<io.xeros.content.instances.BossInstance> unlockedInstances = java.util.EnumSet.noneOf(io.xeros.content.instances.BossInstance.class);
     public int totalEarnedExchangePoints;
     public int referallFlag;
     public int amDonated;
@@ -6203,6 +6207,13 @@ public class Player extends Entity {
     public Player MiniMeOwner = null;
 
     public BlastFurnace blastFurnace = new BlastFurnace();
+
+    /**
+     * Get the set of unlocked boss instances.
+     */
+    public java.util.EnumSet<io.xeros.content.instances.BossInstance> getUnlockedInstances() {
+        return unlockedInstances;
+    }
 
     public BlastFurnace getBlastFurnace() {
         return blastFurnace;
