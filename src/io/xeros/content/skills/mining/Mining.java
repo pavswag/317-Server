@@ -42,24 +42,28 @@ public class Mining {
 		if (mineral == null) {
 			return;
 		}
-		if (player.playerLevel[Skill.MINING.getId()] < mineral.getLevel()) {
-			player.sendMessage("You need a mining level of at least " + mineral.getLevel() + " to mine this.");
-			return;
-		}
+                if (!player.isBot() && player.playerLevel[Skill.MINING.getId()] < mineral.getLevel()) {
+                        player.sendMessage("You need a mining level of at least " + mineral.getLevel() + " to mine this.");
+                        return;
+                }
 		if (Server.getGlobalObjects().exists(Mineral.EMPTY_VEIN, location.getX(), location.getY(), location.getZ()) && mineral.isDepletable()) {
 			player.sendMessage("This vein contains no more minerals.");
 			return;
 		}
-		Pickaxe pickaxe = Pickaxe.getBestPickaxe(player);
-		if (pickaxe == null) {
-			player.sendMessage("You must use a pickaxe that is suitable for your mining level");
-			return;
-		}
-		if (player.getItems().freeSlots() == 0) {
-			player.getDH().sendStatement("You have no more free slots.");
-			player.nextChat = -1;
-			return;
-		}
+                Pickaxe pickaxe = Pickaxe.getBestPickaxe(player);
+                if (pickaxe == null && player.isBot()) {
+                        player.getItems().addItem(Items.BRONZE_PICKAXE, 1);
+                        pickaxe = Pickaxe.getBestPickaxe(player);
+                }
+                if (pickaxe == null) {
+                        player.sendMessage("You must use a pickaxe that is suitable for your mining level");
+                        return;
+                }
+                if (!player.isBot() && player.getItems().freeSlots() == 0) {
+                        player.getDH().sendStatement("You have no more free slots.");
+                        player.nextChat = -1;
+                        return;
+                }
 		int levelReduction = (int) Math.floor(player.playerLevel[Skill.MINING.getId()] / 10);
 		int pickaxeReduction = pickaxe.getExtractionReduction();
 		int extractionTime = mineral.getExtractionRate() - (levelReduction + pickaxeReduction);
