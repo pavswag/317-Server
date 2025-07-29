@@ -55,6 +55,12 @@ public class Bots extends Command {
             case "spawnwoodcutter":
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
                 break;
+            case "spawnminer":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.MINE_NEAREST_ROCK);
+                break;
+            case "spawnfisher":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FISH_NEAREST_SPOT);
+                break;
             case "talk":
                 CycleEventHandler.getSingleton().addEvent(player, new CycleEvent() {
                     @Override

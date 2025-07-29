@@ -11,7 +11,7 @@ public class Woodcutting {
 	public void chop(Player player, int objectId, int x, int y) {
         Tree tree = Tree.forObject(objectId);
         player.facePosition(x, y);
-        if (player.playerLevel[Player.playerWoodcutting] < tree.getLevelRequired()) {
+        if (!player.isBot() && player.playerLevel[Player.playerWoodcutting] < tree.getLevelRequired()) {
                 player.sendMessage("You do not have the woodcutting level required to cut this tree down.");
                 return;
         }

@@ -121,11 +121,11 @@ public class MiningEvent extends Event<Player> {
 			stop();
 			return;
 		}
-		if (attachment.getItems().freeSlots() == 0) {
-			attachment.getDH().sendStatement("You have no more free slots.");
-			stop();
-			return;
-		}
+                if (!attachment.isBot() && attachment.getItems().freeSlots() == 0) {
+                        attachment.getDH().sendStatement("You have no more free slots.");
+                        stop();
+                        return;
+                }
 //		if (RandomUtils.nextInt(1, 300) == 1 && attachment.getInterfaceEvent().isExecutable() && attachment.wildLevel < 30) {
 //			attachment.getInterfaceEvent().execute();
 //			stop();
@@ -155,13 +155,16 @@ public class MiningEvent extends Event<Player> {
 		int artefactRoll = Misc.random(100);
 		if (Misc.random(chance) == 1) {
 			if (artefactRoll <65) {//1/300
-				player.getItems().addItemUnderAnyCircumstance(11180, 1);//ancient coin foe for 200
+                                if (!player.isBot())
+                                        player.getItems().addItemUnderAnyCircumstance(11180, 1);//ancient coin foe for 200
 				player.sendMessage("You found a coin that can be dissolved, speak to Nomad!");
 			} else if (artefactRoll >= 65 && artefactRoll < 99) {//1/600
-				player.getItems().addItemUnderAnyCircumstance(681, 1);//anicent talisman foe for 300
+                                if (!player.isBot())
+                                        player.getItems().addItemUnderAnyCircumstance(681, 1);//anicent talisman foe for 300
 				player.sendMessage("You found a talisman that can be dissolved, speak to Nomad!");
 			} else if (artefactRoll > 99){//1/1000
-				player.getItems().addItemUnderAnyCircumstance(9034, 1);//golden statuette foe for 500
+                                if (!player.isBot())
+                                        player.getItems().addItemUnderAnyCircumstance(9034, 1);//golden statuette foe for 500
 				PlayerHandler.executeGlobalMessage("@bla@[@red@Mining@bla@]@blu@ " + player.getDisplayName() + " @red@just found a Golden statuette while mining!");
 			}
 		}
@@ -241,7 +244,8 @@ public class MiningEvent extends Event<Player> {
 			if (Misc.random(20) == 5) {
 				int randomAmount = 1;
 				attachment.sendMessage("You received " + randomAmount + " pkp while mining!");
-				attachment.getItems().addItem(2996, randomAmount);
+                                if (!attachment.isBot())
+                                        attachment.getItems().addItem(2996, randomAmount);
 			}
 		}
 
@@ -314,11 +318,11 @@ public class MiningEvent extends Event<Player> {
 										attachment.getRechargeItems().hasItem(13107) && Misc.random(4) == 2 ? 2 : 1;
 
 		int itemId = mineral.getMineralReturn().generate();
-		if ((SkillcapePerks.MINING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment)) && attachment.getItems().freeSlots() < 2) {
-			attachment.sendMessage("You have run out of inventory space.");
-			stop();
-			return;
-		}
+                if (!attachment.isBot() && (SkillcapePerks.MINING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment)) && attachment.getItems().freeSlots() < 2) {
+                        attachment.sendMessage("You have run out of inventory space.");
+                        stop();
+                        return;
+                }
 
 
 		if (mineral == Mineral.BOULDER) {
@@ -360,11 +364,12 @@ public class MiningEvent extends Event<Player> {
 
 		}
 
-		if (attachment.playerEquipment[Player.playerWeapon] == 25112 || attachment.playerEquipmentCosmetic[Player.playerWeapon] == 25112) {
-			attachment.getItems().addItemToBankOrDrop(itemId, amount);
-		} else {
-			attachment.getItems().addItem(itemId, amount);
-		}
+                if (!attachment.isBot()) {
+                        if (attachment.playerEquipment[Player.playerWeapon] == 25112 || attachment.playerEquipmentCosmetic[Player.playerWeapon] == 25112)
+                                attachment.getItems().addItemToBankOrDrop(itemId, amount);
+                        else
+                                attachment.getItems().addItem(itemId, amount);
+                }
 
 		attachment.sendSpamMessage("You just mined some " + mineral.name().toLowerCase() + ".");//restart that so i can do client side  once i got these done i can send u other skilling messages if needed
 
@@ -414,33 +419,38 @@ public class MiningEvent extends Event<Player> {
 		}
 		if (Misc.random(mineral.getPetChance() / dropRate) == 10 ) {
 			switch (Misc.random(2)) {
-				case 0:
-					attachment.getItems().addItemUnderAnyCircumstance(20358, clueAmount);
-					break;
+                                case 0:
+                                        if (!attachment.isBot())
+                                                attachment.getItems().addItemUnderAnyCircumstance(20358, clueAmount);
+                                        break;
 
-				case 1:
-					attachment.getItems().addItemUnderAnyCircumstance(20360, clueAmount);
-					break;
-				case 2:
-					attachment.getItems().addItemUnderAnyCircumstance(20362, clueAmount);
-					break;
+                                case 1:
+                                        if (!attachment.isBot())
+                                                attachment.getItems().addItemUnderAnyCircumstance(20360, clueAmount);
+                                        break;
+                                case 2:
+                                        if (!attachment.isBot())
+                                                attachment.getItems().addItemUnderAnyCircumstance(20362, clueAmount);
+                                        break;
 
 			}
 			attachment.sendMessage("@blu@You appear to see a clue geode fall within the rock, and pick it up.");
 		}
 
-		if (Misc.random(mineral.getPetChance()) / dropRate == 10) {
-			attachment.getItems().addItemUnderAnyCircumstance(20362, clueAmount);
-			attachment.sendMessage("@blu@You appear to see a clue geode fall within the rock, and pick it up.");
-		}
+                if (Misc.random(mineral.getPetChance()) / dropRate == 10) {
+                        if (!attachment.isBot())
+                                attachment.getItems().addItemUnderAnyCircumstance(20362, clueAmount);
+                        attachment.sendMessage("@blu@You appear to see a clue geode fall within the rock, and pick it up.");
+                }
 
 		int petRate = attachment.skillingPetRateScroll ? (int) (mineral.getPetChance() * .75) : mineral.getPetChance();
 		if (Misc.random(petRate) == 2 && attachment.getItems().getItemCount(13321, false) == 0
 				&& attachment.petSummonId != 7439) {
 			PlayerHandler.executeGlobalMessage("[<col=CC0000>News</col>] @cr20@ <col=255>" + attachment.getDisplayName()
 					+ "</col> mined a rock and formed the <col=CC0000>Rock golem</col> pet!");
-			attachment.getCollectionLog().handleDrop(attachment, 5, 13321, 1);
-			attachment.getItems().addItemUnderAnyCircumstance(13321, 1);
+                        attachment.getCollectionLog().handleDrop(attachment, 5, 13321, 1);
+                        if (!attachment.isBot())
+                                attachment.getItems().addItemUnderAnyCircumstance(13321, 1);
 		}
 	}
 
