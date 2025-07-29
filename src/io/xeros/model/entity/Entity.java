@@ -235,6 +235,21 @@ public abstract class Entity {
             animationUpdateRequired = true;
         }
     }
+    public List<EntityProperties> entityProperties = new ArrayList<>();
+    public void addEntityProperty(EntityProperties property) {
+        if(!entityProperties.contains(property)) {
+            entityProperties.add(property);
+            if(this.isNPC()) {
+                this.asNPC().requestTransform(this.asNPC().getNpcId());
+            }
+            if(this.isPlayer()) {
+                this.asPlayer().updateAppearance();
+            }
+            property.apply(this);
+        }
+    }
+
+
     public List<Graphic> graphics = new ArrayList<>();
 
     public void startGraphic(Graphic... graphics) {

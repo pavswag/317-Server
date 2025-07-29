@@ -24,11 +24,41 @@ public class Bots extends Command {
     private static int botCounter = 0;
 
     private static final String[] PREFIXES = {
-        "Iron", "Rune", "Dark", "Sir", "Lady", "Lord", "Swift", "Mystic"
+            "Iron", "Rune", "Dark", "Sir", "Lady", "Lord", "Zez", "Woox", "B0aty", "Soup",
+            "Torv", "Skill", "Fram", "Solo", "Guth", "Zammy", "Sara", "Max", "Obby",
+            "Barro", "Void", "Arma", "Band", "Vork", "Hydr", "Krak", "TzKal", "Jad",
+            "Corp", "Nex", "Nylo", "Sire", "Zul", "Nigh", "Tham", "Anc", "Blood", "Soul",
+            "Earth", "Air", "Fire", "Watr", "Death", "Nat", "Law", "Cosm", "Trim",
+            "Fury", "Shad", "Divi", "Spec", "Just", "Virt", "Clue", "Frem", "Luna",
+            "Curs", "Prim", "Asc", "Wild", "Demo", "Grim", "Hex", "Bara", "Freez",
+            "Blast", "Tox", "Smok", "Gnom", "Shade", "Gob", "Urn", "Zeny", "Vial",
+            "Nom", "Rock", "Bass", "Pot", "Seed", "Bag", "Maple", "Flet", "Skul",
+            "Shay", "Glari", "Pouch", "Card", "Bun", "Pres", "Pick", "Myst", "Bear",
+            "RuneL", "Scape", "Gz", "Alt", "Main", "Farm", "Loot", "Rush", "Tbow",
+            "Dclaw", "Fang", "Cape", "Voidr", "Torm", "Whip", "Tent", "Slay", "Sang",
+            "Kodai", "Angler", "Pros", "Guard", "Darkz", "Ghost", "Fiend", "Slug",
+            "Worm", "Dust", "Spark", "Dart", "Edge", "Var", "Yan", "Lum", "Seer",
+            "Canif", "Menaph", "RuneG", "Ardy", "Port", "Gran", "Blastf", "Voidw",
+            "Tarn", "Grave", "Lock", "RuneX", "PKX", "LootX", "MystX", "Xeno", "Nite"
     };
+
     private static final String[] SUFFIXES = {
-        "Knight", "Mage", "Scaper", "Hunter", "Ranger", "Warrior", "Slayer", "Druid"
+            "Mage", "Knight", "Pker", "Scape", "Slay", "Tank", "Fury", "Boss", "Hex",
+            "Skul", "Farm", "Fish", "Run", "Cook", "Mine", "WC", "Thief", "Spec", "Cape",
+            "Champ", "Main", "Alt", "HC", "UIM", "Iron", "Max", "Gamb", "Loot", "Zerk",
+            "Whip", "Mage", "Bow", "Claws", "Fletch", "Grind", "AFK", "Sweat", "Dead",
+            "Def", "Atk", "Str", "Wis", "Dps", "Troll", "Trap", "Tank", "Rush", "God",
+            "Noob", "Vet", "Nerd", "Skill", "Cape", "Box", "Key", "Bag", "Drop", "Junk",
+            "Raid", "Smack", "Hit", "Splash", "Zap", "Pop", "Crit", "Dash", "Spam",
+            "Grief", "Mule", "Bot", "Lure", "Lag", "Gf", "Ez", "Hard", "Soft", "Blast",
+            "Arc", "Myst", "Wand", "Lootr", "Grim", "Fix", "Fang", "Rushr", "Split",
+            "Die", "Farmr", "Herb", "Mix", "Stab", "Bonk", "Bop", "Bash", "Swing",
+            "Juke", "Pet", "RNG", "Cube", "Shank", "Peep", "Quick", "Bank", "Click",
+            "Skillz", "Scope", "Zapz", "Shiv", "Wreck", "Scout", "Feed", "Stack", "Tame",
+            "Luck", "Flee", "Loop", "Bagz", "Fox", "Seal", "Stash", "Chip", "Rock",
+            "Drip", "View", "Cast", "Flick", "Chop", "Splitz", "Boop", "Crash", "Rev"
     };
+
 
     private static String randomBotName() {
         String prefix = PREFIXES[Misc.random(PREFIXES.length - 1)];
@@ -49,10 +79,16 @@ public class Bots extends Command {
             case "spawn":
                 spawnBots(player, Integer.parseInt(args[1]), null);
                 break;
-            case "spawnfighter":
+            case "fight":
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FIGHT_NEAREST_NPC);
                 break;
-            case "spawnwoodcutter":
+            case "miner":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.MINE_NEAREST_ROCK);
+                break;
+            case "fish":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FISH_NEAREST_SPOT);
+                break;
+            case "wc":
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
                 int amount = Integer.parseInt(args[1]);
                 player.sendMessage("Adding " + amount + " bots.");

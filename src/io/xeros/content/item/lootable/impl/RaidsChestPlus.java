@@ -5,6 +5,7 @@ import io.xeros.content.item.lootable.LootRarity;
 import io.xeros.content.item.lootable.Lootable;
 import io.xeros.content.prestige.PrestigePerks;
 import io.xeros.model.Npcs;
+import io.xeros.model.definitions.NpcDef;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.items.GameItem;
 import io.xeros.util.Misc;
@@ -60,7 +61,7 @@ public class RaidsChestPlus implements Lootable {
             }
             c.getItems().addItem(reward.getId(), (PrestigePerks.hasRelic(c, PrestigePerks.DOUBLE_PC_POINTS) && Misc.isLucky(10) ? reward.getAmount() * 2 : reward.getAmount()));
             c.sendMessage("@blu@You have received a rare item out of the storage unit.");
-            NPCDeath.announceKc(c, reward, c.raidCount);
+            NPCDeath.announceKc(c, reward, "Raids chest", c.raidCount);
         } else {
             c.sendMessage("@blu@The chest is locked, it won't budge!");
         }

@@ -46,19 +46,7 @@ public class PetManagement {
     }
 
     public void openInterface() {
-        int frame = 8149;
-        player.getPA().resetQuestInterface();
-        player.getPA().sendFrame126("@dre@Pet Management", 8144);
-        player.getPA().sendFrame126("", 8145);
-        player.getPA().sendFrame126("", 8148);
-        if (!petIds.isEmpty()) {
-            for (int id : petIds) {
-                player.getPA().sendFrame126("@blu@" + ItemAssistant.getItemName(id) + "", frame);
-                frame++;
-            }
-        }
-
-        player.getPA().openQuestInterface();
+        io.xeros.content.pet.PetManager.open(player);
     }
 
 

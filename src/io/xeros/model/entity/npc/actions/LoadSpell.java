@@ -555,6 +555,7 @@ public class LoadSpell {
                 break;
             case 8164:
             case 1025:
+            case 1028:
             case 8172:
                 if (Misc.random(3) == 3) {
                     player.appendDamage(npc, Misc.random(5,25), Hitmark.HIT);
@@ -1265,6 +1266,7 @@ public class LoadSpell {
                 }
                 break;
             case 10532:
+            case 10531:
                 int rnd = Misc.random(10);
                 if (rnd <= 9) {
                     burnGFX(player, npc);
@@ -1408,6 +1410,7 @@ public class LoadSpell {
                 npc.attackTimer = 4;
                 break;
             case 319:
+            case 1802:
                 int corpRandom = Misc.random(15);
                 if (corpRandom >= 12) {
                     npc.setAttackType(CombatType.MAGE);

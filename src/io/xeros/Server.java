@@ -250,11 +250,11 @@ public class Server {
                 if (configuration == null) {
                     setConfiguration(loadConfiguration());
                 }
-             //   discord = new Discord();
-                //discord.init();
+                discord = new Discord();
+                discord.init();
                 // Set log level for debug mode
-             //   ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-            //    root.setLevel(isDebug() || isTest() ? ch.qos.logback.classic.Level.ALL : ch.qos.logback.classic.Level.INFO);
+                ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+                root.setLevel(isDebug() || isTest() ? ch.qos.logback.classic.Level.ALL : ch.qos.logback.classic.Level.INFO);
 
                 loadData();
 //                XericRewards.calldrops();
@@ -267,7 +267,7 @@ public class Server {
                 bindPorts();
                 long endTime = System.nanoTime();
                 long elapsed = endTime - startTime;
-             //   Discord.sendEmbeddedAnnouncement(Discord.ANNOUNCEMENTS_CHANNEL, Color.MAGENTA, "Turmoil Is Online!");
+             //able to   Discord.sendEmbeddedAnnouncement(Discord.ANNOUNCEMENTS_CHANNEL, Color.MAGENTA, "Turmoil Is Online!");
                 System.out.println(Configuration.SERVER_NAME + " has successfully started up in " + TimeUnit.SECONDS.convert(elapsed, TimeUnit.NANOSECONDS)+ " seconds.");
             } catch (Exception e) {
                 logger.error("An error occurred while starting the server.", e);

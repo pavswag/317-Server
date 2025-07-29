@@ -2,6 +2,7 @@ package io.xeros.content.skills.woodcutting;
 
 import io.xeros.Server;
 import io.xeros.content.skills.Skill;
+import io.xeros.model.Items;
 import io.xeros.model.entity.player.Player;
 
 public class Woodcutting {
@@ -11,16 +12,15 @@ public class Woodcutting {
 	public void chop(Player player, int objectId, int x, int y) {
         Tree tree = Tree.forObject(objectId);
         player.facePosition(x, y);
-        if (player.playerLevel[Player.playerWoodcutting] < tree.getLevelRequired()) {
+        if (!player.isBot() && player.playerLevel[Player.playerWoodcutting] < tree.getLevelRequired()) {
                 player.sendMessage("You do not have the woodcutting level required to cut this tree down.");
                 return;
         }
         Hatchet hatchet = Hatchet.getBest(player);
-        if (hatchet == null && player.isBot()) {
-                player.getItems().addItem(Items.BRONZE_AXE, 1);
+        if (hatchet == null && !player.isBot()) {
                 hatchet = Hatchet.getBest(player);
         }
-        if (hatchet == null) {
+        if (!player.isBot() && hatchet == null) {
                 player.sendMessage("You must have an axe and the level required to cut this tree down.");
                 return;
         }

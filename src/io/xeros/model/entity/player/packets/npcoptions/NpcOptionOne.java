@@ -167,8 +167,18 @@ public class NpcOptionOne {
 						}), new DialogueOption("No", player1 -> player1.getPA().closeAllWindows())));
 				break;
 		case 3400:
-			player.getEventCalendar().openCalendar();
+			if (player.getItems().playerHasItem(995, 5_000_000)) {
+			player.getItems().deleteItem(995, 5_000_000);
+			player.getItems().addItem(33169, 1);
+			player.getQuestTab().updateInformationTab();
+			player.getDH().sendItemStatement("You receive the new starter weps! You can upgrade them.", 33169);
+		} else {
+			player.getDH().sendNpcChat("Come back with 5M Gold!");
+		}
 			break;
+			case 3405:
+				player.getEventCalendar().openCalendar();
+				break;
 			case 3201:
 				player.start(new DialogueBuilder(player).npc(3201, "Welcome to Bloody Minigame.","Coming soon Difficulty modes!"));
 				break;

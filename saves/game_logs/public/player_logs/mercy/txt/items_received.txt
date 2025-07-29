@@ -26,3 +26,36 @@
 [ItemPickupLog] [2024-09-25T12:38:01.6253786] Picked up GameItem{name=Dwarf remains, id=30272, amount=1} at Position{x=3210, y=3221, z=0}, owner mercy
 [ItemPickupLog] [2024-09-25T12:38:09.4173007] Picked up GameItem{name=Dwarf remains, id=30272, amount=1} at Position{x=3210, y=3221, z=0}, owner mercy
 [ItemPickupLog] [2024-09-25T12:55:33.629679] Picked up GameItem{name=Dwarf remains, id=30314, amount=1} at Position{x=3173, y=3203, z=0}, owner mercy
+[ItemPickupLog] [2025-07-12T21:43:39.4570233] Picked up GameItem{name=Infernal pickaxe, id=13243, amount=1} at Position{x=2719, y=4768, z=0}, owner mercy
+[ItemPickupLog] [2025-07-12T21:43:40.6635414] Picked up GameItem{name=Scythe of vitur, id=22325, amount=1} at Position{x=2719, y=4772, z=0}, owner mercy
+[ItemPickupLog] [2025-07-12T21:43:41.8606322] Picked up GameItem{name=Nomad Mystery Chest, id=8167, amount=1} at Position{x=2723, y=4772, z=0}, owner mercy
+[ItemPickupLog] [2025-07-12T21:43:43.6681027] Picked up GameItem{name=Fortune Spin, id=6805, amount=5} at Position{x=2723, y=4776, z=0}, owner mercy
+[ItemPickupLog] [2025-07-12T21:43:44.8679296] Picked up GameItem{name=Necklace of anguish (or), id=22249, amount=1} at Position{x=2727, y=4776, z=0}, owner mercy
+[ItemPickupLog] [2025-07-12T21:43:46.6706014] Picked up GameItem{name=$10 scroll, id=2403, amount=1} at Position{x=2727, y=4772, z=0}, owner mercy
+[ItemPickupLog] [2025-07-12T22:15:06.5284866] Picked up GameItem{name=Red dragonhide, id=1750, amount=24} at Position{x=2310, y=6367, z=0}, owner mercy
+[ItemPickupLog] [2025-07-12T22:15:07.1294082] Picked up GameItem{name=Dragon bones, id=536, amount=1} at Position{x=2310, y=6367, z=0}, owner mercy
+[ItemPickupLog] [2025-07-15T19:14:14.2808868] Picked up GameItem{name=Toadflax seed, id=5296, amount=2} at Position{x=2450, y=10146, z=0}, owner mercy
+[ShopBuyLog] [2025-07-20T08:56:10.4686468] Bought GameItem{name=Torva platebody, id=26384, amount=5} from Donator Store with id 9
+[ShopBuyLog] [2025-07-20T08:56:11.6734006] Bought GameItem{name=Torva platelegs, id=26386, amount=5} from Donator Store with id 9
+[ShopBuyLog] [2025-07-20T08:56:15.2804821] Bought GameItem{name=Cosmetic Mystery Box, id=19897, amount=5,000} from Donator Store with id 9
+[ShopBuyLog] [2025-07-20T08:56:36.9254898] Bought GameItem{name=Cosmetic Mystery Box, id=19897, amount=5,000} from Donator Store with id 9
+[ShopBuyLog] [2025-07-20T08:57:41.3123863] Bought GameItem{name=Donation Coin, id=33251, amount=1} from Donator Store with id 9
+[ItemPickupLog] [2025-07-20T09:26:52.2709526] Picked up GameItem{name=Nature rune, id=561, amount=68} at Position{x=2675, y=3718, z=0}, owner mercy
+[ItemPickupLog] [2025-07-20T10:22:38.7699447] Picked up GameItem{name=Dwarf remains, id=30203, amount=1} at Position{x=3189, y=3218, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T10:13:30.8260436] Picked up GameItem{name=Dwarf remains, id=33430, amount=1} at Position{x=2665, y=3706, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T10:13:32.6252167] Picked up GameItem{name=Dwarf remains, id=33430, amount=1} at Position{x=2665, y=3706, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T10:15:16.1340397] Picked up GameItem{name=Dwarf remains, id=30198, amount=1} at Position{x=2660, y=3705, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T10:20:58.0435975] Picked up GameItem{name=Dwarf remains, id=33442, amount=1} at Position{x=2662, y=3711, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T11:27:46.7787555] Picked up GameItem{name=Dwarf remains, id=30173, amount=1} at Position{x=3209, y=3223, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:06.9497306] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2472, y=10152, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:06.9497306] Picked up GameItem{name=Raw sardine, id=327, amount=3} at Position{x=2472, y=10152, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:06.9507314] Picked up GameItem{name=Toadflax seed, id=5296, amount=1} at Position{x=2472, y=10152, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:06.9507314] Picked up GameItem{name=Kwuarm seed, id=5299, amount=1} at Position{x=2472, y=10152, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:06.9527298] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2475, y=10144, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:06.9527298] Picked up GameItem{name=Mithril javelin, id=828, amount=2} at Position{x=2475, y=10144, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:12.9632152] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2485, y=10150, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:12.9632152] Picked up GameItem{name=Seaweed, id=401, amount=7} at Position{x=2485, y=10150, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:12.9642148] Picked up GameItem{name=Irit seed, id=5297, amount=1} at Position{x=2485, y=10150, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:12.9652179] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2491, y=10155, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:12.9652179] Picked up GameItem{name=Lobster pot, id=301, amount=1} at Position{x=2491, y=10155, z=0}, owner mercy
+[ItemPickupLog] [2025-07-24T12:59:12.9652179] Picked up GameItem{name=Belladonna seed, id=5281, amount=1} at Position{x=2491, y=10155, z=0}, owner mercy

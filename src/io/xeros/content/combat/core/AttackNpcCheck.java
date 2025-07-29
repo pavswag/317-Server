@@ -71,24 +71,24 @@ public class AttackNpcCheck {
         if (ThrallSystem.isThrall(npc.getNpcId())) {
             return false;
         }
-        if (!npc.getPosition().inMulti()) {
+//        if (!npc.getPosition().inMulti()) {
             //!npcs[i].getPosition().inMulti() && ((c.underAttackByPlayer > 0 && c.underAttackByNpc != i)
             //        || (c.underAttackByNpc > 0 && c.underAttackByNpc != i))
 
-            if (!c.getPosition().inMulti() && (c.underAttackByPlayer > 0 && c.underAttackByNpc != npc.getIndex())
-                    || (c.underAttackByNpc > 0 && c.underAttackByNpc != npc.getIndex() && npc.getIndex() != 1969 && npc.getIndex() != 7514 && npc.getIndex() != 7859)) {
-                sendCheckMessage(c, sendMessages, "You are already in combat.");
+//            if (!c.getPosition().inMulti() && (c.underAttackByPlayer > 0 && c.underAttackByNpc != npc.getIndex())
+//                    || (c.underAttackByNpc > 0 && c.underAttackByNpc != npc.getIndex() && npc.getIndex() != 1969 && npc.getIndex() != 7514 && npc.getIndex() != 7859)) {
+//                sendCheckMessage(c, sendMessages, "You are already in combat.");
+//
+//                return false;
+//            }
 
-                return false;
-            }
-
-            if (!Boundary.isIn(c, Boundary.OLM) && !Boundary.isIn(c, Boundary.RAIDS)) {
-                if (npc.underAttackBy > 0 && npc.underAttackBy != c.getIndex() && !c.getRights().isOrInherits(Right.GAME_DEVELOPER)) {
-                    sendCheckMessage(c, sendMessages, "This monster is already in combat.");
-                    return false;
-                }
-            }
-        }
+//            if (!Boundary.isIn(c, Boundary.OLM) && !Boundary.isIn(c, Boundary.RAIDS)) {
+//                if (npc.underAttackBy > 0 && npc.underAttackBy != c.getIndex() && !c.getRights().isOrInherits(Right.GAME_DEVELOPER)) {
+//                    sendCheckMessage(c, sendMessages, "This monster is already in combat.");
+//                    return false;
+//                }
+           // }
+      //  }
 
         switch (npc.getNpcId()) {
             //case 5890:
@@ -227,10 +227,10 @@ public class AttackNpcCheck {
                 break;
         }
 
-        if ((c.underAttackByPlayer > 0 || c.underAttackByNpc > 0) && c.underAttackByNpc != npc.getIndex() && !c.getPosition().inMulti()) {
-            sendCheckMessage(c, sendMessages, "I am already under attack.");
-            return false;
-        }
+//        if ((c.underAttackByPlayer > 0 || c.underAttackByNpc > 0) && c.underAttackByNpc != npc.getIndex() && !c.getPosition().inMulti()) {
+//            sendCheckMessage(c, sendMessages, "I am already under attack.");
+//            return false;
+//        }
 
         // Zulrah
         if (npc.getNpcId() >= 2042 && npc.getNpcId() <= 2044 || npc.getNpcId() == 6720) {
@@ -420,12 +420,12 @@ public class AttackNpcCheck {
             }
         }
 
-        if (npc.getNpcId() != 5890 && npc.getNpcId() != 5916) {
-            if ((c.underAttackByPlayer > 0 || c.underAttackByNpc > 0) && c.underAttackByNpc != npc.getIndex() && !c.getPosition().inMulti()) {
-                sendCheckMessage(c, sendMessages, "I am already under attack.");
-                return false;
-            }
-        }
+//        if (npc.getNpcId() != 5890 && npc.getNpcId() != 5916) {
+//            if ((c.underAttackByPlayer > 0 || c.underAttackByNpc > 0) && c.underAttackByNpc != npc.getIndex() && !c.getPosition().inMulti()) {
+//                sendCheckMessage(c, sendMessages, "I am already under attack.");
+//                return false;
+//            }
+//        }
         if (npc.spawnedBy != c.getIndex() && npc.spawnedBy > 0 && !Boundary.isIn(c, Boundary.XERIC)) {
             sendCheckMessage(c, sendMessages, "This monster was not spawned for you.");
             return false;

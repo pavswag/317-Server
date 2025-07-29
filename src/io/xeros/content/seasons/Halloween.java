@@ -274,11 +274,11 @@ public class Halloween {
         }
 
         if (npc.getNpcId() == 8368) {
-            Server.itemHandler.createGroundItem(player, 24984, location.getX(), location.getY(), location.getZ(), 1_500 * amt, player.getIndex());
+            Server.itemHandler.createGroundItem(player, 24984, location.getX(), location.getY(), location.getZ(), 1_500 * amt, player.getIndex(), false);
         } else if (npc.getNpcId() == 7633) {
-            Server.itemHandler.createGroundItem(player, 24984, location.getX(), location.getY(), location.getZ(), Misc.random(10_000, 100_000) * amt, player.getIndex());
+            Server.itemHandler.createGroundItem(player, 24984, location.getX(), location.getY(), location.getZ(), Misc.random(10_000, 100_000) * amt, player.getIndex(), false);
         } else if (npc.getNpcId() == 7623) {
-            Server.itemHandler.createGroundItem(player, 24984, location.getX(), location.getY(), location.getZ(), Misc.random(500000, 1000000) * amt, player.getIndex());
+            Server.itemHandler.createGroundItem(player, 24984, location.getX(), location.getY(), location.getZ(), Misc.random(500000, 1000000) * amt, player.getIndex(), false);
             int amtz = 50;
             if (player.getItems().hasItemOnOrInventory(33150) || (player.hasFollower && (player.petSummonId == 33159))) {
                 amtz = 250;

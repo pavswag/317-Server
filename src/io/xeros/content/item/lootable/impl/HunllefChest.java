@@ -76,8 +76,8 @@ public class HunllefChest implements Lootable {
                 new GameItem(23979, 1), //crystal legs
                 new GameItem(23757, 1), //younglleff pet 	 RARES//////////////////////////////////
                 new GameItem(23995, 1), //blade of saeldor
-                new GameItem(25894, 1), //bofa normal
-                new GameItem(25867, 1), //bofa corrupt
+//                new GameItem(25894, 1), //bofa normal
+//                new GameItem(25867, 1), //bofa corrupt
                 new GameItem(23848, 1), //corrupt legs
                 new GameItem(23842, 1), //corrupt helm
                 new GameItem(23845, 1), //corrupt body

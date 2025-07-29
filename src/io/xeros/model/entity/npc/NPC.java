@@ -7,6 +7,7 @@ import io.xeros.Server;
 import io.xeros.content.bosses.CorporealBeast;
 import io.xeros.content.bosses.Skotizo;
 import io.xeros.content.bosses.Sol;
+import io.xeros.content.bosses.Solak;
 import io.xeros.content.bosses.hydra.AlchemicalHydra;
 import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
 import io.xeros.content.combat.CombatHit;
@@ -61,7 +62,7 @@ public class NPC extends Entity {
     public NPCAction[] actions;
     @Getter
     @Setter
-    private int npcId;
+    public int npcId;
 
     public boolean isGodmode;
 
@@ -404,6 +405,7 @@ public class NPC extends Entity {
             switch (getNpcId()) {
                 //case 2042://green zulrah
                 //	return -150;
+                case 1802:
                 case 319://corp
                     return +80;
                 //case 2044://blue zulrah
@@ -627,9 +629,16 @@ public class NPC extends Entity {
 
             if (npcId == Npcs.CORPOREAL_BEAST) {
                 CorporealBeast.targets = PlayerHandler.getPlayers().stream().filter(plr ->
-                        !plr.isDead && Boundary.isIn(plr, Boundary.CORPOREAL_BEAST_LAIR)).collect(Collectors.toList());
+                        !plr.isDead && Boundary.isIn(plr, Boundary.CORPOREAL_BEAST_LAIR)
+                                && plr.getInstance() == npc.getInstance()).collect(Collectors.toList());
                 CorporealBeast.checkCore(npc);
                 CorporealBeast.healWhenNoPlayers(npc);
+            }
+            if (npcId == 1028) {
+                Solak.targets = PlayerHandler.getPlayers().stream().filter(plr ->
+                        !plr.isDead && Boundary.isIn(plr, Boundary.SOLAK)).collect(Collectors.toList());
+               // Solak.checkCore(npc);
+                Solak.healWhenNoPlayers(npc);
             }
             if (npcId == 12821) {
                 Sol.targets = PlayerHandler.getPlayers().stream().filter(plr ->

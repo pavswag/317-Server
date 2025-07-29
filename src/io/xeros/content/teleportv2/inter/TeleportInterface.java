@@ -513,7 +513,9 @@ public class TeleportInterface {
 
 
     public enum BOSSES implements Teleport {
-        LIGHTBEARER("Lightbearer Wizard Knight", 1025, new int[]{2464, 5707, 0}),
+        SOLAK("Solak Collector of Souls", 1028, new int[]{2164, 3430, 0}),
+        SOL("Sol Heredit", 12821, new int[]{1828, 3097, 0}),
+        LIGHTBEARER("Lightbearer Wizard", 1025, new int[]{2464, 5707, 0}),
         GHOST("Ghost of Darkness", 1429, new int[]{3084, 5210, 0}),
         CRYO("Cryomancer Ranger", 1656, new int[]{2317, 6369, 0}),
         ARRAV("Arrav", 1658, new int[]{3196, 4566, 0}),

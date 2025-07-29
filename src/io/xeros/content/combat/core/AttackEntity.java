@@ -72,6 +72,7 @@ public class AttackEntity {
                     return 4;
                 case 27275:
                 case 33205:
+                case 33433:
                 case 28547:
                     return 3;
             }
@@ -115,6 +116,11 @@ public class AttackEntity {
         attacker.faceUpdate(0);
         attacker.getPA().resetFollow();
         attacker.getPA().resetClickCast();
+        if (attacker.isMiniMe && attacker.MiniMeOwner != null) {
+            attacker.playerFollowingIndex = attacker.MiniMeOwner.getIndex();
+            attacker.combatFollowing = false;
+            attacker.getPA().followPlayer();
+        }
         // attacker.setTargeted(null);
         // attacker.getPA().sendEntityTarget(0, null);
     }
@@ -196,7 +202,23 @@ public class AttackEntity {
             reset();
             return;
         }
-
+        if (!attacker.isMiniMe && attacker.getMiniMe() != null && !attacker.usingSpecial) {
+            Player mini = attacker.getMiniMe();
+            mini.getCombatConfigs().setAttackStyle(attacker.getCombatConfigs().getAttackStyle());
+            if (attacker.autocasting) {
+                mini.autocasting = true;
+                mini.setSpellId(attacker.getSpellId());
+            }
+            mini.attacking.attackEntity(targetEntity);
+        }
+        if (attacker.getItems().isWearingItem(9083)) {
+            attacker.getHealth().setMaximumHealth(250);
+            attacker.getHealth().reset();
+            attacker.playerLevel[Player.playerPrayer] = 250;
+            attacker.getPA().refreshSkill(Player.playerPrayer);
+            attacker.specAmount = 250;
+            attacker.getPA().requestUpdates();
+        }
 
 
         if (Boundary.isIn(attacker, Boundary.HESPORI) && Hespori.TOTAL_ESSENCE_BURNED < Hespori.ESSENCE_REQUIRED) {
@@ -316,7 +338,7 @@ public class AttackEntity {
                     attacker.getPA().sendEntityTarget(targetState, targetEntity);
                 }
             }
-            return;
+            //  return;
         } else if (Boundary.isIn(attacker, Boundary.AOEInstance) && aoeData == null) {
             attacker.sendMessage("You cannot use this weapon inside the instance!");
             return;
@@ -445,7 +467,14 @@ public class AttackEntity {
 
             attacker.specAmount -= special.getRequiredCost();
             HitDispatcher.getHitEntity(attacker, targetEntity).playerHitEntity(getCombatType(), special);
-
+            if (!attacker.isMiniMe && attacker.getMiniMe() != null) {
+                Player mini = attacker.getMiniMe();
+                mini.getCombatConfigs().setAttackStyle(attacker.getCombatConfigs().getAttackStyle());
+                mini.autocasting = attacker.autocasting;
+                mini.setSpellId(attacker.getSpellId());
+                mini.usingSpecial = true;
+                mini.attacking.attackEntity(targetEntity);
+            }
             attacker.usingSpecial = false;
             attacker.getItems().updateSpecialBar();
             attacker.getItems().addSpecialBar(attacker.playerEquipment[Player.playerWeapon]);
@@ -529,8 +558,12 @@ public class AttackEntity {
                             || attacker.playerEquipment[Player.playerWeapon] == 33058
                             || attacker.playerEquipment[Player.playerWeapon] == 30340
                             || attacker.playerEquipment[Player.playerWeapon] == 30152
+                            || attacker.playerEquipment[Player.playerWeapon] == 30205
+                            || attacker.playerEquipment[Player.playerWeapon] == 30203
+                            || attacker.playerEquipment[Player.playerWeapon] == 30228
                             || attacker.playerEquipment[Player.playerWeapon] == 22333
                             || attacker.playerEquipment[Player.playerWeapon] == 33207
+                            || attacker.playerEquipment[Player.playerWeapon] == 33434
                             || attacker.playerEquipment[Player.playerWeapon] == 22550
                             || attacker.playerEquipment[Player.playerWeapon] == 27655
                             || attacker.playerEquipment[Player.playerWeapon] == 28919
@@ -690,7 +723,7 @@ public class AttackEntity {
             int speed = 70 + (8 * distance);
 
             if (projectile > 0) {
-               attacker.getPA().createPlayersProjectile(pX, pY, offX, offY, 50, speed, projectile,
+                attacker.getPA().createPlayersProjectile(pX, pY, offX, offY, 50, speed, projectile,
                         CombatSpellData.getStartHeight(attacker), CombatSpellData.getEndHeight(attacker),
                         Projectile.getLockon(entity), time);
             }
@@ -758,6 +791,9 @@ public class AttackEntity {
                 }
                 return true;
             case 33205:
+            case 33173:
+            case 33433:
+            case 33174:
                 if (!attacker.usingClickCast) {
                     attacker.usingMagic = true;
                     attacker.autocasting = true; //Demonx Staff
@@ -765,6 +801,10 @@ public class AttackEntity {
                 }
                 return true;
             case 84:
+            case 33169:
+            case 33170:
+            case 33171:
+            case 33172:
                 if (!attacker.usingClickCast) {
                     attacker.usingMagic = true;
                     attacker.autocasting = true; //Demonx Staff
@@ -882,8 +922,8 @@ public class AttackEntity {
                 if (attacker.getToxicBlowpipeAmmo() == 0 || attacker.getToxicBlowpipeAmmoAmount() == 0 || attacker.getToxicBlowpipeCharge() == 0) {
                     attacker.sendMessage("Your blowpipe is recharged.");
                     attacker.setToxicBlowpipeAmmo(11230);
-                    attacker.setToxicBlowpipeAmmoAmount(90000);
-                    attacker.setToxicBlowpipeCharge(90000);
+                    attacker.setToxicBlowpipeAmmoAmount(5000);
+                    attacker.setToxicBlowpipeCharge(20000);
                     attacker.attacking.reset();
                     return false;
                 }
@@ -927,8 +967,12 @@ public class AttackEntity {
                     && !(attacker.playerEquipment[Player.playerWeapon] == 33058)
                     && !(attacker.playerEquipment[Player.playerWeapon] == 30340)
                     && !(attacker.playerEquipment[Player.playerWeapon] == 30152)
+                    && !(attacker.playerEquipment[Player.playerWeapon] == 30205)
+                    && !(attacker.playerEquipment[Player.playerWeapon] == 30203)
+                    && !(attacker.playerEquipment[Player.playerWeapon] == 30228)
                     && !(attacker.playerEquipment[Player.playerWeapon] == 22333)
                     && !(attacker.playerEquipment[Player.playerWeapon] == 33207)
+                    && !(attacker.playerEquipment[Player.playerWeapon] == 33434)
                     && !(attacker.playerEquipment[Player.playerWeapon] == 28919)
                     && !(attacker.playerEquipment[Player.playerWeapon] == 28922)) {
                 attacker.sendMessage("You have run out of arrows!");
@@ -954,6 +998,7 @@ public class AttackEntity {
                     && (attacker.playerEquipment[Player.playerWeapon] != 22333)
                     && !(attacker.playerEquipment[Player.playerWeapon] == 30340)
                     && (attacker.playerEquipment[Player.playerWeapon] != 33207)
+                    && (attacker.playerEquipment[Player.playerWeapon] != 33434)
                     && (attacker.playerEquipment[Player.playerWeapon] != 28919)
                     && (attacker.playerEquipment[Player.playerWeapon] != 28922)) {
                 attacker.sendMessage("You can't use " + ItemAssistant.getItemName(attacker.playerEquipment[Player.playerArrows]).toLowerCase() + "'s with a "

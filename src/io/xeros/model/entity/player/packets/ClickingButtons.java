@@ -216,8 +216,10 @@ public class ClickingButtons implements PacketType {
                 return;
             }
             if (c.getSlayer().getMaster() == 8623) {//konar slayer
+                PlayerAssistant.ringOfCharosTeleport(c);
                 c.sendMessage("I currently have " + c.getSlayer().getTaskAmount() + " " + c.getSlayer().getTask().get().getPrimaryName() + "'s to kill in "  + c.getKonarSlayerLocation() + ".");
             } else {
+                PlayerAssistant.ringOfCharosTeleport(c);
                 c.sendMessage("I currently have " + c.getSlayer().getTaskAmount() + " " + c.getSlayer().getTask().get().getPrimaryName() + "'s to kill.");
             }
 
@@ -1652,6 +1654,7 @@ public class ClickingButtons implements PacketType {
                 } else {
                     c.forcedChat("I must slay another " + c.getSlayer().getTaskAmount() + " "
                             + c.getSlayer().getTask().get().getPrimaryName() + ".");
+                    PlayerAssistant.ringOfCharosTeleport(c);
                 }
                 break;
             case 185149:

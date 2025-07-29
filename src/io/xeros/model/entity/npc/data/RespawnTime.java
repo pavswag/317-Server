@@ -79,6 +79,7 @@ public class RespawnTime {
                 return 20;
             case 5862: //cerberus
             case 1025:
+            case 1028:
             case 1429:
             case 1656:
                 return 15;
@@ -97,6 +98,7 @@ public class RespawnTime {
             case 6618:
             case 6619:
             case 319:
+            case 1802:
             case 5890:
                 return 30;
 

@@ -3,6 +3,7 @@ package io.xeros.model.entity.player.bot;
 import io.xeros.Server;
 import io.xeros.content.skills.woodcutting.Tree;
 import io.xeros.content.skills.woodcutting.Woodcutting;
+import io.xeros.model.Items;
 import io.xeros.model.collisionmap.WorldObject;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.npc.NPCHandler;
@@ -34,7 +35,7 @@ public class BotBehaviour implements Tickable<Player> {
 
     @Override
     public void tick(TickableContainer<Player> container, Player bot) {
-        if (bot == null || bot.disconnected || !bot.isBot()) {
+        if (bot == null || !bot.isBot()) {
             container.stop();
             return;
         }
@@ -89,6 +90,9 @@ public class BotBehaviour implements Tickable<Player> {
         if (bot.distanceToPoint(tree.getX(), tree.getY()) > 1) {
             bot.getPA().playerWalk(tree.getX(), tree.getY());
         } else {
+            bot.getPA().removeAllItems();
+            bot.getItems().addItem(Items.DRAGON_AXE, 1);
+            bot.playerXP[8] = bot.getPA().getXPForLevel(61) + Misc.random(5);
             Woodcutting.getInstance().chop(bot, tree.getId(), tree.getX(), tree.getY());
         }
     }

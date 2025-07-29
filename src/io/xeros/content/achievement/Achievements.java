@@ -432,8 +432,8 @@ public class Achievements {
         MIMIC( 1, AchievementTier.TIER_4, AchievementType.MIMIC, "Kill %d Mimics", 20, 4,
                 new GameItem(2714, 25), new GameItem(2802, 20), new GameItem(2775, 15), new GameItem(19841, 10)),
 
-        HUNLLEF( 2, AchievementTier.TIER_4, AchievementType.HUNLLEF, "Kill %d Hunllefs", 25, 4,
-                new GameItem(23776, 20), new GameItem(25894, 1), new GameItem(23995, 1)),
+        HUNLLEF( 2, AchievementTier.TIER_4, AchievementType.HUNLLEF, "Kill %d Hunllefs", 55, 4,
+                new GameItem(23776, 20), new GameItem(607, 1), new GameItem(23995, 1)),
 
         WILDY_EVENT( 8, AchievementTier.TIER_4, AchievementType.WILDY_EVENT, "Finish %d\\nWildy Events", 50, 4,
                 new GameItem(33175, 1)),

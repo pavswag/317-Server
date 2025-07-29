@@ -371,6 +371,12 @@ public final class Position {
             return true;
         }
 
+        if (Boundary.isIn(this, Boundary.SOLAK)) {
+            return true;
+        }
+        if (Boundary.isIn(this, Boundary.SOL)) {
+            return true;
+        }
         if (Boundary.isIn(this, Boundary.WHISPERER_BOUNDARY)) {
             return true;
         }

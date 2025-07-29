@@ -173,7 +173,7 @@ public class WarriorsGuild {
 			int current = currentDefender();
 			int item = current == -1 ? DEFENDER_DATA[0][0] : nextDefender();
 			if (Misc.random(chance) == 0) {
-				Server.itemHandler.createGroundItem(player, item, x, y, 2, 1, player.getIndex());
+				Server.itemHandler.createGroundItem(player, item, x, y, 2, 1, player.getIndex(), false);
 				player.sendMessage("@blu@The cyclops dropped a " + ItemAssistant.getItemName(item) + " on the ground.", 600000);
 			}
 		}

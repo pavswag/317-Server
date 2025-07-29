@@ -89,7 +89,7 @@ public class ChristmasBoss {
             return;
         }
 
-        PlayerHandler.executeGlobalMessage("<img=28>[@red@C@gre@H@red@R@gre@I@red@S@gre@T@red@M@gre@A@red@S@bla@]<img=28> @pur@ The Evil Yeti Has spawned, ::xmas!");
+        //PlayerHandler.executeGlobalMessage("<img=28>[@red@C@gre@H@red@R@gre@I@red@S@gre@T@red@M@gre@A@red@S@bla@]<img=28> @pur@ The Evil Yeti Has spawned, ::xmas!");
 
         evilSnowman.spawnedBy = 0;
         evilSnowman.getBehaviour().setRespawn(false);
@@ -278,7 +278,7 @@ public class ChristmasBoss {
         if (npc.getNpcId() == 2847) {
             spawned = false;
             alive = false;
-            PlayerHandler.executeGlobalMessage("<img=28>[@red@C@gre@H@red@R@gre@I@red@S@gre@T@red@M@gre@A@red@S@bla@]<img=28> @pur@ The Evil Yeti Has died!");
+           // PlayerHandler.executeGlobalMessage("<img=28>[@red@C@gre@H@red@R@gre@I@red@S@gre@T@red@M@gre@A@red@S@bla@]<img=28> @pur@ The Evil Yeti Has died!");
             HashMap<String, Integer> map = new HashMap<>();
             damageCount.forEach((p, i) -> {
                 if (map.containsKey(p.getUUID())) {

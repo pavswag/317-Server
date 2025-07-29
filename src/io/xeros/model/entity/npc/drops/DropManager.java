@@ -183,7 +183,7 @@ public class DropManager {
                 player.getItems().addItemToBankOrDrop(itemId, 1 + extraBag);
             } else {
                 player.sendMessage("@bla@You notice a @blu@coin bag@bla@ on the floor.");
-                Server.itemHandler.createGroundItem(player, itemId, dropX, dropY, dropZ, 1, player.getIndex());
+                Server.itemHandler.createGroundItem(player, itemId, dropX, dropY, dropZ, 1, player.getIndex(), false);
             }
         }
     }
@@ -208,7 +208,7 @@ public class DropManager {
             } else {
                 player.getItems().addItemUnderAnyCircumstance(33132, combatLevel / 2);
                 player.sendMessage("@bla@You notice a @blu@resource box@bla@ on the floor.");
-                Server.itemHandler.createGroundItem(player, box, dropX, dropY, dropZ, 1, player.getIndex());
+                Server.itemHandler.createGroundItem(player, box, dropX, dropY, dropZ, 1, player.getIndex(), false);
             }
         }
     }
@@ -222,7 +222,7 @@ public class DropManager {
                 if (combatLevel >= 96) amount *= 4;
                 else if (combatLevel >= 62) amount *= 2;
                 player.sendMessage("You manage to syphon some blood from " + npcDefinition.getName() + " and it turns into coins!");
-                Server.itemHandler.createGroundItem(player, 13307, dropX, dropY, dropZ, amount, player.getIndex());
+                Server.itemHandler.createGroundItem(player, 13307, dropX, dropY, dropZ, amount, player.getIndex(), false);
             }
         }
     }
@@ -253,12 +253,12 @@ public class DropManager {
         if (npc.getPosition().inWild()) switch (Misc.random(40)) {
             case 2:
                 if (!player.inventoryContains(LootingBag.LOOTING_BAG_OPEN) && !player.inventoryContains(LootingBag.LOOTING_BAG))
-                    Server.itemHandler.createGroundItem(player, LootingBag.LOOTING_BAG, location.getX(), location.getY(), location.getZ(), 1, player.getIndex());
+                    Server.itemHandler.createGroundItem(player, LootingBag.LOOTING_BAG, location.getX(), location.getY(), location.getZ(), 1, player.getIndex(), false);
                 break;
 
             case 8:
                 if (player.getItems().getItemCount(12791, true) < 1)
-                    Server.itemHandler.createGroundItem(player, 12791, location.getX(), location.getY(), location.getZ(), 1, player.getIndex());
+                    Server.itemHandler.createGroundItem(player, 12791, location.getX(), location.getY(), location.getZ(), 1, player.getIndex(), false);
                 break;
         }
 
@@ -288,11 +288,11 @@ public class DropManager {
                     int slayerChance = 650;
                     int emblemChance = 100;
                     if (Misc.random(emblemChance) == 1) {
-                        Server.itemHandler.createGroundItem(player, 12746, location.getX(), location.getY(), location.getZ(), 1, player.getIndex());
+                        Server.itemHandler.createGroundItem(player, 12746, location.getX(), location.getY(), location.getZ(), 1, player.getIndex(), false);
                         player.sendMessage("@red@You receive a mysterious emblem!");
                     }
                     if (Misc.random(slayerChance) == 1)
-                        Server.itemHandler.createGroundItem(player, 21257, location.getX(), location.getY(), location.getZ(), 1, player.getIndex());
+                        Server.itemHandler.createGroundItem(player, 21257, location.getX(), location.getY(), location.getZ(), 1, player.getIndex(), false);
                 }
             });
         });
@@ -321,11 +321,11 @@ public class DropManager {
                 player.getItems().addItemToBankOrDrop(specialItemId, clueAmount + extraKey);
             } else {
                 player.sendMessage("@bla@[@red@Pet@bla@] Your pet noticed a @blu@clue scroll,@bla@ but your inventory is full!");
-                Server.itemHandler.createGroundItem(player, specialItemId, location.getX(), location.getY(), location.getZ(), clueAmount, player.getIndex());
+                Server.itemHandler.createGroundItem(player, specialItemId, location.getX(), location.getY(), location.getZ(), clueAmount, player.getIndex(), false);
             }
             else {
                 player.sendMessage("@bla@You notice a @blu@clue scroll@bla@ on the floor.");
-                Server.itemHandler.createGroundItem(player, specialItemId, location.getX(), location.getY(), location.getZ(), clueAmount, player.getIndex());
+                Server.itemHandler.createGroundItem(player, specialItemId, location.getX(), location.getY(), location.getZ(), clueAmount, player.getIndex(), false);
             }
         }
 
@@ -369,11 +369,11 @@ public class DropManager {
                 player.getItems().addItemToBankOrDrop(specialItemId, keyAmount + extraKey);
             } else {
                 player.sendMessage("@bla@[@red@Pet@bla@] Your pet noticed a @blu@crystal key,@bla@ but your inventory is full!");
-                Server.itemHandler.createGroundItem(player, specialItemId, location.getX(), location.getY(), location.getZ(), keyAmount, player.getIndex());
+                Server.itemHandler.createGroundItem(player, specialItemId, location.getX(), location.getY(), location.getZ(), keyAmount, player.getIndex(), false);
             }
             else {
                 player.sendMessage("@bla@You notice a @blu@crystal key@bla@ on the floor.");
-                Server.itemHandler.createGroundItem(player, specialItemId, location.getX(), location.getY(), location.getZ(), keyAmount, player.getIndex());
+                Server.itemHandler.createGroundItem(player, specialItemId, location.getX(), location.getY(), location.getZ(), keyAmount, player.getIndex(), false);
             }
         }
         NpcDef npcDefinition = NpcDef.forId(npcId);
@@ -400,20 +400,20 @@ public class DropManager {
                 int key_amount = player.getDiaryManager().getWildernessDiary().hasCompleted("ELITE") ? 6 : 3;
                 if (player.getItems().getItemCount(Godwars.KEY_ID, true) > key_amount)
                     return;
-                Server.itemHandler.createGroundItem(player, Godwars.KEY_ID, npc.getX(), npc.getY(), player.heightLevel, 1, player.getIndex());
+                Server.itemHandler.createGroundItem(player, Godwars.KEY_ID, npc.getX(), npc.getY(), player.heightLevel, 1, player.getIndex(), false);
                 //player.sendMessage("@pur@An Ecumenical Key drops from your foe.");
             }
         int random = Misc.random(1200);
         if (IntStream.of(wildybosses).anyMatch(id -> id == npcId) && player.getPosition().inWild())
             if (random == 1) Server.itemHandler.createGroundItem(player, 12746, player.absX,
-                    player.absY, player.heightLevel, 1, player.getIndex());
+                    player.absY, player.heightLevel, 1, player.getIndex(), false);
 
         /*
           Dark Light
          */
         //PlayerHandler.executeGlobalMessage("<col=FF0000>[Lootations] @cr19@ </col><col=255>"+ Misc.capitalize(player.playerName) + "</col> received a <col=255>Darklight!</col>.");
         if (Boundary.isIn(npc, Boundary.CATACOMBS)) if (Misc.random(1000) == 1)
-            Server.itemHandler.createGroundItem(player, 6746, location.getX(), location.getY(), location.getZ(), 1, player.getIndex());
+            Server.itemHandler.createGroundItem(player, 6746, location.getX(), location.getY(), location.getZ(), 1, player.getIndex(), false);
 
         /*
           Dark totem Pieces
@@ -421,21 +421,21 @@ public class DropManager {
         if (Boundary.isIn(npc, Boundary.CATACOMBS)) switch (Misc.random(25)) {
             case 1:
                 if (player.getItems().getItemCount(19679, false) < 1) {
-                    Server.itemHandler.createGroundItem(player, 19679, location.getX(), location.getY(), location.getZ(), 1, player.getIndex());
+                    Server.itemHandler.createGroundItem(player, 19679, location.getX(), location.getY(), location.getZ(), 1, player.getIndex(), false);
                     player.sendMessage("@red@A surge of dark energy fills your body as you notice something on the ground.");
                 }
                 break;
 
             case 2:
                 if (player.getItems().getItemCount(19681, false) < 1) {
-                    Server.itemHandler.createGroundItem(player, 19681, location.getX(), location.getY(), location.getZ(), 1, player.getIndex());
+                    Server.itemHandler.createGroundItem(player, 19681, location.getX(), location.getY(), location.getZ(), 1, player.getIndex(), false);
                     player.sendMessage("@red@A surge of dark energy fills your body as you notice something on the ground.");
                 }
                 break;
 
             case 3:
                 if (player.getItems().getItemCount(19683, false) < 1) {
-                    Server.itemHandler.createGroundItem(player, 19683, location.getX(), location.getY(), location.getZ(), 1, player.getIndex());
+                    Server.itemHandler.createGroundItem(player, 19683, location.getX(), location.getY(), location.getZ(), 1, player.getIndex(), false);
                     player.sendMessage("@red@A surge of dark energy fills your body as you notice something on the ground.");
                 }
                 break;
@@ -460,7 +460,7 @@ public class DropManager {
             for (GameItem item : drops) {
                 onDrop(player, item, npcId);
                 Server.itemHandler.createGroundItem(player, item.getId(), location.getX(), location.getY(),
-                        location.getZ(), item.getAmount(), player.getIndex());
+                        location.getZ(), item.getAmount(), player.getIndex(), false);
             }
 
             handle(player, npc, location, repeats, npcId);
@@ -476,7 +476,7 @@ public class DropManager {
             for (GameItem item : drops) {
                 onDrop(player, item, npcId);
                 Server.itemHandler.createGroundItem(player, item.getId(), location.getX(), location.getY(),
-                        location.getZ(), item.getAmount(), player.getIndex());
+                        location.getZ(), item.getAmount(), player.getIndex(), false);
             }
             handle(player, npc, location, repeats, npcId);
         });
@@ -504,7 +504,10 @@ public class DropManager {
         else if (player.hasItemEquipped(20788)) modifier += 0.13D;
         else if (player.hasItemEquipped(20787)) modifier += 0.15D;
         else if (player.hasItemEquipped(20786)) modifier += 0.18D;
-        else if (player.hasItemEquipped(25975)) modifier += 0.25D;
+        else if (player.hasItemEquipped(25975)) modifier += 0.21D;
+        else if (player.hasItemEquipped(33392)) modifier += 0.24D;
+        else if (player.hasItemEquipped(24731)) modifier += 0.27D;
+        else if (player.hasItemEquipped(33406)) modifier += 0.30D;
         else if (player.hasItemEquipped(13069)) modifier += 0.10D;
         else if ((player.hasItemEquipped(33056) || player.hasItemEquipped(23859))) modifier += 0.05D;
 

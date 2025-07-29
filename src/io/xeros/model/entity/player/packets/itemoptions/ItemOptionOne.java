@@ -15,6 +15,8 @@ import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
 import io.xeros.content.dialogue.impl.ClaimDonatorScrollDialogue;
 import io.xeros.content.dwarfmulticannon.Cannon;
+import io.xeros.content.elonmusk.Island;
+import io.xeros.content.elonmusk.Islandv2;
 import io.xeros.content.item.lootable.impl.*;
 import io.xeros.content.items.CluescrollRateIncreaseScroll;
 import io.xeros.content.items.Packs;
@@ -113,7 +115,117 @@ public class ItemOptionOne implements PacketType {
             c.getItems().deleteItem2(27, 1);
             return;
         }
+        if (itemId == 26879) {
+        ItemAction.registerInventory(26879, 1, (player, item) -> {
+            if (player.getItems().playerHasItem(26879, 1)) { // Wraith Essence
+                player.start(new DialogueBuilder(player)
+                        .option("Which armour would you like create?",
+                                new DialogueOption("Wraith Mask (2b Upgrade Points & 750x Wraith Essence)", p -> {
+                                    if (p.getItems().getInventoryCount(26879) < 750) {
+                                        p.sendMessage("@red@You need 750 Wraith Essences to upgrade!");
+                                        p.getPA().closeAllWindows();
+                                        return;
+                                    }
+                                    if (p.foundryPoints < 2_000_000_000) {
+                                        p.sendMessage("@red@You require 2b Upgrade Points to upgrade!");
+                                        p.getPA().closeAllWindows();
+                                        return;
+                                    }
+                                    p.getItems().deleteItem2(26879, 750);
+                                    p.foundryPoints -= 2_000_000_000;
+                                    p.getItems().addItemUnderAnyCircumstance(33438, 1);
+                                    String msg = "@blu@@cr18@[UPGRADE]@cr18@@red@ " + p.getDisplayName()
+                                            + " Has successfully achieved Wraith Mask!";
+                                    PlayerHandler.executeGlobalMessage(msg);
+                                    p.getPA().closeAllWindows();
+                                }),
+                                new DialogueOption("Wraith Body (2b Upgrade Points & 1000x Wraith Essence)", p -> {
+                                    if (p.getItems().getInventoryCount(26879) < 1000) {
+                                        p.sendMessage("@red@You need 250 Wraith Essences to upgrade!");
+                                        p.getPA().closeAllWindows();
+                                        return;
+                                    }
+                                    if (p.foundryPoints < 2_000_000_000) {
+                                        p.sendMessage("@red@You require 2b Upgrade Points to upgrade!");
+                                        p.getPA().closeAllWindows();
+                                        return;
+                                    }
+                                    p.getItems().deleteItem2(26879, 1000);
+                                    p.foundryPoints -= 2_000_000_000;
+                                    p.getItems().addItemUnderAnyCircumstance(33439, 1);
+                                    String msg = "@blu@@cr18@[UPGRADE]@cr18@@red@ " + p.getDisplayName()
+                                            + " Has successfully achieved Wraith Body!";
+                                    PlayerHandler.executeGlobalMessage(msg);
+                                    p.getPA().closeAllWindows();
+                                }),
+                                new DialogueOption("Wraith Legs (2b Upgrade Points & 1000x Wraith Essence)", p -> {
+                                    if (p.getItems().getInventoryCount(26879) < 1000) {
+                                        p.sendMessage("@red@You need 1000 Wraith Essences to upgrade!");
+                                        p.getPA().closeAllWindows();
+                                        return;
+                                    }
+                                    if (p.foundryPoints < 2_000_000_000) {
+                                        p.sendMessage("@red@You require 2b Upgrade Points to upgrade!");
+                                        p.getPA().closeAllWindows();
+                                        return;
+                                    }
+                                    p.getItems().deleteItem2(26879, 1050);
+                                    p.foundryPoints -= 2_000_000_000;
+                                    p.getItems().addItemUnderAnyCircumstance(33440, 1);
+                                    String msg = "@blu@@cr18@[UPGRADE]@cr18@@red@ " + p.getDisplayName()
+                                            + " Has successfully achieved Wraith Legs!";
+                                    PlayerHandler.executeGlobalMessage(msg);
+                                    p.getPA().closeAllWindows();
+                                })
+                        )
+                );
+            } else {
+                player.sendMessage("You do not have the required item.");
+            }
+        });
+    }
+        if (itemId == 11740) {
+            if (c.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33110) || c.playerEquipment[Player.playerAmulet] == 33407 || c.playerEquipment[Player.playerAmulet] == 24725 || c.playerEquipment[Player.playerAmulet] == 26914) {
+                c.sendMessage("@red@You may not use clepto perk or collection amulets.");
+                return;
 
+            }
+            if (c.getItems().getInventoryCount(11740) <= 0) {
+                return;
+            }if (c.inTrade || c.inDuel || c.getPosition().inWild()) {
+                return;
+            }
+            if (c.getPosition().inClanWars() || c.getPosition().inClanWarsSafe()) {
+                c.sendMessage("@cr10@This player is currently at the pk district.");
+                return;
+            }
+            if (c.getInstance() != null) {
+                c.sendMessage("You can't activate it while inside of an instance");
+                return;
+            }
+            c.getItems().deleteItem2(11740, 1);
+            new Island().init(c);
+            return;
+        }
+
+        if (itemId == 29625) {
+            if (c.getItems().getInventoryCount(29625) <= 0) {
+                return;
+            }if (c.inTrade || c.inDuel || c.getPosition().inWild()) {
+                return;
+            }
+            if (c.getPosition().inClanWars() || c.getPosition().inClanWarsSafe()) {
+                c.sendMessage("@cr10@This player is currently at the pk district.");
+                return;
+            }
+            if (c.getInstance() != null) {
+                c.sendMessage("You can't activate it while inside of an instance");
+                return;
+            }
+            c.getItems().deleteItem2(29625, 1);
+            new Islandv2().init(c);
+            return;
+        }
         if (itemId == 20280) {
             c.sendErrorMessage("Contact a staff member to exchange this item!");
             return;
@@ -297,8 +409,22 @@ public class ItemOptionOne implements PacketType {
                     new DialogueOption("No", plr -> plr.getPA().closeAllWindows())));
             return;
         }
-
-        if (itemId == 6805) {
+        if (itemId == 11489) {
+        if (c.getPotionTimer().elapsed() >= 2) {
+            c.getPotionTimer().reset();
+            c.getFoodTimer().reset();
+            c.getPA().sendSound(334);
+            c.startAnimation(4939);
+            c.forcedChat("I HOLD THE TRUE POWER!");
+            c.startGraphic(new Graphic(1920));
+            c.startGraphic(new Graphic(1800));
+            c.startGraphic(new Graphic(1850));
+            c.startGraphic(new Graphic(1921));
+            c.getPotions().doAIOPotion();
+            return;
+        }
+        }
+            if (itemId == 6805) {
             if (c.hitStandardRateLimit(true))
                 return;
             int amount = c.getItems().getInventoryCount(6805);
@@ -931,13 +1057,13 @@ public class ItemOptionOne implements PacketType {
                 }
                 break;
         case ResourceBoxSmall.BOX_ITEM:
-            new ResourceBoxSmall().roll(c);
+            new ResourceBoxSmall().quickOpen(c);
             break;
         case ResourceBoxMedium.BOX_ITEM:
-            new ResourceBoxMedium().roll(c);
+            new ResourceBoxMedium().quickOpen(c);
             break;
         case ResourceBoxLarge.BOX_ITEM:
-            new ResourceBoxLarge().roll(c);
+            new ResourceBoxLarge().quickOpen(c);
             break;
             case 23071:
                 if (!(c.getSuperMysteryBox().canMysteryBox) || !(c.getNormalMysteryBox().canMysteryBox) ||
@@ -1310,35 +1436,6 @@ public class ItemOptionOne implements PacketType {
                   c.sendMessage("You rub the lamp...");
                   c.getPA().showInterface(2808);
             	break;
-            case 11489:
-                if (Boundary.isIn(c, Boundary.DUEL_ARENA) || (Boundary.isIn(c, Boundary.WILDERNESS) && c.wildLevel > 0)) {
-                    c.sendMessage("You can't use this in the wild or duel arena!");
-                    return;
-                }
-                if (Boundary.isIn(c, Boundary.OUTLAST_HUT)) {
-                    c.sendMessage("You are not allowed to drink potions in the outlast hut.");
-                    return;
-                }
-                if (c.isDead) {
-                    return;
-                }
-                if (c.teleTimer > 0) {
-                    return;
-                }
-
-                if (c.getPotionTimer().elapsed() >= 2) {
-                    c.getPotionTimer().reset();
-                    c.getFoodTimer().reset();
-                    c.getPA().sendSound(334);
-                    c.startAnimation(4939);
-                    c.forcedChat("I HOLD THE TRUE POWER!");
-                    c.startGraphic(new Graphic(1920));
-                    c.startGraphic(new Graphic(1800));
-                    c.startGraphic(new Graphic(1850));
-                    c.startGraphic(new Graphic(1921));
-                    c.getPotions().doAIOPotion();
-                }
-                    break;
             case 13148:
                 c.start(new DialogueBuilder(c).statement("This lamp will reset a skill of your choice.").exit(plr -> {
                     c.inLamp = true;
@@ -1770,12 +1867,10 @@ public class ItemOptionOne implements PacketType {
                 }
                 break;
             case PvmCasket.PVM_CASKET: //Pvm Casket
-            	if (System.currentTimeMillis() - c.openCasketTimer > 350) {
                 	if (c.getItems().playerHasItem(405)) {
-                        c.getPvmCasket().roll(c);
+                        c.getPvmCasket().quickOpen(c);
                         c.openCasketTimer =  System.currentTimeMillis();
                     }
-                }
             	break;
             case Items.DWARF_CANNON_SET:
                 if (c.getItems().freeSlots() < 4) {

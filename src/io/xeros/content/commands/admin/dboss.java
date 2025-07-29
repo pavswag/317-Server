@@ -46,7 +46,25 @@ public class dboss extends Command {
         Discord.writeBugMessage("[Donor Boss] Has just spawned! ::db");
         TrackerType.DONOR_BOSS.addTrackerData(1);
     }
+    public static void lightningAttack() {
+        updateTargets();
+        if (donaboss.isDead) {
+            return;
+        }
+        if (targets.isEmpty()) {
+            return;
+        }
 
+        for (Player possibleTargets : targets) {
+            possibleTargets.gfx0(1666);
+            int dam;
+            if (possibleTargets.protectingMagic())
+                dam = 25;
+            else
+                dam = Misc.random(0,99);
+            possibleTargets.appendDamage(dam, (dam > 0 ? Hitmark.HIT : Hitmark.MISS));
+        }
+    }
     public static void Attack() {
         if (donaboss.isDead) {
             return;
@@ -96,6 +114,16 @@ public class dboss extends Command {
             donaboss.maxHit = 5;
             //Poison Attack
             poiAttack();
+        } else if (rng >= 95) {
+            donaboss.startAnimation(7910, AnimationPriority.HIGH);
+            donaboss.setAttackType(CombatType.MAGE);
+            donaboss.projectileId = 1665;
+            donaboss.endGfx = -1;
+            donaboss.hitDelayTimer = 4;
+            donaboss.attackTimer = 10;
+            donaboss.maxHit = 5;
+            //Lightning Attack
+            lightningAttack();
         } else if (rng >= 85) {
             donaboss.startAnimation(7910, AnimationPriority.HIGH);
             donaboss.setAttackType(CombatType.MAGE);
@@ -107,6 +135,7 @@ public class dboss extends Command {
             //Purple Fire
             fireAttack();
         }
+
     }
 
     public static List<Player> targets = new ArrayList<>();
@@ -138,7 +167,7 @@ public class dboss extends Command {
         donaboss.getBehaviour().setRespawn(false);
         donaboss.getBehaviour().setAggressive(true);
         donaboss.getBehaviour().setRunnable(true);
-        donaboss.getHealth().setMaximumHealth(20000);
+        donaboss.getHealth().setMaximumHealth(50000);
         donaboss.getHealth().reset();
         announce();
         Discord.writeBugMessage("[DONO BOSS] the dono boss [Galvek] has spawned!, use ::vb or ::db @News-Event");

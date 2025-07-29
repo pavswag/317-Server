@@ -76,6 +76,7 @@ public class Boundary {
 	public static final Boundary TUMEKENS_WARDEN_BOSS_ROOM_BOUNDARY = new Boundary(3790, 5136, 3826, 5174,2);
 	public static final Boundary LOOT_ROOM_BOUNDARY = new Boundary(3667, 5135, 3696, 5174);
 	public static final Boundary SOL = new Boundary(1806, 3089, 1847, 3127);
+	public static final Boundary SOLAK = new Boundary(2150, 3423, 2177, 3438);
 
 
     /**

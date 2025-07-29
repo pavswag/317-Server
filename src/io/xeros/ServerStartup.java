@@ -116,6 +116,7 @@ public class ServerStartup {
         DoorDefinition.load();
         GodwarsEquipment.load();
         GodwarsNPCs.load();
+        io.xeros.content.pet.PetUtility.init();
         LobbyManager.initializeLobbies();
         VotePanelManager.init();
         TourneyManager.initialiseSingleton();

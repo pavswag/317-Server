@@ -103,6 +103,7 @@ import io.xeros.content.miniquests.magearenaii.MageArenaII;
 import io.xeros.content.party.PlayerParty;
 import io.xeros.content.perky.PerkSystem;
 import io.xeros.content.perky.Perks;
+import io.xeros.content.pet.Pet;
 import io.xeros.content.polls.PollTab;
 import io.xeros.content.preset.Preset;
 import io.xeros.content.prestige.PrestigePerks;
@@ -6374,10 +6375,25 @@ public class Player extends Entity {
     @Setter
     private BJManager bjManager;
 
+    @Getter
+    private List<Pet> petCollection = new ArrayList<>();
+
+    @Getter
+    private Pet currentPet;
+    @Getter @Setter
+    private int currentPetIndex;
+    public HashMap<Integer, Integer> petPrestige = new HashMap<>();
     public long bettingAmount = 0;
     public int BjWins = 0;
     public int BjLoss = 0;
     public int BjPay = 0;
     public int BjCurrency = 10000;
     public boolean StoreTransfer = false;
+
+    public void updateAppearance() {
+        setUpdateRequired(true);
+        setAppearanceUpdateRequired(true);
+    }
+
+
 }

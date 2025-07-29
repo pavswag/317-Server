@@ -1,1 +1,3 @@
 [FireOfExchangeLog] [2024-09-04T10:38:08.5098547] Burned GameItem{name=Golden statuette, id=9034, amount=1}
+[FireOfExchangeLog] [2025-07-27T23:54:11.3147281] Burned GameItem{name=Wraith Essence, id=26879, amount=1}
+[FireOfExchangeLog] [2025-07-27T23:54:24.5439294] Burned GameItem{name=Wraith Essence, id=26879, amount=1,000}

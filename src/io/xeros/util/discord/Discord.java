@@ -36,7 +36,7 @@ public class Discord extends ListenerAdapter {
     public static String ADMIN_ROLE = "891930584446812200";
     public static String GLOBAL_MOD_ROLE = "892423012551389265";
     public static String SUPPORT_ROLE = "892558604580847627";
-    public static final String BOT_TOKEN = "MTA0MDc2MzIwMDUwNjk1NzkwNA.GB6i72.lWCdFD3UxyWW3Oy_eVhMYE0mb0ny8976iW8yME";
+    public static final String BOT_TOKEN = "MTA0MDc2MzIwMDUwNjk1NzkwNA.GZtaFT.WSeWJw0IudDLt5ciBEDXd7FBGjt6NLo0zfIROo";
     public static final String DISCORD_THUMBNAIL = "https://turmoilrsps.quest/logo.png";
     public static final String SERVER_LOGO = "https://turmoilrsps.quest/logo.png";
     public static final long GUILD_ID = 605271780302651420L;

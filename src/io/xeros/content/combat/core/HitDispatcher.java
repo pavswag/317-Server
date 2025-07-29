@@ -30,6 +30,8 @@ import io.xeros.content.combat.specials.impl.*;
 import io.xeros.content.combat.weapon.RangedWeaponType;
 import io.xeros.content.items.ChristmasWeapons;
 import io.xeros.content.items.PvpWeapons;
+import io.xeros.content.items.aoeweapons.AOESystem;
+import io.xeros.content.items.aoeweapons.AoeWeapons;
 import io.xeros.content.minigames.pest_control.PestControl;
 import io.xeros.content.prestige.PrestigePerks;
 import io.xeros.content.skills.Skill;
@@ -204,7 +206,7 @@ public abstract class HitDispatcher {
             }
             if (attacker.getItems().isWearingItem(28534) && !attacker.getArboContainer().inArbo() && !defender.isPlayer()) {
                     attacker.getHealth().increase((damage / 4));
-                    defender.startGraphic(new Graphic(399));
+                    //defender.startGraphic(new Graphic(399));
             }
             if (attacker.getItems().isWearingItem(30338) && !attacker.getArboContainer().inArbo() && !defender.isPlayer()) {
                 attacker.prayerPoint = attacker.playerLevel[5];
@@ -246,6 +248,12 @@ public abstract class HitDispatcher {
                 }
             }
 
+            if (attacker.getItems().isWearingItem(33431) && !defender.isPlayer()) {
+                if (Misc.trueRand(5) == 1) {
+                    damage = (int) (damage + (damage * 0.45));
+                    attacker.startGraphic(new Graphic(400));
+                }
+            }
             if (attacker.getItems().isWearingItem(33202) && !defender.isPlayer()) {
                 if (Misc.trueRand(5) == 1) {
                     damage = (int) (damage + (damage * 0.15));
@@ -770,6 +778,9 @@ public abstract class HitDispatcher {
             if (attacker.playerEquipment[Player.playerWeapon] == 33149) {
                 delayToHit = 4;
             }
+            if (attacker.playerEquipment[Player.playerWeapon] == 33433) {
+                delayToHit = 3;
+            }
             if (attacker.playerEquipment[Player.playerWeapon] == 33205) {
                 delayToHit = 3;
             }
@@ -805,7 +816,7 @@ public abstract class HitDispatcher {
         }
 
         if (!(special instanceof VolatileNightmareStaff)) {
-            if (!applyingMultiHitAttack && usingMultiAttack(combatType) && attacker.getPosition().inMulti() && !attacker.getItems().isWearingItem(27610)) {
+            if (!applyingMultiHitAttack && usingMultiAttack(combatType) && !attacker.getItems().isWearingItem(27610)) {
                 List<Entity> multiHitEntities = getMultiHitEntities(MeleeData.usingSytheOfVitur(attacker));
                 if (attacker.isPrintAttackStats()) {
                     attacker.sendMessage("Using multi-attack, " + multiHitEntities.size() + " possible targets.");
@@ -829,7 +840,7 @@ public abstract class HitDispatcher {
                     }
                     getHitEntity(attacker, entity).playerHitEntity(combatType, special, true);
                 });
-            } else if (!applyingMultiHitAttack && usingMultiAttack(combatType) && attacker.getPosition().inMulti() && defender.isNPC()) {
+            } else if (!applyingMultiHitAttack && usingMultiAttack(combatType) && defender.isNPC()) {
                 List<Entity> multiHitEntities = getMultiHitEntities(MeleeData.usingSytheOfVitur(attacker));
                 if (attacker.isPrintAttackStats()) {
                     attacker.sendMessage("Using multi-attack, " + multiHitEntities.size() + " possible targets.");
@@ -942,7 +953,7 @@ public abstract class HitDispatcher {
         int enemyY = defender.getY();
         int height = defender.getHeight();
         if (Misc.trueRand(3) == 0) {
-            Server.itemHandler.createGroundItem(attacker, arrowId, enemyX, enemyY, height, 1, attacker.getIndex());
+            Server.itemHandler.createGroundItem(attacker, arrowId, enemyX, enemyY, height, 1, attacker.getIndex(), false);
         }
     }
 
@@ -1017,6 +1028,8 @@ public abstract class HitDispatcher {
     }
 
     private boolean usingMultiAttack(CombatType combatType) {
+               AoeWeapons aoeData = AOESystem.getSingleton().getAOEData(attacker.playerEquipment[Player.playerWeapon]);
+
         if (attacker.usingSpecial && attacker.getItems().isWearingItem(21902)) {
             return true;
         } else if (combatType == CombatType.MAGE && Arrays.stream(CombatSpellData.MULTI_SPELLS).anyMatch(spell -> spell == CombatSpellData.getSpellId(attacker.getSpellId()))) {
@@ -1025,7 +1038,9 @@ public abstract class HitDispatcher {
             return true;
         } else if (MeleeData.usingSytheOfVitur(attacker)) {
             return true;
-        } else if (attacker.getItems().isWearingItem(33205)) {
+        } else if (attacker.getItems().isWearingItem(33205) ||attacker.getItems().isWearingItem(33434) || attacker.getItems().isWearingItem(33207)  || attacker.getItems().isWearingItem(33170) || attacker.getItems().isWearingItem(33171)) {
+            return true;
+        } else if (attacker.getItems().isWearingItem(33433)) {
             return true;
         } else if (attacker.getItems().isWearingItem(27610)) {
             return true;
@@ -1037,6 +1052,8 @@ public abstract class HitDispatcher {
     }
 
     public List<Entity> getMultiHitEntities(boolean sythe) {
+        AoeWeapons aoeData = AOESystem.getSingleton().getAOEData(attacker.playerEquipment[Player.playerWeapon]);
+
         List<Entity> attackable = Lists.newArrayList();
         Entity[] entities;
 
@@ -1050,29 +1067,29 @@ public abstract class HitDispatcher {
                             && !entity.isDead && entity.isRegistered()
                             && entity.getHeight() == defender.getHeight()) {
                         if (sythe) {
-                            if (attacker.getItems().isWearingItem(33203)) {
-                                if (entity.distance(defender.getPosition()) <= 3 && attacker.attacking.attackEntityCheck(entity, false)) {
+                            if (attacker.getItems().isWearingItem(33203) || attacker.getItems().isWearingItem(33431)) {
+                                if (entity.distance(defender.getPosition()) <= 13 && attacker.attacking.attackEntityCheck(entity, false)) {
                                     attackable.add(entity);
                                     if (attackable.size() >= 9)
                                         break main;
                                 }
                             } else {
-                                if (entity.distance(defender.getPosition()) <= 1.5 && attacker.distance(entity.getPosition()) <= 1.5 && attacker.attacking.attackEntityCheck(entity, false)) {
+                                if (entity.distance(defender.getPosition()) <= 7 && attacker.distance(entity.getPosition()) <= 7 && attacker.attacking.attackEntityCheck(entity, false)) {
                                     attackable.add(entity);
-                                    if (attackable.size() >= 3)
+                                    if (attackable.size() >= 6)
                                         break main;
                                 }
                             }
-                        } else if (attacker.getItems().isWearingItem(33205)) {
-                            if (entity.distance(defender.getPosition()) <= 3 && attacker.attacking.attackEntityCheck(entity, false)) {
+                        } else if (attacker.getItems().isWearingItem(33205) || attacker.getItems().isWearingItem(33433) || attacker.getItems().isWearingItem(33174) || attacker.getItems().isWearingItem(30350) ||attacker.getItems().isWearingItem(33205) || attacker.getItems().isWearingItem(33433) || attacker.getItems().isWearingItem(33174) || attacker.getItems().isWearingItem(33434) || attacker.getItems().isWearingItem(33207) || attacker.getItems().isWearingItem(9999)|| attacker.getItems().isWearingItem(33173)) {
+                            if (entity.distance(defender.getPosition()) <= 9 && attacker.attacking.attackEntityCheck(entity, false)) {
                                 attackable.add(entity);
-                                if (attackable.size() >= 9)
+                                if (attackable.size() >= 8)
                                     break main;
                             }
                         } else if (attacker.getItems().isWearingItem(27610)) {
-                            if (entity.distance(defender.getPosition()) <= 3 && attacker.attacking.attackEntityCheck(entity, false)) {
+                            if (entity.distance(defender.getPosition()) <= 7 && attacker.attacking.attackEntityCheck(entity, false)) {
                                 attackable.add(entity);
-                                if (attackable.size() >= 9)
+                                if (attackable.size() >= 6)
                                     break main;
                             }
                         } else if (attacker.getItems().hasItemOnOrInventory(33233)) {

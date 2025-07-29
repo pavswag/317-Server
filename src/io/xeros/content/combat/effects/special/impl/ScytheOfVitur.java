@@ -32,6 +32,7 @@ public class ScytheOfVitur implements SpecialEffect {
                 player.getItems().isWearingItem(33148, Player.playerWeapon) ||
                 player.getItems().isWearingItem(33184, Player.playerWeapon) ||
                 player.getItems().isWearingItem(33203, Player.playerWeapon) ||
+                player.getItems().isWearingItem(33431, Player.playerWeapon) ||
                 player.getItems().isWearingItem(28543, Player.playerWeapon);
     }
 
@@ -47,6 +48,7 @@ public class ScytheOfVitur implements SpecialEffect {
                 player.getItems().isWearingItem(28534, Player.playerWeapon)||
                 player.getItems().isWearingItem(28997, Player.playerWeapon) ||
                 player.getItems().isWearingItem(33203, Player.playerWeapon)||
+                player.getItems().isWearingItem(33431, Player.playerWeapon)||
                 player.getItems().isWearingItem(28543, Player.playerWeapon)||
                 player.getItems().isWearingItem(30154, Player.playerWeapon)||
                 player.getItems().isWearingItem(30156, Player.playerWeapon)||

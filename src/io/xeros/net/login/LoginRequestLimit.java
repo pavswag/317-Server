@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class LoginRequestLimit {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginRequestLimit.class);
-    public static int MAX_LOGINS_PER_TICK = 8;
+    public static int MAX_LOGINS_PER_TICK = 18;
     public static final int INVALID_LOGIN_REQUEST_TIMEOUT = 30_000;
     private static final Map<String, Long> INVALID_LOGINS = new ConcurrentHashMap<>();
 

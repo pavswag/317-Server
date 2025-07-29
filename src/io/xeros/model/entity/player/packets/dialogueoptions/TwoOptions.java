@@ -165,7 +165,7 @@ public class TwoOptions {
 						return;
 					}
 					for (LootingBagItem item : c.getLootingBag().getLootingBagContainer().items) {
-						Server.itemHandler.createGroundItem(c, item.getId(), c.absX, c.absY, c.getHeight(), item.getAmount(), c.getIndex());
+						Server.itemHandler.createGroundItem(c, item.getId(), c.absX, c.absY, c.getHeight(), item.getAmount(), c.getIndex(), false);
 					}
 					c.getLootingBag().getLootingBagContainer().items.clear();
 					c.getItems().deleteItem(LootingBag.LOOTING_BAG_OPEN, 1);
@@ -179,7 +179,7 @@ public class TwoOptions {
 						return;
 					}
 					for (LootingBagItem item : c.getLootingBag().getLootingBagContainer().items) {
-						Server.itemHandler.createGroundItem(c, item.getId(), c.absX, c.absY, c.getHeight(), item.getAmount(), c.getIndex());
+						Server.itemHandler.createGroundItem(c, item.getId(), c.absX, c.absY, c.getHeight(), item.getAmount(), c.getIndex(), false);
 					}
 					c.getLootingBag().getLootingBagContainer().items.clear();
 					c.getItems().deleteItem(LootingBag.LOOTING_BAG, 1);

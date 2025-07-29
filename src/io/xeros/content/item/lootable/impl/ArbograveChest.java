@@ -5,7 +5,7 @@ import io.xeros.content.combat.death.NPCDeath;
 import io.xeros.content.item.lootable.LootRarity;
 import io.xeros.content.item.lootable.Lootable;
 import io.xeros.content.prestige.PrestigePerks;
-import io.xeros.model.Npcs;
+import io.xeros.model.definitions.NpcDef;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.items.GameItem;
 import io.xeros.util.Misc;
@@ -88,7 +88,8 @@ public class ArbograveChest implements Lootable {
             c.getItems().addItemUnderAnyCircumstance(reward.getId(), finalAmount);
             if (ArbograveChestItems.getItems().get(LootRarity.RARE).contains(reward)) {
                     c.sendMessage("@blu@You have received a rare item out of the storage unit.");
-                    NPCDeath.announceKc(c, reward, c.arboCompletions);
+                int npcId;
+                NPCDeath.announceKc(c, reward, "Arbograve Swamp", c.arboCompletions);
                     c.getCollectionLog().handleDrop(c, 1101, reward.getId(), reward.getAmount());
                 }
         } else {

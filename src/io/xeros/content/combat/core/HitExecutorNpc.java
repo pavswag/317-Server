@@ -164,6 +164,51 @@ public class HitExecutorNpc extends HitExecutor {
                     dboss.damageCount.put(attacker, damage.getAmount());
                 }
                 break;
+            case 1028:
+                Solak.targets.add(attacker);
+                if (Solak.damageCount.containsKey(attacker)) {
+                    Solak.damageCount.put(attacker, Solak.damageCount.get(attacker) + damage.getAmount());
+                } else {
+                    Solak.damageCount.put(attacker, damage.getAmount());
+                }
+                attacker.getPA().sendConfig(999, Solak.damageCount.getOrDefault(attacker, 0));
+                break;
+            case 1025:
+                Lightbearer.targets.add(attacker);
+                if (Lightbearer.damageCount.containsKey(attacker)) {
+                    Lightbearer.damageCount.put(attacker, Lightbearer.damageCount.get(attacker) + damage.getAmount());
+                } else {
+                    Lightbearer.damageCount.put(attacker, damage.getAmount());
+                }
+                attacker.getPA().sendConfig(999, Lightbearer.damageCount.getOrDefault(attacker, 0));
+                break;
+            case 1429:
+                Ghost.targets.add(attacker);
+                if (Ghost.damageCount.containsKey(attacker)) {
+                    Ghost.damageCount.put(attacker, Ghost.damageCount.get(attacker) + damage.getAmount());
+                } else {
+                    Ghost.damageCount.put(attacker, damage.getAmount());
+                }
+                attacker.getPA().sendConfig(999, Ghost.damageCount.getOrDefault(attacker, 0));
+                break;
+            case 1802:
+                DCorp.targets.add(attacker);
+                if (DCorp.damageCount.containsKey(attacker)) {
+                    DCorp.damageCount.put(attacker, DCorp.damageCount.get(attacker) + damage.getAmount());
+                } else {
+                    DCorp.damageCount.put(attacker, damage.getAmount());
+                }
+                attacker.getPA().sendConfig(999, DCorp.damageCount.getOrDefault(attacker, 0));
+                break;
+            case 1656:
+                Cryo.targets.add(attacker);
+                if (Cryo.damageCount.containsKey(attacker)) {
+                    Cryo.damageCount.put(attacker, Cryo.damageCount.get(attacker) + damage.getAmount());
+                } else {
+                    Cryo.damageCount.put(attacker, damage.getAmount());
+                }
+                attacker.getPA().sendConfig(999, Cryo.damageCount.getOrDefault(attacker, 0));
+                break;
             case 12821:
                 Sol.targets.add(attacker);
                 if (Sol.damageCount.containsKey(attacker)) {

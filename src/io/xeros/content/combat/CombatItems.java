@@ -213,7 +213,7 @@ public class CombatItems {
 	}
 
 	public boolean usingTwistedBow() {
-		return c.playerEquipment[Player.playerWeapon] == Items.TWISTED_BOW || c.playerEquipment[Player.playerWeapon] == 33160|| c.playerEquipment[Player.playerWeapon] == 30152|| c.playerEquipment[Player.playerWeapon] == 33058;
+		return c.playerEquipment[Player.playerWeapon] == Items.TWISTED_BOW || c.playerEquipment[Player.playerWeapon] == 33160|| c.playerEquipment[Player.playerWeapon] == 30152|| c.playerEquipment[Player.playerWeapon] == 30205|| c.playerEquipment[Player.playerWeapon] == 30203|| c.playerEquipment[Player.playerWeapon] == 30228|| c.playerEquipment[Player.playerWeapon] == 33058;
 	}
 
 	public boolean usingDbow() {

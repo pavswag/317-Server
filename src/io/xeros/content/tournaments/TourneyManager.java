@@ -676,7 +676,7 @@ public class TourneyManager {
                     killer.getItems().addItem(rewardItem.getId(), rewardItem.getAmount());
                 } else {
                     killer.sendMessage("Your inventory was full and your rewarded items were dropped beneath you.");
-                    Server.itemHandler.createGroundItem(killer, rewardItem.getId(), killer.absX, killer.absY, killer.getHeight(), rewardItem.getAmount(), killer.getIndex());
+                    Server.itemHandler.createGroundItem(killer, rewardItem.getId(), killer.absX, killer.absY, killer.getHeight(), rewardItem.getAmount(), killer.getIndex(), false);
                 }
             }
             for (int i = 0; i < itemsToRemove.length; i++) {

@@ -54,7 +54,7 @@ public final class Hunter {
 				t.setAbandoned(true);
 				Server.getGlobalObjects().remove(t.getObject());
 				Server.getGlobalObjects().remove(t.getObject().getObjectId(), t.getObject().getX(), t.getObject().getY(), t.getObject().getHeight());
-				Server.itemHandler.createGroundItem(player, t.getType().getItemId(), t.getObject().getX(), t.getObject().getY(), t.getObject().getHeight(), 1, player.getIndex());
+				Server.itemHandler.createGroundItem(player, t.getType().getItemId(), t.getObject().getX(), t.getObject().getY(), t.getObject().getHeight(), 1, player.getIndex(), false);
 			});
 			GLOBAL_TRAPS.get(player).getTraps().clear();
 		} else {
@@ -62,7 +62,7 @@ public final class Hunter {
 			trap.setAbandoned(true);
 			Server.getGlobalObjects().remove(trap.getObject());
 			Server.getGlobalObjects().remove(trap.getObject().getObjectId(), trap.getObject().getX(), trap.getObject().getY(), trap.getObject().getHeight());
-			Server.itemHandler.createGroundItem(player, trap.getType().getItemId(), trap.getObject().getX(), trap.getObject().getY(), trap.getObject().getHeight(), 1, player.getIndex());
+			Server.itemHandler.createGroundItem(player, trap.getType().getItemId(), trap.getObject().getX(), trap.getObject().getY(), trap.getObject().getHeight(), 1, player.getIndex(), false);
 			player.sendMessage("You have abandoned your trap...");
 		}
 

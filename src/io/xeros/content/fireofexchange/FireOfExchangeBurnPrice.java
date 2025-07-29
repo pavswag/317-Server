@@ -528,6 +528,8 @@ public class FireOfExchangeBurnPrice {
                     1_500_000;
             case 33124 ->//SLAYER_GURU
                     500_000;
+            case 26879 ->//wraith_ess
+                    10_000;
             case 33162 ->//WHIP
                     10_000_000;//SCYTHE
             case 33161, 33160 ->//TBOW

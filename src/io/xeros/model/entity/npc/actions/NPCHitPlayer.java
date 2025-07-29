@@ -703,6 +703,7 @@ public class NPCHitPlayer {
                                     case 1046:
                                     case 8028:
                                     case 319:
+                                    case 1802:
                                     case 7554:
                                     case 7604: // Skeletal mystic
                                     case 7605: // Skeletal mystic

@@ -6,7 +6,6 @@ import io.xeros.content.achievement.AchievementType;
 import io.xeros.content.achievement.Achievements;
 import io.xeros.content.achievement_diary.impl.FremennikDiaryEntry;
 import io.xeros.content.achievement_diary.impl.MorytaniaDiaryEntry;
-import io.xeros.content.activityboss.Groot;
 import io.xeros.content.battlepass.Pass;
 import io.xeros.content.bosses.Hunllef;
 import io.xeros.content.bosses.Kraken;
@@ -15,24 +14,34 @@ import io.xeros.content.bosses.nightmare.NightmareConstants;
 import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
 import io.xeros.content.bosses.wildypursuit.TheUnbearable;
 import io.xeros.content.bosspoints.BossPoints;
+import io.xeros.content.combat.Hitmark;
 import io.xeros.content.event.eventcalendar.EventChallenge;
 import io.xeros.content.events.monsterhunt.MonsterHunt;
 import io.xeros.content.minigames.warriors_guild.AnimatedArmour;
-import io.xeros.content.perky.PerkFinderBoss;
 import io.xeros.content.skills.Skill;
+import io.xeros.content.skills.hunter.impling.ItemRarity;
+import io.xeros.model.Graphic;
 import io.xeros.model.Npcs;
+import io.xeros.model.collisionmap.RegionProvider;
+import io.xeros.model.cycleevent.CycleEvent;
+import io.xeros.model.cycleevent.CycleEventContainer;
+import io.xeros.model.cycleevent.CycleEventHandler;
 import io.xeros.model.definitions.ItemDef;
 import io.xeros.model.definitions.NpcDef;
+import io.xeros.model.entity.EntityProperties;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.npc.NPCHandler;
 import io.xeros.model.entity.npc.drops.DropManager;
 import io.xeros.model.entity.npc.pets.PetHandler;
 import io.xeros.model.entity.player.*;
+import io.xeros.model.entity.player.lock.CompleteLock;
 import io.xeros.model.items.EquipmentSet;
 import io.xeros.model.items.GameItem;
 import io.xeros.util.Location3D;
 import io.xeros.util.Misc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class NPCDeath {
@@ -54,7 +63,59 @@ public class NPCDeath {
             player.setTargeted(null);
             player.getPA().sendEntityTarget(0, npc);
         }
-
+        if(player.hasPetSpawned && Misc.random(1, 100) == 100) {
+            List<Position> positions = new ArrayList<>();
+            List<NPC> npcs = new ArrayList<>();
+            for(int i = 0; i < 5; i++) {
+                Position position;
+                do position = new Position(Misc.random(player.absX - 3, player.absX + 3), Misc.random(player.absY - 3, player.absY + 3), player.heightLevel);
+                while (positions.contains(position) || RegionProvider.getGlobal().isBlocked(position));
+                positions.add(position);
+            }
+            CycleEventHandler.getSingleton().addEvent(player, new CycleEvent() {
+                @Override
+                public void execute(CycleEventContainer container) {
+                    int ticks = container.getTotalTicks();
+                    switch (ticks) {
+                        case 1 -> {
+                            player.lock(new CompleteLock());
+                            player.sendMessage("Your pet triggers a massacre event!");
+                            //player.currentPetNpc.startAnimation(11446);
+                        }
+                        case 2 -> {
+                            // player.currentPetNpc.forceChat("Kill them all!");
+                            player.sendMessage("Your pet kills them all!");
+                            positions.forEach(position -> {
+                                NPC npc = new NPC(npcId, position);
+                                npc.spawnedBy = player.getIndex();
+                                npc.getBehaviour().setRespawn(false);
+                                npc.getBehaviour().setAggressive(false);
+                                npc.getBehaviour().setRespawnWhenPlayerOwned(false);
+                                npc.getHealth().setCurrentHealth(1);
+                                npc.getHealth().setMaximumHealth(1);
+                                npc.addEntityProperty(EntityProperties.SHADOW);
+                                npcs.add(npc);
+                               // NPCSpawning.spawn(npc);
+                            });
+                        }
+                        case 3 -> {
+                            // player.currentPetNpc.startGraphic(new Graphic(2698));
+                        }
+                        case 8 -> {
+                            npcs.forEach(npc -> {
+                                npc.startGraphic(new Graphic(2697));
+                                npc.appendDamage(player, 1, Hitmark.HIT);
+                            });
+                        }
+                        case 9 -> {
+                            player.sendMessage("Your pet increases your drops!");
+                            player.unlock();
+                            container.stop();
+                        }
+                    }
+                }
+            }, 1);
+        }
         player.getAchievements().kill(npc);
 
         PetHandler.rollOnNpcDeath(player, npc);
@@ -109,6 +170,12 @@ public class NPCDeath {
         }
 
         if (npcId == Npcs.CORPOREAL_BEAST) {
+            NPCHandler.kill(Npcs.DARK_ENERGY_CORE, npc.heightLevel);
+        }
+//        if (npcId == 1028) {
+//            NPCHandler.kill(8030, player.heightLevel);
+//        }
+        if (npcId == 1802) {
             NPCHandler.kill(Npcs.DARK_ENERGY_CORE, npc.heightLevel);
         }
         if (npcId == 12821) {
@@ -293,8 +360,8 @@ public class NPCDeath {
         }
 
         if (!Boundary.isIn(player, Boundary.STAFF_ZONE) && player.announce) {
-            announceKc(player, item, player.getNpcDeathTracker().getKc(NpcDef.forId(npcId).getName()));
-        }
+            int kc = player.getNpcDeathTracker().getKc(NpcDef.forId(npcId).getName());
+            announceKc(player, item, NpcDef.forId(npcId).getName(), kc);        }
 
         Achievements.increase(player, AchievementType.UNIQUE_DROPS, 1);
 
@@ -306,17 +373,20 @@ public class NPCDeath {
         }
     }
 
-    public static void announceKc(Player player, GameItem item, int kc) {
+    public static void announceKc(Player player, GameItem item, String npcName, int kc) {
         if (player == null || item == null) return;
         if (player.getDisplayName().equalsIgnoreCase("Mercy")) {
             return;
         }
-
-        if (item.getRarity() == null) return;
-
-        if (item.getRarity().rarity > 100) {
-            PlayerHandler.executeGlobalMessage("@pur@" + player.getDisplayNameFormatted() + " received a drop: " + ItemDef.forId(item.getId()).getName() + " x " + item.getAmount() + " at <col=E9362B>" + kc + "</col>@pur@ kills.");
+        ItemRarity rarity = item.getRarity();
+        if (rarity == null || (rarity != ItemRarity.RARE && rarity != ItemRarity.VERY_RARE)) {
+            return;
         }
+
+        String from = npcName != null && !npcName.isEmpty() ? " from " + npcName : "";
+        PlayerHandler.executeGlobalMessage("@pur@" + player.getDisplayNameFormatted() +
+                " received a drop: " + ItemDef.forId(item.getId()).getName() + " x " + item.getAmount() +
+                from + " at <col=E9362B>" + kc + "</col>@pur@ kills.");
     }
 
     public static boolean isDoubleDrops() {

@@ -145,6 +145,7 @@ public class Degrade {
 				|| Boundary.isIn(player, Boundary.WG_Boundary)) {
 			return;
 		}
+
 		for (DegradableItem degradable : DegradableItem.DEGRADABLES) {
 			if (degradable.special)
 				continue;

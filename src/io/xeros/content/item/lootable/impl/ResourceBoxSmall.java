@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import io.xeros.content.item.lootable.ItemLootable;
 import io.xeros.content.item.lootable.LootRarity;
 import io.xeros.model.Items;
+import io.xeros.model.entity.player.Player;
 import io.xeros.model.items.GameItem;
 
 import java.util.List;
@@ -68,7 +69,23 @@ public class ResourceBoxSmall extends ItemLootable {
                 new GameItem(Items.RED_SPIDERS_EGGS_NOTED, 6)
         ));
     }
+    /**
+     * Quickly open all large resource boxes in the player's inventory.
+     */
+    public void quickOpen(Player player) {
+        int amount = player.getItems().getInventoryCount(BOX_ITEM);
 
+        if (amount > 1000) {
+            amount = 1000;
+        }
+
+        for (int i = 0; i < amount; i++) {
+            if (!player.getItems().playerHasItem(BOX_ITEM)) {
+                break;
+            }
+            roll(player);
+        }
+    }
     @Override
     public int getLootableItem() {
         return BOX_ITEM;

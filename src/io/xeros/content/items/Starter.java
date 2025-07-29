@@ -2,6 +2,7 @@ package io.xeros.content.items;
 
 import io.xeros.Server;
 import io.xeros.content.skills.Skill;
+import io.xeros.content.skills.slayer.SlayerMaster;
 import io.xeros.model.Items;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Right;
@@ -56,27 +57,56 @@ public class Starter {
             testingStarter(c);
         } else {
             standardStarter(c);
+            SlayerMaster.get(401);
         }
     }
 
     private static void standardStarter(Player c) {
         c.setToxicBlowpipeAmmo(11230);
-        c.setToxicBlowpipeAmmoAmount(90000);
-        c.setToxicBlowpipeCharge(90000);
-        c.getItems().addItemUnderAnyCircumstance(84, 1);
-        c.getItems().addItemUnderAnyCircumstance(24364, 1);
-        c.getItems().addItemUnderAnyCircumstance(995, 300000);
-        c.getItems().addItemUnderAnyCircumstance(12785, 1);
+        c.setToxicBlowpipeAmmoAmount(5000);
+        c.setToxicBlowpipeCharge(15000);
+        c.getItems().addItemUnderAnyCircumstance(33169, 1);
         c.getItems().addItemUnderAnyCircumstance(28688, 1);
-        c.getItems().addItemUnderAnyCircumstance(12934, 500);
-        c.getItems().addItemUnderAnyCircumstance(11230, 500);
+        c.getItems().addItemUnderAnyCircumstance(Items.WRATH_RUNE, 500);
+        c.getItems().addItemUnderAnyCircumstance(24364, 1);
+        c.getItems().addItemUnderAnyCircumstance(12785, 1);
         c.getItems().addItemUnderAnyCircumstance(2841, 1);//double exp scroll
-        c.getItems().addItemUnderAnyCircumstance(380, 100);//noted lobster
-        c.getItems().addItemUnderAnyCircumstance(555, 1000);//Water Rune
-        c.getItems().addItemUnderAnyCircumstance(556, 1000);//Air Rune
-        c.getItems().addItemUnderAnyCircumstance(554, 1000);//Fire Rune
-        c.getItems().addItemUnderAnyCircumstance(557, 1000);//Earth Rune
-        c.getItems().addItemUnderAnyCircumstance(558, 1000);//Mind Rune
+        c.getItems().sendToTab(1, Items.ANGLERFISH, 100);
+        c.getItems().sendToTab(1, Items.COOKED_KARAMBWAN, 50);
+        c.getItems().sendToTab(1, Items.DIVINE_SUPER_COMBAT_POTION4, 25);
+        c.getItems().sendToTab(1, Items.SUPER_COMBAT_POTION4, 25);
+        c.getItems().sendToTab(1, Items.DIVINE_RANGING_POTION4, 25);
+        c.getItems().sendToTab(1, Items.RANGING_POTION4, 25);
+        c.getItems().sendToTab(1, Items.DIVINE_MAGIC_POTION4, 25);
+        c.getItems().sendToTab(1, Items.MAGIC_POTION4, 25);
+        c.getItems().sendToTab(1, Items.SUPER_RESTORE4, 25);
+        c.getItems().sendToTab(1, Items.ANTI_VENOMPLUS4, 25);
+        c.getItems().sendToTab(1, Items.ANTIDOTEPLUSPLUS4, 25);
+        c.getItems().sendToTab(1, Items.SARADOMIN_BREW4, 50);
+        c.getItems().sendToTab(2, Items.PURE_ESSENCE, 1000);
+        for (int i = 554; i <= 566; i++) {
+            c.getItems().sendToTab(2, i, 1000);
+        }
+        c.getItems().sendToTab(2, 9075, 1000);
+        c.getItems().sendToTab(2, Items.WRATH_RUNE, 100);
+        c.getItems().sendToTab(3, Items.HAMMER, 1);
+        c.getItems().sendToTab(3, Items.TINDERBOX, 1);
+        c.getItems().sendToTab(3, Items.KNIFE, 1);
+        c.getItems().sendToTab(3, Items.CHEFS_HAT, 1);
+        c.getItems().sendToTab(3, Items.CHISEL, 1);
+        c.getItems().sendToTab(3, Items.IRON_PICKAXE, 1);
+        c.getItems().sendToTab(3, Items.SMALL_FISHING_NET, 1);
+        c.getItems().sendToTab(3, Items.FISHING_BAIT, 100);
+        c.getItems().sendToTab(3, Items.FISHING_ROD, 1);
+        c.getItems().sendToTab(3, Items.FLY_FISHING_ROD, 1);
+        c.getItems().sendToTab(3, Items.FEATHER, 1000);
+        c.getItems().sendToTab(3, Items.IRON_AXE, 1);
+        c.getItems().sendToTab(3, Items.VIAL_OF_WATER, 1000);
+        c.getItems().sendToTab(3, Items.PESTLE_AND_MORTAR, 1);
+        c.getItems().sendToTab(3, Items.EYE_OF_NEWT, 100);
+        c.getItems().sendToTab(3, Items.HAMMER, 1);
+        c.getItems().sendToTab(3, Items.SPADE, 1);
+        c.getItems().sendToTab(0, 995, 300000);
     }
 
     public static void testingStarter(Player player) {

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class DemonXBow extends Special {
     public DemonXBow()  {
-        super(3.25, 10.0, 5.0, new int[] { 33207 });
+        super(3.25, 10.0, 5.0, new int[] { 33207,33434 });
     }
 
     @Override

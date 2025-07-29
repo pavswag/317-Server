@@ -68,7 +68,7 @@ public class TableGroup extends ArrayList<Table> {
                     if (generate.nextInt(chance) == 0) {
                         var drop = table.fetchRandom();
                         var finalAmount = Server.random.inclusive(drop.getMinimumAmount(), drop.getMaximumAmount());
-                        System.out.println("amount=" + finalAmount + " maxamount=" + drop.getMaximumAmount());
+                      //  System.out.println("amount=" + finalAmount + " maxamount=" + drop.getMaximumAmount());
                         var rareTableBroadcast = policy.equals(TablePolicy.VERY_RARE) || policy.equals(TablePolicy.RARE) || policy.equals(TablePolicy.EXTREMELY_RARE);
                         var item = new GameItem(drop.getItemId(), finalAmount);
                         var itemNameLowerCase = ItemDef.forId(item.getId()).getName().toLowerCase();

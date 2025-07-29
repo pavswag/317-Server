@@ -23,6 +23,8 @@ public class MeleeData {
 			return true;
 		} else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(33184)) {
 			return true;
+		} else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(33431)) {
+			return true;
 		} else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(33203)) {
 			return true;
 		} else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(27610)) {
@@ -497,6 +499,9 @@ public class MeleeData {
 			return 10922;
 		}
 
+		if (weaponName.contains("claws")) {
+			return 7514;
+		}
 		if (weaponName.contains("tonalztics")) {
 			return 10923;
 		}
@@ -762,6 +767,7 @@ public class MeleeData {
 			case 33161:
 			case 33184:
 			case 33203:
+			case 33431:
 				return 435;
 			case 33148:
 				return 435;

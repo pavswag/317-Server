@@ -446,6 +446,7 @@ public class DeathAnimation extends NPCHandler {
             case 5938:// Wallasalki
                 return 2367;
 
+            case 1802:
             case 319: // Corporeal Beast
                 return 1676;
 

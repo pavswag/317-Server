@@ -203,6 +203,7 @@ public class NPCHandler {
         switch (npc.getNpcId()) {
             case 963:
             case 1025:
+            case 1028:
             case 1429:
             case 1656:
             case 965:
@@ -214,6 +215,7 @@ public class NPCHandler {
             case 8172:
             case 494:
             case 319:
+            case 1802:
             case 12821:
             case 7554:
             case 320:
@@ -369,6 +371,7 @@ public class NPCHandler {
             case 8164, 8172 -> npc.getAttackType() == CombatType.MAGE ? 1 : 3;
             case 6611, 6612 -> npc.getAttackType() == CombatType.MAGE ? 6 : 5;
             case 6607 -> 5;
+            case 1802 -> npc.getAttackType() == CombatType.MAGE ? 7 : 6;
             case 319 -> npc.getAttackType() == CombatType.MAGE ? 7 : 6;
             case 12821 -> 6;
             case 7554 -> npc.getAttackType() == CombatType.MAGE ? 4 : 6;
@@ -634,6 +637,7 @@ public class NPCHandler {
         return switch (npc.getNpcId()) {
             case 3129 -> 16;
             case 319 -> 0;
+            case 1802 -> 16;
             case 12821 -> 12;
             case 3021 -> 5;
             case 957 -> 4;
@@ -674,6 +678,7 @@ public class NPCHandler {
             case 11286:
                 return 100;
             case 319:
+            case 1802:
             case 12821:
             case 239:
             case 8031:
@@ -794,7 +799,7 @@ public class NPCHandler {
                                 continue;
                             }
                         }
-                        if (npc.getNpcId() == 8164 || npc.getNpcId() == 8172|| npc.getNpcId() == 1025) {
+                        if (npc.getNpcId() == 8164 || npc.getNpcId() == 8172 || npc.getNpcId() == 1028|| npc.getNpcId() == 1025) {
                             if (araphelSpellCoordinates.stream().noneMatch(p -> p[0] == c.absX && p[1] == c.absY)) {
                                 continue;
                             }
@@ -816,6 +821,7 @@ public class NPCHandler {
                                 case 6612:
                                 case 8164:
                                 case 8172:
+                                case 1028:
                                 case 1025:
                                 case 1429:
                                 case 1656:
@@ -829,6 +835,7 @@ public class NPCHandler {
                                     if (c.protectingMagic()) damage /= 2;
                                     break;
                                 case 319:
+                                case 1802:
                                     if (c.protectingMagic()) damage /= 2;
                                     break;
                                 default:
@@ -883,6 +890,7 @@ public class NPCHandler {
             case 11730:
             case 1025:
             case 1429:
+            case 1028:
             case 1656:
             case 11756:
                 return true;
@@ -903,6 +911,7 @@ public class NPCHandler {
             case 6619:
             case 319:
             case 6766:
+            case 1802:
             case 6768:
             case 7617:
                 return npc.getAttackType() == CombatType.SPECIAL || npc.getAttackType() == CombatType.MAGE;
@@ -1291,6 +1300,7 @@ public class NPCHandler {
             case InfernoWaveData.JAL_ZEK:
             case 1025:
             case 1429:
+            case 1028:
             case 1656:
                 return 8;
             case InfernoWaveData.JAL_IMKOT:
@@ -1367,6 +1377,7 @@ public class NPCHandler {
             case FragmentOfSeren.NPC_ID:
                 return 8;
             case 319:
+            case 1802:
                 if (npc.getAttackType() == CombatType.MAGE) if (npc.getAttackType() == CombatType.SPECIAL) return 20;
                 if (npc.getAttackType() == CombatType.MELEE) return 4;
                 //case 5890:
@@ -1552,6 +1563,7 @@ public class NPCHandler {
             case 1257:
             case 1025:
             case 1429:
+            case 1028:
             case 1656:
                 return 5;
             case 11283:
@@ -1676,6 +1688,7 @@ public class NPCHandler {
             case FragmentOfSeren.NPC_ID:
                 return 10;
             case 319:
+            case 1802:
                 return 9;
             case 2551:
             case 2562:
@@ -1755,11 +1768,13 @@ public class NPCHandler {
             case 6611:
             case 1025:
             case 1429:
+            case 1028:
             case 1656:
             case 8164:
             case 8172:
             case 6612:
             case 319:
+            case 1802:
             case 12821:
             case 6618:
             case 6766:
@@ -2137,6 +2152,7 @@ public class NPCHandler {
                 return npc.getAttackType() == CombatType.MELEE ? 55 : 25;
             case 22545:
             case 1025:
+            case 1028:
             case 1429:
             case 1656:
             case 1658:
@@ -2229,6 +2245,7 @@ public class NPCHandler {
             case 8609:
                 return 22;
             case 319:
+            case 1802:
                 return npc.getAttackType() == CombatType.MELEE ? 55 : npc.getAttackType() == CombatType.SPECIAL ? 35 : 49;
             case 320:
                 return 10;

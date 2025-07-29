@@ -28,7 +28,7 @@ public class MiniMeFunctions {
         //TODO register in world?, add miniMe check to player file, Clone all skill levels
         p.sendMessage("@red@You call your mini-me!");
 
-       // mini.getRights().setPrimary(p.getRights().getPrimary());
+        mini.getRights().setPrimary(p.getRights().getPrimary());
         mini.setMode(p.getMode());
         mini.saveCharacter = true;
         mini.setCompletedTutorial(true);
@@ -55,7 +55,7 @@ public class MiniMeFunctions {
         p.getMiniMe().combatFollowing = false;
 
         p.getMiniMe().getPA().followPlayer();
-        startFollowing(p);
+
         Server.getIoExecutorService().submit(() -> {
             try {
                 LoginReturnCode code = RS2LoginProtocol.loadPlayer(mini, mini.getLoginNameLower(), LoginReturnCode.SUCCESS, true);
@@ -72,7 +72,6 @@ public class MiniMeFunctions {
 
     }
 
-
     public static void startFollowing(Player owner) {
 
         if (owner.getMiniMe() == null) {
@@ -80,11 +79,10 @@ public class MiniMeFunctions {
             return;
         }
 
-//        if (owner.getMiniMe().playerFollowingIndex == owner.getIndex()) {
-//            owner.sendMessage("Your minime is already following you.");
-//            return;
-//        }
-
+        if (owner.getMiniMe().playerFollowingIndex == owner.getIndex()) {
+            owner.sendMessage("Your minime is already following you.");
+            return;
+        }
 
         owner.getMiniMe().moveTo(owner.getPosition());
         owner.sendMessage("Your minime begins to follow you.");
@@ -96,35 +94,6 @@ public class MiniMeFunctions {
         owner.getMiniMe().playerFollowingIndex = owner.getIndex();
         owner.getMiniMe().combatFollowing = false;
         owner.getMiniMe().getPA().followPlayer();
-        for (int i = 0; i < owner.playerEquipment.length; i++) {
-            owner.getMiniMe().playerEquipment[i] = owner.playerEquipment[i];
-        }
-
-        for (int i = 0; i < owner.playerEquipmentN.length; i++) {
-            owner.getMiniMe().playerEquipmentN[i] = owner.playerEquipmentN[i];
-        }
-
-        owner.getItems().getInventoryItems().forEach(item -> {
-            owner.getMiniMe().getItems().setInventoryItemSlot(item.getSlot(), item.getId(), item.getAmount());
-        });
-
-        for (int i = 0; i < owner.playerLevel.length; i++) {
-            owner.getMiniMe().playerLevel[i] = owner.playerLevel[i];
-        }
-
-        for (int i = 0; i < owner.playerXP.length; i++) {
-            owner.getMiniMe().playerXP[i] = owner.playerXP[i];
-        }
-
-        owner.getMiniMe().getPA().refreshSkills();
-        owner.getMiniMe().getItems().addContainerUpdate(ContainerUpdate.EQUIPMENT);
-        owner.getMiniMe().getItems().addContainerUpdate(ContainerUpdate.INVENTORY);
-        owner.getMiniMe().getItems().calculateBonuses();
-        owner.getMiniMe().getPA().requestUpdates();
-        MeleeData.setWeaponAnimations(owner.getMiniMe());
-        owner.getMiniMe().getItems().calculateBonuses();
-        owner.getMiniMe().getItems().sendEquipmentContainer();
-        owner.getMiniMe().getPA().requestUpdates();
     }
 
     public static void stopFollowing(Player owner) {

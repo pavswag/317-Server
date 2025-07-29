@@ -22,7 +22,7 @@ public class OurianaAltar {
             Items.COSMIC_RUNE, Items.NATURE_RUNE, Items.ASTRAL_RUNE, Items.LAW_RUNE, Items.WRATH_RUNE};
 
     public static boolean clickObject(Player player, WorldObject worldObject) {
-        if (worldObject.getId() == 29_631) {
+        if (worldObject.getId() == 43479) {
             if (player.getInventory().containsAll(new ImmutableItem(Items.PURE_ESSENCE, 1))) {
                 int essence = player.getItems().getItemAmount(Items.PURE_ESSENCE);
                 if (essence >= 20) {

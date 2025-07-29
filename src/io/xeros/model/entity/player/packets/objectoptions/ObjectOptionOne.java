@@ -2484,7 +2484,10 @@ public class ObjectOptionOne {
                 c.objectDistance = 3;
                 c.objectXOffset = 3;
                 c.objectYOffset = 3;
-                new CrystalChest().roll(c);
+                int amount = c.getItems().getItemAmount(989);
+                if (amount > 2000)
+                    amount = 2000;
+                new CrystalChest().roll(c, amount);
                 break;
 
             case 4873:

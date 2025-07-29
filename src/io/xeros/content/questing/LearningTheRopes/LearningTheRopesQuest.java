@@ -351,9 +351,9 @@ public class LearningTheRopesQuest extends Quest {
 
     @Override
     public void handleNpcKilled(NPC npc) {
-        if (Boundary.HOME.in(player) && npc.getNpcId() == Npcs.HOBGOBLIN_2) {
+        if (npc.getNpcId() == Npcs.HOBGOBLIN_2) {
             if (getStage() == 13) {
-                Server.itemHandler.createGroundItem(player, 696, npc.getX(), npc.getY(), player.getHeight(), 10, player.getIndex());
+                Server.itemHandler.createGroundItem(player, 696, npc.getX(), npc.getY(), player.getHeight(), 10, player.getIndex(), false);
                 player.start(new DialogueBuilder(player).player("I think the hobgoblin has dropped some certificate's."));
                 incrementStage();
             }

@@ -423,6 +423,9 @@ public class MagicCombatFormula implements CombatFormula {
                 multiplier += 1.000;
             }
 
+            if (player.getItems().isWearingItem(33433, Player.playerWeapon)) {
+                multiplier += 2.425;
+            }
             if (player.getItems().isWearingItem(33205, Player.playerWeapon)) {
                 multiplier += 1.425;
             }

@@ -219,4 +219,33 @@ public class CrystalChest implements Lootable {
 		}
 	}
 
+	/**
+	 * Opens multiple crystal keys in quick succession.
+	 * Items will be noted if possible and overflow will be sent to the bank.
+	 *
+	 * @param c      the player opening the chest
+	 * @param amount how many keys to open
+	 */
+	public void roll(Player c, int amount) {
+		int keys = Math.min(c.getItems().getItemCount(KEY, false), amount);
+		if (keys <= 0) {
+			c.sendMessage("@blu@The chest is locked, it won't budge!");
+			return;
+		}
+
+		for (int i = 0; i < keys; i++) {
+			c.getItems().deleteItem(KEY, 1);
+			c.startAnimation(ANIMATION);
+			c.getItems().addItemToBankOrDrop(DRAGONSTONE, 1);
+			GameItem reward = randomChestRewards(c);
+			int id = reward.getId();
+			if (!reward.getDef().isNoted() && reward.getDef().getNoteId() > 0) {
+				id = reward.getDef().getNoteId();
+			}
+			int amountToAdd = PrestigePerks.hasRelic(c, PrestigePerks.DOUBLE_PC_POINTS) && Misc.isLucky(10) ? reward.getAmount() * 2 : reward.getAmount();
+			c.getItems().addItemToBankOrDrop(id, amountToAdd);
+			Achievements.increase(c, AchievementType.LOOT_CRYSTAL_CHEST, 1);
+		}
+	}
+
 }

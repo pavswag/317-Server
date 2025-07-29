@@ -350,9 +350,9 @@ public class Slayer {
 								}
 								if (Misc.random(chance) == 1) {
 									if (npc.getNpcId() == Kraken.KRAKEN_ID || npc.getNpcId() == 492) {
-										Server.itemHandler.createGroundItem(player, Items.BRIMSTONE_KEY, player.getX(), player.getY(), player.heightLevel, rewardAmount, player.getIndex());
+										Server.itemHandler.createGroundItem(player, Items.BRIMSTONE_KEY, player.getX(), player.getY(), player.heightLevel, rewardAmount, player.getIndex(), false);
 									} else {
-										Server.itemHandler.createGroundItem(player, Items.BRIMSTONE_KEY, npc.getX(), npc.getY(), player.heightLevel, rewardAmount, player.getIndex());
+										Server.itemHandler.createGroundItem(player, Items.BRIMSTONE_KEY, npc.getX(), npc.getY(), player.heightLevel, rewardAmount, player.getIndex(), false);
 									}
 									//PlayerHandler.executeGlobalMessage("@cr21@ @pur@" + player.playerName + " received a drop: Brimstone's key from Konar slayer.");
 								}

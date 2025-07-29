@@ -254,11 +254,11 @@ public class BountyHunter extends CycleEvent {
 		BountyHunterEmblem.EMBLEMS.forEach(e -> player.getItems().deleteItem2(e.getItemId(), player.getItems().getItemAmount(e.getItemId())));
 		if (Misc.random(9) != 0 && killer.getBH().hasTarget() && hasTarget() && killer.getLoginName().equalsIgnoreCase(target.getLoginName())) {
 			if (emblem.isPresent()) {
-				Server.itemHandler.createGroundItem(killer, emblem.get().getPreviousOrFirst().getItemId(), player.getX(), player.getY(), player.heightLevel, 1, killer.getIndex());
+				Server.itemHandler.createGroundItem(killer, emblem.get().getPreviousOrFirst().getItemId(), player.getX(), player.getY(), player.heightLevel, 1, killer.getIndex(), false);
 			} else {
 				if (Misc.random(3) != 0) {
 					Server.itemHandler.createGroundItem(killer, BountyHunterEmblem.TIER_1.getItemId(), player.getX(), player.getY(), player.heightLevel, Configuration.DOUBLE_PKP ? 2 : 1,
-							killer.getIndex());
+							killer.getIndex(), false);
 				}
 			}
 		}

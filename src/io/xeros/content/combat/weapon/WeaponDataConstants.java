@@ -47,7 +47,7 @@ public class WeaponDataConstants {
     };
 
     public static final int[] SCYTHE = {
-            Items.SCYTHE, Items.SCYTHE_OF_VITUR, 25736, 25739, 33161, 33148, 33184, 33203, 28543
+            Items.SCYTHE, Items.SCYTHE_OF_VITUR, 25736, 25739, 33161, 33148, 33184, 33431,33203, 28543
     };
 
     // [[accurate, stab], [aggressive, stab], [aggressive, slash], [defensive, stab]]
@@ -107,7 +107,7 @@ public class WeaponDataConstants {
             Items.MYSTIC_AIR_STAFF, Items.MYSTIC_EARTH_STAFF, Items.MYSTIC_FIRE_STAFF, Items.MYSTIC_WATER_STAFF,
             Items.MYSTIC_LAVA_STAFF, Items.MYSTIC_MUD_STAFF, Items.MYSTIC_STEAM_STAFF, Items.MYSTIC_DUST_STAFF, Items.MYSTIC_SMOKE_STAFF,
             Items.BEGINNER_WAND, Items.APPRENTICE_WAND, Items.TEACHER_WAND, Items.MASTER_WAND, Items.THIRD_AGE_WAND, Items.KODAI_WAND,
-            Items.TRIDENT_OF_THE_SEAS, Items.TRIDENT_OF_THE_SWAMP, Items.SANGUINESTI_STAFF, 25731, 33149, 33205, 21198, Items.DAWNBRINGER, Items.STAFF_OF_LIGHT,
+            Items.TRIDENT_OF_THE_SEAS, Items.TRIDENT_OF_THE_SWAMP, Items.SANGUINESTI_STAFF, 25731, 33149, 33433,33205, 21198, Items.DAWNBRINGER, Items.STAFF_OF_LIGHT,
             Items.STAFF_OF_BALANCE, Items.AHRIMS_STAFF, Items.ANCIENT_STAFF, Items.GUTHIX_STAFF, Items.SARADOMIN_STAFF, Items.ZAMORAK_STAFF,
             Items.NIGHTMARE_STAFF, Items.ELDRITCH_NIGHTMARE_STAFF, Items.HARMONISED_NIGHTMARE_STAFF, Items.VOLATILE_NIGHTMARE_STAFF,
             Items.SLAYERS_STAFF, Items.SLAYERS_STAFF_E, Items.THIRD_AGE_DRUIDIC_STAFF, Items.THAMMARONS_SCEPTRE, Items.THAMMARONS_SCEPTRE_U,
@@ -149,7 +149,7 @@ public class WeaponDataConstants {
             // Crystal bows
             412, 4213, 4214, 4215, 4216, 4217, 4218, 4219, 4220, 4221, 4222, 4223,
             // bofa
-            25865, 25867, 25884, 25888, 25886, 25890, 25892, 25894, 25896, 30152,33058, 33207,27655,
+            25865, 25867, 25884, 25888, 25886, 25890, 25892, 25894, 25896, 30203,30205,30152,30228,33058,33434, 33207,27655,
             //corrupted bow
             23855, 23857, 23902,
             //new wildy weapons

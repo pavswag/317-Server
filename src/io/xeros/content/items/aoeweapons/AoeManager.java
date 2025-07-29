@@ -3,6 +3,8 @@ package io.xeros.content.items.aoeweapons;
 import io.xeros.content.combat.Damage;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.range.RangeData;
+import io.xeros.content.skills.Skill;
+import io.xeros.model.CombatType;
 import io.xeros.model.Graphic;
 import io.xeros.model.collisionmap.doors.Location;
 import io.xeros.model.entity.Entity;
@@ -15,6 +17,7 @@ import io.xeros.util.Misc;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Random;
 
 public class AoeManager {
@@ -26,11 +29,11 @@ public class AoeManager {
     }
 
     public static void castAOE(Player player, Entity victim) {
-        if (!canAOE(player)) {
-            player.sendMessage("You cannot do this here.");
-            player.attacking.reset();
-            return;
-        }
+//        if (!canAOE(player)) {
+//            player.sendMessage("You cannot do this here.");
+//            player.attacking.reset();
+//            return;
+//        }
 
         AoeWeapons aoeData = AOESystem.getSingleton().getAOEData(player.playerEquipment[Player.playerWeapon]);
         if (aoeData != null) {
@@ -40,6 +43,7 @@ public class AoeManager {
             int delay = aoeData.Delay;
             int anim = aoeData.anim;
             int gfx = aoeData.gfx;
+            String style = aoeData.style;
 
             player.startAnimation(anim);
 
@@ -55,12 +59,24 @@ public class AoeManager {
                             if (victim != next) {
                                 victim.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
                                 int calc = Misc.random(dmg);
-                                victim.appendDamage(calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
+                                victim.appendDamage(player, calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
                             }
+//                            if (Objects.equals(style, "mage")) {
+//                                player.getPA().addSkillXPMultiplied(dmg >> 2, Skill.MAGIC.getId(), true);
+//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 3, true);
+//                            } else if (Objects.equals(style, "melee")) {
+//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 0, true);
+//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 1, true);
+//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 2, true);
+//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 3, true);
+//                            } else if (Objects.equals(style, "ranged")) {
+//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 4, true);
+//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 3, true);
+//                            }
 //                            RangeData.fireProjectileNpc(player, next.asNPC(), 50, 70, gfx, 43, 31, 37, 10);
                             next.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
                             int calc = Misc.random(dmg);
-                            next.appendDamage(calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
+                            next.appendDamage(player, calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
                             next.attackEntity(player);
                             player.attackTimer = delay;
                         }

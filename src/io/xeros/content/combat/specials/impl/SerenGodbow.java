@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class SerenGodbow extends Special {
 
     public SerenGodbow() {
-        super(5.0, 1.5, 1.0, new int[] { 30152,33058,30340 });
+        super(5.0, 1.5, 1.0, new int[] { 30152,33058,30340,30228 });
     }
 
     @Override

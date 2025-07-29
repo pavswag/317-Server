@@ -29,44 +29,44 @@ import static io.xeros.content.skills.Cooking.fishIds;
 
 public class Fishing extends SkillHandler {
 
-	public static int[] anglerOuftit = { 13258, 13259, 13260, 13261 };
-	public static int[] SpiritanglerOuftit = { 25592, 25594, 25596, 25598 };
+	public static int[] anglerOuftit = {13258, 13259, 13260, 13261};
+	public static int[] SpiritanglerOuftit = {25592, 25594, 25596, 25598};
 
 	/**
 	 * Fishing data
-	 * Id, Level, Equipment, Bait, Raw material, XP, Animation,  
+	 * Id, Level, Equipment, Bait, Raw material, XP, Animation,
 	 */
-	public static int[][] data = { 
-			{ 1, 1, 303, -1, 317, 10, 621, 321, 15, 30, 12000 }, // SHRIMP
-			{ 2, 5, 307, 313, 327, 20, 622, 345, 10, 30, 12000 }, // SARDINE + HERRING
-			{ 3, 16, 305, -1, 353, 20, 620, -1, -1, -1, 12000 }, // MACKEREL
-			{ 4, 20, 309, 314, 335, 50, 622, 331, 30, 70, 12000 }, // TROUT
-			{ 5, 23, 305, -1, 341, 45, 619, 363, 46, 100, 12000 }, // BASS + COD
-			{ 6, 25, 309, 314, 349, 60, 622, -1, -1, -1, 12000 }, // PIKE
-			{ 7, 35, 311, -1, 359, 80, 618, 371, 50, 100, 12000 }, // TUNA + SWORDIE
-			{ 7, 35, 21028, -1, 359, 80, 7401, 371, 50, 100, 12000 }, // TUNA + SWORDIE
-			{ 7, 35, 21031, -1, 359, 80, 7402, 371, 50, 100, 12000 }, // TUNA + SWORDIE
-			{ 8, 40, 301, -1, 377, 90, 619, -1, -1, -1, 10000 }, // LOBSTER
-			{ 9, 62, 303, -1, 7944, 100, 620, -1, -1, -1, 8000 }, // MONKFISH
-			{ 10, 76, 311, -1, 383, 110, 618, -1, -1, -1, 6000 }, // SHARK
-			{ 10, 76, 21028, -1, 383, 110, 7401, -1, -1, -1, 6000 }, // SHARK
-			{ 10, 76, 21031, -1, 383, 110, 7402, -1, -1, -1, 6000 }, // SHARK
-			{ 11, 79, 305, -1, 395, 100, 620, 389, 81, 130, 6000 }, // SEA TURTLE
-			{ 12, 81, 305, -1, 389, 130, 620, -1, -1, -1, 6000 }, // MANTA RAY
-			{ 13, 85, 301, 11940, 11934, 132, 619, -1, -1, -1, 6000 }, // DARK CRAB
-			{ 14, 1, -1, -1, 3150, 1, 620, -1, -1, -1, 15000 }, // Karambwanji AFK FISH
-			{ 15, 65, 3159, 3150, 3142, 105, 620, -1, -1, -1, 8000 }, // Karambwan
-			{ 16, 82, 307, 13431, 13439, 118, 622, -1, -1, -1, 6000 }, // Anglerfish
-			{ 17, 90, 1585, 26598, 2148, 160, 622, -1, -1, -1, 6000 }, // Lava Eel
+	public static int[][] data = {
+			{1, 1, 303, -1, 317, 10, 621, 321, 15, 30, 12000}, // SHRIMP
+			{2, 5, 307, 313, 327, 20, 622, 345, 10, 30, 12000}, // SARDINE + HERRING
+			{3, 16, 305, -1, 353, 20, 620, -1, -1, -1, 12000}, // MACKEREL
+			{4, 20, 309, 314, 335, 50, 622, 331, 30, 70, 12000}, // TROUT
+			{5, 23, 305, -1, 341, 45, 619, 363, 46, 100, 12000}, // BASS + COD
+			{6, 25, 309, 314, 349, 60, 622, -1, -1, -1, 12000}, // PIKE
+			{7, 35, 311, -1, 359, 80, 618, 371, 50, 100, 12000}, // TUNA + SWORDIE
+			{7, 35, 21028, -1, 359, 80, 7401, 371, 50, 100, 12000}, // TUNA + SWORDIE
+			{7, 35, 21031, -1, 359, 80, 7402, 371, 50, 100, 12000}, // TUNA + SWORDIE
+			{8, 40, 301, -1, 377, 90, 619, -1, -1, -1, 10000}, // LOBSTER
+			{9, 62, 303, -1, 7944, 100, 620, -1, -1, -1, 8000}, // MONKFISH
+			{10, 76, 311, -1, 383, 110, 618, -1, -1, -1, 6000}, // SHARK
+			{10, 76, 21028, -1, 383, 110, 7401, -1, -1, -1, 6000}, // SHARK
+			{10, 76, 21031, -1, 383, 110, 7402, -1, -1, -1, 6000}, // SHARK
+			{11, 79, 305, -1, 395, 100, 620, 389, 81, 130, 6000}, // SEA TURTLE
+			{12, 81, 305, -1, 389, 130, 620, -1, -1, -1, 6000}, // MANTA RAY
+			{13, 85, 301, 11940, 11934, 132, 619, -1, -1, -1, 6000}, // DARK CRAB
+			{14, 1, -1, -1, 3150, 1, 620, -1, -1, -1, 15000}, // Karambwanji AFK FISH
+			{15, 65, 3159, 3150, 3142, 105, 620, -1, -1, -1, 8000}, // Karambwan
+			{16, 82, 307, 13431, 13439, 118, 622, -1, -1, -1, 6000}, // Anglerfish
+			{17, 90, 1585, 26598, 2148, 160, 622, -1, -1, -1, 6000}, // Lava Eel
 	};
-	
+
 	private static void clueBottles(Player player, int petChance) {
-		int chance =  petChance/40;
+		int chance = petChance / 40;
 		int easyChance = 50;
 		int medChance = 100;
 		int rewardAmount = 1;
 		if (player.fasterCluesScroll) {
-			chance = petChance/80;
+			chance = petChance / 80;
 			easyChance = 25;
 			medChance = 50;
 		}
@@ -87,16 +87,16 @@ public class Fishing extends SkillHandler {
 	}
 
 	private static void foeArtefact(Player player, int petChance) {
-		int chance = petChance/24;
+		int chance = petChance / 24;
 		int artefactRoll = Misc.random(100);
 		if (Misc.random(chance) == 1) {
-			if (artefactRoll <65) {//1/300
+			if (artefactRoll < 65) {//1/300
 				player.getItems().addItemUnderAnyCircumstance(11180, 1);//ancient coin foe for 200
 				player.sendMessage("You found a coin that can be dissolved, speak to Nomad!");
 			} else if (artefactRoll >= 65 && artefactRoll < 99) {//1/600
 				player.getItems().addItemUnderAnyCircumstance(681, 1);//anicent talisman foe for 300
 				player.sendMessage("You found a talisman that can be dissolved, speak to Nomad!");
-			} else if (artefactRoll > 99){//1/1000
+			} else if (artefactRoll > 99) {//1/1000
 				player.getItems().addItemUnderAnyCircumstance(9034, 1);//golden statuette foe for 500
 				PlayerHandler.executeGlobalMessage("@bla@[@red@Fishing@bla@]@blu@ " + player.getDisplayName() + " @red@just found a Golden statuette while fishing!");
 			}
@@ -144,7 +144,7 @@ public class Fishing extends SkillHandler {
 					return;
 				}
 				//double percentOfXp = player.getMode().getType().equals(ModeType.OSRS) ? data[i][5] * multiplier : (data[i][5] * Config.FISHING_EXPERIENCE / 100) * multiplier;
-				
+
 				player.playerSkillProp[10][0] = data[i][6]; // ANIM
 				player.playerSkillProp[10][1] = data[i][4]; // FISH
 				double experience = data[i][5] * multiplier; // XP
@@ -156,11 +156,11 @@ public class Fishing extends SkillHandler {
 				player.playerSkillProp[10][9] = Misc.random(1) == 0 ? 7 : 5;
 				player.playerSkillProp[10][10] = data[i][10]; // petChance
 
-				if (!hasFishingEquipment(player,  player.playerSkillProp[10][4])) {
+				if (!hasFishingEquipment(player, player.playerSkillProp[10][4])) {
 					return;
 				}
 				player.sendMessage("You start fishing.");//8783
-				player.getPA().sendSound(379,0,10,0);
+				player.getPA().sendSound(379, 0, 10, 0);
 				player.startAnimation((player.getItems().playerHasItem(25373) || player.playerEquipment[3] == 25373 ? 8738 : player.playerSkillProp[10][0]));
 				player.stopPlayerSkill = true;
 
@@ -169,7 +169,7 @@ public class Fishing extends SkillHandler {
 
 				//getTimer(player, npcId) + 5 + playerFishingLevel(player)
 
-				Server.getEventHandler().submit(new Event<Player>("skilling", player,  getTotalFishingTime(player,npcId)) {
+				Server.getEventHandler().submit(new Event<Player>("skilling", player, getTotalFishingTime(player, npcId)) {
 					@Override
 					public void execute() {
 						if (player.getItems().freeSlots() == 0) {
@@ -239,7 +239,7 @@ public class Fishing extends SkillHandler {
 							if (!cooked) {
 								int amt = SkillcapePerks.FISHING.isWearing(player) || SkillcapePerks.isWearingMaxCape(player) ? 2 : 1;
 
-								if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33100) && Misc.random(0,100) <= 10) {
+								if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33100) && Misc.random(0, 100) <= 10) {
 									amt *= 3;
 								}
 								player.getItems().addItem(player.playerSkillProp[10][1], amt);
@@ -249,71 +249,71 @@ public class Fishing extends SkillHandler {
 							clueBottles(player, player.playerSkillProp[10][10]);
 							foeArtefact(player, player.playerSkillProp[10][10]);
 
-							if (Misc.random(player.playerSkillProp[10][10] / 6 ) == 1) {
+							if (Misc.random(player.playerSkillProp[10][10] / 6) == 1) {
 								player.getItems().addItemUnderAnyCircumstance(anglerOuftit[Misc.random(anglerOuftit.length - 1)], 1);
 								player.sendMessage("You notice a angler piece floating in the water and pick it up.");
 							}
 							int petRate = attachment.skillingPetRateScroll ? (int) (2500 * .75) : 2500;
 							if (Misc.random(petRate) == 2 && player.getItems().getItemCount(13320, true) == 0 && player.petSummonId != 13320) {
-								 PlayerHandler.executeGlobalMessage("[<col=CC0000>News</col>] <col=255>" + player.getDisplayName() + "</col> caught a fish and a <col=CC0000>Heron</col> pet!");
-								 player.getItems().addItemUnderAnyCircumstance(13320, 1);
-								 player.getCollectionLog().handleDrop(player, 5, 13320, 1);
-							 }
+								PlayerHandler.executeGlobalMessage("[<col=CC0000>News</col>] <col=255>" + player.getDisplayName() + "</col> caught a fish and a <col=CC0000>Heron</col> pet!");
+								player.getItems().addItemUnderAnyCircumstance(13320, 1);
+								player.getCollectionLog().handleDrop(player, 5, 13320, 1);
+							}
 						}
 						switch (player.playerSkillProp[10][1]) {
-						case 389:
-							if (Boundary.isIn(player, Boundary.FALADOR_BOUNDARY)) {
-								player.getDiaryManager().getFaladorDiary().progress(FaladorDiaryEntry.FISH_MANTA);
-							}
-							break;
-						case 371:
-							if (Boundary.isIn(player, Boundary.CATHERBY_BOUNDARY)) {
-								player.getDiaryManager().getKandarinDiary().progress(KandarinDiaryEntry.FISH_SWORD);
-							}
-							break;
-							
-						case 377:
-							if (Boundary.isIn(player, Boundary.KARAMJA_BOUNDARY)) {
-								player.getDiaryManager().getKaramjaDiary().progress(KaramjaDiaryEntry.FISH_LOBSTER_KAR);
-							}
-							break;
-							
-						case 3142:
-							if (Boundary.isIn(player, Boundary.RESOURCE_AREA_BOUNDARY)) {
-								player.getDiaryManager().getWildernessDiary().progress(WildernessDiaryEntry.KARAMBWAN);
-							}
-							break;
+							case 389:
+								if (Boundary.isIn(player, Boundary.FALADOR_BOUNDARY)) {
+									player.getDiaryManager().getFaladorDiary().progress(FaladorDiaryEntry.FISH_MANTA);
+								}
+								break;
+							case 371:
+								if (Boundary.isIn(player, Boundary.CATHERBY_BOUNDARY)) {
+									player.getDiaryManager().getKandarinDiary().progress(KandarinDiaryEntry.FISH_SWORD);
+								}
+								break;
+
+							case 377:
+								if (Boundary.isIn(player, Boundary.KARAMJA_BOUNDARY)) {
+									player.getDiaryManager().getKaramjaDiary().progress(KaramjaDiaryEntry.FISH_LOBSTER_KAR);
+								}
+								break;
+
+							case 3142:
+								if (Boundary.isIn(player, Boundary.RESOURCE_AREA_BOUNDARY)) {
+									player.getDiaryManager().getWildernessDiary().progress(WildernessDiaryEntry.KARAMBWAN);
+								}
+								break;
 						}
 						switch (player.playerSkillProp[10][7]) {
-						case 389:
-							if (Boundary.isIn(player, Boundary.FALADOR_BOUNDARY)) {
-								player.getDiaryManager().getFaladorDiary().progress(FaladorDiaryEntry.FISH_MANTA);
-							}
-							break;
+							case 389:
+								if (Boundary.isIn(player, Boundary.FALADOR_BOUNDARY)) {
+									player.getDiaryManager().getFaladorDiary().progress(FaladorDiaryEntry.FISH_MANTA);
+								}
+								break;
 						}
-						
+
 						switch (player.playerSkillProp[10][4]) {
-						case 389:
-							if (Boundary.isIn(player, Boundary.FALADOR_BOUNDARY)) {
-								player.getDiaryManager().getFaladorDiary().progress(FaladorDiaryEntry.FISH_MANTA);
-							}
-							break;
-							
-						case 377:
-							if (Boundary.isIn(player, Boundary.KARAMJA_BOUNDARY)) {
-								player.getDiaryManager().getKaramjaDiary().progress(KaramjaDiaryEntry.FISH_LOBSTER_KAR);
-							}
-							break;
-							
-						case 3142:
-							if (Boundary.isIn(player, Boundary.RESOURCE_AREA_BOUNDARY)) {
-								player.getDiaryManager().getWildernessDiary().progress(WildernessDiaryEntry.KARAMBWAN);
-							}
-							break;
+							case 389:
+								if (Boundary.isIn(player, Boundary.FALADOR_BOUNDARY)) {
+									player.getDiaryManager().getFaladorDiary().progress(FaladorDiaryEntry.FISH_MANTA);
+								}
+								break;
+
+							case 377:
+								if (Boundary.isIn(player, Boundary.KARAMJA_BOUNDARY)) {
+									player.getDiaryManager().getKaramjaDiary().progress(KaramjaDiaryEntry.FISH_LOBSTER_KAR);
+								}
+								break;
+
+							case 3142:
+								if (Boundary.isIn(player, Boundary.RESOURCE_AREA_BOUNDARY)) {
+									player.getDiaryManager().getWildernessDiary().progress(WildernessDiaryEntry.KARAMBWAN);
+								}
+								break;
 						}
-						
+
 						if (experience > 0) {
-							player.getPA().addSkillXPMultiplied((int)(experience), Player.playerFishing, true);
+							player.getPA().addSkillXPMultiplied((int) (experience), Player.playerFishing, true);
 						}
 						if (player.playerSkillProp[10][3] > 0) {
 							player.getItems().deleteItem(player.playerSkillProp[10][3], player.getItems().getInventoryItemSlot(player.playerSkillProp[10][3]), 1);
@@ -350,26 +350,26 @@ public class Fishing extends SkillHandler {
 	private static boolean hasFishingEquipment(Player c, int equipment) {
 		if (!c.getItems().playerHasItem(equipment)) {
 
-			if(equipment == 311 || equipment == 21028 || equipment == 25373) {
-				if(c.getItems().playerHasItem(21028) || c.playerEquipment[3] == 21028) {
+			if (equipment == 311 || equipment == 21028 || equipment == 25373) {
+				if (c.getItems().playerHasItem(21028) || c.playerEquipment[3] == 21028) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(25059) || c.playerEquipment[3] == 25059) {
+				if (c.getItems().playerHasItem(25059) || c.playerEquipment[3] == 25059) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(25114) || c.playerEquipment[3] == 25114) {
+				if (c.getItems().playerHasItem(25114) || c.playerEquipment[3] == 25114) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(25373) || c.playerEquipment[3] == 25373) {
+				if (c.getItems().playerHasItem(25373) || c.playerEquipment[3] == 25373) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(21031) || c.playerEquipment[3] == 21031) {
+				if (c.getItems().playerHasItem(21031) || c.playerEquipment[3] == 21031) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(10129) || c.playerEquipment[3] == 10129) {
+				if (c.getItems().playerHasItem(10129) || c.playerEquipment[3] == 10129) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(23762) || c.playerEquipment[3] == 23762) {
+				if (c.getItems().playerHasItem(23762) || c.playerEquipment[3] == 23762) {
 					return true;
 				}
 			}
@@ -414,33 +414,32 @@ public class Fishing extends SkillHandler {
 
 	private final static int getTimer(Player c, int npcId) {
 		switch (npcId) {
-		case 1:
-			return 2;
-		case 2:
-			return 3;
-		case 3:
-			return 4;
-		case 4:
-			return 4;
-		case 5:
-			return 4;
-		case 6:
-			return 5;
-		case 7:
-			return 5;
-		case 8:
-			return 5;
-		case 9:
-			return 5;
-		case 10:
-			return 5;
-		case 11:
-			return 9;
-		case 12:
-			return 9;
-		default:
-			return -1;
+			case 1:
+				return 2;
+			case 2:
+				return 3;
+			case 3:
+				return 4;
+			case 4:
+				return 4;
+			case 5:
+				return 4;
+			case 6:
+				return 5;
+			case 7:
+				return 5;
+			case 8:
+				return 5;
+			case 9:
+				return 5;
+			case 10:
+				return 5;
+			case 11:
+				return 9;
+			case 12:
+				return 9;
+			default:
+				return -1;
 		}
 	}
-
 }

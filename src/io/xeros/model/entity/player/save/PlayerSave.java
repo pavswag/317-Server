@@ -2145,12 +2145,6 @@ public class PlayerSave {
             characterfile.write("donD = ", 0, 6);
             characterfile.write(Long.toString(p.getDailyDonated()), 0, Long.toString(p.getDailyDonated()).length());
             characterfile.newLine();
-            characterfile.write("tpNomad = ", 0, 10);
-            characterfile.write(Long.toString(p.getTradePost().getNomadCoffer()), 0, Long.toString(p.getTradePost().getNomadCoffer()).length());
-            characterfile.newLine();
-            characterfile.write("tpPlat = ", 0, 9);
-            characterfile.write(Long.toString(p.getTradePost().getCoinCoffer()), 0, Long.toString(p.getTradePost().getCoinCoffer()).length());
-            characterfile.newLine();
             characterfile.write("donW = ", 0, 6);
             characterfile.write(Long.toString(p.getWeeklyDonated()), 0, Long.toString(p.getWeeklyDonated()).length());
             characterfile.newLine();

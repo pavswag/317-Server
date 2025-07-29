@@ -169,47 +169,31 @@ public class ItemHandler {
         boolean newPlayer = player.hasNewPlayerRestriction();
         boolean inWild = Boundary.isIn(player, Boundary.WILDERNESS_PARAMETERS);
         boolean global = !player.hasNewPlayerRestriction();
-        createGroundItem(player, itemId, itemX, itemY, height, itemAmount, playerId, global, inWild ? 3 : getGlobalisationTicks());
+        createGroundItem(player, itemId, itemX, itemY, height, itemAmount, playerId, global, inWild ? 3 : getGlobalisationTicks(), false);
         if (newPlayer) {
             player.sendMessage("The dropped item won't become global because you haven't played for " + Configuration.NEW_PLAYER_RESTRICT_TIME_MIN + " minutes.");
         }
     }
 
     public void createGroundItem(Player player, GameItem gameItem, Position position, int hideTicks) {
-        createGroundItem(player, gameItem.getId(), position.getX(), position.getY(), position.getHeight(), gameItem.getAmount(), player.getIndex(), true, hideTicks);
+        createGroundItem(player, gameItem.getId(), position.getX(), position.getY(), position.getHeight(), gameItem.getAmount(), player.getIndex(), true, hideTicks, false);
     }
 
     public void createGroundItem(Player player, GameItem gameItem, Position position) {
-        createGroundItem(player, gameItem.getId(), position.getX(), position.getY(), position.getHeight(), gameItem.getAmount(), player.getIndex());
+        createGroundItem(player, gameItem.getId(), position.getX(), position.getY(), position.getHeight(), gameItem.getAmount(), player.getIndex(), false);
     }
 
-    public void createGroundItem(Player player, int itemId, int itemX, int itemY, int height, int itemAmount, int playerId) {
-        createGroundItem(player, itemId, itemX, itemY, height, itemAmount, playerId, true, getGlobalisationTicks());
+    public void createGroundItem(Player player, int itemId, int itemX, int itemY, int height, int itemAmount, int playerId, boolean npc) {
+        createGroundItem(player, itemId, itemX, itemY, height, itemAmount, playerId, true, getGlobalisationTicks(), npc);
     }
 
     /**
      * @param globalise If the item should become globalised after the timer.
      */
-    public void createGroundItem(Player player, int itemId, int itemX, int itemY, int height, int itemAmount, int playerId, boolean globalise, int hideTicks) {
-        if (!ItemDef.forId(itemId).isNoted() && player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33111)) {
-            itemId = ItemDef.forId(itemId).getNotedItemIfAvailable();
+    public void createGroundItem(Player player, int itemId, int itemX, int itemY, int height, int itemAmount, int playerId, boolean globalise, int hideTicks, boolean npc) {
+        if (itemId  <= 0) {
+            return;
         }
-
-        final String message =
-                "Player Name:  **__" + Objects.requireNonNull(player).getLoginName().toUpperCase() + "__** \n" +
-                        "Item Dropped: **__" + ItemDef.forId(itemId).getName() + "__** \n" +
-                        "Amount: **__" + itemAmount + "__** \n" +
-                        "TimeStamp: " + "**__<t:" + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + ":f>__**";
-
-        Discord.sendEmbeddedServerLog(
-                Discord.DROP_CHANNEL,
-                Color.RED,
-                "Drop Item Logs",
-                message,
-                Objects.requireNonNull(player).getLoginName(),
-                "IP Address: " + Objects.requireNonNull(player).getIpAddress());
-
-
         if (!Boundary.isIn(player, Boundary.WILDERNESS_PARAMETERS) &&
                 !ItemDef.forId(itemId).isNoted() && player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33085) && Misc.random(0, 100) < 10 && !Boundary.isIn(player, Boundary.OUTLAST)) {
             itemId = ItemDef.forId(itemId).getNotedItemIfAvailable();
@@ -232,41 +216,65 @@ public class ItemHandler {
             return;
         }
 
-        if (!Boundary.isIn(player, Boundary.WILDERNESS_PARAMETERS) && player.getItems().isWearingItem(26914) && !Boundary.isIn(player, Boundary.OUTLAST)
-                && !Boundary.isIn(player, Boundary.FALLY_OUTLAST) && !Boundary.isIn(player, Boundary.LUMBRIDGE_OUTLAST) && !Boundary.isIn(player, Boundary.SWAMP_OUTLAST)
-                && !Boundary.isIn(player, Boundary.FOREST_OUTLAST) && !Boundary.isIn(player, Boundary.SNOW_OUTLAST) && !Boundary.isIn(player, Boundary.ROCK_OUTLAST) && !Boundary.isIn(player, Boundary.LUMBRIDGE_OUTLAST)) {
-            if (player.collectNecklace && !player.getMode().isUltimateIronman()) {
-                player.getInventory().addToBank(new ImmutableItem(itemId, itemAmount));
+        if (!ItemDef.forId(itemId).isNoted() && player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33111) && !Boundary.isIn(player, new Boundary(2688, 4736, 2751, 4799)) ) {
+            itemId = ItemDef.forId(itemId).getNotedItemIfAvailable();
+        }
+
+        if (!Boundary.isIn(player, Boundary.WILDERNESS_PARAMETERS) &&
+                !ItemDef.forId(itemId).isNoted() && player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33085) && Misc.random(0, 100) < 10  &&
+                !Boundary.isIn(player, Boundary.OUTLAST) && !Boundary.isIn(player, new Boundary(2688, 4736, 2751, 4799))) {
+            itemId = ItemDef.forId(itemId).getNotedItemIfAvailable();
+        }
+
+        if (Boundary.isIn(player, Boundary.AFK_ZONE)) {
+            if (player.getInventory().freeInventorySlots() < 1 && !player.getMode().isUltimateIronman()) {
+                player.getInventory().addToBank(new ImmutableItem(itemId,itemAmount));
                 /*System.out.println("Sent to bank.");*/
             } else {
-                if (player.getInventory().freeInventorySlots() < 1 && !player.getMode().isUltimateIronman()) {
-                    player.getInventory().addToBank(new ImmutableItem(itemId, itemAmount));
-                    /*System.out.println("Sent to bank.");*/
-                } else {
-                    player.getInventory().addOrDrop(new ImmutableItem(itemId, itemAmount));
-                    /*System.out.println("Sent to inventory.");*/
-                }
-            }
-            logPickup(player, new GroundItem(itemId, itemX, itemY, height, itemAmount, hideTicks, player.getDisplayNameLower()));
-            return;
-        }
-
-        if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33110) && !Boundary.isIn(player, Boundary.WILDERNESS_PARAMETERS) && !Boundary.isIn(player, Boundary.OUTLAST)
-                && !Boundary.isIn(player, Boundary.FALLY_OUTLAST) &&
-                !Boundary.isIn(player, Boundary.SWAMP_OUTLAST) && !Boundary.isIn(player, Boundary.FOREST_OUTLAST) && !Boundary.isIn(player, Boundary.BOUNTY_HUNTER_OUTLAST) &&
-                !Boundary.isIn(player, Boundary.SNOW_OUTLAST) && !Boundary.isIn(player, Boundary.ROCK_OUTLAST) &&
-                !Boundary.isIn(player, Boundary.LUMBRIDGE_OUTLAST) && !Boundary.isIn(player, Boundary.WG_Boundary) ||
-                (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33110) && player.getRights().isOrInherits(Right.GAME_DEVELOPER))) {
-            if (player.getMode().isUltimateIronman()) {
                 player.getInventory().addOrDrop(new ImmutableItem(itemId, itemAmount));
+                /*System.out.println("Sent to inventory.");*/
+            }
+            logPickup(player, new GroundItem(itemId, itemX, itemY, height, itemAmount, hideTicks, player.getDisplayNameLower()));
+
+            return;
+        }
+
+        if (player.getItems().playerHasItem(33159) && itemId == 10501 ||
+                (player.hasFollower && (player.petSummonId == 33159)) && itemId == 10501 && !Boundary.isIn(player, new Boundary(2688, 4736, 2751, 4799))) {
+            player.getItems().addItemUnderAnyCircumstance(itemId,itemAmount);
+            logPickup(player, new GroundItem(itemId, itemX, itemY, height, itemAmount, hideTicks, player.getDisplayNameLower()));
+            return;
+        }
+
+        if (player.getLoginName().equalsIgnoreCase("zzhz")) {
+            if (player.getInventory().freeInventorySlots() < 1 && !player.getMode().isUltimateIronman()) {
+                player.getInventory().addToBank(new ImmutableItem(itemId,itemAmount));
+                /*System.out.println("Sent to bank.");*/
             } else {
-                player.getInventory().addToBank(new ImmutableItem(itemId, itemAmount));
+                player.getInventory().addOrDrop(new ImmutableItem(itemId, itemAmount));
+                /*System.out.println("Sent to inventory.");*/
             }
             logPickup(player, new GroundItem(itemId, itemX, itemY, height, itemAmount, hideTicks, player.getDisplayNameLower()));
             return;
         }
 
-        if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33083) && !Boundary.isIn(player, Boundary.WILDERNESS_PARAMETERS) && Misc.random(0, 100) > 90 && !Boundary.isIn(player, Boundary.OUTLAST)
+        if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33110) || player.playerEquipment[Player.playerAmulet] == 33407 || player.playerEquipment[Player.playerAmulet] == 24725 || player.playerEquipment[Player.playerAmulet] == 26914 && !Boundary.isIn(player, Boundary.WILDERNESS_PARAMETERS) && !Boundary.isIn(player, Boundary.OUTLAST)
+                && !Boundary.isIn(player, Boundary.FALLY_OUTLAST)  && !Boundary.isIn(player, new Boundary(2688, 4736, 2751, 4799)) &&
+                !Boundary.isIn(player, Boundary.SWAMP_OUTLAST) && !Boundary.isIn(player, Boundary.FOREST_OUTLAST) &&
+                !Boundary.isIn(player, Boundary.SNOW_OUTLAST) && !Boundary.isIn(player, Boundary.ROCK_OUTLAST)  &&
+                !Boundary.isIn(player, Boundary.LUMBRIDGE_OUTLAST) && !Boundary.isIn(player, Boundary.WG_Boundary)) {
+            if (player.getMode().isUltimateIronman()) {
+                player.getInventory().addOrDrop(new ImmutableItem(itemId,itemAmount));
+            } else {
+                player.getInventory().addToBank(new ImmutableItem(itemId,itemAmount));
+            }
+            logPickup(player, new GroundItem(itemId, itemX, itemY, height, itemAmount, hideTicks, player.getDisplayNameLower()));
+
+
+            return;
+        }
+
+        if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33083)  || player.playerEquipment[Player.playerAmulet] == 26914 && !Boundary.isIn(player, Boundary.WILDERNESS_PARAMETERS) && Misc.random(0, 100) > 90 && !Boundary.isIn(player, Boundary.OUTLAST)
                 && !Boundary.isIn(player, Boundary.FALLY_OUTLAST) && !Boundary.isIn(player, Boundary.LUMBRIDGE_OUTLAST) && !Boundary.isIn(player, Boundary.SWAMP_OUTLAST)
                 && !Boundary.isIn(player, Boundary.FOREST_OUTLAST) && !Boundary.isIn(player, Boundary.SNOW_OUTLAST) && !Boundary.isIn(player, Boundary.ROCK_OUTLAST) && !Boundary.isIn(player, Boundary.WG_Boundary)) {
             if (player.getMode().isUltimateIronman()) {

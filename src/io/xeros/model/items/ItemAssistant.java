@@ -489,7 +489,7 @@ public class ItemAssistant {
 
 		if (player.getMode().isUltimateIronman()) {
 			if (!player.getItems().hasRoomInInventory(itemId, amount)) {
-				Server.itemHandler.createGroundItem(player, itemId, player.absX, player.absY, player.heightLevel, amount, player.getIndex());
+				Server.itemHandler.createGroundItem(player, itemId, player.absX, player.absY, player.heightLevel, amount, player.getIndex(), false);
 				player.sendMessage("Your items was dropped on the floor due to your mode and no inventory room.");
 				return;
 			}
@@ -500,13 +500,13 @@ public class ItemAssistant {
 		if (tab.freeSlots() == 0) {
 			player.sendMessage("The item has been dropped on the floor.");
 			Server.itemHandler.createGroundItem(player, itemId, player.absX, player.absY, player.heightLevel, amount,
-					player.getIndex());
+					player.getIndex(), false);
 			return;
 		}
 		long totalAmount = ((long) tab.getItemAmount(item) + (long) item.getAmount());
 		if (totalAmount >= Integer.MAX_VALUE) {
 			player.sendMessage("The item has been dropped on the floor.");
-			Server.itemHandler.createGroundItem(player, itemId, player.absX, player.absY, player.heightLevel, amount, player.getIndex());
+			Server.itemHandler.createGroundItem(player, itemId, player.absX, player.absY, player.heightLevel, amount, player.getIndex(), false);
 			return;
 		}
 		tab.add(item);

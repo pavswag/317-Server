@@ -88,6 +88,10 @@ public class FusionSystem {
     }
 
     public void openInterface(FusionTypes type) {
+        if (player.playerLevel[Skill.DEMON_HUNTER.getId()] < 89) {
+            player.sendMessage("You need 90 Demon Hunter to do this.");
+            return;
+        }
         fusionMaterials = null;
         player.getPA().itemOnInterface(new GameItem(-1, 1), 37217,0);
 

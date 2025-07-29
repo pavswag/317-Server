@@ -1,4 +1,4 @@
-package io.xeros.content.commands.donator;
+package io.xeros.content.commands.all;
 
 import io.xeros.Server;
 import io.xeros.content.bosses.nightmare.NightmareConstants;
@@ -7,8 +7,6 @@ import io.xeros.content.minigames.arbograve.ArbograveConstants;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Right;
-
-import static io.xeros.model.entity.player.Right.MAJOR_DONATOR;
 
 public class Bank extends Command {
 
@@ -20,7 +18,6 @@ public class Bank extends Command {
                 || Boundary.isIn(c, Boundary.FIGHT_CAVE)
                 || c.getPosition().inClanWarsSafe()
                 || Boundary.isIn(c, Boundary.INFERNO)
-                || c.getInstance() != null
                 || Boundary.isIn(c, NightmareConstants.BOUNDARY)
                 || Boundary.isIn(c, Boundary.OUTLAST_AREA)
                 || Boundary.isIn(c, Boundary.LUMBRIDGE_OUTLAST_AREA)
@@ -51,7 +48,7 @@ public class Bank extends Command {
                 || Boundary.isIn(c, Boundary.DONATOR_ZONE_BLOODY)
                 || Boundary.isIn(c, Boundary.DONATOR_ZONE_BOSS)
                 || Boundary.isIn(c, ArbograveConstants.ALL_BOUNDARIES)) return;
-        if (c.amDonated >= 500) {
+        if (c.amDonated >= 750) {
             c.getPA().player.itemAssistant.openUpBank();
             c.inBank = true;
         }
@@ -60,6 +57,6 @@ public class Bank extends Command {
 
     @Override
     public boolean hasPrivilege(Player player) {
-        return player.amDonated >= 20;
+        return true;
     }
 }

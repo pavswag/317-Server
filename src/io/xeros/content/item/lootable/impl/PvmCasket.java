@@ -238,5 +238,24 @@ public class PvmCasket implements Lootable {
 					+ Misc.insertCommas(Integer.toString(coins)) + "</col>GP.");
 		}
 	}
+	public void quickOpen(Player player) {
+		int amount = player.getItems().getInventoryCount(PVM_CASKET);
 
+		// Limit the amount to avoid potential abuse
+		if (amount > 1000) {
+			amount = 1000;
+		}
+
+		for (int i = 0; i < amount; i++) {
+			if (!player.getItems().playerHasItem(PVM_CASKET)) {
+				break;
+			}
+			if (player.getItems().freeSlots() < 2) {
+				player.sendMessage("You need at least two free slots to open a PvM Casket.");
+				break;
+			}
+			player.getItems().deleteItem(PVM_CASKET, 1);
+			open(player);
+		}
+	}
 }

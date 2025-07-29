@@ -509,7 +509,7 @@ public class AttackAnimation extends NPCHandler {
 			return 2859;
 		case 5938:// Wallasalki
 			return 2365;
-
+			case 1802:
 		case 319: // Corporeal Beast
 			return npc.getAttackType() == CombatType.MAGE ? 1680
 					: npc.getAttackType() == CombatType.SPECIAL ? 1680 : 1682;

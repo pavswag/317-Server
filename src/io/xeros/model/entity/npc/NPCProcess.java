@@ -244,14 +244,18 @@ public class NPCProcess {
             }
             Scorpia.spawnHealer();
         }
-
         if (type == Npcs.CORPOREAL_BEAST) {
             CorporealBeast.targets = PlayerHandler.getPlayers().stream().filter(plr ->
                     !plr.isDead && Boundary.isIn(plr, Boundary.CORPOREAL_BEAST_LAIR)).collect(Collectors.toList());
             CorporealBeast.checkCore(npc);
             CorporealBeast.healWhenNoPlayers(npc);
         }
-
+        if (type == 1028) {
+            Solak.targets = PlayerHandler.getPlayers().stream().filter(plr ->
+                    !plr.isDead && Boundary.isIn(plr, Boundary.SOLAK)).collect(Collectors.toList());
+           // Solak.checkCore(npc);
+            Solak.healWhenNoPlayers(npc);
+        }
         if (type == 12821) {
             Sol.targets = PlayerHandler.getPlayers().stream().filter(plr ->
                     !plr.isDead && Boundary.isIn(plr, Boundary.SOL)).collect(Collectors.toList());
@@ -513,7 +517,7 @@ public class NPCProcess {
                             int dropHead = Misc.random(50);
                             if (dropHead == 1 || playerOwner.getNpcDeathTracker().getKc("vorkath") == 50) {
                                 Server.itemHandler.createGroundItem(playerOwner, 2425, Vorkath.lootCoordinates[0],
-                                        Vorkath.lootCoordinates[1], playerOwner.heightLevel, 1, playerOwner.getIndex());
+                                        Vorkath.lootCoordinates[1], playerOwner.heightLevel, 1, playerOwner.getIndex(), false);
                             }
                             Achievements.increase(playerOwner, AchievementType.SLAY_VORKATH, 1);
                             Vorkath.spawn(playerOwner);
@@ -639,6 +643,14 @@ public class NPCProcess {
                         npc.startAnimation(npc.getDeathAnimation());
                     }
 
+                    if (npc.getNpcId() == 319) {
+                        npc.actionTimer = 0;
+                        npc.setDead(false);
+                        npc.requestTransform(1802);
+                        npc.getHealth().reset();
+                        npc.applyDead = false;
+                        npc.startAnimation(Animation.RESET_ANIMATION);
+                    }
                     if (npc.getNpcId() == 963) {
                         npc.actionTimer = 0;
                         npc.setDead(false);
@@ -663,14 +675,18 @@ public class NPCProcess {
                     ChristmasBoss.handleDeath(npc);
                 } else if (npc.getNpcId() == Npcs.CORPOREAL_BEAST) {
                     CorporealBeast.handleRewards(npc);
-//                } else if (npc.getNpcId() == 1025) {
-//                    Lightbearer.handleRewards(npc);
-//                } else if (npc.getNpcId() == 1429) {
-//                    Ghost.handleRewards(npc);
-//                } else if (npc.getNpcId() == 1656) {
-//                    Cryo.handleRewards(npc);
+                } else if (npc.getNpcId() == 1025) {
+                    Lightbearer.handleRewards(npc);
+                } else if (npc.getNpcId() == 1429) {
+                    Ghost.handleRewards(npc);
+                } else if (npc.getNpcId() == 1802) {
+                    DCorp.handleRewards(npc);
+                } else if (npc.getNpcId() == 1656) {
+                    Cryo.handleRewards(npc);
                 } else if (npc.getNpcId() == 12821) {
                     Sol.handleRewards(npc);
+                } else if (npc.getNpcId() == 1028) {
+                    Solak.handleRewards(npc);
                 } else if (npc.getNpcId() == 4923) {
                     Groot.handleDeath(npc);
                 } else if (npc.getNpcId() == 239) {
