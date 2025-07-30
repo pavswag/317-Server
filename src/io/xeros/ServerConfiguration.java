@@ -15,6 +15,7 @@ public class ServerConfiguration {
     public static ServerConfiguration getDefault() {
         ServerConfiguration configuration = new ServerConfiguration();
         configuration.serverState = ServerState.PUBLIC;
+        configuration.discordBotToken = "";
         return configuration;
     }
 
@@ -35,6 +36,9 @@ public class ServerConfiguration {
 
     @JsonProperty("hiscores_database")
     private DatabaseCredentials hiscoresDatabase;
+
+    @JsonProperty("discord_bot_token")
+    private String discordBotToken;
 
     @JsonProperty("backup_ftp_credentials")
     private DatabaseCredentials backupFtpCredentials;
@@ -124,5 +128,13 @@ public class ServerConfiguration {
 
     public String getMysqlDumpPath() {
         return mysqlDumpPath;
+    }
+
+    public String getDiscordBotToken() {
+        return discordBotToken;
+    }
+
+    public void setDiscordBotToken(String discordBotToken) {
+        this.discordBotToken = discordBotToken;
     }
 }

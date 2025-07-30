@@ -36,7 +36,7 @@ public class Discord extends ListenerAdapter {
     public static String ADMIN_ROLE = "891930584446812200";
     public static String GLOBAL_MOD_ROLE = "892423012551389265";
     public static String SUPPORT_ROLE = "892558604580847627";
-    public static final String BOT_TOKEN = "MTA0MDc2MzIwMDUwNjk1NzkwNA.GZtaFT.WSeWJw0IudDLt5ciBEDXd7FBGjt6NLo0zfIROo";
+    public static String BOT_TOKEN = "";
     public static final String DISCORD_THUMBNAIL = "https://turmoilrsps.quest/logo.png";
     public static final String SERVER_LOGO = "https://turmoilrsps.quest/logo.png";
     public static final long GUILD_ID = 605271780302651420L;
@@ -272,6 +272,7 @@ public class Discord extends ListenerAdapter {
     }
 
     public void init() {
+        BOT_TOKEN = Server.getConfiguration().getDiscordBotToken();
         JDABuilder builder = JDABuilder.createDefault(BOT_TOKEN)
                 .enableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MEMBERS)
                 .enableCache(CacheFlag.ACTIVITY)

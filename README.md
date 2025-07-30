@@ -4,6 +4,7 @@ Based on Xeros.
 ## Setup
 - Enable annotation processing for Lombok.
 - Create a config.yaml in the working directory with the server state: `server_state: DEBUG`.
+- Add your Discord bot token with `discord_bot_token: YOUR_TOKEN`.
 Debug will give you the developer rank on login and fill your bank with various items.
 It will also give you printouts by default.
 
