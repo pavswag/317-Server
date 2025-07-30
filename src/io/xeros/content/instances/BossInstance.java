@@ -10,6 +10,7 @@ import io.xeros.content.bosses.hydra.AlchemicalHydra;
 import io.xeros.content.bosses.nightmare.NightmareInstance;
 import io.xeros.content.bosses.obor.OborInstance;
 import io.xeros.content.bosses.zulrah.Zulrah;
+import io.xeros.content.bosses.toa.ToaInstances;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
 
@@ -28,7 +29,13 @@ public enum BossInstance {
     OBOR("Obor", 1_000_000, p -> new OborInstance().begin(p)),
     BRYOPHYTA("Bryophyta", 1_000_000, p -> new Bryophyta().enter(p)),
     DUKE_SUCELLUS("Duke Sucellus", 8_000_000, p -> { DukeSucellus inst = new DukeSucellus(p, Boundary.DUKE_INSTANCE); DukeSucellus.enter(p, inst); }),
-    NIGHTMARE("Nightmare", 10_000_000, p -> { NightmareInstance inst = new NightmareInstance(false); inst.add(p); inst.countdown(); });
+    NIGHTMARE("Nightmare", 10_000_000, p -> { NightmareInstance inst = new NightmareInstance(false); inst.add(p); inst.countdown(); }),
+    TOA_BABA("Baba", 5_000_000, ToaInstances::startBaba),
+    TOA_CRONDIS("Crondis", 5_000_000, ToaInstances::startCrondis),
+    TOA_APMEKEN("Apmeken", 5_000_000, ToaInstances::startApmeken),
+    TOA_AKKHA("Akkha", 5_000_000, ToaInstances::startAkkha),
+    TOA_KEPHRI("Kephri", 5_000_000, ToaInstances::startKephri),
+    TOA_TUMEKENS_WARDEN("Tumeken's Warden", 5_000_000, ToaInstances::startTumekensWarden);
 
     private final String name;
     private final long cost;

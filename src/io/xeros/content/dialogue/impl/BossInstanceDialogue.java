@@ -27,7 +27,13 @@ public class BossInstanceDialogue extends DialogueBuilder {
                 optionFor(BossInstance.KRAKEN),
                 optionFor(BossInstance.CERBERUS),
                 optionFor(BossInstance.VORKATH),
-                optionFor(BossInstance.HYDRA));
+                optionFor(BossInstance.HYDRA),
+                optionFor(BossInstance.TOA_BABA),
+                optionFor(BossInstance.TOA_CRONDIS),
+                optionFor(BossInstance.TOA_APMEKEN),
+                optionFor(BossInstance.TOA_AKKHA),
+                optionFor(BossInstance.TOA_KEPHRI),
+                optionFor(BossInstance.TOA_TUMEKENS_WARDEN));
     }
 
     private void customMenu() {
