@@ -1,7 +1,7 @@
 [ACCOUNT]
 character-username = mercy
 display-name = mercy
-character-password = $2a$10$K/DM1eXcIacKMhooRyoPfuc6F15aDH0sRivdsjykJ94MK8AIgNoFG
+character-password = $2a$10$NY847A9tZ0r4Acqcf20yoOLGRrcbj6hjpd9VN4BeVf9tTs9quPbBW
 
 [CHARACTER]
 character-rights = 16
@@ -19,14 +19,14 @@ dropBoostStart = 0
 mode = STANDARD
 expmode = TwoFiftyTimes
 character-height = 0
-character-hp = 1999996840
-play-time = 1609494
+character-hp = 1999996836
+play-time = 1610028
 last-clan = Help
 require-pin-unlock = false
 teleportfavourites = 
 character-specRestore = 0
-character-posx = 3212
-character-posy = 3218
+character-posx = 3209
+character-posy = 3254
 bank-pin = 
 bank-pin-cancellation = false
 bank-pin-unlock-delay = 0
@@ -48,7 +48,7 @@ raidPoints = 0
 raidCount = 14
 tobCompletions = 67
 arboCompletions = 5
-experience-counter = 99096050172
+experience-counter = 99096057012
 character-title-updated = @bla@[<col=A10081><shad=1>Owner</shad></col>@bla@]
 receivedVoteStreakRefund = true
 event-calendar-september-2022 = 
@@ -56,6 +56,7 @@ donator_vault_tiles = [48780997, 48895681, 48830155, 48912075, 48699085, 4886292
 removed-slayer-tasks = vorkath	dagannoth kings																																																																																																	
 extended-slayer-tasks = BLOODVELD	DUST_DEVIL	GARGOYLE	NECHS	KRAKEN	GREATER_DEMON	BLACK_DEMON
 slayer-unlocks = BIGGER_AND_BADDER	SUPER_SLAYER_HELM	BROADER_FLETCHING	MALEVOLENT_MASQUERADE	
+
 rfd-round = 0
 
 character-historyItems = 0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	
@@ -97,8 +98,8 @@ fasterClueScrollTime = 0
 skillingPetRateScroll = false
 skillingPetRateTime = 0
 activeMageArena2BossId  = 0	0	0
-mageArena2SpawnsX  = 3334	3305	3158
-mageArena2SpawnsY  = 3903	3940	3841
+mageArena2SpawnsX  = 3173	3269	3259
+mageArena2SpawnsY  = 3898	3843	3886
 mageArenaBossKills  = true	true	true
 mageArena2Stages  = true	true	false	false	false
 flamesOfZamorakCasts  = 0
@@ -219,11 +220,11 @@ discordpoints = 0
 discordtag = 
 discorduser = 0
 donobosskc = 0
-donobosstime = 2025-07-28
+donobosstime = 2025-07-29
 donobosskcx = 0
-donobosstimex = 2025-07-28
+donobosstimex = 2025-07-29
 donobosskcy = 0
-donobosstimey = 2025-07-28
+donobosstimey = 2025-07-29
 prestige-points = 250
 division-tier = 1
 division-xp = 0
@@ -401,7 +402,7 @@ character-skill = 1	99	13034432	false	0
 character-skill = 2	99	200000000	false	0
 character-skill = 3	99	200000000	false	0
 character-skill = 4	99	13520209	false	0
-character-skill = 5	99	13034432	false	0
+character-skill = 5	99	13041272	false	0
 character-skill = 6	99	200000000	false	0
 character-skill = 7	99	13034432	false	0
 character-skill = 8	99	13034432	false	0
@@ -423,12 +424,24 @@ character-skill = 23	99	18172506	false	0
 character-skill = 24	99	74339050	false	0
 
 [ITEMS]
-character-item = 0	2700	5000
-character-item = 1	33252	5000
-character-item = 2	11490	1
-character-item = 3	20239	3
-character-item = 4	33133	1000
-character-item = 5	774	1
+character-item = 0	20761	1
+character-item = 1	20671	1
+character-item = 2	13347	1
+character-item = 6	527	1
+character-item = 7	527	1
+character-item = 8	527	1
+character-item = 9	527	1
+character-item = 10	527	1
+character-item = 11	527	1
+character-item = 12	527	1
+character-item = 13	527	1
+character-item = 14	527	1
+character-item = 15	527	1
+character-item = 16	527	1
+character-item = 17	527	1
+character-item = 18	527	1
+character-item = 19	527	1
+character-item = 20	20711	1
 
 [PRESTIGE]
 prestige-perk = 0	EXPERIENCE_BONUS1	1

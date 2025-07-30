@@ -2,6 +2,7 @@ package io.xeros.content.skills.mining;
 
 import io.xeros.Server;
 import io.xeros.content.skills.Skill;
+import io.xeros.model.Items;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.player.Player;
 import io.xeros.util.Location3D;
@@ -52,7 +53,6 @@ public class Mining {
 		}
                 Pickaxe pickaxe = Pickaxe.getBestPickaxe(player);
                 if (pickaxe == null && player.isBot()) {
-                        player.getItems().addItem(Items.BRONZE_PICKAXE, 1);
                         pickaxe = Pickaxe.getBestPickaxe(player);
                 }
                 if (pickaxe == null) {

@@ -1,4 +1,5 @@
 package io.xeros.content.commands.moderator;
+import io.xeros.content.commands.owner.Bots;
 
 import io.xeros.content.commands.Command;
 import io.xeros.content.tournaments.TourneyManager;
@@ -18,6 +19,7 @@ public class Mstarttourney extends Command {
 	public void execute(Player player, String commandName, String input) {
 		if (TourneyManager.getSingleton().setNextTourneyType(input)) {
 			WorldEventContainer.getInstance().startEvent(new TournamentWorldEvent());
+			Bots.joinOutlastBots();
 			player.sendMessage("The tournament is about to begin, please allow up to 30 seconds..");
 		} else {
 			player.sendMessage("The tournament won't start because you entered an invalid tournament type.");

@@ -2,6 +2,7 @@ package io.xeros.content.worldevent.impl;
 
 import io.xeros.content.commands.Command;
 import io.xeros.content.commands.all.Outlast;
+import io.xeros.content.commands.owner.Bots;
 import io.xeros.content.tournaments.TourneyManager;
 import io.xeros.content.worldevent.WorldEvent;
 import io.xeros.model.entity.player.Player;
@@ -52,6 +53,7 @@ public class TournamentWorldEvent implements WorldEvent {
     @Override
     public void announce(List<Player> players) {
         String name = tourney.getTournamentType();
+        Bots.joinOutlastBots();
         if (tourney.getTournamentType().equalsIgnoreCase("DYOG")) {
             name = "Dig Your Own Grave";
         }

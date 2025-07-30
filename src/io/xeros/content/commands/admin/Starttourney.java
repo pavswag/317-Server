@@ -6,6 +6,8 @@ import io.xeros.content.worldevent.WorldEventContainer;
 import io.xeros.content.worldevent.impl.TournamentWorldEvent;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Right;
+import io.xeros.content.commands.owner.Bots;
+
 
 /**
  * 

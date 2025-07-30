@@ -193,3 +193,41 @@
 [CommandLog] [2025-07-28T23:15:45.3845335] mercy2 typed command tele 3213 3241 at X: 3226 Y:3234
 [CommandLog] [2025-07-28T23:15:46.5943839] mercy2 typed command tele 3209 3251 at X: 3213 Y:3241
 [CommandLog] [2025-07-28T23:15:49.6026889] mercy2 typed command bots wc 10 at X: 3209 Y:3251
+[CommandLog] [2025-07-29T11:50:00.7604468] mercy2 typed command taskmanager at X: 3212 Y:3249
+[CommandLog] [2025-07-29T11:50:17.0793908] mercy2 typed command tele 3211 3254 at X: 3209 Y:3254
+[CommandLog] [2025-07-29T11:50:17.0793908] mercy2 typed command tele 3218 3253 at X: 3209 Y:3254
+[CommandLog] [2025-07-29T11:50:17.0793908] mercy2 typed command tele 3218 3253 at X: 3209 Y:3254
+[CommandLog] [2025-07-29T11:50:17.6835296] mercy2 typed command tele 3227 3251 at X: 3218 Y:3253
+[CommandLog] [2025-07-29T11:50:17.6845286] mercy2 typed command tele 3227 3251 at X: 3218 Y:3253
+[CommandLog] [2025-07-29T11:50:17.6845286] mercy2 typed command tele 3225 3246 at X: 3218 Y:3253
+[CommandLog] [2025-07-29T11:50:18.2846453] mercy2 typed command tele 3232 3237 at X: 3225 Y:3246
+[CommandLog] [2025-07-29T11:50:19.4884759] mercy2 typed command tele 3236 3236 at X: 3232 Y:3237
+[CommandLog] [2025-07-29T11:50:21.2914968] mercy2 typed command tele 3243 3236 at X: 3236 Y:3236
+[CommandLog] [2025-07-29T11:50:25.4958864] mercy2 typed command bots fish 1 at X: 3246 Y:3236
+[CommandLog] [2025-07-29T11:51:11.2623371] mercy2 typed command checkinventory basssplitz97 at X: 3246 Y:3236
+[CommandLog] [2025-07-29T11:51:41.3513155] mercy2 typed command bots spawnpker 1 at X: 3245 Y:3236
+[CommandLog] [2025-07-29T11:51:58.2237897] mercy2 typed command tele 3200 3200 at X: 3246 Y:3236
+[CommandLog] [2025-07-29T11:52:01.2358619] mercy2 typed command tele 3200 3800 at X: 3200 Y:3200
+[CommandLog] [2025-07-29T11:52:07.8683244] mercy2 typed command bots spawnpker 1 at X: 3200 Y:3797
+[CommandLog] [2025-07-29T11:52:27.1415091] mercy2 typed command bots spawnpker 1 at X: 3211 Y:3796
+[CommandLog] [2025-07-29T11:52:31.3527351] mercy2 typed command bots spawnpker 1 at X: 3211 Y:3797
+[CommandLog] [2025-07-29T11:52:41.5941901] mercy2 typed command bots spawnpker 10 at X: 3217 Y:3799
+[CommandLog] [2025-07-29T11:53:12.3177097] mercy2 typed command starttourney pure at X: 3221 Y:3799
+[CommandLog] [2025-07-29T11:53:25.0050892] mercy2 typed command outlast at X: 3221 Y:3799
+[CommandLog] [2025-07-29T11:53:26.2067314] mercy2 typed command home at X: 3221 Y:3799
+[CommandLog] [2025-07-29T11:54:14.9940468] mercy2 typed command bots joinoutlast at X: 3427 Y:4067
+[CommandLog] [2025-07-29T11:54:19.8249258] mercy2 typed command bots joinoutlast 2 at X: 3425 Y:4066
+[CommandLog] [2025-07-29T11:54:22.8367177] mercy2 typed command bots joinoutlast at X: 3425 Y:4066
+[CommandLog] [2025-07-29T11:54:24.0409822] mercy2 typed command bots joinoutlast at X: 3425 Y:4066
+[CommandLog] [2025-07-29T11:54:24.6431174] mercy2 typed command bots joinoutlast at X: 3425 Y:4066
+[CommandLog] [2025-07-29T11:55:55.6627187] mercy2 typed command bots spawnpker 5 at X: 3427 Y:4066
+[CommandLog] [2025-07-29T11:56:01.6800151] mercy2 typed command bots joinoutlast at X: 3427 Y:4066
+[CommandLog] [2025-07-29T11:56:45.041404] mercy2 typed command teletome fanggod99 at X: 3409 Y:4086
+[CommandLog] [2025-07-29T11:58:19.0192823] mercy2 typed command starttourney pure at X: 3096 Y:3498
+[CommandLog] [2025-07-29T11:58:22.6306893] mercy2 typed command bots spawnpker 20 at X: 3096 Y:3498
+[CommandLog] [2025-07-29T11:58:32.885975] mercy2 typed command outlast at X: 3098 Y:3494
+[CommandLog] [2025-07-29T11:58:42.5247415] mercy2 typed command bots joinoutlast at X: 3427 Y:4066
+[CommandLog] [2025-07-29T11:58:45.544113] mercy2 typed command bots joinoutlast at X: 3427 Y:4066
+[CommandLog] [2025-07-29T11:58:46.1468044] mercy2 typed command bots joinoutlast at X: 3427 Y:4066
+[CommandLog] [2025-07-29T11:58:47.3486105] mercy2 typed command bots joinoutlast 5 at X: 3427 Y:4066
+[CommandLog] [2025-07-29T12:01:16.7972515] mercy2 typed command teletome fanggod99 at X: 3395 Y:4045

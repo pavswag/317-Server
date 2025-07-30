@@ -1,9 +1,6 @@
 package io.xeros.content.taskmaster;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.mode.Mode;
@@ -11,6 +8,7 @@ import io.xeros.model.entity.player.mode.ModeType;
 import io.xeros.model.items.GameItem;
 import io.xeros.model.items.bank.BankItem;
 import io.xeros.model.items.bank.BankTab;
+import io.xeros.util.LocalDateTimeAdapter;
 import io.xeros.util.Misc;
 
 import java.io.File;
@@ -272,8 +270,14 @@ public class TaskMaster {
 
                 // Now read the properties from the json parser.
                 try (FileReader fileReader = new FileReader(file)) {
-                        Gson builder = new GsonBuilder().create();
-                        JsonArray reader = (JsonArray) JsonParser.parseReader(fileReader);
+                        Gson builder = new GsonBuilder()
+                                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                                .create();
+                        JsonElement element = JsonParser.parseReader(fileReader);
+                        if (element == null || element.isJsonNull() || !element.isJsonArray()) {
+                                return;
+                        }
+                        JsonArray reader = element.getAsJsonArray();
 
                         // Declare the type token for our JSON in our case its an array of Sales
                         Type collectionType = new TypeToken<Collection<TaskMasterKills>>() {
@@ -307,7 +311,10 @@ public class TaskMaster {
                 }
 
                 try (FileWriter writer = new FileWriter(file)) {
-                        Gson builder = new GsonBuilder().setPrettyPrinting().create();
+                        Gson builder = new GsonBuilder()
+                                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                                .setPrettyPrinting()
+                                .create();
                         String json = builder.toJson(player.getTaskMaster().taskMasterKillsList);
                         writer.write(json);
 

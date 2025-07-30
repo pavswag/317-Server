@@ -131,7 +131,7 @@ public class ServerStartup {
         ItemDefinitionLoader.init();
         CollectionLog.init();
         Region.load();
-     //   DiscordIntegration.loadConnectedAccounts();
+       // DiscordIntegration.loadConnectedAccounts();
         Doors.getSingleton().load();
         DoubleDoors.getSingleton().load();
         // Keep this below region load and object loading

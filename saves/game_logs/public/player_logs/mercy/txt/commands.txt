@@ -2388,3 +2388,55 @@
 [CommandLog] [2025-07-28T00:13:33.9996555] mercy typed command dz at X: 3210 Y:3215
 [CommandLog] [2025-07-28T00:21:26.334128] mercy typed command dz at X: 3211 Y:3219
 [CommandLog] [2025-07-28T00:22:32.2925925] mercy typed command pos at X: 1886 Y:5016
+[CommandLog] [2025-07-29T12:06:34.467251] mercy typed command taskmanager at X: 3207 Y:3216
+[CommandLog] [2025-07-29T12:06:43.4973022] mercy typed command empty at X: 3211 Y:3221
+[CommandLog] [2025-07-29T12:06:45.9061088] mercy typed command item 526 20 at X: 3211 Y:3221
+[CommandLog] [2025-07-29T12:06:51.9230869] mercy typed command taskmanager at X: 3211 Y:3221
+[CommandLog] [2025-07-29T12:07:13.0491995] mercy typed command taskmanager at X: 3211 Y:3221
+[CommandLog] [2025-07-29T12:38:09.4324441] mercy typed command item 20760 at X: 3212 Y:3219
+[CommandLog] [2025-07-29T12:38:23.8866588] mercy typed command item 20670 at X: 3212 Y:3219
+[CommandLog] [2025-07-29T12:38:32.9099151] mercy typed command getid pyromancer b at X: 3212 Y:3219
+[CommandLog] [2025-07-29T12:38:34.7152207] mercy typed command item 13346 at X: 3212 Y:3219
+[CommandLog] [2025-07-29T12:38:40.1251876] mercy typed command item 20710 at X: 3212 Y:3219
+[CommandLog] [2025-07-29T12:42:46.9677802] mercy typed command npc 9010 at X: 3212 Y:3219
+[CommandLog] [2025-07-29T12:42:51.1912516] mercy typed command npc 9011 at X: 3212 Y:3221
+[CommandLog] [2025-07-29T12:42:52.3985252] mercy typed command npc 9012 at X: 3212 Y:3221
+[CommandLog] [2025-07-29T12:42:56.0090265] mercy typed command npc 9013 at X: 3206 Y:3226
+[CommandLog] [2025-07-29T12:42:57.2134153] mercy typed command npc 9014 at X: 3206 Y:3226
+[CommandLog] [2025-07-29T12:43:06.2319265] mercy typed command npc 9020 at X: 3274 Y:6055
+[CommandLog] [2025-07-29T12:43:07.4342142] mercy typed command npc 9025 at X: 3274 Y:6055
+[CommandLog] [2025-07-29T12:43:24.3544144] mercy typed command tele 3212 3240 at X: 3212 Y:3224
+[CommandLog] [2025-07-29T12:43:24.9552246] mercy typed command tele 3209 3252 at X: 3212 Y:3240
+[CommandLog] [2025-07-29T12:43:29.1651785] mercy typed command bots spawnwoodcutter 1 at X: 3209 Y:3252
+[CommandLog] [2025-07-29T12:43:33.9821195] mercy typed command bots wc 1 at X: 3212 Y:3252
+[CommandLog] [2025-07-29T12:43:45.4158437] mercy typed command tele 3218 3264 at X: 3213 Y:3249
+[CommandLog] [2025-07-29T12:43:51.4455986] mercy typed command bots wc 1 at X: 3222 Y:3270
+[CommandLog] [2025-07-29T12:44:02.2702679] mercy typed command bots wc 1 at X: 3221 Y:3269
+[CommandLog] [2025-07-29T12:54:05.8192878] mercy typed command tele 3212 3239 at X: 3213 Y:3224
+[CommandLog] [2025-07-29T12:54:05.8252904] mercy typed command tele 3211 3238 at X: 3213 Y:3224
+[CommandLog] [2025-07-29T12:54:07.0225579] mercy typed command tele 3208 3251 at X: 3211 Y:3238
+[CommandLog] [2025-07-29T12:54:08.8433437] mercy typed command npc 9012 at X: 3208 Y:3251
+[CommandLog] [2025-07-29T12:54:11.8460271] mercy typed command npc 9020 at X: 3212 Y:3254
+[CommandLog] [2025-07-29T12:54:28.7104823] mercy typed command taskmanager at X: 3209 Y:3254
+[CommandLog] [2025-07-29T12:54:38.9393548] mercy typed command taskmanager at X: 3211 Y:3253
+[CommandLog] [2025-07-29T12:55:10.2175243] mercy typed command bots wc 1 at X: 3210 Y:3252
+[CommandLog] [2025-07-29T12:55:21.66328] mercy typed command tele 3218 3268 at X: 3218 Y:3254
+[CommandLog] [2025-07-29T12:55:23.4925109] mercy typed command bots wc 1 at X: 3220 Y:3269
+[CommandLog] [2025-07-29T12:55:27.111459] mercy typed command bots wc 2 at X: 3219 Y:3272
+[CommandLog] [2025-07-29T12:55:46.3615698] mercy typed command item 1321 at X: 3221 Y:3268
+[CommandLog] [2025-07-29T12:55:49.9688932] mercy typed command getid bronze axe at X: 3221 Y:3268
+[CommandLog] [2025-07-29T12:55:52.3762865] mercy typed command item 1351 at X: 3221 Y:3268
+[CommandLog] [2025-07-29T12:56:16.8141343] mercy typed command copyplayer ardyalt84 at X: 3221 Y:3268
+[CommandLog] [2025-07-29T12:59:14.4802493] mercy typed command copyplayer ardyalt84 at X: 3207 Y:3255
+[CommandLog] [2025-07-29T13:00:05.0773131] mercy typed command bots wc 5 at X: 3206 Y:3257
+[CommandLog] [2025-07-29T13:00:22.5224862] mercy typed command bots wc 2 at X: 3221 Y:3270
+[CommandLog] [2025-07-29T13:00:32.7670655] mercy typed command tele 3211 3258 at X: 3218 Y:3265
+[CommandLog] [2025-07-29T13:00:34.5738689] mercy typed command tele 3223 3254 at X: 3211 Y:3258
+[CommandLog] [2025-07-29T13:00:40.6126071] mercy typed command bots miner 2 at X: 3223 Y:3256
+[CommandLog] [2025-07-29T13:02:03.360854] mercy typed command getid bronze picka at X: 3227 Y:3253
+[CommandLog] [2025-07-29T13:02:06.0858685] mercy typed command item 1265 at X: 3227 Y:3253
+[CommandLog] [2025-07-29T13:03:01.6178737] mercy typed command tele 3232 3238 at X: 3226 Y:3252
+[CommandLog] [2025-07-29T13:03:02.8202832] mercy typed command tele 3239 3236 at X: 3232 Y:3238
+[CommandLog] [2025-07-29T13:03:08.5464224] mercy typed command bots fish 1 at X: 3245 Y:3237
+[CommandLog] [2025-07-29T13:03:12.8263544] mercy typed command bots fish 3 at X: 3247 Y:3236
+[CommandLog] [2025-07-29T13:03:30.9436696] mercy typed command tele 3246 3236 at X: 3246 Y:3237

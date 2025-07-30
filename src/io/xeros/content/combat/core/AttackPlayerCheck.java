@@ -34,7 +34,9 @@ public class AttackPlayerCheck {
         if (o == null || c.getIndex() == o.getIndex() || c.equals(o)) {
             return false;
         }
-
+        if (c.isBot() || o.isBot()) {
+            return true;
+        }
         if (o.getBankPin().requiresUnlock()) {
             sendCheckMessage(c, sendMessages, "You cannot do this while a player is in lock-down.");
             return false;

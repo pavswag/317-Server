@@ -6,6 +6,7 @@ import io.xeros.content.skills.woodcutting.Woodcutting;
 import io.xeros.content.skills.mining.Mining;
 import io.xeros.content.skills.mining.Mineral;
 import io.xeros.content.skills.Fishing;
+import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.util.Location3D;
 import io.xeros.model.collisionmap.WorldObject;
 import io.xeros.model.entity.npc.NPC;
@@ -17,6 +18,7 @@ import io.xeros.model.tickable.TickableContainer;
 import io.xeros.util.Misc;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Simple behaviour controller for bot players.
@@ -27,6 +29,7 @@ public class BotBehaviour implements Tickable<Player> {
         FIGHT_NEAREST_NPC,
         CHOP_NEAREST_TREE,
         MINE_NEAREST_ROCK,
+        PK_NEAREST_PLAYER,
         FISH_NEAREST_SPOT
     }
 
@@ -35,6 +38,7 @@ public class BotBehaviour implements Tickable<Player> {
     static {
         FISHING_DATA.put(7155, 1);
         FISHING_DATA.put(3913, 1);
+        FISHING_DATA.put(3917, 1);
         FISHING_DATA.put(7200, 5);
         FISHING_DATA.put(3317, 14);
         FISHING_DATA.put(4712, 15);
@@ -67,7 +71,13 @@ public class BotBehaviour implements Tickable<Player> {
     public BotBehaviour(Type type) {
         this.type = type;
     }
-
+    private void healIfNeeded(Player bot) {
+        int max = bot.getHealth().getMaximumHealth();
+        if (bot.getHealth().getCurrentHealth() <= max / 3) {
+            bot.startAnimation(829);
+            bot.getHealth().increase(20);
+        }
+    }
     @Override
     public void tick(TickableContainer<Player> container, Player bot) {
         if (bot == null || !bot.isBot()) {
@@ -78,6 +88,7 @@ public class BotBehaviour implements Tickable<Player> {
         if (container.getTicks() < nextActionTick) {
             return;
         }
+        healIfNeeded(bot);
         nextActionTick = container.getTicks() + Misc.random(3, 7);
 
         switch (type) {
@@ -93,9 +104,35 @@ public class BotBehaviour implements Tickable<Player> {
             case FISH_NEAREST_SPOT:
                 fishNearestSpot(bot);
                 break;
+            case PK_NEAREST_PLAYER:
+                fightNearestPlayer(bot);
+                break;
         }
     }
+    private void fightNearestPlayer(Player bot) {
+        Player nearest = null;
+        double best = Double.MAX_VALUE;
+        for (Player player : PlayerHandler.nonNullStream().collect(Collectors.toList())) {
+            if (player == bot || player.isDead)
+                continue;
+            double distance = bot.getPosition().distanceTo(player.getPosition());
+            if (distance < best) {
+                best = distance;
+                nearest = player;
+            }
+        }
 
+        if (nearest == null || best > 10) {
+            randomWalk(bot);
+            return;
+        }
+
+        if (best > 1) {
+            bot.getPA().playerWalk(nearest.getX(), nearest.getY());
+        } else if (bot.playerAttackingIndex == 0) {
+            bot.attackEntity(nearest);
+        }
+    }
     private void fightNearestNpc(Player bot) {
         NPC nearest = null;
         double best = Double.MAX_VALUE;

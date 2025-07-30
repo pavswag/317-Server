@@ -9559,6 +9559,6 @@ public class Npcs {
     public static final int ABYSSAL_WALKER_3 = 11_454;
     public static final int THE_GREAT_GUARDIAN_2 = 11_455;
     public static final int THE_GREAT_GUARDIAN_3 = 11_456;
-    public static final int INSTANCE_MASTER = 9_010;
+    public static final int INSTANCE_MASTER = 9_020;
 
 }

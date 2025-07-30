@@ -1,6 +1,7 @@
 package io.xeros.content.commands.owner;
 
 import io.xeros.content.commands.Command;
+import io.xeros.model.Items;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
@@ -13,6 +14,7 @@ import io.xeros.model.EquipmentSetup;
 import io.xeros.util.Captcha;
 import io.xeros.util.Misc;
 import org.jetbrains.annotations.NotNull;
+import io.xeros.content.tournaments.TourneyManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -83,10 +85,16 @@ public class Bots extends Command {
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FIGHT_NEAREST_NPC);
                 break;
             case "miner":
-               // spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.MINE_NEAREST_ROCK);
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.MINE_NEAREST_ROCK);
                 break;
             case "fish":
-               // spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FISH_NEAREST_SPOT);
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FISH_NEAREST_SPOT);
+                break;
+            case "spawnpker":
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.PK_NEAREST_PLAYER, "Pure");
+                break;
+            case "joinoutlast":
+                joinOutlastBots();
                 break;
             case "wc":
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.CHOP_NEAREST_TREE);
@@ -110,24 +118,53 @@ public class Bots extends Command {
                 player.sendMessage(String.format("No actionable command with '%s'", args[0]));
         }
     }
-
     private void spawnBots(Player player, int amount, BotBehaviour.Type type) {
+        spawnBots(player, amount, type, null);
+    }
+    private void spawnBots(Player player, int amount, BotBehaviour.Type type, String setupName) {
         player.sendMessage("Spawning " + amount + " bots.");
         for (int i = 0; i < amount; i++) {
             int x = player.getX() + Misc.random(-2, 2);
             int y = player.getY() + Misc.random(-2, 2);
             Player bot = Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
             bot.addQueuedLoginAction(Bots::randomizeStats);
-            bot.addQueuedLoginAction(Bots::equipRandomSetup);
+            if (setupName != null) {
+                String name = setupName;
+                bot.addQueuedLoginAction(plr -> equipSetup(plr, name));
+            } else {
+                bot.addQueuedLoginAction(Bots::equipRandomSetup);
+            }
             if (type != null) {
-                bot.addQueuedLoginAction(plr -> plr.addTickable(new BotBehaviour(type)));
+                BotBehaviour.Type finalType = type;
+                bot.addQueuedLoginAction(plr -> {
+                    plr.addTickable(new BotBehaviour(finalType));
+                    plr.getAttributes().setInt("bot_behavior", finalType.ordinal());
+                });
             }
         }
+    }
+    private static void equipSetup(Player bot, String name) {
+        try {
+            EquipmentSetup.equip(bot, name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void joinOutlastBots() {
+        TourneyManager tourney = TourneyManager.getSingleton();
+        if (!tourney.isLobbyOpen())
+            return;
+        PlayerHandler.nonNullStream().filter(Player::isBot).forEach(bot -> {
+            if (bot.getAttributes().getInt("bot_behavior", -1) == BotBehaviour.Type.PK_NEAREST_PLAYER.ordinal()) {
+                tourney.join(bot);
+            }
+        });
     }
 
     private static void randomizeStats(Player bot) {
         for (int i = 0; i < bot.playerLevel.length; i++) {
-            int level = Misc.random(1, 99);
+            int level = Misc.random(60, 91);
             bot.playerLevel[i] = level;
             bot.playerXP[i] = bot.getPA().getXPForLevel(level) + 1;
             bot.getPA().setSkillLevel(i, bot.playerLevel[i], bot.playerXP[i]);
@@ -145,6 +182,37 @@ public class Bots extends Command {
         String setup = setups.get(Misc.random(setups.size() - 1));
         try {
             EquipmentSetup.equip(bot, setup);
+            bot.getPA().removeAllItems();
+            bot.playerLevel[Player.playerPrayer] = 2_000_000_000;
+            bot.getHealth().setMaximumHealth(bot.getLevelForXP(bot.playerXP[Player.playerHitpoints]));
+            bot.getHealth().reset();
+// Tab 2 items
+            bot.getItems().addItemUnderAnyCircumstance(Items.WRATH_RUNE, 100);
+// Tab 3 items
+            int[][] tab3Items = {
+                    {Items.HAMMER, 1},
+                    {Items.TINDERBOX, 1},
+                    {Items.KNIFE, 1},
+                    {Items.CHEFS_HAT, 1},
+                    {Items.CHISEL, 1},
+                    {Items.IRON_PICKAXE, 1},
+                    {Items.SMALL_FISHING_NET, 1},
+                    {Items.FISHING_BAIT, 100},
+                    {Items.FISHING_ROD, 1},
+                    {Items.FLY_FISHING_ROD, 1},
+                    {Items.FEATHER, 1000},
+                    {Items.IRON_AXE, 1},
+                    {Items.VIAL_OF_WATER, 1000},
+                    {Items.PESTLE_AND_MORTAR, 1},
+                    {Items.EYE_OF_NEWT, 100},
+                    {Items.HAMMER, 1},
+                    {Items.SPADE, 1}
+            };
+
+            for (int[] item : tab3Items) {
+                bot.getItems().addItemUnderAnyCircumstance(item[0], item[1]);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
