@@ -32,10 +32,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class Voted extends Command {
 
-    /**
-     * EverythingRS API key used when validating votes.
-     */
+
     private static final String ER_API_KEY = "D5xMvBs24EOx7N41AEYsdOoWiIJXdUstwtQH2941jsDZ8LV9Ia4zN2ttNe7rpWfTL7F6UJzc";
+
+    public static final long XP_SCROLL_TICKS = TimeUnit.MINUTES.toMillis(60) / 600;
+    /**
+     * Base coin reward for each vote claimed. Previously 1m, now doubled.
+     */
+    private static final int GP_REWARD = 2_000_000;
+	public static int globalVotes = 10;
+	public static int totalVotes = 0;
 
     /**
      * Item id that grants double vote rewards when owned.
@@ -83,32 +89,56 @@ public class Voted extends Command {
 		}
 	}
 
-        static void votePanel(Player player) {
+  
+	static void votePanel(Player player) {
                 VotePanelManager.addVote(player.getLoginName());
                 VoteUser user = VotePanelManager.getUser(player);
-                if (user == null) {
-                        return;
-                }
-
-                if (player.getLastVotePanelPoint().isBefore(LocalDate.now())) {
-                        player.setLastVotePanelPoint(LocalDate.now());
-                        boolean streakOverflow = user.getDayStreak() >= VoteUser.MAX_DAY_STREAK;
-                        user.incrementDayStreak();
-                        if (user.getDayStreak() > VoteUser.MAX_DAY_STREAK && !streakOverflow) {
-                                user.resetDayStreak();
+                if (user != null) {
+                        if (player.getLastVotePanelPoint().isBefore(LocalDate.now())) { // Gain one point per day
+                                player.setLastVotePanelPoint(LocalDate.now());
+                                boolean oldStreakOverflow = user.getDayStreak() >= VoteUser.MAX_DAY_STREAK;
                                 user.incrementDayStreak();
-                        }
-
-                        if (user.getDayStreak() == VoteUser.MAX_DAY_STREAK || streakOverflow) {
-                                player.getItems().addItemToBankOrDrop(22093, 1);
-                                player.getItems().addItemToBankOrDrop(6199, 1);
-                                player.sendMessage("@pur@One @gre@vote key @pur@has been added to your bank for a 5 vote streak!");
-                                player.sendMessage("@red@You just completed a 5 day voting streak!");
-                                user.resetDayStreak();
-                                if (streakOverflow) {
+                                if (user.getDayStreak() > VoteUser.MAX_DAY_STREAK && !oldStreakOverflow) {
+                                        user.resetDayStreak();
                                         user.incrementDayStreak();
                                 }
+
+                                if (user.getDayStreak() == VoteUser.MAX_DAY_STREAK || oldStreakOverflow) { //They just hit a 5 day streak (after incrementing) so reward them!
+                                        player.getItems().addItemToBankOrDrop(22093, 1);
+                                        player.getItems().addItemToBankOrDrop(6199, 1);
+                                        player.sendMessage("@pur@One @gre@vote key @pur@has been added to your bank for a 5 vote streak!");
+                                        player.sendMessage("@red@You just completed a 5 day voting streak!");
+                                        user.resetDayStreak();
+                                        if (oldStreakOverflow) {
+                                                user.incrementDayStreak();
+                                        }
+                                }
+
+                                player.debug("Gained one ::vpanel point, streak: {}.", "" + user.getDayStreak());
                         }
+                        // Always persist vote data since vote counts update each claim.
+                        VotePanelManager.saveToJSON();
+                }
+        }
+
+        static void rewards(Player player, final int voteCount) {
+                Achievements.increase(player, AchievementType.VOTER, voteCount);
+                // Grant double the usual vote and key points per vote.
+                player.votePoints += voteCount * 2;
+                player.voteKeyPoints += voteCount * 2;
+                player.xpScroll = true;
+                player.xpScrollTicks += XP_SCROLL_TICKS * voteCount;
+		if (!DoubleExperience.isDoubleExperience()) player.getPA().sendGameTimer(ClientGameTimer.BONUS_XP, TimeUnit.MINUTES, (int) ((player.xpScrollTicks / 100)));
+		boolean firstWeekOfMonth = DateUtils.isFirstWeekOfMonth();
+                int amount = GP_REWARD * voteCount;
+                if (firstWeekOfMonth) {
+                        amount *= 2;
+                        player.sendMessage("@red@You have gained " + (voteCount * 2) + " voting points and extra gp for the first week of month!");
+                } else {
+                        player.sendMessage("You have gained " +  (voteCount * 2) + " voting points and gp!");
+                }
+		player.getItems().addItemUnderAnyCircumstance(Items.COINS, amount);
+	}
 
                         player.debug("Gained one ::vpanel point, streak: {}.", "" + user.getDayStreak());
                 }
