@@ -121,7 +121,11 @@ public class Configuration {
 	 */
 	public static boolean BOUNTY_HUNTER_ACTIVE = true;
 	public static boolean NEW_DUEL_ARENA_ACTIVE = true;
-	public static boolean VOTE_PANEL_ACTIVE = false;
+        /**
+         * Toggles the weekly vote panel system. When enabled players can
+         * access ::vpanel to track streaks and claim extra rewards.
+         */
+        public static boolean VOTE_PANEL_ACTIVE = true;
 
 	/**
 	 * The highest amount ID. Change is not needed here unless loading items higher
