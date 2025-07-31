@@ -1396,6 +1396,9 @@ public class NPC extends Entity {
     public void appendDamage(Entity entity, int damage, Hitmark hitmark) {
         if (entity != null && entity.isPlayer()) {
             Player player = (Player) entity;
+            if (player.getInstance() != getInstance()) {
+                return;
+            }
             damage = modifyDamage(player, damage);
             if (!canBeDamaged(player)) {
                 damage = 0;
