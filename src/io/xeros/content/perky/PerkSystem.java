@@ -129,52 +129,57 @@ public class PerkSystem {
     }
 
     public boolean obtainPerk(int itemID) {
-        ArrayList<Perks> perks = new ArrayList<>();
+        if (System.currentTimeMillis() - player.clickDelay <= 2200) {
+            return true;
+        }
+        player.clickDelay = System.currentTimeMillis();
 
-        if (!perks.isEmpty()) {
-            perks.clear();
+        int amount = player.getItems().getInventoryCount(itemID);
+        if (amount <= 0) {
+            return false;
         }
 
-        if (itemID == 26547) { // Combat
-            if (System.currentTimeMillis() - player.clickDelay <= 2200) {
-                return true;
+        if (itemID == 26545) { // Random fragment - open into any perk
+            player.getItems().deleteItem2(itemID, amount);
+            PerkType[] types = {PerkType.COMBAT, PerkType.SKILLING, PerkType.MISC};
+            for (int i = 0; i < amount; i++) {
+                PerkType type = types[Misc.random(types.length - 1)];
+                List<Perks> list = getPerksByType(type);
+                player.getItems().addItemUnderAnyCircumstance(list.get(Misc.random(list.size() - 1)).itemID, 1);
             }
-            player.clickDelay = System.currentTimeMillis();
-            for (Perks value : Perks.values()) {
-                if (value.perkType == PerkType.COMBAT) {
-                    perks.add(value);
-                }
+            return true;
+        } else if (itemID == 26547) { // Combat
+            List<Perks> list = getPerksByType(PerkType.COMBAT);
+            player.getItems().deleteItem2(itemID, amount);
+            for (int i = 0; i < amount; i++) {
+                player.getItems().addItemUnderAnyCircumstance(list.get(Misc.random(list.size() - 1)).itemID, 1);
             }
-            player.getItems().deleteItem2(itemID, 1);
-            player.getItems().addItemUnderAnyCircumstance(perks.get(Misc.random((perks.size()-1))).itemID, 1);
             return true;
         } else if (itemID == 26546) { // Skilling
-            if (System.currentTimeMillis() - player.clickDelay <= 2200) {
-                return true;
+            List<Perks> list = getPerksByType(PerkType.SKILLING);
+            player.getItems().deleteItem2(itemID, amount);
+            for (int i = 0; i < amount; i++) {
+                player.getItems().addItemUnderAnyCircumstance(list.get(Misc.random(list.size() - 1)).itemID, 1);
             }
-            player.clickDelay = System.currentTimeMillis();
-            for (Perks value : Perks.values()) {
-                if (value.perkType == PerkType.SKILLING) {
-                    perks.add(value);
-                }
-            }
-            player.getItems().deleteItem2(itemID, 1);
-            player.getItems().addItemUnderAnyCircumstance(perks.get(Misc.random((perks.size()-1))).itemID, 1);
             return true;
         } else if (itemID == 26548) { // Misc
-            if (System.currentTimeMillis() - player.clickDelay <= 2200) {
-                return true;
+            List<Perks> list = getPerksByType(PerkType.MISC);
+            player.getItems().deleteItem2(itemID, amount);
+            for (int i = 0; i < amount; i++) {
+                player.getItems().addItemUnderAnyCircumstance(list.get(Misc.random(list.size() - 1)).itemID, 1);
             }
-            player.clickDelay = System.currentTimeMillis();
-            for (Perks value : Perks.values()) {
-                if (value.perkType == PerkType.MISC) {
-                    perks.add(value);
-                }
-            }
-            player.getItems().deleteItem2(itemID, 1);
-            player.getItems().addItemUnderAnyCircumstance(perks.get(Misc.random((perks.size()-1))).itemID, 1);
             return true;
         }
         return false;
+    }
+
+    private List<Perks> getPerksByType(PerkType type) {
+        List<Perks> list = new ArrayList<>();
+        for (Perks value : Perks.values()) {
+            if (value.perkType == type) {
+                list.add(value);
+            }
+        }
+        return list;
     }
 }

@@ -789,17 +789,6 @@ public class ItemOptionOne implements PacketType {
             return;
         }
 
-        if (itemId == 26545) {
-            if (System.currentTimeMillis() - c.clickDelay <= 2200) {
-                return;
-            }
-            c.clickDelay = System.currentTimeMillis();
-            int[] perks = {26546, 26547, 26548};
-            c.getItems().deleteItem2(26545, 1);
-            c.getItems().addItem(perks[Misc.random((perks.length-1))], 1);
-            return;
-        }
-
         if (itemSlot >= c.playerItems.length || itemSlot < 0) {
             return;
         }
