@@ -56,6 +56,21 @@ public class BossInstanceDialogue extends DialogueBuilder {
     private String optionText(BossTier tier) {
         String action = getPlayer().getUnlockedBossTiers().contains(tier) ? "Enter " : "Unlock ";
         return action + "Tier " + (tier.ordinal() + 1) + " - " + tier.getZoneName();
+    private void tierMenu() {
+        BossTier[] tiers = BossTier.values();
+        DialogueOption[] options = new DialogueOption[tiers.length + 1];
+        int ptr = 0;
+        for (BossTier tier : tiers) {
+            options[ptr++] = new DialogueOption(optionText(tier), p -> selectTier(tier));
+        }
+        options[ptr] = DialogueOption.nevermind();
+        option(options);
+    }
+
+    private String optionText(BossTier tier) {
+        return getPlayer().getUnlockedBossTiers().contains(tier) ?
+                "Enter " + tier.getZoneName() :
+                "Unlock " + tier.getZoneName();
     }
 
     /**
@@ -67,6 +82,8 @@ public class BossInstanceDialogue extends DialogueBuilder {
             if (tier.getKillCount(player) < tier.getKillRequirement()) {
                 String name = io.xeros.model.definitions.NpcDef.forId(tier.getKillNpcId()).getName();
                 player.sendMessage("You need " + tier.getKillRequirement() + " " + name + " kills to unlock this tier.");
+            if (player.killcount < tier.getKillRequirement()) {
+                player.sendMessage("You need " + tier.getKillRequirement() + " kills to unlock this tier.");
                 player.getPA().closeAllWindows();
                 return;
             }
