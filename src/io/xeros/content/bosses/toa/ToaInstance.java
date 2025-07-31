@@ -17,7 +17,7 @@ public class ToaInstance extends InstancedArea {
 
     private static final InstanceConfiguration CONFIG = new InstanceConfigurationBuilder()
             .setCloseOnPlayersEmpty(true)
-            .setRespawnNpcs(false)
+            .setRespawnNpcs(true)
             .createInstanceConfiguration();
 
     public ToaInstance(Boundary boundary, Function<InstancedArea, NPC> bossSupplier, Position spawnPosition) {
@@ -31,6 +31,8 @@ public class ToaInstance extends InstancedArea {
         player.moveTo(new Position(spawnPosition.getX(), spawnPosition.getY(), getHeight()));
         NPC npc = bossSupplier.apply(this);
         npc.setPosition(new Position(spawnPosition.getX(), spawnPosition.getY(), getHeight()));
+        npc.getBehaviour().setRespawn(true);
+        npc.getBehaviour().setRespawnWhenPlayerOwned(true);
         add(npc);
     }
 
