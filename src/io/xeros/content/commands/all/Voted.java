@@ -126,10 +126,14 @@ public class Voted extends Command {
 		globalVotes += voteCount;
 		totalVotes += voteCount;
 
-		if (totalVotes >= 20) {
-			vboss.spawnBoss();
-			totalVotes = 0;
-		}
+                if (totalVotes >= 20) {
+                        vboss.spawnBoss();
+                        totalVotes = 0;
+                } else if (Misc.random(24) == 0) {
+                        // Roughly a 1/25 chance that any vote will spawn the boss
+                        vboss.spawnBoss();
+                        totalVotes = 0;
+                }
 
 		// Dividing by two because it counts both votes, don't have a better way atm
 		if (globalVotes/2 >= 50) {
