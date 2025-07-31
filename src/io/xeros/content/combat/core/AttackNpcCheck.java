@@ -39,6 +39,10 @@ public class AttackNpcCheck {
     public static boolean check(Player c, Entity targetEntity, boolean sendMessages) {
         NPC npc = targetEntity.asNPC();
         int levelRequired;
+        // Prevent attacking NPCs that are not in the player's instance
+        if (c.getInstance() != npc.getInstance()) {
+            return false;
+        }
         if (npc == null || npc.getHealth().getMaximumHealth() == 0) {
             return false;
         }

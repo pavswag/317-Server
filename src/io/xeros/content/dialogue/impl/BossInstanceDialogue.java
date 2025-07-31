@@ -2,10 +2,15 @@ package io.xeros.content.dialogue.impl;
 
 import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
-import io.xeros.content.instances.BossInstance;
+import io.xeros.content.instances.BossInstanceManager;
+import io.xeros.content.instances.BossInstanceManager.BossTier;
+import io.xeros.model.definitions.ItemDef;
 import io.xeros.model.entity.player.Player;
 import io.xeros.util.Misc;
 
+/**
+ * Dialogue allowing players to enter or unlock personal boss tiers.
+ */
 public class BossInstanceDialogue extends DialogueBuilder {
 
     private static final int NPC_ID = io.xeros.model.Npcs.INSTANCE_MASTER;
@@ -13,53 +18,63 @@ public class BossInstanceDialogue extends DialogueBuilder {
     public BossInstanceDialogue(Player player) {
         super(player);
         setNpcId(NPC_ID);
-        mainMenu();
+        tierMenu();
     }
 
-    private void mainMenu() {
-        option(new DialogueOption("OSRS Boss Instances", p -> osrsMenu()),
-                new DialogueOption("Custom Boss Instances", p -> customMenu()),
-                DialogueOption.nevermind());
+    /**
+     * Displays the tier selection menu.
+     */
+    private void tierMenu() {
+        BossTier[] tiers = BossTier.values();
+        DialogueOption[] options = new DialogueOption[tiers.length + 1];
+        int ptr = 0;
+        for (BossTier tier : tiers) {
+            options[ptr++] = new DialogueOption(optionText(tier), p -> selectTier(tier));
+        }
+        options[ptr] = DialogueOption.nevermind();
+        option(options);
     }
 
-    private void osrsMenu() {
-        option(optionFor(BossInstance.ZULRAH),
-                optionFor(BossInstance.KRAKEN),
-                optionFor(BossInstance.CERBERUS),
-                optionFor(BossInstance.VORKATH),
-                optionFor(BossInstance.HYDRA),
-                optionFor(BossInstance.TOA_BABA),
-                optionFor(BossInstance.TOA_CRONDIS),
-                optionFor(BossInstance.TOA_APMEKEN),
-                optionFor(BossInstance.TOA_AKKHA),
-                optionFor(BossInstance.TOA_KEPHRI),
-                optionFor(BossInstance.TOA_TUMEKENS_WARDEN));
+    private String optionText(BossTier tier) {
+        return getPlayer().getUnlockedBossTiers().contains(tier) ?
+                "Enter " + tier.getZoneName() :
+                "Unlock " + tier.getZoneName();
     }
 
-    private void customMenu() {
-        option(optionFor(BossInstance.GROTESQUE_GUARDIANS),
-                optionFor(BossInstance.OBOR),
-                optionFor(BossInstance.BRYOPHYTA),
-                optionFor(BossInstance.DUKE_SUCELLUS),
-                optionFor(BossInstance.NIGHTMARE));
-    }
-
-    private DialogueOption optionFor(BossInstance instance) {
-        return new DialogueOption(instance.getName(), p -> handle(instance));
-    }
-
-    private void handle(BossInstance instance) {
-        if (!getPlayer().getUnlockedInstances().contains(instance)) {
-            if (getPlayer().foundryPoints < instance.getCost()) {
-                getPlayer().sendMessage("You need " + Misc.formatCoins(instance.getCost()) + " upgrade points to unlock this instance.");
-                getPlayer().getPA().closeAllWindows();
+    /**
+     * Handles unlocking and entering the chosen tier.
+     */
+    private void selectTier(BossTier tier) {
+        Player player = getPlayer();
+        if (!player.getUnlockedBossTiers().contains(tier)) {
+            if (player.killcount < tier.getKillRequirement()) {
+                player.sendMessage("You need " + tier.getKillRequirement() + " kills to unlock this tier.");
+                player.getPA().closeAllWindows();
                 return;
             }
-            getPlayer().foundryPoints -= instance.getCost();
-            getPlayer().getUnlockedInstances().add(instance);
-            getPlayer().sendMessage("You unlock the " + instance.getName() + " instance!");
+            if (tier.getItemRequirement() > 0 && !player.getItems().playerHasItem(tier.getItemRequirement())) {
+                player.sendMessage("You need a " + ItemDef.forId(tier.getItemRequirement()).getName() + " to unlock this tier.");
+                player.getPA().closeAllWindows();
+                return;
+            }
+            if (tier.getGpCost() > 0 && !player.getItems().playerHasItem(995, tier.getGpCost())) {
+                player.sendMessage("You need " + Misc.formatCoins(tier.getGpCost()) + " coins to unlock this tier.");
+                player.getPA().closeAllWindows();
+                return;
+            }
+
+            if (tier.getItemRequirement() > 0) {
+                player.getItems().deleteItem(tier.getItemRequirement(), 1);
+            }
+            if (tier.getGpCost() > 0) {
+                player.getItems().deleteItem(995, tier.getGpCost());
+            }
+            player.getUnlockedBossTiers().add(tier);
+            player.sendMessage("You unlock " + tier.getZoneName() + "!");
         }
-        instance.start(getPlayer());
-        getPlayer().getPA().closeAllWindows();
+
+        BossInstanceManager.enter(player, tier);
+        player.getPA().closeAllWindows();
     }
 }
+

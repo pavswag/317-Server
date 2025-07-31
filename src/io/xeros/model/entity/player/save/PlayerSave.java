@@ -1114,6 +1114,16 @@ public class PlayerSave {
                                         e.printStackTrace();
                                     }
                                 }
+                            } else if (token.equals("tier-unlocks")) {
+                                for (String s : token3) {
+                                    try {
+                                        io.xeros.content.instances.BossInstanceManager.BossTier tier = io.xeros.content.instances.BossInstanceManager.BossTier.valueOf(s);
+                                        p.getUnlockedBossTiers().add(tier);
+                                    } catch (Exception e) {
+                                        logger.error("Error while loading {}", playerName, e);
+                                        e.printStackTrace();
+                                    }
+                                }
                             } else if (token.startsWith("removedTask")) {
                                 int value = Integer.parseInt(token2);
                                 if (value > -1) {
@@ -1743,6 +1753,17 @@ public class PlayerSave {
                 for (io.xeros.content.instances.BossInstance bi : p.getUnlockedInstances()) {
                     characterfile.write(bi.name());
                     if (i++ < p.getUnlockedInstances().size() - 1) {
+                        characterfile.write("\t");
+                    }
+                }
+            }
+            characterfile.newLine();
+            if (!p.getUnlockedBossTiers().isEmpty()) {
+                characterfile.write("tier-unlocks = ");
+                int i = 0;
+                for (io.xeros.content.instances.BossInstanceManager.BossTier tier : p.getUnlockedBossTiers()) {
+                    characterfile.write(tier.name());
+                    if (i++ < p.getUnlockedBossTiers().size() - 1) {
                         characterfile.write("\t");
                     }
                 }

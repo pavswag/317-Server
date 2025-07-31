@@ -36,53 +36,37 @@ public class AoeManager {
 //        }
 
         AoeWeapons aoeData = AOESystem.getSingleton().getAOEData(player.playerEquipment[Player.playerWeapon]);
-        if (aoeData != null) {
+        if (aoeData == null) {
+            return;
+        }
 
-            int dmg = Misc.random(aoeData.DMG);
-            int range = aoeData.Size;
-            int delay = aoeData.Delay;
-            int anim = aoeData.anim;
-            int gfx = aoeData.gfx;
-            String style = aoeData.style;
+        int dmg = Misc.random(aoeData.DMG);
+        int range = aoeData.Size;
+        int delay = aoeData.Delay;
+        int anim = aoeData.anim;
+        int gfx = aoeData.gfx;
+        String style = aoeData.style;
 
-            player.startAnimation(anim);
+        player.startAnimation(anim);
 
-            Iterator<NPC> it;
-            if (player.isPlayer() && victim.isNPC()) {
-//                it = Arrays.stream(NPCHandler.npcs).filter(i -> i.getPosition().withinDistance(player.getPosition(), range)).iterator();
-                for (NPC next : NPCHandler.npcs) {
-                    if (next != null) {
-                        if (player.getPosition().withinDistance(next.getPosition(), range) && next.getHealth().getCurrentHealth() > 0) {
-                            if (next.isNPC() && next.getHealth().getCurrentHealth() <= 0 && next.isDead()) {
-                                continue;
-                            }
-                            if (victim != next) {
-                                victim.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
-                                int calc = Misc.random(dmg);
-                                victim.appendDamage(player, calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
-                            }
-//                            if (Objects.equals(style, "mage")) {
-//                                player.getPA().addSkillXPMultiplied(dmg >> 2, Skill.MAGIC.getId(), true);
-//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 3, true);
-//                            } else if (Objects.equals(style, "melee")) {
-//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 0, true);
-//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 1, true);
-//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 2, true);
-//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 3, true);
-//                            } else if (Objects.equals(style, "ranged")) {
-//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 4, true);
-//                                player.getPA().addSkillXPMultiplied(dmg >> 2, 3, true);
-//                            }
-//                            RangeData.fireProjectileNpc(player, next.asNPC(), 50, 70, gfx, 43, 31, 37, 10);
-                            next.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
-                            int calc = Misc.random(dmg);
-                            next.appendDamage(player, calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
-                            next.attackEntity(player);
-                            player.attackTimer = delay;
-                        }
-                    }
+        if (player.isPlayer() && victim.isNPC()) {
+            victim.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
+            for (NPC next : NPCHandler.npcs) {
+                if (next == null) {
+                    continue;
                 }
+                if (next.getInstance() != player.getInstance() || next.getHeight() != player.getHeight()) {
+                    continue;
+                }
+                if (!player.getPosition().withinDistance(next.getPosition(), range) || next.getHealth().getCurrentHealth() <= 0) {
+                    continue;
+                }
+                next.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
+                int calc = Misc.random(dmg);
+                next.appendDamage(player, calc, (calc > 0 ? Hitmark.HIT : Hitmark.MISS));
+                next.attackEntity(player);
             }
+            player.attackTimer = delay;
         }
     }
 }
