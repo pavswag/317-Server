@@ -831,6 +831,10 @@ public class Player extends Entity {
      * Boss instances the player has unlocked.
      */
     private java.util.EnumSet<io.xeros.content.instances.BossInstance> unlockedInstances = java.util.EnumSet.noneOf(io.xeros.content.instances.BossInstance.class);
+    /**
+     * Boss tiers unlocked for {@link io.xeros.content.instances.BossInstanceManager}.
+     */
+    private java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> unlockedBossTiers = java.util.EnumSet.of(io.xeros.content.instances.BossInstanceManager.BossTier.TIER1);
     public int totalEarnedExchangePoints;
     public int referallFlag;
     public int amDonated;
@@ -6213,6 +6217,13 @@ public class Player extends Entity {
      */
     public java.util.EnumSet<io.xeros.content.instances.BossInstance> getUnlockedInstances() {
         return unlockedInstances;
+    }
+
+    /**
+     * Get the set of unlocked boss tiers.
+     */
+    public java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> getUnlockedBossTiers() {
+        return unlockedBossTiers;
     }
 
     public BlastFurnace getBlastFurnace() {

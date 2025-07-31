@@ -34,6 +34,12 @@ public class RespawnTime {
             return 1;
         }
 
+        if (npc.getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea) {
+            io.xeros.content.instances.BossInstanceManager.BossInstanceArea area =
+                    (io.xeros.content.instances.BossInstanceManager.BossInstanceArea) npc.getInstance();
+            return area.getTier().getRespawnTime();
+        }
+
         switch (id) {
             case Npcs.SARACHNIS:
             case 11278:
