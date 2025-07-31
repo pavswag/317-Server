@@ -2,8 +2,12 @@ package io.xeros.content.bosses.toa;
 
 import io.xeros.content.minigames.TOA.bosses.Crondis;
 import io.xeros.content.instances.InstancedArea;
-import io.xeros.content.minigames.TOA.TombsOfAmascutConstants;
+import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.player.Player;
+import io.xeros.content.item.lootable.impl.TombsOfAmascutChest;
+import io.xeros.model.items.GameItem;
+import io.xeros.util.Misc;
+import java.util.List;
 
 public class SoloCrondis extends Crondis {
     public SoloCrondis(InstancedArea area) {
@@ -11,13 +15,19 @@ public class SoloCrondis extends Crondis {
     }
 
     @Override
+    public NPC provideRespawnInstance() {
+        return new SoloCrondis(getInstance());
+    }
+
+    @Override
     public void onDeath() {
         InstancedArea inst = getInstance();
         if (inst != null) {
+            Player rareWinner = Misc.random(inst.getPlayers());
             for (Player plr : inst.getPlayers()) {
-                plr.moveTo(TombsOfAmascutConstants.FINISHED_TOMBS_OF_AMASCUT_POSITION);
+                List<GameItem> rewards = TombsOfAmascutChest.getRandomItems(plr.equals(rareWinner), 1);
+                TombsOfAmascutChest.rewardItems(plr, rewards);
             }
-            inst.dispose();
         }
     }
 }
