@@ -344,6 +344,11 @@ public class NPCDeath {
         int bossPoints = BossPoints.getPointsOnDeath(npc);
         BossPoints.addPoints(player, bossPoints, false);
 
+        if (npc.getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea area) {
+            io.xeros.content.instances.BossInstanceManager.BossTier tier = area.getTier();
+            player.getTierKillCounts().merge(tier, 1, Integer::sum);
+        }
+
         if (NpcDef.forId(npcId).getCombatLevel() >= 1) {
             player.getNpcDeathTracker().add(NpcDef.forId(npcId).getName(), NpcDef.forId(npcId).getCombatLevel(), bossPoints);
         }
