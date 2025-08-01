@@ -4,6 +4,7 @@ import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
 import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.instances.BossInstanceManager.BossTier;
+import java.util.Arrays;
 import io.xeros.model.definitions.ItemDef;
 import io.xeros.model.entity.player.Player;
 import io.xeros.util.Misc;
@@ -20,46 +21,67 @@ public class BossInstanceDialogue extends DialogueBuilder {
         setNpcId(NPC_ID);
         tierMenu();
     }
+
     /**
      * Displays the tier selection menu.
      */
-    private static final int TIERS_PER_PAGE = 2;
+    private static final int TIERS_PER_PAGE = 5;
     private int page;
 
     private void tierMenu() {
         tierMenu(0);
     }
-    /**
-     * Displays the tier selection menu.
-     */
+
     private void tierMenu(int page) {
         this.page = page;
         BossTier[] tiers = BossTier.values();
         int start = page * TIERS_PER_PAGE;
         int end = Math.min(start + TIERS_PER_PAGE, tiers.length);
 
-        java.util.List<DialogueOption> opts = new java.util.ArrayList<>();
-
+        DialogueOption[] options = new DialogueOption[TIERS_PER_PAGE + 2];
+        int ptr = 0;
         for (int i = start; i < end; i++) {
             BossTier tier = tiers[i];
-            opts.add(new DialogueOption(optionText(tier), p -> selectTier(tier)));
-        }
-
-        if (end < tiers.length) {
-            opts.add(new DialogueOption("More", p -> tierMenu(page + 1)));
+            options[ptr++] = new DialogueOption(optionText(tier), p -> selectTier(tier));
         }
         if (page > 0) {
-            opts.add(new DialogueOption("Back", p -> tierMenu(page - 1)));
+            options[ptr++] = new DialogueOption("Back", p -> tierMenu(page - 1));
         }
-        opts.add(DialogueOption.nevermind());
-
-        option(opts.toArray(new DialogueOption[0]));
+        if (end < tiers.length) {
+            options[ptr++] = new DialogueOption("More", p -> tierMenu(page + 1));
+        }
+        options[ptr++] = DialogueOption.nevermind();
+        option(java.util.Arrays.copyOf(options, ptr));
     }
 
-
     private String optionText(BossTier tier) {
-        String action = getPlayer().getUnlockedBossTiers().contains(tier) ? "Enter " : "Unlock ";
-        return action + "Tier " + (tier.ordinal() + 1) + " - " + tier.getZoneName();
+        Player player = getPlayer();
+        boolean unlocked = player.getUnlockedBossTiers().contains(tier);
+        String prefix = unlocked ? "\u2705 " : "\uD83D\uDD12 ";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix).append("Tier ").append(tier.ordinal() + 1);
+
+        if (unlocked) {
+            sb.append(" - Unlocked");
+        } else {
+            // find the tier that unlocks this one
+            BossTier prev = Arrays.stream(BossTier.values())
+                    .filter(t -> t.getNextTier() == tier)
+                    .findFirst()
+                    .orElse(null);
+            if (prev != null) {
+                int current = player.getTierKillCounts().getOrDefault(prev, 0);
+                int required = prev.getRequiredKillCountToUnlockNext();
+                sb.append(" - ").append(current).append("/").append(required).append(" kills");
+                if (current >= required) {
+                    sb.append(" (Ready!)");
+                } else {
+                    sb.append(" (Progressing...)");
+                }
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -68,8 +90,9 @@ public class BossInstanceDialogue extends DialogueBuilder {
     private void selectTier(BossTier tier) {
         Player player = getPlayer();
         if (!player.getUnlockedBossTiers().contains(tier)) {
-            if (player.killcount < tier.getKillRequirement()) {
-                player.sendMessage("You need " + tier.getKillRequirement() + " kills to unlock this tier.");
+            if (tier.getKillCount(player) < tier.getKillRequirement()) {
+                String name = io.xeros.model.definitions.NpcDef.forId(tier.getKillNpcId()).getName();
+                player.sendMessage("You need " + tier.getKillRequirement() + " " + name + " kills to unlock this tier.");
                 player.getPA().closeAllWindows();
                 return;
             }

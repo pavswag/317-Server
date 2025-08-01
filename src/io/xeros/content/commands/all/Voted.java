@@ -26,17 +26,15 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Changes the password of the player.
- *
- * @author Emiel
- *
+ * Handles the {@code ::voted} command which players use to claim voting
+ * rewards from EverythingRS. The command also manages vote panel streaks,
+ * global vote counters and bonus rewards.
  */
 public class Voted extends Command {
 
-    /**
-     * Amount of bonus experience time granted per vote. Increased to one hour
-     * to incentivise voting more frequently.
-     */
+
+    private static final String ER_API_KEY = "D5xMvBs24EOx7N41AEYsdOoWiIJXdUstwtQH2941jsDZ8LV9Ia4zN2ttNe7rpWfTL7F6UJzc";
+
     public static final long XP_SCROLL_TICKS = TimeUnit.MINUTES.toMillis(60) / 600;
     /**
      * Base coin reward for each vote claimed. Previously 1m, now doubled.
@@ -45,15 +43,36 @@ public class Voted extends Command {
 	public static int globalVotes = 10;
 	public static int totalVotes = 0;
 
-	public static void claimVotes(Player player) {
-		if (Configuration.VOTE_PANEL_ACTIVE) {
-			votePanel(player);
-		}
-		int amt = 1;
+    /**
+     * Item id that grants double vote rewards when owned.
+     */
+    private static final int DOUBLE_VOTE_ITEM_ID = 33115;
 
-		if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33115)) {
-			amt = 2;
-		}
+    /**
+     * Amount of bonus experience time granted per vote. Increased to one hour
+     * to incentivise voting more frequently.
+     */
+    public static final long XP_SCROLL_TICKS = TimeUnit.MINUTES.toMillis(60) / 600;
+
+    /**
+     * Base coin reward for each vote claimed. Previously 1m, now doubled.
+     */
+    private static final int GP_REWARD = 2_000_000;
+
+    /** Total votes counted towards spawning the vote boss. */
+    public static int globalVotes = 10;
+    /** Votes counted for the next vote boss spawn. */
+    public static int totalVotes = 0;
+
+        public static void claimVotes(Player player) {
+                if (Configuration.VOTE_PANEL_ACTIVE) {
+                        votePanel(player);
+                }
+
+                boolean hasDoubleRewardPerk = player.getPerkSytem().gameItems
+                                .stream()
+                                .anyMatch(item -> item.getId() == DOUBLE_VOTE_ITEM_ID);
+                int amt = hasDoubleRewardPerk ? 2 : 1;
 
 		player.bonusDmgTicks += (TimeUnit.MINUTES.toMillis(10) / 600);
 		player.bonusDmg = true;
@@ -70,6 +89,7 @@ public class Voted extends Command {
 		}
 	}
 
+  
 	static void votePanel(Player player) {
                 VotePanelManager.addVote(player.getLoginName());
                 VoteUser user = VotePanelManager.getUser(player);
@@ -108,8 +128,8 @@ public class Voted extends Command {
                 player.voteKeyPoints += voteCount * 2;
                 player.xpScroll = true;
                 player.xpScrollTicks += XP_SCROLL_TICKS * voteCount;
-		if (!DoubleExperience.isDoubleExperience()) player.getPA().sendGameTimer(ClientGameTimer.BONUS_XP, TimeUnit.MINUTES, (int) ((player.xpScrollTicks / 100)));
-		boolean firstWeekOfMonth = DateUtils.isFirstWeekOfMonth();
+                if (!DoubleExperience.isDoubleExperience()) player.getPA().sendGameTimer(ClientGameTimer.BONUS_XP, TimeUnit.MINUTES, (int) ((player.xpScrollTicks / 100)));
+                boolean firstWeekOfMonth = DateUtils.isFirstWeekOfMonth();
                 int amount = GP_REWARD * voteCount;
                 if (firstWeekOfMonth) {
                         amount *= 2;
@@ -117,19 +137,23 @@ public class Voted extends Command {
                 } else {
                         player.sendMessage("You have gained " +  (voteCount * 2) + " voting points and gp!");
                 }
-		player.getItems().addItemUnderAnyCircumstance(Items.COINS, amount);
-	}
+                player.getItems().addItemUnderAnyCircumstance(Items.COINS, amount);
+        }
 
-	public static void incrementGlobalVote(final int voteCount) {
-		final boolean firstWeekOfMonth = DateUtils.isFirstWeekOfMonth();
-		final var header = firstWeekOfMonth ? "Double Vote Week" : "Vote";
-		globalVotes += voteCount;
-		totalVotes += voteCount;
+        public static void incrementGlobalVote(final int voteCount) {
+                final boolean firstWeekOfMonth = DateUtils.isFirstWeekOfMonth();
+                final var header = firstWeekOfMonth ? "Double Vote Week" : "Vote";
 
-		if (totalVotes >= 20) {
-			vboss.spawnBoss();
-			totalVotes = 0;
-		}
+                globalVotes += voteCount;
+                totalVotes += voteCount;
+
+                if (totalVotes >= 20) {
+                        vboss.spawnBoss();
+                        totalVotes = 0;
+                } else if (Misc.random(24) == 0) { // ~4% chance per vote
+                        vboss.spawnBoss();
+                        totalVotes = 0;
+                }
 
 		// Dividing by two because it counts both votes, don't have a better way atm
 		if (globalVotes/2 >= 50) {
@@ -145,18 +169,15 @@ public class Voted extends Command {
 	}
 
 	@Override
-	public void execute(Player c, String commandName, String input) {
-		String[] args = input.split(" ");
-		final String playerName = c.getLoginName();
-		final String id = "1";
-		final String amount = "all";
+        public void execute(Player c, String commandName, String input) {
+                final String playerName = c.getLoginName();
+                final String id = "1";
+                final String amount = "all";
 
-		com.everythingrs.vote.Vote.service.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					com.everythingrs.vote.Vote[] reward = com.everythingrs.vote.Vote.reward("D5xMvBs24EOx7N41AEYsdOoWiIJXdUstwtQH2941jsDZ8LV9Ia4zN2ttNe7rpWfTL7F6UJzc",
-							playerName, id, amount);
+                com.everythingrs.vote.Vote.service.execute(() -> {
+                                try {
+                                        com.everythingrs.vote.Vote[] reward = com.everythingrs.vote.Vote.reward(ER_API_KEY,
+                                                        playerName, id, amount);
 					if (reward[0].message != null) {
 						c.sendMessage(reward[0].message);
 						return;
@@ -189,14 +210,13 @@ public class Voted extends Command {
                                         claimVotes(c);
 				} catch (Exception e) {
 					c.sendMessage("Api Services are currently offline. Please check back shortly");
-					e.printStackTrace();
-				}
-			}
+                                e.printStackTrace();
+                        }
 
-		});
-	}
+                });
+        }
 
-	@Override
+        @Override
 	public Optional<String> getDescription() {
 		return Optional.of("Claim your voted reward.");
 	}
@@ -233,7 +253,7 @@ public class Voted extends Command {
 
 
 	@Override
-	public boolean hasPrivilege(Player player) {
-		return true;
-	}
+        public boolean hasPrivilege(Player player) {
+                return true;
+        }
 }

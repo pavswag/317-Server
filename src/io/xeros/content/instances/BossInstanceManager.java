@@ -25,7 +25,7 @@ public class BossInstanceManager {
      * Simple instance type that cleans up the instance map when disposed so
      * height levels can be reused immediately.
      */
-    public static class BossInstanceArea extends LegacySoloPlayerInstance {
+    private static class BossInstanceArea extends LegacySoloPlayerInstance {
 
         /** Player that owns this instance. */
         private final Player owner;
@@ -107,6 +107,30 @@ public class BossInstanceManager {
         TIER10("Dragon King", 1000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON,
                 new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180)});
 
+        static {
+            TIER1.requiredKillCountToUnlockNext = 25;
+            TIER1.nextTier = TIER2;
+            TIER2.requiredKillCountToUnlockNext = 50;
+            TIER2.nextTier = TIER3;
+            TIER3.requiredKillCountToUnlockNext = 75;
+            TIER3.nextTier = TIER4;
+            TIER4.requiredKillCountToUnlockNext = 100;
+            TIER4.nextTier = TIER5;
+            TIER5.requiredKillCountToUnlockNext = 150;
+            TIER5.nextTier = TIER6;
+            TIER6.requiredKillCountToUnlockNext = 200;
+            TIER6.nextTier = TIER7;
+            TIER7.requiredKillCountToUnlockNext = 250;
+            TIER7.nextTier = TIER8;
+            TIER8.requiredKillCountToUnlockNext = 300;
+            TIER8.nextTier = TIER9;
+            TIER9.requiredKillCountToUnlockNext = 400;
+            TIER9.nextTier = TIER10;
+            TIER10.requiredKillCountToUnlockNext = 0;
+            TIER10.nextTier = null;
+        }
+
+
         private final String zoneName;
         /** Kill requirement to unlock this tier. */
         private final int killRequirement;
@@ -118,6 +142,10 @@ public class BossInstanceManager {
         private final int itemRequirement;
         private final int respawnTime;
         private final BossMob[] mobs;
+        /** Kill count required within this tier to unlock the next one. */
+        private int requiredKillCountToUnlockNext;
+        /** The next tier unlocked after meeting the kill requirement. */
+        private BossTier nextTier;
 
         BossTier(String zoneName, int killRequirement, int gpCost, int itemRequirement, int respawnTime, int killNpcId, BossMob[] mobs) {
             this.zoneName = zoneName;
@@ -164,6 +192,19 @@ public class BossInstanceManager {
         public BossMob[] getMobs() {
             return mobs;
         }
+
+
+        public BossTier getNextTier() {
+            return nextTier;
+        }
+        public int[] getNpcIds() {
+            return npcIds;
+        }
+
+        public int getRequiredKillCountToUnlockNext() {
+            return requiredKillCountToUnlockNext;
+        }
+
     }
 
     /**
@@ -225,7 +266,7 @@ public class BossInstanceManager {
         }
     }
 
-    /**x
+    /**
      * Leave the boss instance, disposing of any spawned NPCs and freeing the
      * height level.
      */

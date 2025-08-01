@@ -230,8 +230,7 @@ import static io.xeros.util.discord.DiscordIntegration.updateDiscordPoints;
 public class Player extends Entity {
 
     private static Logger logger = LoggerFactory.getLogger(Player.class);
-    /** Tracks the combat type of the last successful hit on this player */
-    public CombatType lastHitType;
+
     public static final int playerHat = 0;
     public static final int playerCape = 1;
     public static final int playerAmulet = 2;
@@ -263,10 +262,7 @@ public class Player extends Entity {
     public static final int playerSlayer = 18;
     public static final int playerFarming = 19;
     public static final int playerRunecrafting = 20;
-    /**
-     * Boss instances the player has unlocked.
-     */
-    private java.util.EnumSet<io.xeros.content.instances.BossInstance> unlockedInstances = java.util.EnumSet.noneOf(io.xeros.content.instances.BossInstance.class);
+
 
     public int[] tempInventory = new int[28], tempInventoryN = new int[28], tempEquipment = new int[28], tempEquipmentN = new int[28], tempEquipmentCosmetic = new int[28];
     public boolean rubyBoltSpecial;
@@ -831,7 +827,16 @@ public class Player extends Entity {
     public int xpMaxSkills;
     public int exchangePoints;
     public long foundryPoints;
-
+    /**
+     * Boss instances the player has unlocked.
+     */
+    private java.util.EnumSet<io.xeros.content.instances.BossInstance> unlockedInstances = java.util.EnumSet.noneOf(io.xeros.content.instances.BossInstance.class);
+    /**
+     * Boss tiers unlocked for {@link io.xeros.content.instances.BossInstanceManager}.
+     */
+    private java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> unlockedBossTiers = java.util.EnumSet.of(io.xeros.content.instances.BossInstanceManager.BossTier.TIER1);
+    /** Kill counts tracked per {@link io.xeros.content.instances.BossInstanceManager.BossTier}. */
+    private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> tierKillCounts = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
     public int totalEarnedExchangePoints;
     public int referallFlag;
     public int amDonated;
@@ -1282,7 +1287,7 @@ public class Player extends Entity {
         player.completedTutorial = true;
         player.setLoginName(username);
         player.setDisplayName(player.getLoginName());
-        player.macAddress = "bot-" + Misc.random(1_000_000);
+        player.macAddress = "";
         player.bot = true;
         player.nameAsLong = Misc.playerNameToInt64(username);
         player.playerPass = "ArkCaneDoesntHaveBotsExiled";
@@ -1853,24 +1858,7 @@ public class Player extends Entity {
         for (int i = 0; i < maxNPCListSize; i++) npcList[i] = null;
         if (Server.isTest() && !isBot()) logger.info(Misc.formatPlayerName(getLoginName()) + " is logging out..");
     }
-    private void handleRankUpgrade() {
-        ArrayList<RankUpgrade> orderedList = new ArrayList<>(Arrays.asList(RankUpgrade.values()));
-        orderedList.sort((one, two) -> Integer.compare(two.amount, one.amount));
-        orderedList.stream().filter(r -> amDonated >= r.amount).findFirst().ifPresent(rank -> {
-            RightGroup rights = getRights();
-            Right right = rank.rights;
-            if (!rights.contains(right)) {
-                sendMessage("@blu@Congratulations, your rank has been upgraded to " + right.toString() + ".");
-                // sendMessage("@blu@This rank is hidden, but you will have all it's perks.");
-                if (rights.isOrInherits(Right.ADMINISTRATOR) || rights.isOrInherits(Right.GAME_DEVELOPER)
-                        || rights.isOrInherits(Right.MODERATOR) || rights.isOrInherits(Right.HELPER)) {
-                    rights.add(right);
-                } else {
-                    rights.setPrimary(right);
-                }
-            }
-        });
-    }
+
     public void declineTrades() {
         if (Server.getMultiplayerSessionListener().inSession(this, MultiplayerSessionType.TRADE))
             Server.getMultiplayerSessionListener().finish(this, MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
@@ -1977,7 +1965,7 @@ public class Player extends Entity {
             getPA().sendGameTimer(ClientGameTimer.BONUS_XP, TimeUnit.MINUTES, (int) (xpScrollTicks / 100));
 
         if (getRights().isOrInherits(Right.GAME_DEVELOPER))
-            getTitles().setCurrentTitle("@bla@[<col=A10081>" + "<shad=1>Admin</shad>" + "</col>@bla@]");
+            getTitles().setCurrentTitle("@bla@[<col=A10081>" + "<shad=1>Owner</shad>" + "</col>@bla@]");
         else if (getRights().isOrInherits(Right.STAFF_MANAGER))
             getTitles().setCurrentTitle("@bla@[<col=0f07eb>" + "<shad=1>Developer</shad>" + "</col>@bla@]");
         else if (getRights().isOrInherits(Right.COMMUNITY_MANAGER))
@@ -2256,7 +2244,6 @@ public class Player extends Entity {
             StoreTransfer = true;
             updateRank();
         }
-        handleRankUpgrade();
 
         CompromisedAccounts.onLogin(this);
         PlayerMigrationRepository.migrate(this);
@@ -3274,83 +3261,82 @@ public class Player extends Entity {
     }
 
     public void updateRank() {
-        handleRankUpgrade();
-//        if (amDonated <= 0) amDonated = 0;
-//
-//        if (amDonated >= 20 && amDonated < 50)
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN)
-//                    || getRights().isOrInherits(Right.ULTIMATE_IRONMAN)
-//                    || getRights().isOrInherits(Right.OSRS)
-//                    || getRights().isOrInherits(Right.HELPER)
-//                    || getRights().isOrInherits(Right.MODERATOR)
-//                    || getRights().isOrInherits(Right.HC_IRONMAN)) getRights().add(Right.DONATOR);
-//            else getRights().setPrimary(Right.DONATOR);
-//        if (amDonated >= 50 && amDonated < 100) {
-//            if (!getRights().isOrInherits(Right.SUPER_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=47>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Super Donator ($50)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) ||
-//                    getRights().isOrInherits(Right.IRONMAN) ||
-//                    getRights().isOrInherits(Right.ULTIMATE_IRONMAN) ||
-//                    getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.SUPER_DONATOR);
-//            else getRights().setPrimary(Right.SUPER_DONATOR);
-//        }
-//        if (amDonated >= 100 && amDonated < 250) {
-//            if (!getRights().isOrInherits(Right.GREAT_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=46>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Great Donator ($100)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.GREAT_DONATOR);
-//            else getRights().setPrimary(Right.GREAT_DONATOR);
-//        }
-//        if (amDonated >= 250 && amDonated < 500) {
-//            if (!getRights().isOrInherits(Right.EXTREME_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=45>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Extreme Donator ($250)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.EXTREME_DONATOR);
-//            else getRights().setPrimary(Right.EXTREME_DONATOR);
-//        }
-//        if (amDonated >= 500 && amDonated < 750) {
-//            if (!getRights().isOrInherits(Right.MAJOR_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=44>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Major Donator ($500)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.MAJOR_DONATOR);
-//            else getRights().setPrimary(Right.MAJOR_DONATOR);
-//        }
-//        if (amDonated >= 750 && amDonated < 1000) {
-//            if (!getRights().isOrInherits(Right.SUPREME_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=43>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Supreme Donator ($750)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.SUPREME_DONATOR);
-//            else getRights().setPrimary(Right.SUPREME_DONATOR);
-//        }
-//        if (amDonated >= 1000 && amDonated < 1500) {
-//            if (!getRights().isOrInherits(Right.GILDED_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=42>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Gilded Donator ($1000)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.GILDED_DONATOR);
-//            else getRights().setPrimary(Right.GILDED_DONATOR);
-//        }
-//        if (amDonated >= 1500 && amDonated < 2000) {
-//            if (!getRights().isOrInherits(Right.PLATINUM_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=41>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Platinum Donator ($1500)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.PLATINUM_DONATOR);
-//            else getRights().setPrimary(Right.PLATINUM_DONATOR);
-//        }
-//        if (amDonated >= 2000 && amDonated < 3000) {
-//            if (!getRights().isOrInherits(Right.APEX_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=40>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Apex Donator ($2000)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.APEX_DONATOR);
-//            else getRights().setPrimary(Right.APEX_DONATOR);
-//        }
-//        if (amDonated >= 3000) {
-//            if (!getRights().isOrInherits(Right.ALMIGHTY_DONATOR))
-//                PlayerHandler.executeGlobalMessage("<img=34>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Almighty Donator ($3000)!");
-//            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
-//                getRights().add(Right.ALMIGHTY_DONATOR);
-//            else getRights().setPrimary(Right.ALMIGHTY_DONATOR);
-//        }
+        if (amDonated <= 0) amDonated = 0;
+
+        if (amDonated >= 20 && amDonated < 50)
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN)
+                    || getRights().isOrInherits(Right.ULTIMATE_IRONMAN)
+                    || getRights().isOrInherits(Right.OSRS)
+                    || getRights().isOrInherits(Right.HELPER)
+                    || getRights().isOrInherits(Right.MODERATOR)
+                    || getRights().isOrInherits(Right.HC_IRONMAN)) getRights().add(Right.DONATOR);
+            else getRights().setPrimary(Right.DONATOR);
+        if (amDonated >= 50 && amDonated < 100) {
+            if (!getRights().isOrInherits(Right.SUPER_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=47>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Super Donator ($50)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) ||
+                    getRights().isOrInherits(Right.IRONMAN) ||
+                    getRights().isOrInherits(Right.ULTIMATE_IRONMAN) ||
+                    getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.SUPER_DONATOR);
+            else getRights().setPrimary(Right.SUPER_DONATOR);
+        }
+        if (amDonated >= 100 && amDonated < 250) {
+            if (!getRights().isOrInherits(Right.GREAT_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=46>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Great Donator ($100)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.GREAT_DONATOR);
+            else getRights().setPrimary(Right.GREAT_DONATOR);
+        }
+        if (amDonated >= 250 && amDonated < 500) {
+            if (!getRights().isOrInherits(Right.EXTREME_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=45>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Extreme Donator ($250)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.EXTREME_DONATOR);
+            else getRights().setPrimary(Right.EXTREME_DONATOR);
+        }
+        if (amDonated >= 500 && amDonated < 750) {
+            if (!getRights().isOrInherits(Right.MAJOR_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=44>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Major Donator ($500)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.MAJOR_DONATOR);
+            else getRights().setPrimary(Right.MAJOR_DONATOR);
+        }
+        if (amDonated >= 750 && amDonated < 1000) {
+            if (!getRights().isOrInherits(Right.SUPREME_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=43>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Supreme Donator ($750)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.SUPREME_DONATOR);
+            else getRights().setPrimary(Right.SUPREME_DONATOR);
+        }
+        if (amDonated >= 1000 && amDonated < 1500) {
+            if (!getRights().isOrInherits(Right.GILDED_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=42>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Gilded Donator ($1000)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.GILDED_DONATOR);
+            else getRights().setPrimary(Right.GILDED_DONATOR);
+        }
+        if (amDonated >= 1500 && amDonated < 2000) {
+            if (!getRights().isOrInherits(Right.PLATINUM_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=41>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Platinum Donator ($1500)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.PLATINUM_DONATOR);
+            else getRights().setPrimary(Right.PLATINUM_DONATOR);
+        }
+        if (amDonated >= 2000 && amDonated < 3000) {
+            if (!getRights().isOrInherits(Right.APEX_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=40>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Apex Donator ($2000)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.APEX_DONATOR);
+            else getRights().setPrimary(Right.APEX_DONATOR);
+        }
+        if (amDonated >= 3000) {
+            if (!getRights().isOrInherits(Right.ALMIGHTY_DONATOR))
+                PlayerHandler.executeGlobalMessage("<img=34>@bla@[@gre@Donator@bla@] " + getDisplayName() + " has just earned rank Almighty Donator ($3000)!");
+            if (getRights().isOrInherits(Right.YOUTUBER) || getRights().isOrInherits(Right.IRONMAN) || getRights().isOrInherits(Right.ULTIMATE_IRONMAN) || getRights().isOrInherits(Right.OSRS) || getRights().isOrInherits(Right.HELPER) || getRights().isOrInherits(Right.MODERATOR) || getRights().isOrInherits(Right.HC_IRONMAN))
+                getRights().add(Right.ALMIGHTY_DONATOR);
+            else getRights().setPrimary(Right.ALMIGHTY_DONATOR);
+        }
     }
 
     public int getPrivateChat() {
@@ -4489,26 +4475,12 @@ public class Player extends Entity {
         }
         setUpdateRequired(true);
     }
-    @Override
-    public void appendDamage(int damage, Hitmark h) {
-        Entity attacker = null;
-        if (underAttackByNpc > 0) {
-            attacker = NPCHandler.npcs[underAttackByNpc];
-        } else if (underAttackByPlayer > 0) {
-            attacker = PlayerHandler.players[underAttackByPlayer];
-        }
 
-        appendDamage(attacker, damage, h);
-    }
     @Override
     public void appendDamage(Entity entity, int damage, Hitmark h) {
         // Attempting a fix to dying after teleport here.
-        if (entity != null && distance(entity.getPosition()) > 36)
-            return;
-// Attempting to fix all auto retal
-        if (entity != null && entity.isNPC() && isAutoRetaliate()) {
-            attackEntity(entity);
-        }
+        if (entity != null && distance(entity.getPosition()) > 36) return;
+
         // Converts all hits to 0, but processes effects
 
         if (getAttributes().getBoolean("GODMODE")) damage = 0;
@@ -6249,6 +6221,20 @@ public class Player extends Entity {
         return unlockedInstances;
     }
 
+    /**
+     * Get the set of unlocked boss tiers.
+     */
+    public java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> getUnlockedBossTiers() {
+        return unlockedBossTiers;
+    }
+
+    /**
+     * Access the kill counts for each boss instance tier.
+     */
+    public java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> getTierKillCounts() {
+        return tierKillCounts;
+    }
+
     public BlastFurnace getBlastFurnace() {
         return blastFurnace;
     }
@@ -6377,17 +6363,7 @@ public class Player extends Entity {
     public int teleGrabY;
     public int teleGrabItem;
     public long teleGrabDelay;
-    /**
-     * Boss tiers unlocked for {@link io.xeros.content.instances.BossInstanceManager}.
-     */
-    private java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> unlockedBossTiers = java.util.EnumSet.of(io.xeros.content.instances.BossInstanceManager.BossTier.TIER1);
 
-    /**
-     * Get the set of unlocked boss tiers.
-     */
-    public java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> getUnlockedBossTiers() {
-        return unlockedBossTiers;
-    }
     public void myShopId(int i) {
         myShopId = i;
     }

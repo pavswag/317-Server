@@ -344,6 +344,17 @@ public class NPCDeath {
         int bossPoints = BossPoints.getPointsOnDeath(npc);
         BossPoints.addPoints(player, bossPoints, false);
 
+        if (npc.getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea area) {
+            io.xeros.content.instances.BossInstanceManager.BossTier tier = area.getTier();
+            int newCount = player.getTierKillCounts().merge(tier, 1, Integer::sum);
+            if (newCount >= tier.getRequiredKillCountToUnlockNext()) {
+                io.xeros.content.instances.BossInstanceManager.BossTier next = tier.getNextTier();
+                if (next != null && player.getUnlockedBossTiers().add(next)) {
+                    player.sendMessage("\uD83C\uDF89 You've unlocked " + next.name().replace('_', ' ') + "! Return to the instance portal to challenge new bosses!");
+                }
+            }
+        }
+
         if (NpcDef.forId(npcId).getCombatLevel() >= 1) {
             player.getNpcDeathTracker().add(NpcDef.forId(npcId).getName(), NpcDef.forId(npcId).getCombatLevel(), bossPoints);
         }
