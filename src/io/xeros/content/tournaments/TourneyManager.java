@@ -49,7 +49,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
+import io.xeros.content.commands.owner.Bots;
+import io.xeros.model.entity.player.Position;
+import io.xeros.model.entity.player.bot.BotBehaviour;
 /**
  * @author Grant_ | www.rune-server.ee/members/grant_ | 10/3/19
  * A tournament system that allows players to join a lobby and fight until there is only one player left.
@@ -461,7 +463,7 @@ public class TourneyManager {
             player.sendMessage("You are unable to join an active tournament.");
             return;
         }
-        if (checkMacAddress(player) && !Server.isDebug()) {
+        if (!player.isBot() && checkMacAddress(player) && !Server.isDebug()) {
             player.sendMessage("You can only play with one account per computer.");
             return;
         }
@@ -750,7 +752,10 @@ public class TourneyManager {
             removeTarget(player);
             player.attacking.reset();
             Server.getDatabaseManager().exec(new OutlastLeaderboardAdd(new OutlastLeaderboardEntry(player)));
-            if (player.getMode().equals(Mode.forType(ModeType.HARDCORE_WILDYMAN)) || player.getMode().equals(Mode.forType(ModeType.WILDYMAN))) {
+            if (player.isBot() && player.getAttributes().getInt("bot_behavior", -1) == BotBehaviour.Type.PK_NEAREST_PLAYER.ordinal()) {
+                Position pos = Bots.randomPkPosition();
+                player.getPA().forceMove(pos.getX(), pos.getY(), pos.getHeight(), logout);
+            } else if (player.getMode().equals(Mode.forType(ModeType.HARDCORE_WILDYMAN)) || player.getMode().equals(Mode.forType(ModeType.WILDYMAN))) {
                 player.getPA().forceMove(3126, 3629, 0, logout);
             } else {
                 player.getPA().forceMove(3101, 3496, 0, logout);

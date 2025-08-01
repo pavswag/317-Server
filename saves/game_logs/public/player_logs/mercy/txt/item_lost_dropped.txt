@@ -32,3 +32,7 @@
 [ItemDroppedLog] [2025-07-24T10:33:32.4608705] Dropped GameItem{name='perfect' ring, id=773, amount=1} at Position{x=3207, y=3223, z=0}
 [ItemDroppedLog] [2025-07-24T11:27:46.198623] Dropped GameItem{name=Dwarf remains, id=30173, amount=1} at Position{x=3209, y=3223, z=0}
 [ItemDroppedLog] [2025-07-29T13:02:20.0823855] Dropped GameItem{name=Bronze pickaxe, id=1265, amount=1} at Position{x=3230, y=3252, z=0}
+[ItemDroppedLog] [2025-07-29T18:07:45.4575725] Dropped GameItem{name=Pyromancer boots, id=20710, amount=1} at Position{x=3208, y=3256, z=0}
+[ItemDroppedLog] [2025-07-29T21:54:35.7617402] Dropped GameItem{name=Ultra Mystery Box, id=13346, amount=1} at Position{x=3037, y=4518, z=0}
+[ItemDroppedLog] [2025-07-30T18:11:55.4262425] Dropped GameItem{name=Dwarf remains, id=34000, amount=1} at Position{x=3360, y=9124, z=0}
+[ItemDroppedLog] [2025-07-30T18:12:02.0316723] Dropped GameItem{name=Dwarf remains, id=30007, amount=1} at Position{x=3362, y=9123, z=0}

@@ -10,6 +10,7 @@ import io.xeros.content.combat.melee.CombatPrayer;
 import io.xeros.content.combat.melee.MeleeData;
 import io.xeros.content.combat.pvp.PkpRewards;
 import io.xeros.content.commands.moderator.vboss;
+import io.xeros.content.commands.owner.Bots;
 import io.xeros.content.items.PvpWeapons;
 import io.xeros.content.itemskeptondeath.ItemsLostOnDeath;
 import io.xeros.content.itemskeptondeath.ItemsLostOnDeathList;
@@ -26,6 +27,7 @@ import io.xeros.model.entity.Entity;
 import io.xeros.model.entity.npc.NPCHandler;
 import io.xeros.model.entity.npc.pets.PetHandler;
 import io.xeros.model.entity.player.*;
+import io.xeros.model.entity.player.bot.BotBehaviour;
 import io.xeros.model.entity.player.mode.Mode;
 import io.xeros.model.entity.player.mode.ModeType;
 import io.xeros.model.entity.player.save.PlayerSave;
@@ -736,6 +738,9 @@ public class PlayerDeath {
         c.resetDamageTaken();
         c.setKiller(null);
         c.killerId = 0;
+        if (c.isBot() && c.getAttributes().getInt("bot_behavior", -1) == BotBehaviour.Type.PK_NEAREST_PLAYER.ordinal()) {
+            Bots.preparePkBot(c);
+        }
     }
 
 }

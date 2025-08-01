@@ -37,6 +37,14 @@ public enum Crushable {
 		this.result = result;
 	}
 
+	public GameItem getOriginal() {
+		return original;
+	}
+
+	public GameItem getResult() {
+		return result;
+	}
+
 	private static final Set<Crushable> VALUES = Collections.unmodifiableSet(EnumSet.allOf(Crushable.class));
 
 	public static Optional<GameItem> getResult(int original) {

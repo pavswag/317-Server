@@ -25,7 +25,7 @@ public class BossInstanceManager {
      * Simple instance type that cleans up the instance map when disposed so
      * height levels can be reused immediately.
      */
-    private static class BossInstanceArea extends LegacySoloPlayerInstance {
+    public static class BossInstanceArea extends LegacySoloPlayerInstance {
 
         /** Player that owns this instance. */
         private final Player owner;
@@ -36,8 +36,7 @@ public class BossInstanceManager {
             super(InstanceConfiguration.CLOSE_ON_EMPTY, owner, boundary);
             this.owner = owner;
             this.tier = tier;
-
-   
+        }
 
         @Override
         public void onDispose() {
@@ -107,15 +106,6 @@ public class BossInstanceManager {
                 new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150)}),
         TIER10("Dragon King", 1000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON,
                 new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180)});
-    }
-
-    /**
-     * Difficulty tiers for bosses.
-     */
-    public enum BossTier {
-        TIER1("Training Grounds", 0, 0, -1, new int[]{Npcs.COW}),
-        TIER2("Giants' Den", 10, 100_000, -1, new int[]{Npcs.HILL_GIANT}),
-        TIER3("Dragon Lair", 50, 1_000_000, 11286, new int[]{Npcs.KING_BLACK_DRAGON});
 
         private final String zoneName;
         /** Kill requirement to unlock this tier. */
@@ -130,9 +120,6 @@ public class BossInstanceManager {
         private final BossMob[] mobs;
 
         BossTier(String zoneName, int killRequirement, int gpCost, int itemRequirement, int respawnTime, int killNpcId, BossMob[] mobs) {
-        private final int[] npcIds;
-
-        BossTier(String zoneName, int killRequirement, int gpCost, int itemRequirement, int[] npcIds) {
             this.zoneName = zoneName;
             this.killRequirement = killRequirement;
             this.gpCost = gpCost;
@@ -140,7 +127,6 @@ public class BossInstanceManager {
             this.respawnTime = respawnTime;
             this.killNpcId = killNpcId;
             this.mobs = mobs;
-            this.npcIds = npcIds;
         }
 
         public String getZoneName() {
@@ -177,8 +163,6 @@ public class BossInstanceManager {
 
         public BossMob[] getMobs() {
             return mobs;
-        public int[] getNpcIds() {
-            return npcIds;
         }
     }
 
@@ -221,9 +205,6 @@ public class BossInstanceManager {
         BossMob[] mobs = tier.getMobs();
         for (int index = 0; index < mobs.length; index++) {
             BossMob mob = mobs[index];
-        int[] ids = tier.getNpcIds();
-        for (int index = 0; index < ids.length; index++) {
-            int npcId = ids[index];
 
             // Spread NPCs out using a 3xN grid with 2 tile spacing
             int offsetX = (index % 3) * 2;
@@ -239,16 +220,12 @@ public class BossInstanceManager {
             if (npc != null) {
                 npc.getBehaviour().setRespawn(true);
                 npc.getBehaviour().setRespawnWhenPlayerOwned(true);
-            NPC npc = NPCSpawning.spawnNpc(player, npcId, baseX + offsetX, baseY + offsetY,
-                    instance.getHeight(), 0, 0, false, false);
-            if (npc != null) {
-                npc.getBehaviour().setRespawn(false);
                 instance.add(npc);
             }
         }
     }
 
-    /**
+    /**x
      * Leave the boss instance, disposing of any spawned NPCs and freeing the
      * height level.
      */

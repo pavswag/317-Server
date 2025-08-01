@@ -1,8 +1,11 @@
 package io.xeros.content.minigames.wheel;
 
+import io.xeros.content.fireofexchange.FireOfExchangeBurnPrice;
+import io.xeros.content.skills.Skill;
 import io.xeros.model.definitions.ItemDef;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.PlayerHandler;
+import io.xeros.util.Misc;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -150,6 +153,12 @@ public class WheelOfFortune {
             player.getItems().addItemUnderAnyCircumstance(game.getReward().getId(), game.getReward().getAmount());
             if (Arrays.stream(rares).anyMatch(i -> i == game.getReward().getId())) {
                 PlayerHandler.executeGlobalMessage("@red@[Fortune]@blu@ " + player.getDisplayName() + " has just received a "+ ItemDef.forId(game.getReward().getId()).getName() + "!");
+            }
+            int burnPrice = FireOfExchangeBurnPrice.getBurnPrice(null, game.getReward().getId(), false);
+            int fortuneXp = burnPrice > 0 ? burnPrice / 100 : 0;
+            if (fortuneXp > 0) {
+                player.getPA().addSkillXPMultiplied(fortuneXp, Skill.FORTUNE.getId(), true);
+                player.sendMessage("You gain " + Misc.formatNumber(fortuneXp) + " Fortune XP.");
             }
             game = null;
         }

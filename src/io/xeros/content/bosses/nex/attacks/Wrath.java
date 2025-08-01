@@ -22,7 +22,7 @@ public class Wrath {
                 if (container.getTotalTicks() > 5) {
                     for (Player player : targets) {
                         if(player.getPosition().getAbsDistance(npc.getPosition()) < 5) {
-                            player.appendDamage(Misc.random(10, 40), Hitmark.HIT);
+                            player.appendDamage(Misc.random(20, 99), Hitmark.HIT);
                         }
                     }
                     container.stop();

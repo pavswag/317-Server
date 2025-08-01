@@ -145,8 +145,13 @@ public class FireOfExchange {
             case 696 -> multiplier = 50;
         }
 
-        if (c.playerXP[Skill.FORTUNE.getId()] < 200_000_000) {
-            c.getPA().addSkillXPMultiplied(multiplier * itemAmount, Skill.FORTUNE.getId(), true);
+        int burnPricePerItem = def.isNoted() ?
+                getBurnPrice(c, def.getUnNotedIdIfNoted(), true) :
+                getBurnPrice(c, c.currentExchangeItem, true);
+        int fortuneXp = (int) ((burnPricePerItem / 100.0) * itemAmount);
+        if (fortuneXp > 0 && c.playerXP[Skill.FORTUNE.getId()] < 200_000_000) {
+            c.getPA().addSkillXPMultiplied(fortuneXp, Skill.FORTUNE.getId(), true);
+            c.sendMessage("You gain " + Misc.formatNumber(fortuneXp) + " Fortune XP.");
         }
 
         c.sendMessage("Nomad takes your @blu@" + ItemAssistant.getItemName(c.currentExchangeItem) + "@bla@ and gives back @blu@" + Misc.formatCoins(exchangePrice) + " Upgrade Points!");

@@ -150,7 +150,7 @@ public class MimicNpc extends NPC {
                     walkTo = null;
                     return;
                 }
-                target.appendDamage(dmg, Hitmark.HIT);
+                target.appendDamage(MimicNpc.this, dmg, Hitmark.HIT);
                 if (counter != 0 && (counter % 3) == 0) {
                     dmg++;
                 }

@@ -8,14 +8,32 @@
         "stackable": false
       }
     ],
-    "amountToKill": 100,
+    "amountToKill": 15,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "MEDIUM",
+    "taskType": "COMBAT",
+    "weekly": false,
+    "localDateTime": "2025-07-31T17:33:55.4558075",
+    "desc": "Araphel"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 1000,
     "claimedReward": false,
     "amountKilled": 0,
     "taskDifficulty": "HARD",
     "taskType": "SKILLING",
     "weekly": false,
-    "localDateTime": "2025-07-29T13:52:28.5260027",
-    "desc": "Grow @whi@Torstols"
+    "localDateTime": "2025-07-31T17:33:55.4638087",
+    "desc": "Make @whi@Runes"
   },
   {
     "items": [
@@ -26,31 +44,13 @@
         "stackable": false
       }
     ],
-    "amountToKill": 10,
-    "claimedReward": false,
-    "amountKilled": 0,
-    "taskDifficulty": "EASY",
-    "taskType": "COMBAT",
-    "weekly": false,
-    "localDateTime": "2025-07-29T13:52:28.5320055",
-    "desc": "Chaos elemental"
-  },
-  {
-    "items": [
-      {
-        "id": 995,
-        "amount": 25000,
-        "slot": 0,
-        "stackable": false
-      }
-    ],
-    "amountToKill": 200,
+    "amountToKill": 300,
     "claimedReward": false,
     "amountKilled": 0,
     "taskDifficulty": "EASY",
     "taskType": "COMBAT",
     "weekly": true,
-    "localDateTime": "2025-07-30T12:52:28.5320055",
-    "desc": "Zulrah"
+    "localDateTime": "2025-08-01T16:33:55.4648099",
+    "desc": "Kree\u0027arra"
   }
 ]

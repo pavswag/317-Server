@@ -357,28 +357,35 @@ public class Fishing extends SkillHandler {
 	}
 
 	private static boolean hasFishingEquipment(Player c, int equipment) {
+		if (equipment <= 0) {
+			return true;
+		}
 		if (!c.getItems().playerHasItem(equipment)) {
+			if (c.isBot()) {
+				c.getItems().addItem(equipment, 1);
+				return true;
+			}
 
-			if(equipment == 311 || equipment == 21028 || equipment == 25373) {
-				if(c.getItems().playerHasItem(21028) || c.playerEquipment[3] == 21028) {
+			if (equipment == 311 || equipment == 21028 || equipment == 25373) {
+				if (c.getItems().playerHasItem(21028) || c.playerEquipment[3] == 21028) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(25059) || c.playerEquipment[3] == 25059) {
+				if (c.getItems().playerHasItem(25059) || c.playerEquipment[3] == 25059) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(25114) || c.playerEquipment[3] == 25114) {
+				if (c.getItems().playerHasItem(25114) || c.playerEquipment[3] == 25114) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(25373) || c.playerEquipment[3] == 25373) {
+				if (c.getItems().playerHasItem(25373) || c.playerEquipment[3] == 25373) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(21031) || c.playerEquipment[3] == 21031) {
+				if (c.getItems().playerHasItem(21031) || c.playerEquipment[3] == 21031) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(10129) || c.playerEquipment[3] == 10129) {
+				if (c.getItems().playerHasItem(10129) || c.playerEquipment[3] == 10129) {
 					return true;
 				}
-				if(c.getItems().playerHasItem(23762) || c.playerEquipment[3] == 23762) {
+				if (c.getItems().playerHasItem(23762) || c.playerEquipment[3] == 23762) {
 					return true;
 				}
 			}

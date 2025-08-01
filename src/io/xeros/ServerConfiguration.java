@@ -11,11 +11,11 @@ import io.xeros.sql.DatabaseCredentials;
 public class ServerConfiguration {
 
     public static final String CONFIGURATION_FILE = "config.yaml";
-
     public static ServerConfiguration getDefault() {
         ServerConfiguration configuration = new ServerConfiguration();
         configuration.serverState = ServerState.PUBLIC;
         configuration.discordBotToken = "";
+        configuration.generateItemTooltips = false;
         return configuration;
     }
 
@@ -59,6 +59,8 @@ public class ServerConfiguration {
 
     public ServerConfiguration() {
     }
+    @JsonProperty("generate_item_tooltips")
+    private boolean generateItemTooltips;
 
     @JsonIgnore
     public boolean isDisplayNamesDisabled() {
@@ -125,7 +127,13 @@ public class ServerConfiguration {
     public void setBackupFtpCredentials(DatabaseCredentials backupFtpCredentials) {
         this.backupFtpCredentials = backupFtpCredentials;
     }
+    public boolean isGenerateItemTooltips() {
+        return generateItemTooltips;
+    }
 
+    public void setGenerateItemTooltips(boolean generateItemTooltips) {
+        this.generateItemTooltips = generateItemTooltips;
+    }
     public String getMysqlDumpPath() {
         return mysqlDumpPath;
     }

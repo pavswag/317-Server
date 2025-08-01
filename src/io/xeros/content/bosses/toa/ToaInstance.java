@@ -4,6 +4,7 @@ import io.xeros.content.instances.InstanceConfiguration;
 import io.xeros.content.instances.InstancedArea;
 import io.xeros.content.instances.InstanceConfigurationBuilder;
 import io.xeros.model.entity.npc.NPC;
+import io.xeros.model.entity.npc.NPCSpawning;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Position;
@@ -28,13 +29,10 @@ public class ToaInstance extends InstancedArea {
 
     public void enter(Player player) {
         add(player);
-        player.moveTo(new Position(spawnPosition.getX(), spawnPosition.getY(), getHeight()));
+        player.moveTo(resolve(spawnPosition));
         NPC npc = bossSupplier.apply(this);
-        npc.setPosition(new Position(spawnPosition.getX(), spawnPosition.getY(), getHeight()));
-        npc.getBehaviour().setRespawn(true);
-        npc.getBehaviour().setRespawnWhenPlayerOwned(true);
-        add(npc);
-    }
+        NPCSpawning.spawnNpc(this, npc.getNpcId(), spawnPosition.getX(), spawnPosition.getY(), getHeight(), 0, 50);
+           }
 
     @Override
     public void onDispose() { }

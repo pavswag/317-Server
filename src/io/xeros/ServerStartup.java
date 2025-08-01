@@ -138,6 +138,8 @@ public class ServerStartup {
         NpcSpawnLoader.load();
         NpcSpawnLoaderOSRS.initOsrsSpawns();
         MonsterHunt.spawnNPC();
+        // Generate the item tooltips json if enabled in configuration
+        io.xeros.content.menu.ItemTooltips.init(Server.getConfiguration().isGenerateItemTooltips());
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
         CommandManager.initializeCommands();
         NightmareStatusNPC.init();

@@ -10,7 +10,7 @@ enum RankUpgrade {
     GOGETTA(Right.GILDED_DONATOR, 1000),
     GOGETTA_SS(Right.PLATINUM_DONATOR, 1500),
     GOGETTA_SS2(Right.APEX_DONATOR, 2000),
-    SS_BROLY(Right.ALMIGHTY_DONATOR, 15000);
+    SS_BROLY(Right.ALMIGHTY_DONATOR, 3000);
 
     /**
      * The rights that will be appended if upgraded

@@ -108,25 +108,16 @@ public enum PrestigePerks {
     }
 
     public static int handleTiers(Player player) {
-        switch (player.prestigeLevel[0]) {
-            case 1:
-            case 2:
-                return 1;
-            case 3:
-            case 4:
-                return 2;
-            case 5:
-            case 6:
-                return 3;
-            case 7:
-            case 8:
-                return 4;
-            case 9:
-                return 5;
-            case 10:
-                return 6;
-        }
-        return 0;
+        int level = player.prestigeLevel[0];
+        if (level <= 0)
+            return 0;
+
+        // Every two prestige levels grant the next tier up to tier 5. Any
+        // prestige level of ten or more grants tier 6 which unlocks all perks.
+        if (level >= 10)
+            return 6;
+
+        return ((level - 1) / 2) + 1;
     }
 
     public static boolean hasRelic(Player player, PrestigePerks perk) {

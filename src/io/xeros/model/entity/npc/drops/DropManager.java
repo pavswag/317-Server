@@ -544,7 +544,7 @@ public class DropManager {
         // Skill based
         if (player.skillLevelGreaterThan(Skill.FORTUNE.getId(), 25, 50)) modifier += 0.04D;
         if (player.skillLevelGreaterThan(Skill.FORTUNE.getId(), 50, 75)) modifier += 0.06D;
-        if (player.skillLevelGreaterThan(Skill.FORTUNE.getId(), 75, 99)) modifier += 0.010D;
+        if (player.skillLevelGreaterThan(Skill.FORTUNE.getId(), 75, 99)) modifier += 0.10D;
         if (player.skillLevelGreaterThan(Skill.FORTUNE.getId(), 99, 200)) modifier += 0.14D;
 
         // Donation Rank

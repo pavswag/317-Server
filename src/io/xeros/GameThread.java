@@ -36,7 +36,17 @@ public class GameThread extends Thread {
     public static final String THREAD_NAME = "GameThread";
     public static final int PRIORITY = 9;
     private static final Logger logger = LoggerFactory.getLogger(GameThread.class);
-    private final List<Consumer<GameThread>> tickables = new ArrayList<>();
+    private static class Tickable {
+        final String name;
+        final Consumer<GameThread> action;
+
+        Tickable(String name, Consumer<GameThread> action) {
+            this.name = name;
+            this.action = action;
+        }
+    }
+
+    private final List<Tickable> tickables = new ArrayList<>();
     private final Runnable startup;
     private long totalCycleTime = 0;
 
@@ -48,39 +58,44 @@ public class GameThread extends Thread {
     }
 
     private void setTickables() {
-        tickables.add(i -> Server.itemHandler.process());
-        tickables.add(i -> Server.npcHandler.process());
-        tickables.add(i -> Server.playerHandler.process());
-        tickables.add(i -> Server.shopHandler.process());
-        tickables.add(i -> Highpkarena.process());
-        tickables.add(i -> Lowpkarena.process());
-        tickables.add(i -> DiscordIntegration.givePoints());
-        tickables.add(i -> ActiveVolcano.Tick());
-        tickables.add(i -> ShootingStars.Tick());
-        tickables.add(i -> Server.getGlobalObjects().pulse());
-        tickables.add(i -> CycleEventHandler.getSingleton().process());
-        tickables.add(i -> Server.getEventHandler().process());
-        tickables.add(i -> Wintertodt.pulse());
-        tickables.add(i -> DonorBoss.tick());
-        tickables.add(i -> DonorBoss2.tick());
-        tickables.add(i -> DonorBoss3.tick());
-        tickables.add(i -> Gobbler.ticker());
-        tickables.add(i -> Pass.tick());
-        tickables.add(i -> BlastFurnace.process());
-        tickables.add(i -> TaskManager.sequence());
-        tickables.add(i -> QuestTab.Tick());
-        tickables.add(i -> Server.tickCount++);
-        tickables.add(i -> ForcedChat.StartForcedChat());
-        tickables.add(i -> DailyDataTracker.newDay());
+        tickables.add(new Tickable("ItemHandler", i -> Server.itemHandler.process()));
+        tickables.add(new Tickable("NPCHandler", i -> Server.npcHandler.process()));
+        tickables.add(new Tickable("PlayerHandler", i -> Server.playerHandler.process()));
+        tickables.add(new Tickable("ShopHandler", i -> Server.shopHandler.process()));
+        tickables.add(new Tickable("Highpkarena", i -> Highpkarena.process()));
+        tickables.add(new Tickable("Lowpkarena", i -> Lowpkarena.process()));
+        tickables.add(new Tickable("DiscordPoints", i -> DiscordIntegration.givePoints()));
+        tickables.add(new Tickable("ActiveVolcano", i -> ActiveVolcano.Tick()));
+        tickables.add(new Tickable("ShootingStars", i -> ShootingStars.Tick()));
+        tickables.add(new Tickable("GlobalObjects", i -> Server.getGlobalObjects().pulse()));
+        tickables.add(new Tickable("CycleEventHandler", i -> CycleEventHandler.getSingleton().process()));
+        tickables.add(new Tickable("EventHandler", i -> Server.getEventHandler().process()));
+        tickables.add(new Tickable("Wintertodt", i -> Wintertodt.pulse()));
+        tickables.add(new Tickable("DonorBoss", i -> DonorBoss.tick()));
+        tickables.add(new Tickable("DonorBoss2", i -> DonorBoss2.tick()));
+        tickables.add(new Tickable("DonorBoss3", i -> DonorBoss3.tick()));
+        tickables.add(new Tickable("Gobbler", i -> Gobbler.ticker()));
+        tickables.add(new Tickable("BattlePass", i -> Pass.tick()));
+        tickables.add(new Tickable("BlastFurnace", i -> BlastFurnace.process()));
+        tickables.add(new Tickable("TaskManager", i -> TaskManager.sequence()));
+        tickables.add(new Tickable("QuestTab", i -> QuestTab.Tick()));
+        tickables.add(new Tickable("TickCounter", i -> Server.tickCount++));
+        tickables.add(new Tickable("ForcedChat", i -> ForcedChat.StartForcedChat()));
+        tickables.add(new Tickable("DailyTracker", i -> DailyDataTracker.newDay()));
     }
 
     private void tick() {
-        for (Consumer<GameThread> tickable : tickables) {
+        for (Tickable tickable : tickables) {
+            long start = System.currentTimeMillis();
             try {
-                tickable.accept(this);
+                tickable.action.accept(this);
             } catch (Exception e) {
                 logger.error("Error caught in GameThread, should be caught up the chain and handled.", e);
                 e.printStackTrace(System.err);
+            }
+            long elapsed = System.currentTimeMillis() - start;
+            if (elapsed > 200) {
+                logger.warn("Tickable {} took {}ms", tickable.name, elapsed);
             }
         }
 

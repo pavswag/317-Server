@@ -1,11 +1,16 @@
 package io.xeros.model.entity.player.bot;
 
 import io.xeros.Server;
+import io.xeros.content.combat.melee.CombatPrayer;
+import io.xeros.content.skills.SkillHandler;
 import io.xeros.content.skills.woodcutting.Tree;
 import io.xeros.content.skills.woodcutting.Woodcutting;
 import io.xeros.content.skills.mining.Mining;
 import io.xeros.content.skills.mining.Mineral;
 import io.xeros.content.skills.Fishing;
+import io.xeros.model.CombatType;
+import io.xeros.model.entity.EntityReference;
+import io.xeros.model.entity.player.ClientGameTimer;
 import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.util.Location3D;
 import io.xeros.model.collisionmap.WorldObject;
@@ -16,15 +21,25 @@ import io.xeros.model.entity.player.Position;
 import io.xeros.model.tickable.Tickable;
 import io.xeros.model.tickable.TickableContainer;
 import io.xeros.util.Misc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 /**
  * Simple behaviour controller for bot players.
  */
 public class BotBehaviour implements Tickable<Player> {
-
+    private static final Logger logger = LoggerFactory.getLogger(BotBehaviour.class);
+    private static final String[] PK_PHRASES = {
+            "You good, bro?",
+            "Gf",
+            "Sit!",
+            "Nice try",
+            "Smoked"
+    };
     public enum Type {
         FIGHT_NEAREST_NPC,
         CHOP_NEAREST_TREE,
@@ -109,30 +124,6 @@ public class BotBehaviour implements Tickable<Player> {
                 break;
         }
     }
-    private void fightNearestPlayer(Player bot) {
-        Player nearest = null;
-        double best = Double.MAX_VALUE;
-        for (Player player : PlayerHandler.nonNullStream().collect(Collectors.toList())) {
-            if (player == bot || player.isDead)
-                continue;
-            double distance = bot.getPosition().distanceTo(player.getPosition());
-            if (distance < best) {
-                best = distance;
-                nearest = player;
-            }
-        }
-
-        if (nearest == null || best > 10) {
-            randomWalk(bot);
-            return;
-        }
-
-        if (best > 1) {
-            bot.getPA().playerWalk(nearest.getX(), nearest.getY());
-        } else if (bot.playerAttackingIndex == 0) {
-            bot.attackEntity(nearest);
-        }
-    }
     private void fightNearestNpc(Player bot) {
         NPC nearest = null;
         double best = Double.MAX_VALUE;
@@ -151,6 +142,10 @@ public class BotBehaviour implements Tickable<Player> {
             return;
         }
 
+        //logger.debug("{} attacking player {}", bot.getDisplayName(), nearest.getDisplayName());
+
+        logger.debug("{} attacking npc {}", bot.getDisplayName(), nearest.getNpcId());
+
         if (best > 1) {
             bot.getPA().playerWalk(nearest.getX(), nearest.getY());
         } else if (bot.npcAttackingIndex == 0) {
@@ -158,12 +153,97 @@ public class BotBehaviour implements Tickable<Player> {
         }
     }
 
+    private void fightNearestPlayer(Player bot) {
+        if (!bot.getPosition().inWild()) {
+            randomWalk(bot);
+            return;
+        }
+
+        Player target = null;
+        double best = Double.MAX_VALUE;
+
+        if (bot.lastDefend != null) {
+            Player attacker = (Player) bot.lastDefend.get();
+            if (attacker != null && !attacker.isDead && attacker.getPosition().inWild()) {
+                target = attacker;
+                best = bot.getPosition().distanceTo(attacker.getPosition());
+            }
+        }
+
+        if (target == null) {
+            for (Player player : PlayerHandler.players) {
+                if (player == null || player == bot || player.isDead || !player.getPosition().inWild())
+                    continue;
+                double distance = bot.getPosition().distanceTo(player.getPosition());
+                if (distance < best) {
+                    best = distance;
+                    target = player;
+                }
+            }
+        }
+
+        if (target == null || best > 10) {
+            randomWalk(bot);
+            return;
+        }
+
+        if (best > 1) {
+            bot.getPA().playerWalk(target.getX(), target.getY());
+        } else if (bot.playerAttackingIndex == 0 || bot.playerAttackingIndex != target.getIndex()) {
+            bot.faceEntity(target);
+            bot.attackEntity(target);
+            if (Misc.random(4) == 0) {
+                bot.forcedChat(PK_PHRASES[Misc.random(PK_PHRASES.length - 1)]);
+            }
+        }
+
+        adjustPrayers(bot);
+        maybeFreeze(bot, target);
+    }
+
+    private void adjustPrayers(Player bot) {
+        CombatType type = bot.lastHitType;
+        if (type == null) {
+            return;
+        }
+        switch (type) {
+            case MELEE:
+                CombatPrayer.activatePrayer(bot, CombatPrayer.PROTECT_FROM_MELEE);
+                break;
+            case RANGE:
+                CombatPrayer.activatePrayer(bot, CombatPrayer.PROTECT_FROM_RANGED);
+                break;
+            case MAGE:
+                CombatPrayer.activatePrayer(bot, CombatPrayer.PROTECT_FROM_MAGIC);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void maybeFreeze(Player bot, Player target) {
+        if (target.isFreezable() && target.freezeTimer <= 0 && target.freezeDelay <= 0) {
+            int delay = 10;
+            target.frozenBy = EntityReference.getReference(bot);
+            target.freezeTimer = delay;
+            target.freezeDelay = delay;
+            target.resetWalkingQueue();
+            target.sendMessage("You have been frozen.");
+            target.getPA().sendGameTimer(ClientGameTimer.FREEZE, java.util.concurrent.TimeUnit.MILLISECONDS, 600 * delay);
+        }
+    }
+
     private void chopNearestTree(Player bot) {
+        if (isSkilling(bot))
+            return;
+
         WorldObject tree = findNearbyTree(bot, 6);
         if (tree == null) {
             randomWalk(bot);
             return;
         }
+
+        logger.debug("{} chopping tree {} at ({}, {})", bot.getDisplayName(), tree.getId(), tree.getX(), tree.getY());
 
         if (bot.distanceToPoint(tree.getX(), tree.getY()) > 1) {
             bot.getPA().playerWalk(tree.getX(), tree.getY());
@@ -173,11 +253,16 @@ public class BotBehaviour implements Tickable<Player> {
     }
 
     private void mineNearestRock(Player bot) {
+        if (isSkilling(bot))
+            return;
+
         WorldObject rock = findNearbyRock(bot, 6);
         if (rock == null) {
             randomWalk(bot);
             return;
         }
+
+        logger.debug("{} mining rock {} at ({}, {})", bot.getDisplayName(), rock.getId(), rock.getX(), rock.getY());
 
         if (bot.distanceToPoint(rock.getX(), rock.getY()) > 1) {
             bot.getPA().playerWalk(rock.getX(), rock.getY());
@@ -187,11 +272,16 @@ public class BotBehaviour implements Tickable<Player> {
     }
 
     private void fishNearestSpot(Player bot) {
+        if (isSkilling(bot))
+            return;
+
         NPC spot = findNearbyFishingSpot(bot, 6);
         if (spot == null) {
             randomWalk(bot);
             return;
         }
+
+        logger.debug("{} fishing at spot {}", bot.getDisplayName(), spot.getNpcId());
 
         if (bot.distanceToPoint(spot.getX(), spot.getY()) > 1) {
             bot.getPA().playerWalk(spot.getX(), spot.getY());
@@ -204,6 +294,8 @@ public class BotBehaviour implements Tickable<Player> {
 
     private WorldObject findNearbyTree(Player bot, int radius) {
         Position pos = bot.getPosition();
+        WorldObject bestObj = null;
+        int bestLevel = -1;
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dy = -radius; dy <= radius; dy++) {
                 int x = pos.getX() + dx;
@@ -211,14 +303,17 @@ public class BotBehaviour implements Tickable<Player> {
                 for (Tree tree : Tree.values()) {
                     for (int id : tree.getTreeIds()) {
                         Optional<WorldObject> obj = bot.getRegionProvider().get(x, y).getWorldObject(id, x, y, pos.getHeight());
-                        if (obj.isPresent() && !Server.getGlobalObjects().exists(tree.getStumpId(), x, y)) {
-                            return obj.get();
+                        if (obj.isPresent() && !Server.getGlobalObjects().exists(tree.getStumpId(), x, y, pos.getHeight())) {
+                            if (tree.getLevelRequired() > bestLevel) {
+                                bestLevel = tree.getLevelRequired();
+                                bestObj = obj.get();
+                            }
                         }
                     }
                 }
             }
         }
-        return null;
+        return bestObj;
     }
 
     private WorldObject findNearbyRock(Player bot, int radius) {
@@ -255,6 +350,10 @@ public class BotBehaviour implements Tickable<Player> {
             }
         }
         return nearest;
+    }
+
+    private boolean isSkilling(Player bot) {
+        return Server.getEventHandler().isRunning(bot, "skilling");
     }
 
     private void randomWalk(Player bot) {

@@ -454,6 +454,10 @@ public class PresetManager {
 	 * @param player
 	 */
 	private void loadPreset(Player player, boolean loadPrevious) {
+		if (player.isBot()) {
+			loadPresetBot(player, loadPrevious);
+			return;
+		}
 		if (Configuration.DISABLE_PRESETS) {
 			player.sendMessage("Presets have been disabled.");
 			return;
@@ -844,7 +848,100 @@ public class PresetManager {
 			MeleeData.setWeaponAnimations(player);
 		}
 	}
+	/**
+	 * Returns the index of a default preset by name or -1 if not found.
+	 */
+	public int getDefaultPresetIndex(String name) {
+		for (int i = 0; i < defaultPresets.size(); i++) {
+			if (defaultPresets.get(i).getName().equalsIgnoreCase(name)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	private void loadPresetBot(Player player, boolean loadPrevious) {
+		boolean defaultPreset = loadPrevious && player.lastPreset instanceof DefaultPreset || player.presetViewingDefault;
+		if (defaultPreset) {
+			DefaultPreset preset = loadPrevious && player.lastPreset instanceof DefaultPreset ? (DefaultPreset) player.lastPreset : defaultPresets.get(player.presetViewingIndex);
+			if (preset == null)
+				return;
+			player.getItems().deleteAllItems();
+			equipPreset(player, preset.getEquipment(), preset.getAmmoAmount());
+			preset.getInventory().forEach(i -> player.getItems().addItem(i.getItemId(), i.getAmount()));
+			applySpellBook(player, preset.getSpellBook());
+			player.lastPreset = preset;
+			finalizeBotPreset(player);
+			return;
+		}
 
+		if (!globalPresets.containsKey(player.getLoginName().toLowerCase())) {
+			return;
+		}
+		if (player.presetViewingIndex >= globalPresets.get(player.getLoginName().toLowerCase()).size()) {
+			return;
+		}
+		Preset preset = loadPrevious && player.lastPreset != null ? (Preset) player.lastPreset : globalPresets.get(player.getLoginName().toLowerCase()).get(player.presetViewingIndex);
+		if (preset == null)
+			return;
+		player.getItems().deleteAllItems();
+		equipPreset(player, preset.getEquipment(), preset.getAmmoAmount());
+		preset.getInventory().forEach(i -> player.getItems().addItem(i.getItemId(), i.getAmount()));
+		applySpellBook(player, preset.getSpellBook());
+		player.lastPreset = preset;
+		finalizeBotPreset(player);
+	}
+
+	private void equipPreset(Player player, PresetEquipment equipment, int ammoAmount) {
+		if (equipment.getWeapon() > 0)
+			player.getItems().equipItem(equipment.getWeapon(), 1, Player.playerWeapon);
+		if (equipment.getBoots() > 0)
+			player.getItems().equipItem(equipment.getBoots(), 1, Player.playerFeet);
+		if (equipment.getCape() > 0)
+			player.getItems().equipItem(equipment.getCape(), 1, Player.playerCape);
+		if (equipment.getNecklace() > 0)
+			player.getItems().equipItem(equipment.getNecklace(), 1, Player.playerAmulet);
+		if (equipment.getGloves() > 0)
+			player.getItems().equipItem(equipment.getGloves(), 1, Player.playerHands);
+		if (equipment.getLegs() > 0)
+			player.getItems().equipItem(equipment.getLegs(), 1, Player.playerLegs);
+		if (equipment.getPlate() > 0)
+			player.getItems().equipItem(equipment.getPlate(), 1, Player.playerChest);
+		if (equipment.getAmmo() > 0)
+			player.getItems().equipItem(equipment.getAmmo(), ammoAmount, Player.playerArrows);
+		if (equipment.getShield() > 0)
+			player.getItems().equipItem(equipment.getShield(), 1, Player.playerShield);
+		if (equipment.getHelmet() > 0)
+			player.getItems().equipItem(equipment.getHelmet(), 1, Player.playerHat);
+		if (equipment.getRing() > 0)
+			player.getItems().equipItem(equipment.getRing(), 1, Player.playerRing);
+		player.getItems().addSpecialBar(player.playerEquipment[Player.playerWeapon]);
+	}
+
+	private void finalizeBotPreset(Player player) {
+		player.getPA().resetAutocast();
+		player.usingMagic = false;
+		player.usingClickCast = false;
+		player.setSpellId(-1);
+		player.getItems().sendWeapon(player.getItems().getWeapon());
+		MeleeData.setWeaponAnimations(player);
+	}
+	private void applySpellBook(Player player, int spellBook) {
+		switch (spellBook) {
+			case 2:
+				player.setSidebarInterface(6, 938);
+				player.playerMagicBook = 0;
+				break;
+			case 0:
+				player.setSidebarInterface(6, 838);
+				player.playerMagicBook = 1;
+				break;
+			case 1:
+				player.setSidebarInterface(6, 29999);
+				player.playerMagicBook = 2;
+				break;
+		}
+		player.getPA().resetAutocast();
+	}
 	/**
 	 * Saves a preset to the players json data
 	 * @param player
@@ -1401,6 +1498,10 @@ public class PresetManager {
 	}
 
 	public void loadLastPreset(Player player) {
+		if (player.isBot()) {
+			loadPresetBot(player, true);
+			return;
+		}
 		if (player.lastPreset == null) {
 			player.sendMessage("You need to have used a preset recently!", 255);
 			return;

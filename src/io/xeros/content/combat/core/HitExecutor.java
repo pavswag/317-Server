@@ -68,6 +68,7 @@ public abstract class HitExecutor {
             Player d = (Player) defender;
             d.lastDefend = EntityReference.getReference(attacker);
             d.lastDefendTime = System.currentTimeMillis();
+            d.lastHitType = damage.getCombatType();
         }
         if (damage.isSuccess()) {
             if (!defender.getHealth().isNotSusceptibleTo(HealthStatus.POISON)) {

@@ -35,6 +35,9 @@ public class AttackPlayerCheck {
             return false;
         }
         if (c.isBot() || o.isBot()) {
+            if (!Boundary.isIn(c, Boundary.WILDERNESS) || !Boundary.isIn(o, Boundary.WILDERNESS)) {
+                return false;
+            }
             return true;
         }
         if (o.getBankPin().requiresUnlock()) {

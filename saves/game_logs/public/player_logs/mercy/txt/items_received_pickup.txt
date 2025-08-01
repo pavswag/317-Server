@@ -54,3 +54,7 @@
 [ItemPickupLog] [2025-07-24T12:59:12.9652179] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2491, y=10155, z=0}, owner mercy
 [ItemPickupLog] [2025-07-24T12:59:12.9652179] Picked up GameItem{name=Lobster pot, id=301, amount=1} at Position{x=2491, y=10155, z=0}, owner mercy
 [ItemPickupLog] [2025-07-24T12:59:12.9652179] Picked up GameItem{name=Belladonna seed, id=5281, amount=1} at Position{x=2491, y=10155, z=0}, owner mercy
+[ItemPickupLog] [2025-07-29T21:54:39.5644405] Picked up GameItem{name=Ultra Mystery Box, id=13346, amount=1} at Position{x=3037, y=4518, z=0}, owner mercy
+[ItemPickupLog] [2025-07-29T21:56:33.3278926] Picked up GameItem{name=Rune sq shield, id=1185, amount=1} at Position{x=2902, y=2722, z=0}, owner mercy
+[ItemPickupLog] [2025-07-30T18:11:57.2183338] Picked up GameItem{name=Dwarf remains, id=34000, amount=1} at Position{x=3360, y=9124, z=0}, owner mercy
+[ItemPickupLog] [2025-07-31T08:48:19.7501472] Picked up GameItem{name=Infernal cape, id=21295, amount=1} at Position{x=3451, y=4080, z=4}, owner mercy

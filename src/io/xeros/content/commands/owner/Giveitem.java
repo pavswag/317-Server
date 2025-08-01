@@ -1,6 +1,7 @@
 package io.xeros.content.commands.owner;
 
 import java.util.Optional;
+import io.xeros.content.ItemSpawner;
 
 import io.xeros.content.commands.Command;
 import io.xeros.model.entity.player.Player;
@@ -17,51 +18,37 @@ import io.xeros.util.Misc;
 public class Giveitem extends Command {
 
 	@Override
-	public void execute(Player c, String commandName, String input) {
-		try {
-			String[] args = input.split("-");
-			if (args.length != 3) {
-				throw new IllegalArgumentException();
-			}
-			String playerName = args[0];
-			int itemID = Integer.parseInt(args[1]);
-			int amount = Misc.stringToInt(args[2]);
-
-			Optional<Player> optionalPlayer = PlayerHandler.getOptionalPlayerByDisplayName(playerName);
-
-			if (optionalPlayer.isPresent()) {
-				Player c2 = optionalPlayer.get();
-
-				if (c2.getMode().isIronmanType()) {
-					if (!c.getRights().isOrInherits(Right.STAFF_MANAGER)) {
-						c.sendMessage("You cannot give items to these players because of their respective game modes.");
-						return;
-					}
-				}
-
-				if (c2.getItems().hasRoomInInventory(itemID, amount)) {
-					c2.getItems().addItem(itemID, amount);
-					c2.sendMessage("You have just been given " + amount + " of item: " + ItemAssistant.getItemName(itemID) + " by: " + Misc.optimizeText(c.getDisplayName()));
-					c.sendMessage("You have just given " + amount + " of item: " + ItemAssistant.getItemName(itemID) + " to inventory.");
-				} else if (c2.getBank().hasRoomFor(itemID, amount)) {
-					c2.getItems().addItemToBankOrDrop(itemID, amount);
-					c2.sendMessage("You have just been given " + amount + " of item: " + ItemAssistant.getItemName(itemID) + " by: " + Misc.optimizeText(c.getDisplayName()));
-					c2.sendMessage("It is in your bank because you didn't have enough space in your inventory.");
-					c.sendMessage("You have just given " + amount + " of item: " + ItemAssistant.getItemName(itemID) + " to bank or dropped.");
-				} else {
-					c.sendMessage("No space in player's bank or inventory for item.");
-				}
-			} else {
-				c.sendMessage(playerName + " is not online.");
-			}
-		} catch (Exception e) {
-			c.sendMessage("Error. Correct syntax: ::giveitem-player-itemid-amount");
+	public void execute(Player player, String commandName, String input) {
+		if (input.isEmpty()) {
+			player.sendMessage("Error. Correct syntax: ::giveitem-player");
+			return;
 		}
+
+		Optional<Player> optionalTarget = PlayerHandler.getOptionalPlayerByDisplayName(input);
+		if (!optionalTarget.isPresent()) {
+			player.sendMessage(input + " is not online.");
+			return;
+		}
+
+		Player target = optionalTarget.get();
+		if (target.getMode().isIronmanType() && !player.getRights().isOrInherits(Right.STAFF_MANAGER)) {
+			player.sendMessage("You cannot give items to these players because of their respective game modes.");
+			return;
+		}
+
+		player.getAttributes().set(ItemSpawner.TARGET_ATTRIBUTE_KEY, target);
+		ItemSpawner.open(player);
+		player.sendMessage("Items spawned will be sent to " + target.getDisplayName() + ".");
 	}
 
 	@Override
 	public boolean hasPrivilege(Player player) {
-		return Right.GAME_DEVELOPER.equals(player.getRights().getPrimary());
+		return Right.GAME_DEVELOPER.isOrInherits(player);
+	}
+
+	@Override
+	public Optional<String> getDescription() {
+		return Optional.of("Opens spawn interface and sends items to a chosen player.");
 	}
 
 }

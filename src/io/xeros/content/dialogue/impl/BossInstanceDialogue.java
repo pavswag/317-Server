@@ -20,57 +20,46 @@ public class BossInstanceDialogue extends DialogueBuilder {
         setNpcId(NPC_ID);
         tierMenu();
     }
-
     /**
      * Displays the tier selection menu.
      */
-    private static final int TIERS_PER_PAGE = 5;
+    private static final int TIERS_PER_PAGE = 2;
     private int page;
 
     private void tierMenu() {
         tierMenu(0);
     }
-
+    /**
+     * Displays the tier selection menu.
+     */
     private void tierMenu(int page) {
         this.page = page;
         BossTier[] tiers = BossTier.values();
         int start = page * TIERS_PER_PAGE;
         int end = Math.min(start + TIERS_PER_PAGE, tiers.length);
 
-        DialogueOption[] options = new DialogueOption[TIERS_PER_PAGE + 2];
-        int ptr = 0;
+        java.util.List<DialogueOption> opts = new java.util.ArrayList<>();
+
         for (int i = start; i < end; i++) {
             BossTier tier = tiers[i];
-            options[ptr++] = new DialogueOption(optionText(tier), p -> selectTier(tier));
+            opts.add(new DialogueOption(optionText(tier), p -> selectTier(tier)));
+        }
+
+        if (end < tiers.length) {
+            opts.add(new DialogueOption("More", p -> tierMenu(page + 1)));
         }
         if (page > 0) {
-            options[ptr++] = new DialogueOption("Back", p -> tierMenu(page - 1));
+            opts.add(new DialogueOption("Back", p -> tierMenu(page - 1)));
         }
-        if (end < tiers.length) {
-            options[ptr++] = new DialogueOption("More", p -> tierMenu(page + 1));
-        }
-        options[ptr++] = DialogueOption.nevermind();
-        option(java.util.Arrays.copyOf(options, ptr));
+        opts.add(DialogueOption.nevermind());
+
+        option(opts.toArray(new DialogueOption[0]));
     }
+
 
     private String optionText(BossTier tier) {
         String action = getPlayer().getUnlockedBossTiers().contains(tier) ? "Enter " : "Unlock ";
         return action + "Tier " + (tier.ordinal() + 1) + " - " + tier.getZoneName();
-    private void tierMenu() {
-        BossTier[] tiers = BossTier.values();
-        DialogueOption[] options = new DialogueOption[tiers.length + 1];
-        int ptr = 0;
-        for (BossTier tier : tiers) {
-            options[ptr++] = new DialogueOption(optionText(tier), p -> selectTier(tier));
-        }
-        options[ptr] = DialogueOption.nevermind();
-        option(options);
-    }
-
-    private String optionText(BossTier tier) {
-        return getPlayer().getUnlockedBossTiers().contains(tier) ?
-                "Enter " + tier.getZoneName() :
-                "Unlock " + tier.getZoneName();
     }
 
     /**
@@ -79,9 +68,6 @@ public class BossInstanceDialogue extends DialogueBuilder {
     private void selectTier(BossTier tier) {
         Player player = getPlayer();
         if (!player.getUnlockedBossTiers().contains(tier)) {
-            if (tier.getKillCount(player) < tier.getKillRequirement()) {
-                String name = io.xeros.model.definitions.NpcDef.forId(tier.getKillNpcId()).getName();
-                player.sendMessage("You need " + tier.getKillRequirement() + " " + name + " kills to unlock this tier.");
             if (player.killcount < tier.getKillRequirement()) {
                 player.sendMessage("You need " + tier.getKillRequirement() + " kills to unlock this tier.");
                 player.getPA().closeAllWindows();

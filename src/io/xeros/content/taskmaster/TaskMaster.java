@@ -2,6 +2,7 @@ package io.xeros.content.taskmaster;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import io.xeros.content.skills.Skill;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.mode.Mode;
 import io.xeros.model.entity.player.mode.ModeType;
@@ -244,7 +245,8 @@ public class TaskMaster {
                 } else if (kills.getTaskType() == TaskType.COMBAT) {
                         player.getItems().addItemUnderAnyCircumstance(6678, 50);
                         player.getItems().addItemUnderAnyCircumstance(696, 20);
-                        player.sendMessage("@cya@You completed your Daily Combat Task and earned 50 Mini Ultra boxes & 5m Nomad!");
+                        player.getPA().addSkillXPMultiplied(100, Skill.FORTUNE.getId(), true);
+                        player.sendMessage("@cya@Completed: Daily Combat Task and earned 50 Mini Ultra boxes & 5m Upgrade points! + 100 fortune XP!");
                 }
 
 

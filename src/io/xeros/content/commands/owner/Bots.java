@@ -1,6 +1,8 @@
 package io.xeros.content.commands.owner;
 
 import io.xeros.content.commands.Command;
+import io.xeros.content.preset.PresetManager;
+import io.xeros.content.teleportv2.inter.TeleportInterface;
 import io.xeros.model.Items;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
@@ -65,10 +67,25 @@ public class Bots extends Command {
     private static String randomBotName() {
         String prefix = PREFIXES[Misc.random(PREFIXES.length - 1)];
         String suffix = SUFFIXES[Misc.random(SUFFIXES.length - 1)];
-        int num = Misc.random(99);
-        return prefix + suffix + String.format("%02d", num);
+       // int num = Misc.random(99);
+        return prefix + suffix;
+    }
+    private static final String[] PK_PRESETS = {"Main setup", "pure", "hybrid setup", "range tank"};
+
+    private static void equipPkPreset(Player bot) {
+        String preset = PK_PRESETS[Misc.random(PK_PRESETS.length - 1)];
+        equipPresetOrSetup(bot, preset);
+        bot.healEverything();
     }
 
+    public static void preparePkBot(Player bot) {
+        equipPkPreset(bot);
+        bot.getPA().movePlayer(3094 + Misc.random(-2, 2), 3520 + Misc.random(-2, 2), 0);
+        if (bot.getAttributes().getInt("bot_behavior", -1) != BotBehaviour.Type.PK_NEAREST_PLAYER.ordinal()) {
+            bot.getAttributes().setInt("bot_behavior", BotBehaviour.Type.PK_NEAREST_PLAYER.ordinal());
+            bot.addTickable(new BotBehaviour(BotBehaviour.Type.PK_NEAREST_PLAYER));
+        }
+    }
     @Override
     public void execute(Player player, String commandName, String input) {
         if (!player.getRights().isOrInherits(Right.STAFF_MANAGER)) {
@@ -91,7 +108,7 @@ public class Bots extends Command {
                 spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.FISH_NEAREST_SPOT);
                 break;
             case "spawnpker":
-                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.PK_NEAREST_PLAYER, "Pure");
+                spawnBots(player, Integer.parseInt(args[1]), BotBehaviour.Type.PK_NEAREST_PLAYER, null);
                 break;
             case "joinoutlast":
                 joinOutlastBots();
@@ -128,9 +145,15 @@ public class Bots extends Command {
             int y = player.getY() + Misc.random(-2, 2);
             Player bot = Player.createBot(randomBotName(), Right.PLAYER, new Position(x, y));
             bot.addQueuedLoginAction(Bots::randomizeStats);
+            if (type == BotBehaviour.Type.PK_NEAREST_PLAYER) {
+                bot.addQueuedLoginAction(Bots::maxCombatStats);
+            }
+            bot.autoRet = 1;
             if (setupName != null) {
                 String name = setupName;
-                bot.addQueuedLoginAction(plr -> equipSetup(plr, name));
+                bot.addQueuedLoginAction(plr -> equipPresetOrSetup(plr, name));
+            } else if (type == BotBehaviour.Type.PK_NEAREST_PLAYER) {
+                bot.addQueuedLoginAction(Bots::equipPkPreset);
             } else {
                 bot.addQueuedLoginAction(Bots::equipRandomSetup);
             }
@@ -143,23 +166,65 @@ public class Bots extends Command {
             }
         }
     }
-    private static void equipSetup(Player bot, String name) {
+    private static void maxCombatStats(Player bot) {
+        int[] skills = {
+                Player.playerAttack,
+                Player.playerStrength,
+                Player.playerDefence,
+                Player.playerMagic,
+                Player.playerPrayer,
+                Player.playerHitpoints,
+                Player.playerRanged
+        };
+        for (int skill : skills) {
+            bot.playerLevel[skill] = 99;
+            bot.playerXP[skill] = bot.getPA().getXPForLevel(99) + 1;
+            bot.getPA().setSkillLevel(skill, bot.playerLevel[skill], bot.playerXP[skill]);
+        }
+        bot.getPA().refreshSkills();
+        bot.getHealth().setMaximumHealth(99);
+        bot.getHealth().reset();
+    }
+    public static Position randomPkPosition() {
+        TeleportInterface.PK[] values = TeleportInterface.PK.values();
+        TeleportInterface.PK tele = values[Misc.random(values.length - 1)];
+        int[] c = tele.teleportCords;
+        return new Position(c[0], c[1], c[2]);
+    }
+    private static void equipPresetOrSetup(Player bot, String name) {
+        int index = PresetManager.getSingleton().getDefaultPresetIndex(name);
+        if (index >= 0) {
+            bot.presetViewingDefault = true;
+            bot.presetViewingIndex = index;
+            PresetManager.getSingleton().loadLastPreset(bot);
+            return;
+        }
         try {
             EquipmentSetup.equip(bot, name);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     public static void joinOutlastBots() {
         TourneyManager tourney = TourneyManager.getSingleton();
         if (!tourney.isLobbyOpen())
             return;
-        PlayerHandler.nonNullStream().filter(Player::isBot).forEach(bot -> {
-            if (bot.getAttributes().getInt("bot_behavior", -1) == BotBehaviour.Type.PK_NEAREST_PLAYER.ordinal()) {
-                tourney.join(bot);
+        CycleEventHandler.getSingleton().addEvent(Bots.class, new CycleEvent() {
+            @Override
+            public void execute(CycleEventContainer container) {
+                if (!tourney.isLobbyOpen()) {
+                    container.stop();
+                    return;
+                }
+                PlayerHandler.nonNullStream().filter(Player::isBot).forEach(bot -> {
+                    if (bot.getAttributes().getInt("bot_behavior", -1) == BotBehaviour.Type.PK_NEAREST_PLAYER.ordinal()) {
+                        if (!tourney.isParticipant(bot)) {
+                            tourney.join(bot);
+                        }
+                    }
+                });
             }
-        });
+        }, 2);
     }
 
     private static void randomizeStats(Player bot) {

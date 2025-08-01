@@ -375,9 +375,9 @@ public class NPCDeath {
 
     public static void announceKc(Player player, GameItem item, String npcName, int kc) {
         if (player == null || item == null) return;
-        if (player.getDisplayName().equalsIgnoreCase("Mercy")) {
-            return;
-        }
+//        if (player.getDisplayName().equalsIgnoreCase("Mercy")) {
+//            return;
+//        }
         ItemRarity rarity = item.getRarity();
         if (rarity == null || (rarity != ItemRarity.RARE && rarity != ItemRarity.VERY_RARE)) {
             return;

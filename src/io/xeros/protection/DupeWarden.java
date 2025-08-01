@@ -77,6 +77,9 @@ public class DupeWarden {
     private boolean exclude;
 
     public void update(Player player) {
+        if (Configuration.DISABLE_DUPE_WARDEN) {
+            return;
+        }
         if (player.getRights().isOrInherits(Right.ADMINISTRATOR))//Has spawn rights so we ignore them
             return;
 

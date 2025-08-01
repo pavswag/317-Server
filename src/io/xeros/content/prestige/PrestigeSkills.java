@@ -13,8 +13,13 @@ public class PrestigeSkills {
 	public PrestigeSkills(Player player) {
 		this.player = player;
 	}
-	
-	public final int MAX_PRESTIGE = 10;
+	/**
+	 * Previously players could only prestige a limited number of times. In
+	 * order to allow unlimited prestiges we set the cap extremely high. The
+	 * check in {@link #prestige()} compares using equality so a large value
+	 * effectively makes the cap unreachable during normal play.
+	 */
+	public final int MAX_PRESTIGE = Integer.MAX_VALUE;
 	
 	public int points = 1; // This is the base prestige points given
 	
@@ -39,12 +44,15 @@ public class PrestigeSkills {
 		String canPrestige = ((player.maxRequirements(player)) ? "@gre@Yes" : "@red@No"); // String version for interface Yes or No
 		player.getPA().sendFrame126("Overall", 37307); // Update Skill Name
 		player.getPA().sendFrame126("Current Prestige: @whi@"+player.currentPrestigeLevel, 37308); // Update Current Prestige in box
-		player.getPA().sendFrame126("Reward: @whi@"+((2000))+" Points", 37309); // Update Reward
+		int projectedReward = 2000 + (player.currentPrestigeLevel * 100);
+		player.getPA().sendFrame126("Reward: @whi@"+ projectedReward +" Points",37309);
 		player.getPA().sendFrame126("Can Prestige: "+ canPrestige, 37390); // Update If you can prestige
 	}
 	
 	public void prestige() {
-		if (player.prestigeLevel[0] == MAX_PRESTIGE) { // Change to prestige master
+		// The MAX_PRESTIGE value is effectively unlimited, but we keep
+		// this check in case a player somehow reaches it.
+		if (player.prestigeLevel[0] == MAX_PRESTIGE) {
 			player.sendMessage("You are the max prestige level in this skill!");
 			return;
 		}
@@ -87,13 +95,18 @@ public class PrestigeSkills {
 				PlayerHandler.executeGlobalMessage("[@red@PRESTIGE@bla@] @cr20@<col=255> <img=" + rights + ">"
 						+ player.getDisplayName() + "</col> received a Upgrader Cell from <col=255>Prestiging.</col>.");
 			}
-				player.getItems().addItemUnderAnyCircumstance(33251, 25);
-				int rights = player.getRights().getPrimary().getValue() - 1;
-				PlayerHandler.executeGlobalMessage("[@red@PRESTIGE@bla@] @cr20@<col=255> <img=" + rights + ">"
-						+ player.getDisplayName() + "</col> received 25 donation coins from <col=255>Prestiging.</col>.");
+
+			int level = player.prestigeLevel[player.prestigeNumber];
+			int coinReward = 25 + (level * 5);
+			player.getItems().addItemUnderAnyCircumstance(33251, coinReward);
+			int rights = player.getRights().getPrimary().getValue() - 1;
+			PlayerHandler.executeGlobalMessage("[@red@PRESTIGE@bla@] @cr20@<col=255> <img=" + rights + ">"+
+					player.getDisplayName() + "</col> received " + coinReward + " donation coins from <col=255>Prestiging.</col>.");
+
 			player.combatLevel = player.calculateCombatLevel();
 			player.getPA().sendFrame126("Combat Level: " + player.combatLevel + "", 3983);
-			player.prestigePoints += (2000);
+			int pointReward = 2000 + (level * 100);
+			player.prestigePoints += pointReward;
 			player.prestigeLevel[player.prestigeNumber] += 1;
 			registerClick(player.prestigeNumber);
 			player.getPA().sendFrame126(""+player.prestigeLevel[player.prestigeNumber]+"", 37400 + player.prestigeNumber); // Update Current Prestige on interface

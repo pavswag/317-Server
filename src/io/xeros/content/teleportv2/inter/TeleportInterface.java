@@ -780,7 +780,7 @@ public class TeleportInterface {
 
         private String name;
         private final int npcID;
-        private int[] teleportCords;
+        public int[] teleportCords;
 
         PK(String name, int npcID, int[] teleportCords) {
             this.name = name;

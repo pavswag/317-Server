@@ -68,6 +68,8 @@ public class UpgradeInterface {
 
         player.getPA().itemOnInterface(new GameItem(upgrade.getReward().getId(), upgrade.getReward().getAmount()), 35017,0);
         player.getPA().sendString(35018, "Upgrade Points req: @whi@" + Misc.formatPriceKMB((int) upgrade.getCost()));
+        int fortuneXp = (int) (upgrade.getCost() / 5000L);
+        player.getPA().sendString(35022, "Fortune XP: @whi@" + Misc.formatNumber(fortuneXp));
 
         if (upgrade.getReward().getId() == 3648 ||
                 upgrade.getReward().getId() == 25432 ||
@@ -101,6 +103,7 @@ public class UpgradeInterface {
         player.getPA().itemOnInterface(new GameItem(-1, 1), 35017, 0);
         player.getPA().sendString(35018, "Nomad req: @whi@---");
         player.getPA().sendString(35019, "Success rate: @whi@---");
+        player.getPA().sendString(35022, "Fortune XP: ---");
         player.sendMessage("@bla@[@red@NOMAD@bla@]@blu@ Your remaining points : " + Misc.formatCoins(player.foundryPoints));
         upgradeMaterialsArrayList = UpgradeMaterials.getForType(type);
         for (int i = 0; i < 72; i++) {
@@ -200,8 +203,11 @@ public class UpgradeInterface {
                                         }
 
                                     }
-                                    player.getPA().addSkillXPMultiplied(val.getXp(), Skill.FORTUNE.getId(), true);
-
+                                    int fortuneXp = (int) (val.getCost() / 5000L);
+                                    if (fortuneXp > 0) {
+                                        player.getPA().addSkillXPMultiplied(fortuneXp, Skill.FORTUNE.getId(), true);
+                                        player.sendMessage("You gain " + Misc.formatNumber(fortuneXp) + " Fortune XP.");
+                                    }
                                 } else {
                                     boolean ReturnItem = (Math.random() * 100) <= getDonator();
                                     if (ReturnItem && player.amDonated >= 100 && val.getRequired().getId() != 33189 && val.getRequired().getId() != 33190 && val.getRequired().getId() != 33191) {
