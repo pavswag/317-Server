@@ -192,13 +192,17 @@ public class BossInstanceManager {
             return mobs;
         }
 
+        public BossTier getNextTier() {
+            return nextTier;
+        }
+        public int[] getNpcIds() {
+            return npcIds;
+        }
+
         public int getRequiredKillCountToUnlockNext() {
             return requiredKillCountToUnlockNext;
         }
 
-        public BossTier getNextTier() {
-            return nextTier;
-        }
     }
 
     /**
