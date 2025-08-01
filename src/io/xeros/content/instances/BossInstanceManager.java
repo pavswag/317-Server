@@ -130,6 +130,7 @@ public class BossInstanceManager {
             TIER10.nextTier = null;
         }
 
+
         private final String zoneName;
         /** Kill requirement to unlock this tier. */
         private final int killRequirement;
@@ -192,13 +193,18 @@ public class BossInstanceManager {
             return mobs;
         }
 
-        public int getRequiredKillCountToUnlockNext() {
-            return requiredKillCountToUnlockNext;
-        }
 
         public BossTier getNextTier() {
             return nextTier;
         }
+        public int[] getNpcIds() {
+            return npcIds;
+        }
+
+        public int getRequiredKillCountToUnlockNext() {
+            return requiredKillCountToUnlockNext;
+        }
+
     }
 
     /**
