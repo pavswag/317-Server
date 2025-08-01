@@ -86,28 +86,7 @@ public class BossInstanceManager {
      * count for a particular NPC. When unlocking a tier, the player's kill count
      * for {@link #getKillNpcId()} must meet {@link #getKillRequirement()}.
      */
-    public enum BossTier {
-        TIER1("Training Grounds", 0, 0, -1, 5, Npcs.COW,
-                new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1)}),
-        TIER2("Goblin Camp", 25, 10_000, -1, 10, Npcs.GOBLIN,
-                new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5)}),
-        TIER3("Giants' Den", 75, 100_000, -1, 20, Npcs.HILL_GIANT,
-                new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20)}),
-        TIER4("Moss Cave", 150, 250_000, -1, 25, Npcs.MOSS_GIANT,
-                new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40)}),
-        TIER5("Fire Pit", 250, 500_000, -1, 30, Npcs.FIRE_GIANT,
-                new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60)}),
-        TIER6("Green Dragons", 350, 750_000, -1, 35, Npcs.GREEN_DRAGON,
-                new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90)}),
-        TIER7("Red Dragons", 500, 1_000_000, -1, 40, Npcs.RED_DRAGON,
-                new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110)}),
-        TIER8("Black Dragons", 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON,
-                new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130)}),
-        TIER9("Demon Domain", 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON,
-                new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150)}),
-        TIER10("Dragon King", 1000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON,
-                new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180)});
-    }
+
 
     /**
      * Difficulty tiers for bosses.
@@ -116,6 +95,15 @@ public class BossInstanceManager {
         TIER1("Training Grounds", 0, 0, -1, new int[]{Npcs.COW}),
         TIER2("Giants' Den", 10, 100_000, -1, new int[]{Npcs.HILL_GIANT}),
         TIER3("Dragon Lair", 50, 1_000_000, 11286, new int[]{Npcs.KING_BLACK_DRAGON});
+
+        static {
+            TIER1.requiredKillCountToUnlockNext = 25;
+            TIER1.nextTier = TIER2;
+            TIER2.requiredKillCountToUnlockNext = 50;
+            TIER2.nextTier = TIER3;
+            TIER3.requiredKillCountToUnlockNext = 0;
+            TIER3.nextTier = null;
+        }
 
         private final String zoneName;
         /** Kill requirement to unlock this tier. */
@@ -128,6 +116,10 @@ public class BossInstanceManager {
         private final int itemRequirement;
         private final int respawnTime;
         private final BossMob[] mobs;
+        /** Kill count required within this tier to unlock the next one. */
+        private int requiredKillCountToUnlockNext;
+        /** The next tier unlocked after meeting the kill requirement. */
+        private BossTier nextTier;
 
         BossTier(String zoneName, int killRequirement, int gpCost, int itemRequirement, int respawnTime, int killNpcId, BossMob[] mobs) {
         private final int[] npcIds;
@@ -177,8 +169,18 @@ public class BossInstanceManager {
 
         public BossMob[] getMobs() {
             return mobs;
+        }
+
         public int[] getNpcIds() {
             return npcIds;
+        }
+
+        public int getRequiredKillCountToUnlockNext() {
+            return requiredKillCountToUnlockNext;
+        }
+
+        public BossTier getNextTier() {
+            return nextTier;
         }
     }
 
