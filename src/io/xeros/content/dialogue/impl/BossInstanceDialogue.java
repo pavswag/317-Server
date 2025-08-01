@@ -4,6 +4,7 @@ import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
 import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.instances.BossInstanceManager.BossTier;
+import java.util.Arrays;
 import io.xeros.model.definitions.ItemDef;
 import io.xeros.model.entity.player.Player;
 import io.xeros.util.Misc;
@@ -54,23 +55,33 @@ public class BossInstanceDialogue extends DialogueBuilder {
     }
 
     private String optionText(BossTier tier) {
-        String action = getPlayer().getUnlockedBossTiers().contains(tier) ? "Enter " : "Unlock ";
-        return action + "Tier " + (tier.ordinal() + 1) + " - " + tier.getZoneName();
-    private void tierMenu() {
-        BossTier[] tiers = BossTier.values();
-        DialogueOption[] options = new DialogueOption[tiers.length + 1];
-        int ptr = 0;
-        for (BossTier tier : tiers) {
-            options[ptr++] = new DialogueOption(optionText(tier), p -> selectTier(tier));
-        }
-        options[ptr] = DialogueOption.nevermind();
-        option(options);
-    }
+        Player player = getPlayer();
+        boolean unlocked = player.getUnlockedBossTiers().contains(tier);
+        String prefix = unlocked ? "\u2705 " : "\uD83D\uDD12 ";
 
-    private String optionText(BossTier tier) {
-        return getPlayer().getUnlockedBossTiers().contains(tier) ?
-                "Enter " + tier.getZoneName() :
-                "Unlock " + tier.getZoneName();
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix).append("Tier ").append(tier.ordinal() + 1);
+
+        if (unlocked) {
+            sb.append(" - Unlocked");
+        } else {
+            // find the tier that unlocks this one
+            BossTier prev = Arrays.stream(BossTier.values())
+                    .filter(t -> t.getNextTier() == tier)
+                    .findFirst()
+                    .orElse(null);
+            if (prev != null) {
+                int current = player.getTierKillCounts().getOrDefault(prev, 0);
+                int required = prev.getRequiredKillCountToUnlockNext();
+                sb.append(" - ").append(current).append("/").append(required).append(" kills");
+                if (current >= required) {
+                    sb.append(" (Ready!)");
+                } else {
+                    sb.append(" (Progressing...)");
+                }
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -82,8 +93,6 @@ public class BossInstanceDialogue extends DialogueBuilder {
             if (tier.getKillCount(player) < tier.getKillRequirement()) {
                 String name = io.xeros.model.definitions.NpcDef.forId(tier.getKillNpcId()).getName();
                 player.sendMessage("You need " + tier.getKillRequirement() + " " + name + " kills to unlock this tier.");
-            if (player.killcount < tier.getKillRequirement()) {
-                player.sendMessage("You need " + tier.getKillRequirement() + " kills to unlock this tier.");
                 player.getPA().closeAllWindows();
                 return;
             }

@@ -1124,6 +1124,20 @@ public class PlayerSave {
                                         e.printStackTrace();
                                     }
                                 }
+                            } else if (token.equals("tier-killcounts")) {
+                                for (String s : token3) {
+                                    String[] parts = s.split(":");
+                                    if (parts.length == 2) {
+                                        try {
+                                            io.xeros.content.instances.BossInstanceManager.BossTier tier = io.xeros.content.instances.BossInstanceManager.BossTier.valueOf(parts[0]);
+                                            int count = Integer.parseInt(parts[1]);
+                                            p.getTierKillCounts().put(tier, count);
+                                        } catch (Exception e) {
+                                            logger.error("Error while loading {}", playerName, e);
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
                             } else if (token.startsWith("removedTask")) {
                                 int value = Integer.parseInt(token2);
                                 if (value > -1) {
@@ -1764,6 +1778,17 @@ public class PlayerSave {
                 for (io.xeros.content.instances.BossInstanceManager.BossTier tier : p.getUnlockedBossTiers()) {
                     characterfile.write(tier.name());
                     if (i++ < p.getUnlockedBossTiers().size() - 1) {
+                        characterfile.write("\t");
+                    }
+                }
+            }
+            characterfile.newLine();
+            if (!p.getTierKillCounts().isEmpty()) {
+                characterfile.write("tier-killcounts = ");
+                int i = 0;
+                for (java.util.Map.Entry<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> entry : p.getTierKillCounts().entrySet()) {
+                    characterfile.write(entry.getKey().name() + ":" + entry.getValue());
+                    if (i++ < p.getTierKillCounts().size() - 1) {
                         characterfile.write("\t");
                     }
                 }
