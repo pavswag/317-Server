@@ -36,8 +36,7 @@ public class BossInstanceManager {
             super(InstanceConfiguration.CLOSE_ON_EMPTY, owner, boundary);
             this.owner = owner;
             this.tier = tier;
-
-   
+        }
 
         @Override
         public void onDispose() {
@@ -86,24 +85,51 @@ public class BossInstanceManager {
      * count for a particular NPC. When unlocking a tier, the player's kill count
      * for {@link #getKillNpcId()} must meet {@link #getKillRequirement()}.
      */
-
-
-    /**
-     * Difficulty tiers for bosses.
-     */
     public enum BossTier {
-        TIER1("Training Grounds", 0, 0, -1, new int[]{Npcs.COW}),
-        TIER2("Giants' Den", 10, 100_000, -1, new int[]{Npcs.HILL_GIANT}),
-        TIER3("Dragon Lair", 50, 1_000_000, 11286, new int[]{Npcs.KING_BLACK_DRAGON});
+        TIER1("Training Grounds", 0, 0, -1, 5, Npcs.COW,
+                new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1)}),
+        TIER2("Goblin Camp", 25, 10_000, -1, 10, Npcs.GOBLIN,
+                new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5)}),
+        TIER3("Giants' Den", 75, 100_000, -1, 20, Npcs.HILL_GIANT,
+                new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20)}),
+        TIER4("Moss Cave", 150, 250_000, -1, 25, Npcs.MOSS_GIANT,
+                new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40)}),
+        TIER5("Fire Pit", 250, 500_000, -1, 30, Npcs.FIRE_GIANT,
+                new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60)}),
+        TIER6("Green Dragons", 350, 750_000, -1, 35, Npcs.GREEN_DRAGON,
+                new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90)}),
+        TIER7("Red Dragons", 500, 1_000_000, -1, 40, Npcs.RED_DRAGON,
+                new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110)}),
+        TIER8("Black Dragons", 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON,
+                new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130)}),
+        TIER9("Demon Domain", 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON,
+                new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150)}),
+        TIER10("Dragon King", 1000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON,
+                new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180)});
 
         static {
             TIER1.requiredKillCountToUnlockNext = 25;
             TIER1.nextTier = TIER2;
             TIER2.requiredKillCountToUnlockNext = 50;
             TIER2.nextTier = TIER3;
-            TIER3.requiredKillCountToUnlockNext = 0;
-            TIER3.nextTier = null;
+            TIER3.requiredKillCountToUnlockNext = 75;
+            TIER3.nextTier = TIER4;
+            TIER4.requiredKillCountToUnlockNext = 100;
+            TIER4.nextTier = TIER5;
+            TIER5.requiredKillCountToUnlockNext = 150;
+            TIER5.nextTier = TIER6;
+            TIER6.requiredKillCountToUnlockNext = 200;
+            TIER6.nextTier = TIER7;
+            TIER7.requiredKillCountToUnlockNext = 250;
+            TIER7.nextTier = TIER8;
+            TIER8.requiredKillCountToUnlockNext = 300;
+            TIER8.nextTier = TIER9;
+            TIER9.requiredKillCountToUnlockNext = 400;
+            TIER9.nextTier = TIER10;
+            TIER10.requiredKillCountToUnlockNext = 0;
+            TIER10.nextTier = null;
         }
+
 
         private final String zoneName;
         /** Kill requirement to unlock this tier. */
@@ -122,9 +148,6 @@ public class BossInstanceManager {
         private BossTier nextTier;
 
         BossTier(String zoneName, int killRequirement, int gpCost, int itemRequirement, int respawnTime, int killNpcId, BossMob[] mobs) {
-        private final int[] npcIds;
-
-        BossTier(String zoneName, int killRequirement, int gpCost, int itemRequirement, int[] npcIds) {
             this.zoneName = zoneName;
             this.killRequirement = killRequirement;
             this.gpCost = gpCost;
@@ -132,7 +155,6 @@ public class BossInstanceManager {
             this.respawnTime = respawnTime;
             this.killNpcId = killNpcId;
             this.mobs = mobs;
-            this.npcIds = npcIds;
         }
 
         public String getZoneName() {
@@ -171,6 +193,10 @@ public class BossInstanceManager {
             return mobs;
         }
 
+
+        public BossTier getNextTier() {
+            return nextTier;
+        }
         public int[] getNpcIds() {
             return npcIds;
         }
@@ -179,9 +205,6 @@ public class BossInstanceManager {
             return requiredKillCountToUnlockNext;
         }
 
-        public BossTier getNextTier() {
-            return nextTier;
-        }
     }
 
     /**
@@ -223,9 +246,6 @@ public class BossInstanceManager {
         BossMob[] mobs = tier.getMobs();
         for (int index = 0; index < mobs.length; index++) {
             BossMob mob = mobs[index];
-        int[] ids = tier.getNpcIds();
-        for (int index = 0; index < ids.length; index++) {
-            int npcId = ids[index];
 
             // Spread NPCs out using a 3xN grid with 2 tile spacing
             int offsetX = (index % 3) * 2;
@@ -241,10 +261,6 @@ public class BossInstanceManager {
             if (npc != null) {
                 npc.getBehaviour().setRespawn(true);
                 npc.getBehaviour().setRespawnWhenPlayerOwned(true);
-            NPC npc = NPCSpawning.spawnNpc(player, npcId, baseX + offsetX, baseY + offsetY,
-                    instance.getHeight(), 0, 0, false, false);
-            if (npc != null) {
-                npc.getBehaviour().setRespawn(false);
                 instance.add(npc);
             }
         }

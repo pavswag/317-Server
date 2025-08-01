@@ -835,6 +835,8 @@ public class Player extends Entity {
      * Boss tiers unlocked for {@link io.xeros.content.instances.BossInstanceManager}.
      */
     private java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> unlockedBossTiers = java.util.EnumSet.of(io.xeros.content.instances.BossInstanceManager.BossTier.TIER1);
+    /** Kill counts tracked per {@link io.xeros.content.instances.BossInstanceManager.BossTier}. */
+    private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> tierKillCounts = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
     public int totalEarnedExchangePoints;
     public int referallFlag;
     public int amDonated;
@@ -6224,6 +6226,13 @@ public class Player extends Entity {
      */
     public java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> getUnlockedBossTiers() {
         return unlockedBossTiers;
+    }
+
+    /**
+     * Access the kill counts for each boss instance tier.
+     */
+    public java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> getTierKillCounts() {
+        return tierKillCounts;
     }
 
     public BlastFurnace getBlastFurnace() {
