@@ -17,23 +17,21 @@ public class BossInstanceDialogue extends DialogueBuilder {
     private static final int NPC_ID = io.xeros.model.Npcs.INSTANCE_MASTER;
 
     public BossInstanceDialogue(Player player) {
+        this(player, 0);
+    }
+
+    private BossInstanceDialogue(Player player, int page) {
         super(player);
         setNpcId(NPC_ID);
-        tierMenu();
+        tierMenu(page);
     }
 
     /**
      * Displays the tier selection menu.
      */
     private static final int TIERS_PER_PAGE = 5;
-    private int page;
-
-    private void tierMenu() {
-        tierMenu(0);
-    }
 
     private void tierMenu(int page) {
-        this.page = page;
         BossTier[] tiers = BossTier.values();
         int start = page * TIERS_PER_PAGE;
         int end = Math.min(start + TIERS_PER_PAGE, tiers.length);
@@ -45,10 +43,12 @@ public class BossInstanceDialogue extends DialogueBuilder {
             options[ptr++] = new DialogueOption(optionText(tier), p -> selectTier(tier));
         }
         if (page > 0) {
-            options[ptr++] = new DialogueOption("Back", p -> tierMenu(page - 1));
+            int prev = page - 1;
+            options[ptr++] = new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, prev)));
         }
         if (end < tiers.length) {
-            options[ptr++] = new DialogueOption("More", p -> tierMenu(page + 1));
+            int next = page + 1;
+            options[ptr++] = new DialogueOption("More", p -> p.start(new BossInstanceDialogue(p, next)));
         }
         options[ptr++] = DialogueOption.nevermind();
         option(java.util.Arrays.copyOf(options, ptr));

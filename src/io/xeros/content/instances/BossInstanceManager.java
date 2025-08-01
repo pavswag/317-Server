@@ -130,7 +130,6 @@ public class BossInstanceManager {
             TIER10.nextTier = null;
         }
 
-
         private final String zoneName;
         /** Kill requirement to unlock this tier. */
         private final int killRequirement;
@@ -192,7 +191,6 @@ public class BossInstanceManager {
         public BossMob[] getMobs() {
             return mobs;
         }
-
 
         public BossTier getNextTier() {
             return nextTier;
