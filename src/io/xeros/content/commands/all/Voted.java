@@ -128,42 +128,14 @@ public class Voted extends Command {
                 player.voteKeyPoints += voteCount * 2;
                 player.xpScroll = true;
                 player.xpScrollTicks += XP_SCROLL_TICKS * voteCount;
-		if (!DoubleExperience.isDoubleExperience()) player.getPA().sendGameTimer(ClientGameTimer.BONUS_XP, TimeUnit.MINUTES, (int) ((player.xpScrollTicks / 100)));
-		boolean firstWeekOfMonth = DateUtils.isFirstWeekOfMonth();
+                if (!DoubleExperience.isDoubleExperience()) player.getPA().sendGameTimer(ClientGameTimer.BONUS_XP, TimeUnit.MINUTES, (int) ((player.xpScrollTicks / 100)));
+                boolean firstWeekOfMonth = DateUtils.isFirstWeekOfMonth();
                 int amount = GP_REWARD * voteCount;
                 if (firstWeekOfMonth) {
                         amount *= 2;
                         player.sendMessage("@red@You have gained " + (voteCount * 2) + " voting points and extra gp for the first week of month!");
                 } else {
                         player.sendMessage("You have gained " +  (voteCount * 2) + " voting points and gp!");
-                }
-		player.getItems().addItemUnderAnyCircumstance(Items.COINS, amount);
-	}
-
-                        player.debug("Gained one ::vpanel point, streak: {}.", "" + user.getDayStreak());
-                }
-
-                // Always persist vote data since vote counts update each claim.
-                VotePanelManager.saveToJSON();
-        }
-
-        static void rewards(Player player, final int voteCount) {
-                Achievements.increase(player, AchievementType.VOTER, voteCount);
-
-                int effectiveVotes = voteCount * 2; // double points per vote
-                player.votePoints += effectiveVotes;
-                player.voteKeyPoints += effectiveVotes;
-
-                player.xpScroll = true;
-                player.xpScrollTicks += XP_SCROLL_TICKS * voteCount;
-                if (!DoubleExperience.isDoubleExperience()) player.getPA().sendGameTimer(ClientGameTimer.BONUS_XP, TimeUnit.MINUTES, (int) ((player.xpScrollTicks / 100)));
-                boolean firstWeekOfMonth = DateUtils.isFirstWeekOfMonth();
-                int amount = GP_REWARD * voteCount;
-                if (firstWeekOfMonth) {
-                        amount *= 2;
-                        player.sendMessage("@red@You have gained " + effectiveVotes + " voting points and extra gp for the first week of month!");
-                } else {
-                        player.sendMessage("You have gained " +  effectiveVotes + " voting points and gp!");
                 }
                 player.getItems().addItemUnderAnyCircumstance(Items.COINS, amount);
         }
