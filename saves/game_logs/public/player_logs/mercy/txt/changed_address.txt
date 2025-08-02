@@ -1,5 +1,0 @@
-[ChangeAddressLog] [2024-08-31T10:45:02.9867853] Changed ip address from '69.10.166.159' to '127.0.0.1'.
-[ChangeAddressLog] [2025-03-22T10:51:53.4612555] Changed mac address from 'D4-D2-52-36-34-C2' to 'B0-52-16-62-C1-4D'.
-[ChangeAddressLog] [2025-03-22T10:51:53.4612555] Changed uuid address from '87e671f7-4a78-4e3f-b529-c14ca6ba26c3' to '84ee4594-a3ec-499a-bec7-8f164d2f195a'.
-[ChangeAddressLog] [2025-03-22T10:55:24.0049057] Changed mac address from 'D4-D2-52-36-34-C2' to 'B0-52-16-62-C1-4D'.
-[ChangeAddressLog] [2025-03-22T10:55:24.0059059] Changed uuid address from '87e671f7-4a78-4e3f-b529-c14ca6ba26c3' to '84ee4594-a3ec-499a-bec7-8f164d2f195a'.

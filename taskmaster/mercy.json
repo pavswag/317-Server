@@ -8,42 +8,6 @@
         "stackable": false
       }
     ],
-    "amountToKill": 15,
-    "claimedReward": false,
-    "amountKilled": 0,
-    "taskDifficulty": "MEDIUM",
-    "taskType": "COMBAT",
-    "weekly": false,
-    "localDateTime": "2025-07-31T17:33:55.4558075",
-    "desc": "Araphel"
-  },
-  {
-    "items": [
-      {
-        "id": 995,
-        "amount": 25000,
-        "slot": 0,
-        "stackable": false
-      }
-    ],
-    "amountToKill": 1000,
-    "claimedReward": false,
-    "amountKilled": 0,
-    "taskDifficulty": "HARD",
-    "taskType": "SKILLING",
-    "weekly": false,
-    "localDateTime": "2025-07-31T17:33:55.4638087",
-    "desc": "Make @whi@Runes"
-  },
-  {
-    "items": [
-      {
-        "id": 995,
-        "amount": 25000,
-        "slot": 0,
-        "stackable": false
-      }
-    ],
     "amountToKill": 300,
     "claimedReward": false,
     "amountKilled": 0,
@@ -52,5 +16,41 @@
     "weekly": true,
     "localDateTime": "2025-08-01T16:33:55.4648099",
     "desc": "Kree\u0027arra"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 150,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "HARD",
+    "taskType": "SKILLING",
+    "weekly": false,
+    "localDateTime": "2025-07-31T20:25:49.7203795",
+    "desc": "Craft @whi@d\u0027hide body"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 100,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "HARD",
+    "taskType": "COMBAT",
+    "weekly": false,
+    "localDateTime": "2025-07-31T20:25:49.7253819",
+    "desc": "Kraken"
   }
 ]

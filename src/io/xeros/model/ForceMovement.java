@@ -34,22 +34,13 @@ public class ForceMovement extends CycleEvent {
         this.end = end;
         this.moveCycleStart = moveCycleStart;
         this.moveCycleEnd = moveCycleEnd;
-        Direction direction = Direction.fromDeltas(start, end);
-        switch (direction) {
-            case NORTH:
-                this.moveDirection = 0;
-                break;
-            case EAST:
-                this.moveDirection = 1;
-                break;
-            case SOUTH:
-                this.moveDirection = 2;
-                break;
-            case WEST:
-                this.moveDirection = 3;
-                break;
-            default:
-                throw new IllegalArgumentException(String.format("Invalid force movement direction=%s", direction));
+        int dx = end.getX() - start.getX();
+        int dy = end.getY() - start.getY();
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            this.moveDirection = dx > 0 ? 1 : 3;
+        } else {
+            this.moveDirection = dy > 0 ? 0 : 2;
         }
     }
 

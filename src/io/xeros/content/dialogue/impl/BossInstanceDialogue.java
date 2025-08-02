@@ -29,7 +29,7 @@ public class BossInstanceDialogue extends DialogueBuilder {
     /**
      * Displays the tier selection menu.
      */
-    private static final int TIERS_PER_PAGE = 5;
+    private static final int TIERS_PER_PAGE = 2;
 
     private void tierMenu(int page) {
         BossTier[] tiers = BossTier.values();

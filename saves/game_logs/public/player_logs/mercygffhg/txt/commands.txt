@@ -1,1 +1,0 @@
-[CommandLog] [2025-03-22T10:56:40.4547902] mercygffhg typed command train at X: 3213 Y:3216

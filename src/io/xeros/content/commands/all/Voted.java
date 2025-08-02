@@ -48,21 +48,6 @@ public class Voted extends Command {
      */
     private static final int DOUBLE_VOTE_ITEM_ID = 33115;
 
-    /**
-     * Amount of bonus experience time granted per vote. Increased to one hour
-     * to incentivise voting more frequently.
-     */
-    public static final long XP_SCROLL_TICKS = TimeUnit.MINUTES.toMillis(60) / 600;
-
-    /**
-     * Base coin reward for each vote claimed. Previously 1m, now doubled.
-     */
-    private static final int GP_REWARD = 2_000_000;
-
-    /** Total votes counted towards spawning the vote boss. */
-    public static int globalVotes = 10;
-    /** Votes counted for the next vote boss spawn. */
-    public static int totalVotes = 0;
 
         public static void claimVotes(Player player) {
                 if (Configuration.VOTE_PANEL_ACTIVE) {

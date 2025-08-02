@@ -25,7 +25,7 @@ public class BossInstanceManager {
      * Simple instance type that cleans up the instance map when disposed so
      * height levels can be reused immediately.
      */
-    private static class BossInstanceArea extends LegacySoloPlayerInstance {
+    public static class BossInstanceArea extends LegacySoloPlayerInstance {
 
         /** Player that owns this instance. */
         private final Player owner;
@@ -194,9 +194,6 @@ public class BossInstanceManager {
 
         public BossTier getNextTier() {
             return nextTier;
-        }
-        public int[] getNpcIds() {
-            return npcIds;
         }
 
         public int getRequiredKillCountToUnlockNext() {

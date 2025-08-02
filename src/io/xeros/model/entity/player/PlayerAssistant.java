@@ -2973,6 +2973,9 @@ public class PlayerAssistant {
 	 */
 
 	public void levelUp(int skill) {
+		int level = getLevelForXP(player.playerXP[skill]);
+		boolean showNotifications = level >= 90;
+
 		int totalLevel = (getLevelForXP(player.playerXP[0]) + getLevelForXP(player.playerXP[1]) + getLevelForXP(player.playerXP[2])
 				+ getLevelForXP(player.playerXP[3]) + getLevelForXP(player.playerXP[4]) + getLevelForXP(player.playerXP[5])
 				+ getLevelForXP(player.playerXP[6]) + getLevelForXP(player.playerXP[7]) + getLevelForXP(player.playerXP[8])
@@ -2985,14 +2988,16 @@ public class PlayerAssistant {
 		int random = Misc.random(20);
 		if (random == 5) {
 			player.forcedChat("Oo some skilling crystals!");
-			player.getItems().addItemUnderAnyCircumstance(33127, getLevelForXP(player.playerXP[skill]) * 2);
+			player.getItems().addItemUnderAnyCircumstance(33127, level * 2);
 		}
 		switch (skill) {
 			case 0:
-				sendFrame126("Congratulations, you just advanced an attack level!", 6248);
-				sendFrame126("Your attack level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6249);
-				player.sendMessage("Congratulations, you just advanced an attack level.");
-				sendChatboxInterface(6247);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced an attack level!", 6248);
+					sendFrame126("Your attack level is now " + level + ".", 6249);
+					player.sendMessage("Congratulations, you just advanced an attack level.");
+					sendChatboxInterface(6247);
+				}
 				player.maxAttack = true;
 				if (player.combatLevel >= 126) {
 					player.getEventCalendar().progress(EventChallenge.HAVE_126_COMBAT);
@@ -3000,10 +3005,12 @@ public class PlayerAssistant {
 				break;
 
 			case 1:
-				sendFrame126("Congratulations, you just advanced a defence level!", 6254);
-				sendFrame126("Your defence level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6255);
-				player.sendMessage("Congratulations, you just advanced a defence level.");
-				sendChatboxInterface(6253);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a defence level!", 6254);
+					sendFrame126("Your defence level is now " + level + ".", 6255);
+					player.sendMessage("Congratulations, you just advanced a defence level.");
+					sendChatboxInterface(6253);
+				}
 				player.maxDefense = true;
 				if (player.combatLevel >= 126) {
 					player.getEventCalendar().progress(EventChallenge.HAVE_126_COMBAT);
@@ -3011,10 +3018,12 @@ public class PlayerAssistant {
 				break;
 
 			case 2:
-				sendFrame126("Congratulations, you just advanced a strength level!", 6207);
-				sendFrame126("Your strength level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6208);
-				player.sendMessage("Congratulations, you just advanced a strength level.");
-				sendChatboxInterface(6206);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a strength level!", 6207);
+					sendFrame126("Your strength level is now " + level + ".", 6208);
+					player.sendMessage("Congratulations, you just advanced a strength level.");
+					sendChatboxInterface(6206);
+				}
 				player.maxStrength = true;
 				if (player.combatLevel >= 126) {
 					player.getEventCalendar().progress(EventChallenge.HAVE_126_COMBAT);
@@ -3023,10 +3032,12 @@ public class PlayerAssistant {
 
 			case 3:
 				player.getHealth().setMaximumHealth(player.getLevelForXP(player.playerXP[Player.playerHitpoints]));
-				sendFrame126("Congratulations, you just advanced a hitpoints level!", 6217);
-				sendFrame126("Your hitpoints level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6218);
-				player.sendMessage("Congratulations, you just advanced a hitpoints level.");
-				sendChatboxInterface(6216);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a hitpoints level!", 6217);
+					sendFrame126("Your hitpoints level is now " + level + ".", 6218);
+					player.sendMessage("Congratulations, you just advanced a hitpoints level.");
+					sendChatboxInterface(6216);
+				}
 				player.maxHealth = true;
 				if (player.combatLevel >= 126) {
 					player.getEventCalendar().progress(EventChallenge.HAVE_126_COMBAT);
@@ -3034,7 +3045,9 @@ public class PlayerAssistant {
 				break;
 
 			case 4:
-				player.sendMessage("Congratulations, you just advanced a ranging level.");
+				if (showNotifications) {
+					player.sendMessage("Congratulations, you just advanced a ranging level.");
+				}
 				player.maxRange = true;
 				if (player.combatLevel >= 126) {
 					player.getEventCalendar().progress(EventChallenge.HAVE_126_COMBAT);
@@ -3042,130 +3055,168 @@ public class PlayerAssistant {
 				break;
 
 			case 5:
-				sendFrame126("Congratulations, you just advanced a prayer level!", 6243);
-				sendFrame126("Your prayer level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6244);
-				player.sendMessage("Congratulations, you just advanced a prayer level.");
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a prayer level!", 6243);
+					sendFrame126("Your prayer level is now " + level + ".", 6244);
+					player.sendMessage("Congratulations, you just advanced a prayer level.");
+					sendChatboxInterface(6242);
+				}
 				player.maxPrayer = true;
-				sendChatboxInterface(6242);
 				if (player.combatLevel >= 126) {
 					player.getEventCalendar().progress(EventChallenge.HAVE_126_COMBAT);
 				}
 				break;
 
 			case 6:
-				sendFrame126("Congratulations, you just advanced a magic level!", 6212);
-				sendFrame126("Your magic level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6213);
-				player.sendMessage("Congratulations, you just advanced a magic level.");
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a magic level!", 6212);
+					sendFrame126("Your magic level is now " + level + ".", 6213);
+					player.sendMessage("Congratulations, you just advanced a magic level.");
+					sendChatboxInterface(6211);
+				}
 				player.maxMage = true;
-				sendChatboxInterface(6211);
 				if (player.combatLevel >= 126) {
 					player.getEventCalendar().progress(EventChallenge.HAVE_126_COMBAT);
 				}
 				break;
 
 			case 7:
-				sendFrame126("Congratulations, you just advanced a cooking level!", 6227);
-				sendFrame126("Your cooking level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6228);
-				player.sendMessage("Congratulations, you just advanced a cooking level.");
-				sendChatboxInterface(6226);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a cooking level!", 6227);
+					sendFrame126("Your cooking level is now " + level + ".", 6228);
+					player.sendMessage("Congratulations, you just advanced a cooking level.");
+					sendChatboxInterface(6226);
+				}
 				break;
 
 			case 8:
-				sendFrame126("Congratulations, you just advanced a woodcutting level!", 4273);
-				sendFrame126("Your woodcutting level is now " + getLevelForXP(player.playerXP[skill]) + ".", 4274);
-				player.sendMessage("Congratulations, you just advanced a woodcutting level.");
-				sendChatboxInterface(4272);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a woodcutting level!", 4273);
+					sendFrame126("Your woodcutting level is now " + level + ".", 4274);
+					player.sendMessage("Congratulations, you just advanced a woodcutting level.");
+					sendChatboxInterface(4272);
+				}
 				break;
 
 			case 9:
-				sendFrame126("Congratulations, you just advanced a fletching level!", 6232);
-				sendFrame126("Your fletching level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6233);
-				player.sendMessage("Congratulations, you just advanced a fletching level.");
-				sendChatboxInterface(6231);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a fletching level!", 6232);
+					sendFrame126("Your fletching level is now " + level + ".", 6233);
+					player.sendMessage("Congratulations, you just advanced a fletching level.");
+					sendChatboxInterface(6231);
+				}
 				break;
 
 			case 10:
-				sendFrame126("Congratulations, you just advanced a fishing level!", 6259);
-				sendFrame126("Your fishing level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6260);
-				player.sendMessage("Congratulations, you just advanced a fishing level.");
-				sendChatboxInterface(6258);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a fishing level!", 6259);
+					sendFrame126("Your fishing level is now " + level + ".", 6260);
+					player.sendMessage("Congratulations, you just advanced a fishing level.");
+					sendChatboxInterface(6258);
+				}
 				break;
 
 			case 11:
-				sendFrame126("Congratulations, you just advanced a fire making level!", 4283);
-				sendFrame126("Your firemaking level is now " + getLevelForXP(player.playerXP[skill]) + ".", 4284);
-				player.sendMessage("Congratulations, you just advanced a fire making level.");
-				sendChatboxInterface(4282);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a fire making level!", 4283);
+					sendFrame126("Your firemaking level is now " + level + ".", 4284);
+					player.sendMessage("Congratulations, you just advanced a fire making level.");
+					sendChatboxInterface(4282);
+				}
 				break;
 
 			case 12:
-				sendFrame126("Congratulations, you just advanced a crafting level!", 6264);
-				sendFrame126("Your crafting level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6265);
-				player.sendMessage("Congratulations, you just advanced a crafting level.");
-				sendChatboxInterface(6263);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a crafting level!", 6264);
+					sendFrame126("Your crafting level is now " + level + ".", 6265);
+					player.sendMessage("Congratulations, you just advanced a crafting level.");
+					sendChatboxInterface(6263);
+				}
 				break;
 
 			case 13:
-				sendFrame126("Congratulations, you just advanced a smithing level!", 6222);
-				sendFrame126("Your smithing level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6223);
-				player.sendMessage("Congratulations, you just advanced a smithing level.");
-				sendChatboxInterface(6221);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a smithing level!", 6222);
+					sendFrame126("Your smithing level is now " + level + ".", 6223);
+					player.sendMessage("Congratulations, you just advanced a smithing level.");
+					sendChatboxInterface(6221);
+				}
 				break;
 
 			case 14:
-				sendFrame126("Congratulations, you just advanced a mining level!", 4417);
-				sendFrame126("Your mining level is now " + getLevelForXP(player.playerXP[skill]) + ".", 4438);
-				player.sendMessage("Congratulations, you just advanced a mining level.");
-				sendChatboxInterface(4416);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a mining level!", 4417);
+					sendFrame126("Your mining level is now " + level + ".", 4438);
+					player.sendMessage("Congratulations, you just advanced a mining level.");
+					sendChatboxInterface(4416);
+				}
 				break;
 
 			case 15:
-				sendFrame126("Congratulations, you just advanced a herblore level!", 6238);
-				sendFrame126("Your herblore level is now " + getLevelForXP(player.playerXP[skill]) + ".", 6239);
-				player.sendMessage("Congratulations, you just advanced a herblore level.");
-				sendChatboxInterface(6237);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a herblore level!", 6238);
+					sendFrame126("Your herblore level is now " + level + ".", 6239);
+					player.sendMessage("Congratulations, you just advanced a herblore level.");
+					sendChatboxInterface(6237);
+				}
 				break;
 
 			case 16:
-				sendFrame126("Congratulations, you just advanced a agility level!", 4278);
-				sendFrame126("Your agility level is now " + getLevelForXP(player.playerXP[skill]) + ".", 4279);
-				player.sendMessage("Congratulations, you just advanced an agility level.");
-				sendChatboxInterface(4277);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a agility level!", 4278);
+					sendFrame126("Your agility level is now " + level + ".", 4279);
+					player.sendMessage("Congratulations, you just advanced an agility level.");
+					sendChatboxInterface(4277);
+				}
 				break;
 
 			case 17:
-				sendFrame126("Congratulations, you just advanced a thieving level!", 4263);
-				sendFrame126("Your theiving level is now " + getLevelForXP(player.playerXP[skill]) + ".", 4264);
-				player.sendMessage("Congratulations, you just advanced a thieving level.");
-				sendChatboxInterface(4261);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a thieving level!", 4263);
+					sendFrame126("Your theiving level is now " + level + ".", 4264);
+					player.sendMessage("Congratulations, you just advanced a thieving level.");
+					sendChatboxInterface(4261);
+				}
 				break;
 
 			case 18:
-				sendFrame126("Congratulations, you just advanced a slayer level!", 12123);
-				sendFrame126("Your slayer level is now " + getLevelForXP(player.playerXP[skill]) + ".", 12124);
-				player.sendMessage("Congratulations, you just advanced a slayer level.");
-				sendChatboxInterface(12122);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a slayer level!", 12123);
+					sendFrame126("Your slayer level is now " + level + ".", 12124);
+					player.sendMessage("Congratulations, you just advanced a slayer level.");
+					sendChatboxInterface(12122);
+				}
 				break;
 
 			case 19:
-				player.sendMessage("Congratulations! You've just advanced a Farming level.");
+				if (showNotifications) {
+					player.sendMessage("Congratulations! You've just advanced a Farming level.");
+				}
 				break;
 
 			case 20:
-				sendFrame126("Congratulations, you just advanced a runecrafting level!", 4268);
-				sendFrame126("Your runecrafting level is now " + getLevelForXP(player.playerXP[skill]) + ".", 4269);
-				player.sendMessage("Congratulations, you just advanced a runecrafting level.");
-				sendChatboxInterface(4267);
+				if (showNotifications) {
+					sendFrame126("Congratulations, you just advanced a runecrafting level!", 4268);
+					sendFrame126("Your runecrafting level is now " + level + ".", 4269);
+					player.sendMessage("Congratulations, you just advanced a runecrafting level.");
+					sendChatboxInterface(4267);
+				}
 				break;
 
 			case 21:
-				player.sendMessage("Congratulations! You've just advanced a Hunter level.");
+				if (showNotifications) {
+					player.sendMessage("Congratulations! You've just advanced a Hunter level.");
+				}
 				break;
 			case 22:
-				player.sendMessage("Congratulations! You've just advanced a Demon Hunter level.");
+				if (showNotifications) {
+					player.sendMessage("Congratulations! You've just advanced a Demon Hunter level.");
+				}
 				break;
 			case 23:
-				player.sendMessage("Congratulations! You've just advanced a Fortune level.");
+				if (showNotifications) {
+					player.sendMessage("Congratulations! You've just advanced a Fortune level.");
+				}
 				break;
 		}
 		if (player.totalLevel >= 2000) {
@@ -3455,7 +3506,13 @@ public class PlayerAssistant {
 				PlayerHandler.executeGlobalMessage("<col=6432a8>" + player.getDisplayNameFormatted() + " has reached 200M XP in " +
 						"<icon=" + iconId + "> " + s.toString() + " on " + player.getMode().getType().getFormattedName() + " mode & " + player.getExpMode().getType().getFormattedName() +" Exp Mode!");
 				player.sendMessage("@blu@You have now maxed 200m experience in @red@" + player.xpMaxSkills + " skills!");
-
+				if (s == Skill.DEMON_HUNTER) {
+					player.getItems().addItemUnderAnyCircumstance(30210, 1);
+					player.getItems().addItemUnderAnyCircumstance(30212, 1);
+					player.getItems().addItemUnderAnyCircumstance(30214, 1);
+					player.getItems().addItemUnderAnyCircumstance(30216, 1);
+					player.sendMessage("You receive the Demon Hunter armour set for reaching 200M Demon Hunter XP.");
+				}
 				if (player.xpMaxSkills > 22) {
 					PlayerHandler.executeGlobalMessage(
 							"<col=6432a8>" + player.getDisplayNameFormatted() + " has reached 200M XP in all skills on " + player.getMode().getType().getFormattedName() + " mode & " + player.getExpMode().getType().getFormattedName() +" Exp Mode!");

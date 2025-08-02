@@ -1,3 +1,0 @@
-[ConnectionLog] [2025-04-02T13:58:19.4753935] Logged in
-[ConnectionLog] [2025-04-02T14:10:45.4096633] Logged in
-[ConnectionLog] [2025-07-23T17:54:51.5991984] Logged in

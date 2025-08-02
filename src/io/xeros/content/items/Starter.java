@@ -2,6 +2,7 @@ package io.xeros.content.items;
 
 import io.xeros.Server;
 import io.xeros.content.skills.Skill;
+import io.xeros.content.skills.slayer.Slayer;
 import io.xeros.content.skills.slayer.SlayerMaster;
 import io.xeros.model.Items;
 import io.xeros.model.entity.player.Player;
@@ -58,6 +59,7 @@ public class Starter {
         } else {
             standardStarter(c);
             SlayerMaster.get(401);
+            c.getSlayer().createNewTask(Slayer.EASY_TASK_NPC_ID, false);
         }
     }
 

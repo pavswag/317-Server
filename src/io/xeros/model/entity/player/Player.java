@@ -4437,6 +4437,7 @@ public class Player extends Entity {
     public void facePosition(Position position) {
         facePosition(position.getX(), position.getY());
     }
+    public CombatType lastHitType;
 
     public void facePosition(int pointX, int pointY) {
         FocusPointX = 2 * pointX + 1;
@@ -4475,11 +4476,26 @@ public class Player extends Entity {
         }
         setUpdateRequired(true);
     }
+    @Override
+    public void appendDamage(int damage, Hitmark h) {
+        Entity attacker = null;
+        if (underAttackByNpc > 0) {
+            attacker = NPCHandler.npcs[underAttackByNpc];
+        } else if (underAttackByPlayer > 0) {
+            attacker = PlayerHandler.players[underAttackByPlayer];
+        }
 
+        appendDamage(attacker, damage, h);
+    }
     @Override
     public void appendDamage(Entity entity, int damage, Hitmark h) {
         // Attempting a fix to dying after teleport here.
-        if (entity != null && distance(entity.getPosition()) > 36) return;
+        if (entity != null && distance(entity.getPosition()) > 36)
+            return;
+
+        if (entity != null && entity.isNPC() && isAutoRetaliate()) {
+            attackEntity(entity);
+        }
 
         // Converts all hits to 0, but processes effects
 

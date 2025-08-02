@@ -106,7 +106,7 @@ public class HitBuilder {
         if (!this.checkNegatedDamage && player.prayerActive[CombatPrayer.PROTECT_FROM_RANGED] && this.combatType.equals(CombatType.RANGE)) {
             this.damage = (int) (this.damage * 0.80);
         }
-        this.defender.appendDamage(this.damage, this.hitmark);
+        this.defender.appendDamage(this.attacker, this.damage, this.hitmark);
         return this;
     }
 

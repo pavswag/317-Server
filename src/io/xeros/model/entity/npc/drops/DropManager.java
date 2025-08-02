@@ -18,6 +18,7 @@ import io.xeros.content.lootbag.LootingBag;
 import io.xeros.content.perky.PerkSystem;
 import io.xeros.content.seasons.Halloween;
 import io.xeros.content.skills.Skill;
+import io.xeros.content.skills.farming.Plants;
 import io.xeros.content.skills.slayer.SlayerMaster;
 import io.xeros.content.skills.slayer.Task;
 import io.xeros.content.trails.RewardLevel;
@@ -892,6 +893,11 @@ public class DropManager {
     }
 
     public void onDrop(Player player, GameItem item, int npcId) {
+        if (Plants.isSeed(item.getId()) || ItemDef.forId(item.getId()).getName().toLowerCase().contains("seed")) {
+            player.getItems().addItemUnderAnyCircumstance(Items.SEED_PACK, 1);
+            item.changeDrop(-1, item.getAmount());
+            return;
+        }
         if (item.getId() == 536) if (player.getRechargeItems().hasItem(13111) && player.getPosition().inWild())
             item.changeDrop(537, item.getAmount());
         if (player.hasItemEquipped(21816) && player.absorption && item.getId() == 21820 && (IntStream.of(revs).anyMatch(id -> id == npcId))) {
