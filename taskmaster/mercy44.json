@@ -1,0 +1,56 @@
+[
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 10,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "MEDIUM",
+    "taskType": "COMBAT",
+    "weekly": false,
+    "localDateTime": "2025-07-30T10:19:19.1041297",
+    "desc": "Nex"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 20,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "HARD",
+    "taskType": "SKILLING",
+    "weekly": false,
+    "localDateTime": "2025-07-30T10:19:19.1041297",
+    "desc": "Craft @whi@Amulet of fury"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 300,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "ELITE",
+    "taskType": "COMBAT",
+    "weekly": true,
+    "localDateTime": "2025-07-31T09:19:19.1051315",
+    "desc": "King Black Dragon"
+  }
+]

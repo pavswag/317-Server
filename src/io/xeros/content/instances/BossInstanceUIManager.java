@@ -12,7 +12,7 @@ public class BossInstanceUIManager {
      * Displays the tier name, current kill count within the tier, and the next
      * tier that will be unlocked.
      */
-    public static void sendKillOverlay(Player player) {
+  public static void sendKillOverlay(Player player) {
         BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(player);
         if (area == null) {
             return;
