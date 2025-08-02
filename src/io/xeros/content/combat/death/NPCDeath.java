@@ -14,6 +14,7 @@ import io.xeros.content.bosses.nightmare.NightmareConstants;
 import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
 import io.xeros.content.bosses.wildypursuit.TheUnbearable;
 import io.xeros.content.bosspoints.BossPoints;
+import io.xeros.content.instances.BossInstanceUIManager;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.event.eventcalendar.EventChallenge;
 import io.xeros.content.events.monsterhunt.MonsterHunt;
@@ -353,6 +354,7 @@ public class NPCDeath {
                     player.sendMessage("\uD83C\uDF89 You've unlocked " + next.name().replace('_', ' ') + "! Return to the instance portal to challenge new bosses!");
                 }
             }
+            BossInstanceUIManager.sendKillOverlay(player);
         }
 
         if (NpcDef.forId(npcId).getCombatLevel() >= 1) {
