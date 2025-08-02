@@ -263,6 +263,31 @@ public class BossInstanceManager {
     }
 
     /**
+     * Adds the given tier to the player's unlocked set if it hasn't been added before.
+     *
+     * @return {@code true} if this is the first time the player has unlocked the tier
+     */
+    public static boolean isFirstTierUnlock(Player player, BossTier tier) {
+        return player.getUnlockedBossTiers().add(tier);
+    }
+
+    /**
+     * Returns a safe, non-null display name for the given tier. The format is
+     * "Tier X – Zone Name". If any information is missing, a fallback label is
+     * used so that option strings are never empty.
+     */
+    public static String getTierDisplayNameSafe(BossTier tier) {
+        if (tier == null) {
+            return "Unavailable";
+        }
+        String zone = tier.getZoneName();
+        if (zone == null || zone.trim().isEmpty()) {
+            zone = "Unknown";
+        }
+        return "Tier " + (tier.ordinal() + 1) + " – " + zone;
+    }
+
+    /**
      * Leave the boss instance, disposing of any spawned NPCs and freeing the
      * height level.
      */

@@ -36,7 +36,11 @@ public class BossInstanceDialogue extends DialogueBuilder {
         int start = page * TIERS_PER_PAGE;
         int end = Math.min(start + TIERS_PER_PAGE, tiers.length);
 
-        DialogueOption[] options = new DialogueOption[TIERS_PER_PAGE + 2];
+        // Debug the tiers being shown on this page
+        Misc.println("BossInstanceDialogue page " + page + " tiers: " + Arrays.toString(Arrays.copyOfRange(tiers, start, end)));
+
+        // Allocate enough room for tiers plus navigation and exit
+        DialogueOption[] options = new DialogueOption[TIERS_PER_PAGE + 3];
         int ptr = 0;
         for (int i = start; i < end; i++) {
             BossTier tier = tiers[i];
@@ -51,21 +55,20 @@ public class BossInstanceDialogue extends DialogueBuilder {
             options[ptr++] = new DialogueOption("More", p -> p.start(new BossInstanceDialogue(p, next)));
         }
         options[ptr++] = DialogueOption.nevermind();
-        option(java.util.Arrays.copyOf(options, ptr));
+        option(Arrays.copyOf(options, ptr));
     }
 
     private String optionText(BossTier tier) {
         Player player = getPlayer();
         boolean unlocked = player.getUnlockedBossTiers().contains(tier);
-        String prefix = unlocked ? "\u2705 " : "\uD83D\uDD12 ";
+        String colour = unlocked ? "@gre@" : "@red@";
 
         StringBuilder sb = new StringBuilder();
-        sb.append(prefix).append("Tier ").append(tier.ordinal() + 1);
+        sb.append(colour).append(BossInstanceManager.getTierDisplayNameSafe(tier));
 
         if (unlocked) {
             sb.append(" - Unlocked");
         } else {
-            // find the tier that unlocks this one
             BossTier prev = Arrays.stream(BossTier.values())
                     .filter(t -> t.getNextTier() == tier)
                     .findFirst()
@@ -89,6 +92,7 @@ public class BossInstanceDialogue extends DialogueBuilder {
      */
     private void selectTier(BossTier tier) {
         Player player = getPlayer();
+        Misc.println("BossInstanceDialogue selected tier: " + (tier == null ? "null" : tier.name()));
         if (!player.getUnlockedBossTiers().contains(tier)) {
             if (tier.getKillCount(player) < tier.getKillRequirement()) {
                 String name = io.xeros.model.definitions.NpcDef.forId(tier.getKillNpcId()).getName();

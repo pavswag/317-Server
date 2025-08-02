@@ -14,6 +14,7 @@ import io.xeros.content.bosses.nightmare.NightmareConstants;
 import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
 import io.xeros.content.bosses.wildypursuit.TheUnbearable;
 import io.xeros.content.bosspoints.BossPoints;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.instances.BossInstanceUIManager;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.event.eventcalendar.EventChallenge;
@@ -345,13 +346,17 @@ public class NPCDeath {
         int bossPoints = BossPoints.getPointsOnDeath(npc);
         BossPoints.addPoints(player, bossPoints, false);
 
-        if (npc.getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea area) {
-            io.xeros.content.instances.BossInstanceManager.BossTier tier = area.getTier();
+        if (npc.getInstance() instanceof BossInstanceManager.BossInstanceArea area) {
+            BossInstanceManager.BossTier tier = area.getTier();
             int newCount = player.getTierKillCounts().merge(tier, 1, Integer::sum);
             if (newCount >= tier.getRequiredKillCountToUnlockNext()) {
-                io.xeros.content.instances.BossInstanceManager.BossTier next = tier.getNextTier();
-                if (next != null && player.getUnlockedBossTiers().add(next)) {
-                    player.sendMessage("\uD83C\uDF89 You've unlocked " + next.name().replace('_', ' ') + "! Return to the instance portal to challenge new bosses!");
+                BossInstanceManager.BossTier next = tier.getNextTier();
+                if (next != null && BossInstanceManager.isFirstTierUnlock(player, next)) {
+                    player.gfx0(199);
+                    int number = next.ordinal() + 1;
+                    String name = next.getZoneName();
+                    player.sendMessage("\uD83C\uDF89 You’ve unlocked Tier " + number + ": " + name + "!");
+                    PlayerHandler.executeGlobalMessage(player.getDisplayName() + " has unlocked Tier " + number + " – " + name + "! \uD83D\uDD25");
                 }
             }
             BossInstanceUIManager.sendKillOverlay(player);

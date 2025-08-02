@@ -12,7 +12,7 @@ public class BossInstanceUIManager {
      * Displays the tier name, current kill count within the tier, and the next
      * tier that will be unlocked.
      */
-    public static void sendKillOverlay(Player player) {
+  public static void sendKillOverlay(Player player) {
         BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(player);
         if (area == null) {
             return;
@@ -22,9 +22,9 @@ public class BossInstanceUIManager {
         int current = player.getTierKillCounts().getOrDefault(tier, 0);
         int required = tier.getRequiredKillCountToUnlockNext();
         BossInstanceManager.BossTier next = tier.getNextTier();
-        String nextName = next != null ? next.name().replace('_', ' ') : "Maxed";
+        String nextName = next != null ? BossInstanceManager.getTierDisplayNameSafe(next) : "Maxed";
 
-        player.sendMessage("\uD83E\uDDF1 Tier: " + tier.name().replace('_', ' '));
+        player.sendMessage("\uD83E\uDDF1 Tier: " + BossInstanceManager.getTierDisplayNameSafe(tier));
         player.sendMessage("\u2620\uFE0F Kills: " + current + " / " + required);
         player.sendMessage("\uD83D\uDD13 Unlocks: " + nextName);
     }
