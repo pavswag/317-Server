@@ -88,18 +88,19 @@ public class ItemOptionTwo implements PacketType {
 		if (Halloween.handleBucket(player, itemId)) {
 			return;
 		}
-		DuelSession duelSession = (DuelSession) Server.getMultiplayerSessionListener().getMultiplayerSession(player, MultiplayerSessionType.DUEL);
-		if (Objects.nonNull(duelSession) && duelSession.getStage().getStage() > MultiplayerSessionStage.REQUEST
-				&& duelSession.getStage().getStage() < MultiplayerSessionStage.FURTHER_INTERATION) {
-			player.sendMessage("Your actions have declined the duel.");
-			duelSession.getOther(player).sendMessage("The challenger has declined the duel.");
-			duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
-			return;
-		}
+                DuelSession duelSession = (DuelSession) Server.getMultiplayerSessionListener().getMultiplayerSession(player, MultiplayerSessionType.DUEL);
+                if (Objects.nonNull(duelSession) && duelSession.getStage().getStage() > MultiplayerSessionStage.REQUEST
+                                && duelSession.getStage().getStage() < MultiplayerSessionStage.FURTHER_INTERATION) {
+                        player.sendMessage("Your actions have declined the duel.");
+                        duelSession.getOther(player).sendMessage("The challenger has declined the duel.");
+                        duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
+                        return;
+                }
 
-		if (JarsToPoints.open(player, itemId)) {
-			return;
-		}
+
+                if (JarsToPoints.open(player, itemId)) {
+                        return;
+                }
 
 		if (BryophytaStaff.handleItemOption(player, itemId, 2))
 			return;
