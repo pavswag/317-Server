@@ -19,6 +19,7 @@ import io.xeros.model.Items;
 import io.xeros.model.definitions.ItemDef;
 import io.xeros.model.entity.player.PacketType;
 import io.xeros.model.entity.player.Player;
+import io.xeros.content.trails.ClueCasketHandler;
 import io.xeros.model.entity.player.Right;
 import io.xeros.model.items.GameItem;
 import io.xeros.model.items.ItemAction;
@@ -90,6 +91,9 @@ public class ItemOptionThree implements PacketType {
             c.sendMessage("Your actions have declined the duel.");
             duelSession.getOther(c).sendMessage("The challenger has declined the duel.");
             duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
+            return;
+        }
+        if (ClueCasketHandler.bulkOpenCasket(c, itemId, 10)) {
             return;
         }
         Optional<DegradableItem> d = DegradableItem.forId(itemId);
