@@ -121,6 +121,50 @@ public class BossInstanceDialogue extends DialogueBuilder {
                 BossInstanceOverlayManager.sendKillOverlay(player);
                 return;
             }
+        }
+
+        if (npc.getNpcId() == 5862) {
+            Achievements.increase(player, AchievementType.SLAY_CERB, 1);
+        } else if (npc.getNpcId() == 319) {
+            Achievements.increase(player, AchievementType.SLAY_CORP, 1);
+        } else if (npc.getNpcId() == 239) {
+            Achievements.increase(player, AchievementType.SLAY_KBD, 1);
+        } else if (npc.getNpcId() >= 5886 && npc.getNpcId() <= 5891) {
+            Achievements.increase(player, AchievementType.SLAY_SIRE, 1);
+        } else if (npc.getNpcId() == 494) {
+            Achievements.increase(player, AchievementType.SLAY_KRAKEN, 1);
+        } else if (npc.getNpcId() == 6503) {
+            Achievements.increase(player, AchievementType.SLAY_CALLISTO, 1);
+        } else if (npc.getNpcId() == 6615) {
+            Achievements.increase(player, AchievementType.SLAY_SCORPIA, 1);
+        } else if (npc.getNpcId() == 6610) {
+            Achievements.increase(player, AchievementType.SLAY_VENENATIS, 1);
+        } else if (npc.getNpcId() == 2054) {
+            Achievements.increase(player, AchievementType.SLAY_CHAOSELE, 1);
+        } else if (npc.getNpcId() == 6619) {
+            Achievements.increase(player, AchievementType.SLAY_CHAOSFANATIC, 1);
+        } else if (npc.getNpcId() == 6618) {
+            Achievements.increase(player, AchievementType.SLAY_ARCHAEOLOGIST, 1);
+        } else if (npc.getNpcId() == 8164) {
+            Achievements.increase(player, AchievementType.SLAY_SHADOWARAPHAEL, 1);
+        } else if (npc.getNpcId() == 8172) {
+            Achievements.increase(player, AchievementType.SLAY_ARAPHAEL, 1);
+        }
+
+        Location3D location = new Location3D(dropX, dropY, dropHeight);
+        int amountOfDrops = 1;
+        if (isDoubleDrops()) {
+            amountOfDrops++;
+        }
+
+        int bossPoints = BossPoints.getPointsOnDeath(npc);
+        BossPoints.addPoints(player, bossPoints, false);
+
+        if (npc.getInstance() instanceof BossInstanceManager.BossInstanceArea area) {
+            if (player.isPreviewingBossInstance()) {
+                BossInstanceOverlayManager.sendKillOverlay(player);
+                return;
+            }
             BossInstanceManager.BossTier tier = area.getTier();
             int newCount = player.getTierKillCounts().merge(tier, 1, Integer::sum);
             if (newCount == tier.getRequiredKillCountToUnlockNext()) {
