@@ -228,7 +228,7 @@ public class BossInstanceManager {
         player.getPA().movePlayerUnconditionally(player.getX(), player.getY(), instance.getHeight());
 
         spawnNpcs(player, tier, instance);
-        BossInstanceUIManager.sendKillOverlay(player);
+        BossInstanceUIManager.show(player);
     }
 
     /**

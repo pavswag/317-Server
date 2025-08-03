@@ -359,7 +359,7 @@ public class NPCDeath {
                     PlayerHandler.executeGlobalMessage(player.getDisplayName() + " has unlocked Tier " + number + " – " + name + "! \uD83D\uDD25");
                 }
             }
-            BossInstanceUIManager.sendKillOverlay(player);
+            BossInstanceUIManager.show(player);
         }
 
         if (NpcDef.forId(npcId).getCombatLevel() >= 1) {
