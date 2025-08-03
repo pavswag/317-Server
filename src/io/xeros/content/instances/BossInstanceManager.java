@@ -10,7 +10,9 @@ import io.xeros.model.entity.npc.NPCSpawning;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
 
+import java.util.Arrays;
 import java.util.Map;
+import io.xeros.util.Misc;
 
 /**
  * Simple manager for personal boss instances. Each player that enters a zone
@@ -227,37 +229,41 @@ public class BossInstanceManager {
         instance.add(player);
         player.getPA().movePlayerUnconditionally(player.getX(), player.getY(), instance.getHeight());
 
-        spawnNpcs(player, tier, instance);
+        spawnInstanceGrid(player, tier, instance);
         BossInstanceOverlayManager.sendKillOverlay(player);
     }
 
     /**
-     * Spawn all NPCs for a player's boss instance. NPCs are spaced out using a
-     * simple grid so they don't overlap and are only visible to the owner.
+     * Spawn NPCs in a grid around the player so the instance feels populated. NPCs are spaced
+     * two tiles apart and up to twenty are spawned using the tier's NPC pool.
      */
-    private static void spawnNpcs(Player player, BossTier tier, BossInstanceArea instance) {
+    private static void spawnInstanceGrid(Player player, BossTier tier, BossInstanceArea instance) {
         int baseX = player.getX();
         int baseY = player.getY();
+        int height = instance.getHeight();
 
         BossMob[] mobs = tier.getMobs();
-        for (int index = 0; index < mobs.length; index++) {
-            BossMob mob = mobs[index];
+        if (mobs.length == 0) {
+            return;
+        }
 
-            // Spread NPCs out using a 3xN grid with 2 tile spacing
-            int offsetX = (index % 3) * 2;
-            int offsetY = (index / 3) * 2;
-
-            NPC npc = NPCSpawning.spawnNpc(player, mob.getNpcId(), baseX + offsetX, baseY + offsetY,
-                    instance.getHeight(), 0, 0, false, false,
-                    NpcStats.builder()
-                            .setHitpoints(mob.getHitpoints())
-                            .setAttackLevel(mob.getAttack())
-                            .setDefenceLevel(mob.getDefence())
-                            .createNpcStats());
-            if (npc != null) {
-                npc.getBehaviour().setRespawn(true);
-                npc.getBehaviour().setRespawnWhenPlayerOwned(true);
-                instance.add(npc);
+        int spawned = 0;
+        for (int dx = -5; dx <= 5 && spawned < 20; dx += 2) {
+            for (int dy = -5; dy <= 5 && spawned < 20; dy += 2) {
+                BossMob mob = mobs[Misc.random(mobs.length - 1)];
+                NPC npc = NPCSpawning.spawnNpc(player, mob.getNpcId(), baseX + dx, baseY + dy,
+                        height, 0, 0, false, false,
+                        NpcStats.builder()
+                                .setHitpoints(mob.getHitpoints())
+                                .setAttackLevel(mob.getAttack())
+                                .setDefenceLevel(mob.getDefence())
+                                .createNpcStats());
+                if (npc != null) {
+                    npc.getBehaviour().setRespawn(true);
+                    npc.getBehaviour().setRespawnWhenPlayerOwned(true);
+                    instance.add(npc);
+                    spawned++;
+                }
             }
         }
     }
@@ -289,14 +295,40 @@ public class BossInstanceManager {
      * used so that option strings are never empty.
      */
     public static String getTierDisplayNameSafe(BossTier tier) {
+        return getTierDisplayNameSafe(tier, null);
+    }
+
+    /**
+     * Returns a safe label for the tier, colour coded based on whether the player has it
+     * unlocked. When a player is provided, their kill progress is included to show lock state.
+     */
+    public static String getTierDisplayNameSafe(BossTier tier, Player player) {
         if (tier == null) {
-            return "Unavailable";
+            return "@red@Unavailable";
         }
         String zone = tier.getZoneName();
         if (zone == null || zone.trim().isEmpty()) {
+            Misc.println("BossInstanceManager warning: missing zone name for " + tier);
             zone = "Unknown";
         }
-        return "Tier " + (tier.ordinal() + 1) + " – " + zone;
+        String base = "Tier " + (tier.ordinal() + 1) + " – " + zone;
+
+        if (player == null) {
+            return base;
+        }
+
+        boolean unlocked = player.getUnlockedBossTiers().contains(tier);
+        BossTier prev = Arrays.stream(BossTier.values()).filter(t -> t.getNextTier() == tier).findFirst().orElse(null);
+        int progress = prev != null ? player.getTierKillCounts().getOrDefault(prev, 0) : 0;
+        int required = prev != null ? prev.getRequiredKillCountToUnlockNext() : tier.getKillRequirement();
+
+        if (unlocked) {
+            return "@gre@" + base;
+        }
+        if (required > 0 && progress >= required) {
+            return "@yel@" + base + " - Preview";
+        }
+        return "@red@Locked: " + base + " (" + progress + "/" + required + ")";
     }
 
 
