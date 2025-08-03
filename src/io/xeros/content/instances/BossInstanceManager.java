@@ -228,7 +228,7 @@ public class BossInstanceManager {
         player.getPA().movePlayerUnconditionally(player.getX(), player.getY(), instance.getHeight());
 
         spawnNpcs(player, tier, instance);
-        BossInstanceUIManager.show(player);
+        BossInstanceOverlayManager.sendKillOverlay(player);
     }
 
     /**
@@ -272,6 +272,18 @@ public class BossInstanceManager {
     }
 
     /**
+     * Removes the player from their boss instance, clearing overlays and
+     * freeing the height level so it can be reused.
+     */
+    public static void leave(Player player) {
+        BossInstanceOverlayManager.clear(player);
+        BossInstanceArea area = INSTANCES.remove(player);
+        if (area != null) {
+            area.dispose();
+        }
+    }
+
+    /**
      * Returns a safe, non-null display name for the given tier. The format is
      * "Tier X – Zone Name". If any information is missing, a fallback label is
      * used so that option strings are never empty.
@@ -287,17 +299,6 @@ public class BossInstanceManager {
         return "Tier " + (tier.ordinal() + 1) + " – " + zone;
     }
 
-    /**
-     * Leave the boss instance, disposing of any spawned NPCs and freeing the
-     * height level.
-     */
-    public static void leave(Player player) {
-        BossInstanceArea instance = INSTANCES.remove(player);
-        if (instance != null) {
-            instance.dispose();
-            player.getPA().movePlayerUnconditionally(player.getX(), player.getY(), 0);
-        }
-    }
 
     public static BossInstanceArea get(Player player) {
         return INSTANCES.get(player);

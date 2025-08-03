@@ -15,7 +15,8 @@ import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
 import io.xeros.content.bosses.wildypursuit.TheUnbearable;
 import io.xeros.content.bosspoints.BossPoints;
 import io.xeros.content.instances.BossInstanceManager;
-import io.xeros.content.instances.BossInstanceUIManager;
+import io.xeros.content.instances.BossInstanceOverlayManager;
+import io.xeros.content.instances.TierRewardManager;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.event.eventcalendar.EventChallenge;
 import io.xeros.content.events.monsterhunt.MonsterHunt;
@@ -349,17 +350,19 @@ public class NPCDeath {
         if (npc.getInstance() instanceof BossInstanceManager.BossInstanceArea area) {
             BossInstanceManager.BossTier tier = area.getTier();
             int newCount = player.getTierKillCounts().merge(tier, 1, Integer::sum);
-            if (newCount >= tier.getRequiredKillCountToUnlockNext()) {
+            if (newCount == tier.getRequiredKillCountToUnlockNext()) {
+                TierRewardManager.reward(player, tier);
                 BossInstanceManager.BossTier next = tier.getNextTier();
                 if (next != null && BossInstanceManager.isFirstTierUnlock(player, next)) {
                     player.gfx0(199);
+                    player.startAnimation(862);
                     int number = next.ordinal() + 1;
                     String name = next.getZoneName();
-                    player.sendMessage("\uD83C\uDF89 You’ve unlocked Tier " + number + ": " + name + "!");
+                    player.sendMessage("<col=ff00ff><shad=000000>\uD83C\uDF89 You’ve unlocked Tier " + number + ": " + name + "!</col>");
                     PlayerHandler.executeGlobalMessage(player.getDisplayName() + " has unlocked Tier " + number + " – " + name + "! \uD83D\uDD25");
                 }
             }
-            BossInstanceUIManager.show(player);
+            BossInstanceOverlayManager.sendKillOverlay(player);
         }
 
         if (NpcDef.forId(npcId).getCombatLevel() >= 1) {

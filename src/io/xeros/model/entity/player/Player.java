@@ -38,6 +38,7 @@ import io.xeros.content.combat.death.PlayerDeath;
 import io.xeros.content.combat.effects.damageeffect.impl.amuletofthedamned.impl.ToragsEffect;
 import io.xeros.content.combat.formula.MeleeMaxHit;
 import io.xeros.content.combat.magic.CombatSpellData;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.combat.melee.CombatPrayer;
 import io.xeros.content.combat.melee.MeleeData;
 import io.xeros.content.combat.melee.MeleeExtras;
@@ -1782,6 +1783,7 @@ public class Player extends Entity {
     public void destruct() {
         if (destructed)
             return;
+        BossInstanceManager.leave(this);
         destructed = true;
         getPA().sendLogout();
 
