@@ -33,6 +33,20 @@ public class Bosses extends Command {
                 player.sendMessage(msg);
             }
         }
+
+        if (!player.getBossContributions().isEmpty()) {
+            player.sendMessage("@dre@Recent contributions:");
+            player.getBossContributions().forEach(entry -> {
+                String[] parts = entry.split(",");
+                if (parts.length == 3) {
+                    String boss = parts[0];
+                    int dmg = Integer.parseInt(parts[1]);
+                    int rank = Integer.parseInt(parts[2]);
+                    player.sendMessage("You dealt " + dmg + " damage to " + boss +
+                            " (" + formatRank(rank) + " place)");
+                }
+            });
+        }
     }
 
     private String formatDuration(long ms) {
@@ -40,6 +54,19 @@ public class Bosses extends Command {
         long minutes = seconds / 60;
         seconds %= 60;
         return minutes + "m " + seconds + "s";
+    }
+
+    private String formatRank(int rank) {
+        switch (rank) {
+            case 1:
+                return "1st";
+            case 2:
+                return "2nd";
+            case 3:
+                return "3rd";
+            default:
+                return rank + "th";
+        }
     }
 
     @Override

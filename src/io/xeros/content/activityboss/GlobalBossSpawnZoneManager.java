@@ -10,12 +10,20 @@ import java.util.Map;
 public class GlobalBossSpawnZoneManager {
 
     private static final Map<GlobalBossType, Position[]> ZONES = new EnumMap<>(GlobalBossType.class);
+    private static final Map<GlobalBossType, String> ZONE_NAMES = new EnumMap<>(GlobalBossType.class);
 
     static {
         ZONES.put(GlobalBossType.CORRUPTED_HYDRA, new Position[]{new Position(1310, 3615, 0)});
+        ZONE_NAMES.put(GlobalBossType.CORRUPTED_HYDRA, "Toxic Swamp");
+
         ZONES.put(GlobalBossType.TREASURE_MIMIC, new Position[]{new Position(3087, 3495, 0)});
+        ZONE_NAMES.put(GlobalBossType.TREASURE_MIMIC, "Edgeville");
+
         ZONES.put(GlobalBossType.ASHEN_BEAST, new Position[]{new Position(3039, 3432, 0)});
+        ZONE_NAMES.put(GlobalBossType.ASHEN_BEAST, "Ardougne");
+
         ZONES.put(GlobalBossType.BLOOD_REAPER, new Position[]{new Position(3245, 3945, 0)});
+        ZONE_NAMES.put(GlobalBossType.BLOOD_REAPER, "Wilderness");
     }
 
     private GlobalBossSpawnZoneManager() {
@@ -32,6 +40,10 @@ public class GlobalBossSpawnZoneManager {
             }
         }
         return null;
+    }
+
+    public static String getZoneName(GlobalBossType type) {
+        return ZONE_NAMES.getOrDefault(type, "Unknown");
     }
 }
 

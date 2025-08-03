@@ -43,6 +43,7 @@ public class GlobalBossActivityManager {
             return;
         }
         int newTotal = totals.getOrDefault(type, 0) + amount;
+        GlobalBossAnnouncer.announceProgress(data, newTotal);
         if (newTotal >= data.getThreshold()) {
             totals.put(type, 0);
             spawn(data);
@@ -58,7 +59,8 @@ public class GlobalBossActivityManager {
         }
         NPCSpawning.spawnNpc(data.getNpcId(), spawn.getX(),
                 spawn.getY(), spawn.getHeight(), 1, 0);
-        new Broadcast(data.getSpawnMessage())
+        String zone = GlobalBossSpawnZoneManager.getZoneName(data);
+        new Broadcast(data.getName() + " has appeared at " + zone + "!")
                 .addTeleport(spawn)
                 .copyMessageToChatbox()
                 .submit();
@@ -104,5 +106,13 @@ public class GlobalBossActivityManager {
             }
         }
         return false;
+    }
+
+    public static synchronized void forceSpawn(GlobalBossType type) {
+        spawn(type);
+    }
+
+    public static void setCooldown(GlobalBossType type, long millis) {
+        lastKillTimes.put(type, System.currentTimeMillis() - COOLDOWN + millis);
     }
 }
