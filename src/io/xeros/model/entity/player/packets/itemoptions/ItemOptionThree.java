@@ -186,7 +186,10 @@ public class ItemOptionThree implements PacketType {
                 break;
 
             case 12161:
-                new ChristmasBox(c).quickOpen();
+                int amount = c.getItems().getInventoryCount(itemId);
+                for (int i = 0; i < amount; i++) {
+                    ChristmasBox.openChristmasBox(c, itemId);
+                }
                 break;
             case 22322:
                 c.getDH().sendDialogues(333, 7456);
