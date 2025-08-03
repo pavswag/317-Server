@@ -1,6 +1,5 @@
 package io.xeros.content.instances;
 
-import io.xeros.content.instances.InstanceConfiguration;
 import io.xeros.content.instances.impl.LegacySoloPlayerInstance;
 import io.xeros.model.Npcs;
 import io.xeros.model.definitions.NpcDef;
@@ -9,10 +8,11 @@ import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.npc.NPCSpawning;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
+import io.xeros.util.Misc;
 
 import java.util.Arrays;
 import java.util.Map;
-import io.xeros.util.Misc;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Simple manager for personal boss instances. Each player that enters a zone
@@ -21,7 +21,7 @@ import io.xeros.util.Misc;
 public class BossInstanceManager {
 
     /** Mapping of players to their active instance. */
-    private static final Map<Player, BossInstanceArea> INSTANCES = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final Map<Player, BossInstanceArea> INSTANCES = new ConcurrentHashMap<>();
 
     /**
      * Simple instance type that cleans up the instance map when disposed so
@@ -85,13 +85,12 @@ public class BossInstanceManager {
 
         instance.add(player);
         player.getPA().movePlayerUnconditionally(player.getX(), player.getY(), instance.getHeight());
-
-        spawnInstanceGrid(player, tier, instance, true);
-        player.setPreviewingBossInstance(true);
+        spawnInstanceGrid(player, tier, instance, false);
         BossInstanceOverlayManager.sendKillOverlay(player);
     }
 
     /**
+     * All
      * Spawn NPCs in a grid around the player so the instance feels populated. NPCs are spaced
      * two tiles apart and up to twenty are spawned using the tier's NPC pool.
      */
