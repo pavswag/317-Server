@@ -7,6 +7,8 @@ import io.xeros.content.achievement.Achievements;
 import io.xeros.content.event.eventcalendar.EventChallenge;
 import io.xeros.content.leaderboards.LeaderboardType;
 import io.xeros.content.leaderboards.LeaderboardUtils;
+import io.xeros.content.activityboss.ActivityType;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.content.prestige.PrestigePerks;
 import io.xeros.content.skills.Skill;
 import io.xeros.content.upgrade.UpgradeMaterials;
@@ -177,6 +179,7 @@ public class FireOfExchange {
         }
         c.getRecentlyDissolvedItems().add(c.currentExchangeItem);
         c.getRecentlyDissolvedPrices().add(exchangePrice);
+        GlobalBossActivityManager.record(ActivityType.FIRE_OF_EXCHANGE, (int) exchangePrice);
         Server.getLogging().write(new FireOfExchangeLog(c, new GameItem(c.currentExchangeItem, c.currentExchangeItemAmount)));
     }
 
