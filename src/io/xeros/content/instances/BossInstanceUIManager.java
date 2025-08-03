@@ -32,4 +32,3 @@ public class BossInstanceUIManager {
         player.getPA().openQuestInterface("Boss Instances", lines);
     }
 }
-

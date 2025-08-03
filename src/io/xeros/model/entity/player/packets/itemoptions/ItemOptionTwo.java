@@ -3,6 +3,7 @@ package io.xeros.model.entity.player.packets.itemoptions;
 import io.xeros.Configuration;
 import io.xeros.Server;
 import io.xeros.content.bosspoints.JarsToPoints;
+import io.xeros.content.trails.ClueCasketHandler;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.magic.SanguinestiStaff;
 import io.xeros.content.displayname.ChangeDisplayName;
@@ -88,18 +89,22 @@ public class ItemOptionTwo implements PacketType {
 		if (Halloween.handleBucket(player, itemId)) {
 			return;
 		}
-		DuelSession duelSession = (DuelSession) Server.getMultiplayerSessionListener().getMultiplayerSession(player, MultiplayerSessionType.DUEL);
-		if (Objects.nonNull(duelSession) && duelSession.getStage().getStage() > MultiplayerSessionStage.REQUEST
-				&& duelSession.getStage().getStage() < MultiplayerSessionStage.FURTHER_INTERATION) {
-			player.sendMessage("Your actions have declined the duel.");
-			duelSession.getOther(player).sendMessage("The challenger has declined the duel.");
-			duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
-			return;
-		}
+                DuelSession duelSession = (DuelSession) Server.getMultiplayerSessionListener().getMultiplayerSession(player, MultiplayerSessionType.DUEL);
+                if (Objects.nonNull(duelSession) && duelSession.getStage().getStage() > MultiplayerSessionStage.REQUEST
+                                && duelSession.getStage().getStage() < MultiplayerSessionStage.FURTHER_INTERATION) {
+                        player.sendMessage("Your actions have declined the duel.");
+                        duelSession.getOther(player).sendMessage("The challenger has declined the duel.");
+                        duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
+                        return;
+                }
 
-		if (JarsToPoints.open(player, itemId)) {
-			return;
-		}
+                if (ClueCasketHandler.bulkOpenCasket(player, itemId, 5)) {
+                        return;
+                }
+
+                if (JarsToPoints.open(player, itemId)) {
+                        return;
+                }
 
 		if (BryophytaStaff.handleItemOption(player, itemId, 2))
 			return;
