@@ -4,9 +4,9 @@ import io.xeros.model.entity.player.Position;
 import java.util.Arrays;
 
 /**
- * Data for bosses that spawn from server wide activities.
+ * Enumeration of all global bosses that can be spawned by server wide activities.
  */
-public enum ActivityBossData {
+public enum GlobalBossType {
     CORRUPTED_HYDRA(9021, "Corrupted Hydra", ActivityType.UPGRADES, 500,
             new Position(1310, 3615, 0),
             "The Corrupted Hydra emerges from the toxic swamp!"),
@@ -30,8 +30,8 @@ public enum ActivityBossData {
     private final Position spawnPosition;
     private final String spawnMessage;
 
-    ActivityBossData(int npcId, String name, ActivityType activityType, int threshold,
-                     Position spawnPosition, String spawnMessage) {
+    GlobalBossType(int npcId, String name, ActivityType activityType, int threshold,
+                   Position spawnPosition, String spawnMessage) {
         this.npcId = npcId;
         this.name = name;
         this.activityType = activityType;
@@ -64,7 +64,11 @@ public enum ActivityBossData {
         return spawnMessage;
     }
 
-    public static ActivityBossData forType(ActivityType type) {
+    public static GlobalBossType forActivity(ActivityType type) {
         return Arrays.stream(values()).filter(it -> it.activityType == type).findFirst().orElse(null);
+    }
+
+    public static GlobalBossType forNpcId(int npcId) {
+        return Arrays.stream(values()).filter(it -> it.npcId == npcId).findFirst().orElse(null);
     }
 }
