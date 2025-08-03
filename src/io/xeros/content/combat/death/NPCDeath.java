@@ -1,6 +1,33 @@
 package io.xeros.content.dialogue.impl;
 
 import io.xeros.Server;
+import io.xeros.content.achievement.AchievementType;
+import io.xeros.content.achievement.Achievements;
+import io.xeros.content.achievement_diary.impl.FremennikDiaryEntry;
+import io.xeros.content.achievement_diary.impl.MorytaniaDiaryEntry;
+import io.xeros.content.battlepass.Pass;
+import io.xeros.content.bosses.Hunllef;
+import io.xeros.content.bosses.Kraken;
+import io.xeros.content.bosses.hespori.Hespori;
+import io.xeros.content.bosses.nightmare.NightmareConstants;
+import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
+import io.xeros.content.bosses.wildypursuit.TheUnbearable;
+import io.xeros.content.bosspoints.BossPoints;
+import io.xeros.content.instances.BossInstanceManager;
+import io.xeros.content.instances.BossInstanceOverlayManager;
+import io.xeros.content.instances.TierRewardManager;
+import io.xeros.content.combat.Hitmark;
+import io.xeros.content.event.eventcalendar.EventChallenge;
+import io.xeros.content.events.monsterhunt.MonsterHunt;
+import io.xeros.content.minigames.warriors_guild.AnimatedArmour;
+import io.xeros.content.skills.Skill;
+import io.xeros.content.skills.hunter.impling.ItemRarity;
+import io.xeros.model.Graphic;
+import io.xeros.model.Npcs;
+import io.xeros.model.collisionmap.RegionProvider;
+import io.xeros.model.cycleevent.CycleEvent;
+import io.xeros.model.cycleevent.CycleEventContainer;
+import io.xeros.model.cycleevent.CycleEventHandler;
 import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
 import io.xeros.content.instances.BossInstanceManager;
@@ -89,6 +116,24 @@ public class BossInstanceDialogue extends DialogueBuilder {
         option("Choose a Boss Tier", opts.toArray(new DialogueOption[0]));
     }
 
+        if (npc.getInstance() instanceof BossInstanceManager.BossInstanceArea area) {
+            if (player.isPreviewingBossInstance()) {
+                BossInstanceOverlayManager.sendKillOverlay(player);
+                return;
+            }
+            BossInstanceManager.BossTier tier = area.getTier();
+            int newCount = player.getTierKillCounts().merge(tier, 1, Integer::sum);
+            if (newCount == tier.getRequiredKillCountToUnlockNext()) {
+                TierRewardManager.reward(player, tier);
+                BossInstanceManager.BossTier next = tier.getNextTier();
+                if (next != null && BossInstanceManager.isFirstTierUnlock(player, next)) {
+                    player.gfx0(199);
+                    player.startAnimation(862);
+                    int number = next.ordinal() + 1;
+                    String name = next.getZoneName();
+                    player.sendMessage("<col=ff00ff><shad=000000>\uD83C\uDF89 You’ve unlocked Tier " + number + ": " + name + "!</col>");
+                    PlayerHandler.executeGlobalMessage(player.getDisplayName() + " has unlocked Tier " + number + " – " + name + "! \uD83D\uDD25");
+                }
     /**
      * Builds a safe, colour-coded label for a tier showing progress and key drops.
      */
@@ -113,6 +158,7 @@ public class BossInstanceDialogue extends DialogueBuilder {
             if (!dropNames.isEmpty()) {
                 label.append(" - ").append(dropNames);
             }
+            BossInstanceOverlayManager.sendKillOverlay(player);
         }
 
         return label.toString();

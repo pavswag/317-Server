@@ -64,7 +64,30 @@ public class BossInstanceManager {
         instance.add(player);
         player.getPA().movePlayerUnconditionally(player.getX(), player.getY(), instance.getHeight());
 
-        spawnInstanceGrid(player, tier, instance);
+        spawnInstanceGrid(player, tier, instance, false);
+        BossInstanceOverlayManager.sendKillOverlay(player);
+    }
+
+    /**
+     * Allows players to preview a boss tier without earning rewards or progress.
+     */
+    public static void preview(Player player, BossTier tier) {
+        if (INSTANCES.containsKey(player)) {
+            player.sendMessage("You are already inside an instance.");
+            return;
+        }
+
+        Boundary bounds = new Boundary(player.getX() - 10, player.getY() - 10,
+                player.getX() + 10, player.getY() + 10);
+
+        BossInstanceArea instance = new BossInstanceArea(player, tier, bounds);
+        INSTANCES.put(player, instance);
+
+        instance.add(player);
+        player.getPA().movePlayerUnconditionally(player.getX(), player.getY(), instance.getHeight());
+
+        spawnInstanceGrid(player, tier, instance, true);
+        player.setPreviewingBossInstance(true);
         BossInstanceOverlayManager.sendKillOverlay(player);
     }
 
@@ -72,7 +95,7 @@ public class BossInstanceManager {
      * Spawn NPCs in a grid around the player so the instance feels populated. NPCs are spaced
      * two tiles apart and up to twenty are spawned using the tier's NPC pool.
      */
-    private static void spawnInstanceGrid(Player player, BossTier tier, BossInstanceArea instance) {
+    private static void spawnInstanceGrid(Player player, BossTier tier, BossInstanceArea instance, boolean preview) {
         int baseX = player.getX();
         int baseY = player.getY();
         int height = instance.getHeight();
@@ -94,8 +117,14 @@ public class BossInstanceManager {
                                 .setDefenceLevel(mob.getDefence())
                                 .createNpcStats());
                 if (npc != null) {
-                    npc.getBehaviour().setRespawn(true);
-                    npc.getBehaviour().setRespawnWhenPlayerOwned(true);
+                    if (preview) {
+                        npc.getBehaviour().setAggressive(false);
+                        npc.getCombatDefinition().setAggressive(false);
+                        npc.getBehaviour().setRespawn(false);
+                    } else {
+                        npc.getBehaviour().setRespawn(true);
+                        npc.getBehaviour().setRespawnWhenPlayerOwned(true);
+                    }
                     instance.add(npc);
                     spawned++;
                 }
@@ -122,6 +151,7 @@ public class BossInstanceManager {
         if (area != null) {
             area.dispose();
         }
+        player.setPreviewingBossInstance(false);
     }
 
     /**

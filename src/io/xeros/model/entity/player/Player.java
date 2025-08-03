@@ -838,6 +838,8 @@ public class Player extends Entity {
     private java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> unlockedBossTiers = java.util.EnumSet.of(io.xeros.content.instances.BossInstanceManager.BossTier.TIER1);
     /** Kill counts tracked per {@link io.xeros.content.instances.BossInstanceManager.BossTier}. */
     private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> tierKillCounts = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
+    /** Whether the player is currently previewing a boss instance tier. */
+    private boolean previewingBossInstance;
     public int totalEarnedExchangePoints;
     public int referallFlag;
     public int amDonated;
@@ -6251,6 +6253,14 @@ public class Player extends Entity {
      */
     public java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> getTierKillCounts() {
         return tierKillCounts;
+    }
+
+    public boolean isPreviewingBossInstance() {
+        return previewingBossInstance;
+    }
+
+    public void setPreviewingBossInstance(boolean previewingBossInstance) {
+        this.previewingBossInstance = previewingBossInstance;
     }
 
     public BlastFurnace getBlastFurnace() {
