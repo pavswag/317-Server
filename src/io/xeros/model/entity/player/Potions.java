@@ -8,6 +8,7 @@ import io.xeros.model.SoundType;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
+import io.xeros.model.entity.npc.actions.AggressionHandler;
 import io.xeros.model.entity.HealthStatus;
 import io.xeros.model.items.ContainerUpdate;
 import io.xeros.model.items.ItemAssistant;
@@ -82,6 +83,7 @@ public class Potions {
         c.InfAgroTimer = 3000;
         c.getPA().sendConfig(36, 1);
         c.usingInfAgro = true;
+        startAggressionTimer();
 
         c.getPA().sendConfig(35, 0);
         c.getPA().sendGameTimer(ClientGameTimer.INF_PRAYER_POT, TimeUnit.MINUTES, 30);
@@ -936,6 +938,7 @@ public class Potions {
         c.getPA().sendConfig(36, 1);
         handleInfArgoTimers();
         c.usingInfAgro = true;
+        startAggressionTimer();
     }
 
     public void drinkRagePot() {
@@ -1258,6 +1261,22 @@ public class Potions {
                 b.stop();
             }
         }, 3000); // 3 minutes
+    }
+
+    private void startAggressionTimer() {
+        c.setAggroTimer(System.currentTimeMillis());
+        CycleEventHandler.getSingleton().stopEvents(c, CycleEventHandler.Event.FORCE_AGGRESSION);
+        AggressionHandler.forceAggro(c, 10);
+        CycleEventHandler.getSingleton().addEvent(CycleEventHandler.Event.FORCE_AGGRESSION, c, new CycleEvent() {
+            @Override
+            public void execute(CycleEventContainer container) {
+                if (c == null || !c.isAggroTimerActive()) {
+                    container.stop();
+                    return;
+                }
+                AggressionHandler.forceAggro(c, 10);
+            }
+        }, 5);
     }
 
     public void handleRageTimers() {

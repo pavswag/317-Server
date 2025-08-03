@@ -216,5 +216,6 @@ public class CycleEventHandler {
         int AFKZone = 10069;
         int WEEKLYDONOS = 10070;
         int BONUSITEMS = 10071;
+        int FORCE_AGGRESSION = 10072;
     }
 }

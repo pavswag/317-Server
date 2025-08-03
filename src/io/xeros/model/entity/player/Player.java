@@ -431,6 +431,7 @@ public class Player extends Entity {
     public StringInput stringInputHandler;
     public AmountInput amountInputHandler;
     private long aggressionTimer = System.currentTimeMillis();
+    private long aggroTimer;
     private boolean printAttackStats = Server.isTest();
     private boolean printDefenceStats = Server.isTest();
     private boolean helpCcMuted = false;
@@ -459,6 +460,14 @@ public class Player extends Entity {
 
     public void resetAggressionTimer() {
         aggressionTimer = System.currentTimeMillis();
+    }
+
+    public void setAggroTimer(long time) {
+        aggroTimer = time;
+    }
+
+    public boolean isAggroTimerActive() {
+        return System.currentTimeMillis() - aggroTimer < TimeUnit.MINUTES.toMillis(2);
     }
 
     public boolean isAggressionTimeout(Player player) {
