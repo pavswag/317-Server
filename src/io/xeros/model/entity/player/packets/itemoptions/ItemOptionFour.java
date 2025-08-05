@@ -18,6 +18,7 @@ import io.xeros.model.items.ItemAction;
 import io.xeros.model.multiplayersession.MultiplayerSessionFinalizeType;
 import io.xeros.model.multiplayersession.MultiplayerSessionStage;
 import io.xeros.model.multiplayersession.MultiplayerSessionType;
+import io.xeros.content.trails.ClueCasketHandler;
 import io.xeros.model.multiplayersession.duel.DuelSession;
 import io.xeros.util.Misc;
 
@@ -74,14 +75,17 @@ public class ItemOptionFour implements PacketType {
 		}
 		TeleportTablets.operate(c, itemId);
 		DuelSession duelSession = (DuelSession) Server.getMultiplayerSessionListener().getMultiplayerSession(c, MultiplayerSessionType.DUEL);
-		if (Objects.nonNull(duelSession) && duelSession.getStage().getStage() > MultiplayerSessionStage.REQUEST
-				&& duelSession.getStage().getStage() < MultiplayerSessionStage.FURTHER_INTERATION) {
-			c.sendMessage("Your actions have declined the duel.");
-			duelSession.getOther(c).sendMessage("The challenger has declined the duel.");
-			duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
-			return;
-		}
-		Optional<DegradableItem> d = DegradableItem.forId(itemId);
+                if (Objects.nonNull(duelSession) && duelSession.getStage().getStage() > MultiplayerSessionStage.REQUEST
+                                && duelSession.getStage().getStage() < MultiplayerSessionStage.FURTHER_INTERATION) {
+                        c.sendMessage("Your actions have declined the duel.");
+                        duelSession.getOther(c).sendMessage("The challenger has declined the duel.");
+                        duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
+                        return;
+                }
+                if (ClueCasketHandler.bulkOpenCasket(c, itemId, c.getItems().getItemAmount(itemId))) {
+                        return;
+                }
+                Optional<DegradableItem> d = DegradableItem.forId(itemId);
 		if (d.isPresent()) {
 			Degrade.checkPercentage(c, itemId);
 			return;

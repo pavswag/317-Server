@@ -1,0 +1,56 @@
+[
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 15,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "MEDIUM",
+    "taskType": "COMBAT",
+    "weekly": false,
+    "localDateTime": "2025-07-30T10:04:50.6628972",
+    "desc": "Alchemical Hydra"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 100,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "MEDIUM",
+    "taskType": "SKILLING",
+    "weekly": false,
+    "localDateTime": "2025-07-30T10:04:50.6678982",
+    "desc": "Cut @whi@Maple Trees"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 300,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "HARD",
+    "taskType": "COMBAT",
+    "weekly": true,
+    "localDateTime": "2025-07-31T09:04:50.6688981",
+    "desc": "K\u0027ril Tsutsaroth"
+  }
+]

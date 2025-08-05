@@ -537,6 +537,7 @@ public class Region {
     public static void load() {
         try {
             System.out.println("Loading mapdata..");
+            MapLoadLogger.log("Region.load", -1, "map_index", false, true, null);
             File f = new File("./mapdata/map_index");
             byte[] buffer = new byte[(int) f.length()];
             DataInputStream dis = new DataInputStream(new FileInputStream(f));
@@ -548,6 +549,7 @@ public class Region {
             int[] mapGroundFileIds = new int[size];
             int[] mapObjectsFileIds = new int[size];
             RegionData[] data = new RegionData[size];
+            regions.clear();
             for (int i = 0; i < size; i++) {
                 regionIds[i] = in.readUnsignedWord();
                 mapGroundFileIds[i] = in.readUnsignedWord();
@@ -557,7 +559,9 @@ public class Region {
             for (int i = 0; i < size; i++) {
                 RegionProvider.getGlobal().add(new Region(RegionProvider.getGlobal(), regionIds[i], false));
             }
-            Arrays.stream(data).forEach(Region::loadMap);
+            for (RegionData regionData : data) {
+                loadMap(regionData);
+            }
             Arrays.asList(EXISTANT_OBJECTS).forEach(object -> RegionProvider.getGlobal().get(object.getX(), object.getY()).addWorldObject(object));
             log.info("Loaded " + customMapFiles + " custom maps.");
             log.info("Error loading map files: " + errors.toString());
@@ -655,20 +659,28 @@ public class Region {
         return null;
     }
 
-    private static void loadMap(RegionData regionData) {
+    private static boolean loadMap(RegionData regionData) {
+        int regionId = regionData.getRegionHash();
+        String mapFile = regionData.getObjects() + "," + regionData.getLandscape();
+        boolean alreadyLoaded = regions.containsKey(regionId);
         try {
             byte[] file1 = getBuffer(new File("./mapdata/index4/" + regionData.getObjects() + ".gz"));
             byte[] file2 = getBuffer(new File("./mapdata/index4/" + regionData.getLandscape() + ".gz"));
-            if (file1 == null || file2 == null) {
-                return;
+            if (file1 == null || file1.length == 0 || file2 == null || file2.length == 0) {
+                System.err.println("[Map] Missing or corrupt map for regionId=" + regionId);
+                MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, false, null);
+                return false;
             }
-            loadMaps(regionData.getRegionHash(), new ByteStream(file1), new ByteStream(file2));
+            loadMaps(regionId, new ByteStream(file1), new ByteStream(file2));
+            MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, true, null);
+            regions.put(regionId, regionData);
+            return true;
         } catch (Exception e) {
             errors.add(regionData.getLandscape());
             errors.add(regionData.getObjects());
+            MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, false, e);
+            return false;
         }
-        //System.out.println("Error loading map region: " + regionData.getRegionHash() + ", objectFile: " + regionData.getObjects() + ", floorFile: " + regionData.getLandscape());
-        //e.printStackTrace();
     }
 
     private static final int[][] fixClips = {{2207, 3057},
