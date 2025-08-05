@@ -98,10 +98,6 @@ public class ItemOptionTwo implements PacketType {
                         return;
                 }
 
-                if (ClueCasketHandler.bulkOpenCasket(player, itemId, 5)) {
-                        return;
-                }
-
                 if (JarsToPoints.open(player, itemId)) {
                         return;
                 }

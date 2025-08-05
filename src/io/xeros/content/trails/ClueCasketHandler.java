@@ -9,11 +9,14 @@ import io.xeros.model.entity.player.Player;
 import io.xeros.model.items.GameItem;
 import io.xeros.util.Misc;
 
+import static io.xeros.content.trails.RewardLevel.MASTER;
+import io.xeros.content.trails.MasterClue;
+
 import java.util.*;
 
 public class ClueCasketHandler {
 
-    public static boolean bulkOpenCasket(Player player, int itemId, int amount) {
+    public static boolean openAll(Player player, int itemId) {
         RewardLevel level = null;
         boolean isCasket = false;
         for (RewardLevel rl : RewardLevel.values()) {
@@ -31,8 +34,7 @@ public class ClueCasketHandler {
             return false;
         }
 
-        int owned = player.getItems().getItemAmount(itemId);
-        amount = Math.min(amount, owned);
+        int amount = player.getItems().getItemAmount(itemId);
         if (amount <= 0) {
             return false;
         }
@@ -47,6 +49,9 @@ public class ClueCasketHandler {
     }
 
     private static void openScrolls(Player player, RewardLevel level, int amount) {
+        if (level == MASTER && !MasterClue.checkRequirementOnOpen(player)) {
+            return;
+        }
         int mimic = 0;
         int caskets = 0;
         for (int i = 0; i < amount; i++) {

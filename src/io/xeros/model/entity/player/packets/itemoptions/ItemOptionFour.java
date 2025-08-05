@@ -82,9 +82,6 @@ public class ItemOptionFour implements PacketType {
                         duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
                         return;
                 }
-                if (ClueCasketHandler.bulkOpenCasket(c, itemId, c.getItems().getItemAmount(itemId))) {
-                        return;
-                }
                 Optional<DegradableItem> d = DegradableItem.forId(itemId);
 		if (d.isPresent()) {
 			Degrade.checkPercentage(c, itemId);

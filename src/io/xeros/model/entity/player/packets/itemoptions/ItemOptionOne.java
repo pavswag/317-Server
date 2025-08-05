@@ -36,7 +36,7 @@ import io.xeros.content.skills.prayer.Prayer;
 import io.xeros.content.skills.runecrafting.Pouches;
 import io.xeros.content.skills.slayer.SlayerUnlock;
 import io.xeros.content.teleportation.TeleportTablets;
-import io.xeros.content.trails.TreasureTrails;
+import io.xeros.content.trails.ClueCasketHandler;
 import io.xeros.model.Graphic;
 import io.xeros.model.Items;
 import io.xeros.model.Npcs;
@@ -968,7 +968,7 @@ public class ItemOptionOne implements PacketType {
         if (SanguinestiStaff.clickItem(c, itemId, 1)) {
             return;
         }
-        if (TreasureTrails.firstClickItem(c, itemId)) {
+        if (ClueCasketHandler.openAll(c, itemId)) {
             return;
         }
 
