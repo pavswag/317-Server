@@ -114,7 +114,6 @@ public class BossInstanceDialogue extends DialogueBuilder {
         // Sanitize the zone to avoid invisible or client-breaking characters.
         zone = zone.replaceAll("[^\\p{ASCII}]", "");
         zone = zone.replaceAll("[–—•]", "-");
-
         StringBuilder label = new StringBuilder(BossInstanceManager.getTierDisplayNameSafe(tier, player));
 
         // Append up to three key drop names
@@ -137,7 +136,6 @@ public class BossInstanceDialogue extends DialogueBuilder {
         // Strip any remaining non-ASCII characters after building the label.
         result = result.replaceAll("[^\\p{ASCII}]", "");
         result = result.replaceAll("[–—•]", "-");
-
         if (result.length() > MAX_OPTION_LENGTH) {
             Misc.println("BossInstanceDialogue truncating label for " + tier + " from " + result.length() + " chars: " + result);
             result = result.substring(0, MAX_OPTION_LENGTH - 3) + "...";
