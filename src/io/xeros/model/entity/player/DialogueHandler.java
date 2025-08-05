@@ -2980,13 +2980,45 @@ public class DialogueHandler {
 		c.getPA().sendChatboxInterface(2459);
 	}
 
-	public void sendOption2(String title, String s, String s1) {
-		c.dialogueOptions = 2;
-		c.getPA().sendFrame126(title, 2460);
-		c.getPA().sendFrame126(s, 2461);
-		c.getPA().sendFrame126(s1, 2462);
-		c.getPA().sendChatboxInterface(2459);
-	}
+        public void sendOption2(String title, String s, String s1) {
+                c.dialogueOptions = 2;
+                c.getPA().sendFrame126(title, 2460);
+                c.getPA().sendFrame126(s, 2461);
+                c.getPA().sendFrame126(s1, 2462);
+                c.getPA().sendChatboxInterface(2459);
+        }
+
+        /**
+         * Sends an option dialogue with a custom title. Any null or empty option strings are
+         * replaced with an "@red@Unavailable" placeholder to avoid invisible entries.
+         */
+        public void sendOptionDialogue(String title, String... options) {
+                if (options.length < 2) {
+                        return;
+                }
+                for (int i = 0; i < options.length; i++) {
+                        if (options[i] == null || options[i].isEmpty()) {
+                                options[i] = "@red@Unavailable";
+                        }
+                }
+                switch (options.length) {
+                        case 2:
+                                sendOption2(title, options[0], options[1]);
+                                break;
+                        case 3:
+                                sendOption3(options[0], options[1], options[2]);
+                                c.getPA().sendFrame126(title, 2470);
+                                break;
+                        case 4:
+                                sendOption4(options[0], options[1], options[2], options[3]);
+                                c.getPA().sendFrame126(title, 2481);
+                                break;
+                        case 5:
+                                sendOption5(options[0], options[1], options[2], options[3], options[4]);
+                                c.getPA().sendFrame126(title, 2493);
+                                break;
+                }
+        }
 
 	private void sendOption3(String s, String s1, String s2) {
 		c.dialogueOptions = 3;
