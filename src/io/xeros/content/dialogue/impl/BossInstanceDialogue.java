@@ -11,6 +11,7 @@ import io.xeros.model.items.GameItem;
 import io.xeros.util.Misc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,15 +143,6 @@ public class BossInstanceDialogue extends DialogueBuilder {
             int required = prev != null ? prev.getRequiredKillCountToUnlockNext() : tier.getKillRequirement();
             int remaining = Math.max(0, required - progress);
             player.sendMessage("You must kill " + remaining + " more to unlock this tier.");
-            final int currentPage = this.page;
-            player.start(new DialogueBuilder(player)
-                    .option("Preview this tier?",
-                            new DialogueOption("Preview Tier", p -> {
-                                BossInstanceManager.preview(p, tier);
-                                p.getPA().closeAllWindows();
-                            }),
-                            new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, currentPage)))
-                    ));
         }
     }
 }

@@ -14,8 +14,8 @@
     "taskDifficulty": "EASY",
     "taskType": "COMBAT",
     "weekly": true,
-    "localDateTime": "2025-08-01T16:33:55.4648099",
-    "desc": "Kree\u0027arra"
+    "localDateTime": "2025-08-03T16:15:02.9755457",
+    "desc": "Corporeal Beast"
   },
   {
     "items": [
@@ -26,31 +26,31 @@
         "stackable": false
       }
     ],
-    "amountToKill": 150,
+    "amountToKill": 10,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "EASY",
+    "taskType": "COMBAT",
+    "weekly": false,
+    "localDateTime": "2025-08-02T21:00:07.5440149",
+    "desc": "Kalphite Queen"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 250,
     "claimedReward": false,
     "amountKilled": 0,
     "taskDifficulty": "HARD",
     "taskType": "SKILLING",
     "weekly": false,
-    "localDateTime": "2025-07-31T20:25:49.7203795",
-    "desc": "Craft @whi@d\u0027hide body"
-  },
-  {
-    "items": [
-      {
-        "id": 995,
-        "amount": 25000,
-        "slot": 0,
-        "stackable": false
-      }
-    ],
-    "amountToKill": 100,
-    "claimedReward": false,
-    "amountKilled": 0,
-    "taskDifficulty": "HARD",
-    "taskType": "COMBAT",
-    "weekly": false,
-    "localDateTime": "2025-07-31T20:25:49.7253819",
-    "desc": "Kraken"
+    "localDateTime": "2025-08-02T21:00:07.5480152",
+    "desc": "Use @whi@Dragon bones(altar)"
   }
 ]

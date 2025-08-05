@@ -26,4 +26,3 @@ public class Instance extends Command {
         return Optional.of("Shows boss instance progress.");
     }
 }
-

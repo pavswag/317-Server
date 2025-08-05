@@ -19,15 +19,12 @@ public class BossInstanceOverlayManager {
 
         BossInstanceManager.BossTier tier = area.getTier();
         int current = player.getTierKillCounts().getOrDefault(tier, 0);
-        int required = tier.getRequiredKillCountToUnlockNext();
-        int remaining = Math.max(0, required - current);
         BossInstanceManager.BossTier next = tier.getNextTier();
 
-        player.getPA().sendFrame126("\uD83E\uDDF1 Instance Tier: " + BossInstanceManager.getTierDisplayNameSafe(tier), 8144);
-        player.getPA().sendFrame126("\u2694\uFE0F Kills: " + current + "/" + required, 8145);
-        String unlockText = next == null ? "Maxed" : (remaining + " more kills");
-        player.getPA().sendFrame126("\uD83D\uDD13 Next Tier: " + unlockText, 8146);
-        player.getPA().sendFrame126("", 8147);
+//        player.getPA().sendFrame126("\uD83E\uDDF1 Tier: " + BossInstanceManager.getTierDisplayNameSafe(tier), 8144);
+//        player.getPA().sendFrame126("\u2620\uFE0F Kills: " + current + " / " + tier.getRequiredKillCountToUnlockNext(), 8145);
+//        player.getPA().sendFrame126("\uD83D\uDD13 Unlocks: " + (next != null ? BossInstanceManager.getTierDisplayNameSafe(next) : "Maxed"), 8146);
+//        player.getPA().sendFrame126("", 8147);
         player.getPA().sendFrame126("", 8148);
     }
 
