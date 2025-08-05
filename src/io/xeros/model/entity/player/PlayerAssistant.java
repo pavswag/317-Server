@@ -38,6 +38,7 @@ import io.xeros.content.skills.crafting.Enchantment;
 import io.xeros.content.skills.fletching.Fletching;
 import io.xeros.content.skills.mining.Mineral;
 import io.xeros.content.skills.slayer.SlayerUnlock;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.skills.slayer.Task;
 import io.xeros.content.skills.smithing.Smelting;
 import io.xeros.content.skills.smithing.Smelting.Bars;
@@ -732,12 +733,12 @@ public class PlayerAssistant {
 		movePlayer(x, y, player.heightLevel);
 	}
 
-	public void movePlayer(int x, int y, int h) {
-		if (Server.getMultiplayerSessionListener().inAnySession(player)) {
-			if (!player.isDead) {
-				return;
-			}
-		}
+        public void movePlayer(int x, int y, int h) {
+                if (Server.getMultiplayerSessionListener().inAnySession(player)) {
+                        if (!player.isDead) {
+                                return;
+                        }
+                }
 		if (player.jailEnd > 1) {
 			player.forcedChat("I'm trying to teleport away!");
 			player.sendMessage("You are still jailed!");
@@ -759,32 +760,34 @@ public class PlayerAssistant {
 		if (player.getSlayer().superiorSpawned) {
 			player.getSlayer().superiorSpawned = false;
 		}
-		player.getPA().closeAllWindows();
-		player.resetWalkingQueue();
-		player.attacking.reset();
-		player.setTeleportToX(x);
-		player.setTeleportToY(y);
-		player.heightLevel = h;
-		player.teleTimer = 2;
-		requestUpdates();
-	}
+                BossInstanceManager.leave(player);
+                player.getPA().closeAllWindows();
+                player.resetWalkingQueue();
+                player.attacking.reset();
+                player.setTeleportToX(x);
+                player.setTeleportToY(y);
+                player.heightLevel = h;
+                player.teleTimer = 2;
+                requestUpdates();
+        }
 
-	public void forceMove(int x, int y, int h, boolean forXlog) {
-		player.resetWalkingQueue();
-		player.attacking.reset();
-		player.setTeleportToX(x);
-		player.setTeleportToY(y);
-		player.getPA().closeAllWindows();
-		player.heightLevel = h;
-		player.teleTimer = 2;
-		if (forXlog) {
-			player.absX = x;
-			player.absY = y;
-			player.heightLevel = h;
-			player.updateController();
-		}
-		requestUpdates();
-	}
+        public void forceMove(int x, int y, int h, boolean forXlog) {
+                BossInstanceManager.leave(player);
+                player.resetWalkingQueue();
+                player.attacking.reset();
+                player.setTeleportToX(x);
+                player.setTeleportToY(y);
+                player.getPA().closeAllWindows();
+                player.heightLevel = h;
+                player.teleTimer = 2;
+                if (forXlog) {
+                        player.absX = x;
+                        player.absY = y;
+                        player.heightLevel = h;
+                        player.updateController();
+                }
+                requestUpdates();
+        }
 
 	public void movePlayer(Coordinate coord) {
 		movePlayer(coord.getX(), coord.getY(), coord.getH());
