@@ -29,6 +29,9 @@ public class BossInstanceDialogue extends DialogueBuilder {
     /** Maximum number of options shown per page. */
     private static final int OPTIONS_PER_PAGE = 5;
 
+    /** Maximum length of an option label before it is truncated. */
+    private static final int MAX_OPTION_LENGTH = 50;
+
     /** Current page being viewed. */
     private final int page;
 
@@ -71,7 +74,6 @@ public class BossInstanceDialogue extends DialogueBuilder {
             BossTier tier = tiers[startIndex + i];
             displayed.add(tier);
             String label = buildTierLabel(player, tier);
-            Misc.println("BossInstanceDialogue option " + (startIndex + i) + ": " + label);
             final int slot = opts.size();
             opts.add(new DialogueOption(label, p -> run(0, slot)));
         }
@@ -92,11 +94,21 @@ public class BossInstanceDialogue extends DialogueBuilder {
 
     /**
      * Builds a safe, colour-coded label for a tier showing progress and key drops.
+     * <p>
+     * The resulting string is logged and truncated if it exceeds {@link #MAX_OPTION_LENGTH}
+     * to prevent invisible dialogue options.
+     * </p>
      */
     private String buildTierLabel(Player player, BossTier tier) {
         if (tier == null) {
             Misc.println("BossInstanceDialogue warning: null tier label");
             return "@red@Unavailable";
+        }
+
+        String zone = tier.getZoneName();
+        if (zone == null || zone.trim().isEmpty()) {
+            zone = "Unknown Zone";
+            Misc.println("BossInstanceDialogue warning: missing zone name for " + tier);
         }
 
         StringBuilder label = new StringBuilder(BossInstanceManager.getTierDisplayNameSafe(tier, player));
@@ -116,7 +128,14 @@ public class BossInstanceDialogue extends DialogueBuilder {
             }
         }
 
-        return label.toString();
+        String result = label.toString();
+        if (result.length() > MAX_OPTION_LENGTH) {
+            Misc.println("BossInstanceDialogue truncating label for " + tier + " from " + result.length() + " chars: " + result);
+            result = result.substring(0, MAX_OPTION_LENGTH - 3) + "...";
+        }
+
+        Misc.println("BossInstanceDialogue option tier=" + tier + " zone=" + zone + " display=" + result);
+        return result;
     }
 
     /**
