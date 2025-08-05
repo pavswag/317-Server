@@ -304,7 +304,21 @@ public class BossInstanceManager {
             Misc.println("BossInstanceManager warning: missing zone name for " + tier);
             zone = "Unknown";
         }
-        String base = "Tier " + (tier.ordinal() + 1) + " – " + zone;
+
+        // Strip non ASCII characters and normalise special dashes so the
+        // dialogue renders consistently across clients.
+        zone = zone.replaceAll("[^\\p{ASCII}]", "");
+        zone = zone.replaceAll("[–—•]", "-");
+
+        String base = "Tier " + (tier.ordinal() + 1) + " - " + zone;
+
+        // Hard cap the length to avoid invisible options.
+        if (base.length() > 50) {
+            base = base.substring(0, 47) + "...";
+        }
+
+        Misc.println("AOE Dialogue: " + base);
+
         if (player == null) {
             return base;
         }
