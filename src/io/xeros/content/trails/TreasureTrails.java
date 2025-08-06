@@ -180,7 +180,7 @@ public class TreasureTrails {
                                 PetHandler.roll(player, PetHandler.Pets.BLOODHOUND);
                                 break;
                 }
-                GlobalBossActivityManager.record(ActivityType.CLUES, 1);
+                GlobalBossActivityManager.record(ActivityType.CLUE_CASKET, 1);
         }
 
 	private static void openClueScroll(Player c, RewardLevel rewardLevel) {

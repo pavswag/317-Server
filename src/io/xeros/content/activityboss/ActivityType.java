@@ -5,11 +5,13 @@ package io.xeros.content.activityboss;
  */
 public enum ActivityType {
     /** Item upgrades done through the upgrade interface. */
-    UPGRADES,
-    /** Completion of clue scrolls. */
-    CLUES,
-    /** Upgrade points burnt in the Fire of Exchange. */
-    FIRE_OF_EXCHANGE,
-    /** Player achieves a large PvP killstreak. */
-    KILLSTREAK
+    UPGRADE_ITEM,
+    /** Completion of clue caskets. */
+    CLUE_CASKET,
+    /** GP burnt in the Fire of Exchange. */
+    FOE_BURN,
+    /** Player achieves a 10+ killstreak. */
+    KILLSTREAK_10,
+    /** Players claiming vote rewards. */
+    VOTE_CLAIM
 }

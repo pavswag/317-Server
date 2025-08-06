@@ -6560,9 +6560,25 @@ public class Player extends Entity {
         return bossAlerts;
     }
 
+    public boolean isBossAlerts() {
+        return bossAlerts;
+    }
+
     public void setBossAlerts(boolean bossAlerts) {
         this.bossAlerts = bossAlerts;
     }
+
+    public Deque<String> getBossContributions() {
+        return bossContributions;
+    }
+
+    public void addBossContribution(String boss, int damage, int rank) {
+        bossContributions.addFirst(boss + "," + damage + "," + rank);
+        while (bossContributions.size() > 5) {
+            bossContributions.removeLast();
+        }
+    }
+
 
     public Deque<String> getBossContributions() {
         return bossContributions;
