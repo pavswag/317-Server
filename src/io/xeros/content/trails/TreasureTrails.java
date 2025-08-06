@@ -125,27 +125,29 @@ public class TreasureTrails {
 		displayRewards(rewards);
 	}
 
-	public void displayRewards(List<GameItem> rewards) {
-		player.outStream.createFrameVarSizeWord(53);
-		player.outStream.writeUnsignedWord(6963);
-		player.outStream.writeUnsignedWord(rewards.size());
-		for (int i = 0; i < rewards.size(); i++) {
-			if (player.playerItemsN[i] > 254) {
-				player.outStream.writeByte(255);
-				player.outStream.writeDWord_v2(rewards.get(i).getAmount());
-			} else {
-				player.outStream.writeByte(rewards.get(i).getAmount());
-			}
-			if (rewards.size() > 0) {
-				player.outStream.writeWordBigEndianA(rewards.get(i).getId() + 1);
-			} else {
-				player.outStream.writeWordBigEndianA(0);
-			}
-		}
-		player.outStream.endFrameVarSizeWord();
-		player.flushOutStream();
-		player.getPA().showInterface(6960);
-	}
+        public void displayRewards(List<GameItem> rewards) {
+                int displayCount = Math.min(28, rewards.size());
+                player.outStream.createFrameVarSizeWord(53);
+                player.outStream.writeUnsignedWord(6963);
+                player.outStream.writeUnsignedWord(displayCount);
+                for (int i = 0; i < displayCount; i++) {
+                        GameItem reward = rewards.get(i);
+                        if (reward.getAmount() > 254) {
+                                player.outStream.writeByte(255);
+                                player.outStream.writeDWord_v2(reward.getAmount());
+                        } else {
+                                player.outStream.writeByte(reward.getAmount());
+                        }
+                        if (reward.getId() > 0) {
+                                player.outStream.writeWordBigEndianA(reward.getId() + 1);
+                        } else {
+                                player.outStream.writeWordBigEndianA(0);
+                        }
+                }
+                player.outStream.endFrameVarSizeWord();
+                player.flushOutStream();
+                player.getPA().showInterface(6960);
+        }
 
 	private static void openCasket(Player player, RewardLevel rewardLevel) {
 		if (player.getItems().freeSlots() < 3) {
