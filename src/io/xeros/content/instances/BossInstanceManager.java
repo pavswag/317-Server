@@ -58,12 +58,14 @@ public class BossInstanceManager {
         private final int hitpoints;
         private final int attack;
         private final int defence;
+        private final int count;
 
-        public BossMob(int npcId, int hitpoints, int attack, int defence) {
+        public BossMob(int npcId, int hitpoints, int attack, int defence, int count) {
             this.npcId = npcId;
             this.hitpoints = hitpoints;
             this.attack = attack;
             this.defence = defence;
+            this.count = count;
         }
 
         public int getNpcId() {
@@ -81,6 +83,10 @@ public class BossInstanceManager {
         public int getDefence() {
             return defence;
         }
+
+        public int getCount() {
+            return count;
+        }
     }
 
     /**
@@ -89,25 +95,25 @@ public class BossInstanceManager {
      */
     public enum BossTier {
         TIER1("Training Grounds", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 0, 0, -1, 5, Npcs.COW,
-                new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1)}),
+                new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1, 5)}),
         TIER2("Goblin Camp", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.GOBLIN,
-                new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5)}),
+                new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5, 5)}),
         TIER3("Giants' Den", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT,
-                new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20)}),
+                new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20, 6)}),
         TIER4("Moss Cave", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.MOSS_GIANT,
-                new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40)}),
+                new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40, 6)}),
         TIER5("Fire Pit", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT,
-                new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60)}),
+                new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60, 7)}),
         TIER6("Green Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.GREEN_DRAGON,
-                new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90)}),
+                new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90, 7)}),
         TIER7("Red Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.RED_DRAGON,
-                new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110)}),
+                new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110, 8)}),
         TIER8("Black Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON,
-                new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130)}),
+                new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130, 8)}),
         TIER9("Demon Domain", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON,
-                new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150)}),
+                new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150, 9)}),
         TIER10("Dragon King", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON,
-                new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180)});
+                new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180, 1)});
 
         static {
             TIER1.requiredKillCountToUnlockNext = 25;  TIER1.nextTier = TIER2;
@@ -249,7 +255,7 @@ public class BossInstanceManager {
 
     /**
      * Spawns NPCs randomly inside the tier's boundary so the instance feels populated.
-     * Up to twenty NPCs are spawned from the tier mob pool within the defined zone.
+     * Each {@link BossMob} defines how many creatures should appear for the tier.
      */
     private static void spawnInstanceGrid(Player player, BossTier tier, BossInstanceArea area, boolean preview) {
         Boundary bounds = tier.getZoneBoundary();
@@ -260,26 +266,27 @@ public class BossInstanceManager {
             return;
         }
 
-        int spawned = 0;
-        for (int attempts = 0; attempts < 100 && spawned < 20; attempts++) {
-            BossMob mob = mobs[Misc.random(mobs.length - 1)];
-            int x = Misc.random(bounds.getMinimumX() + 1, bounds.getMaximumX() - 1);
-            int y = Misc.random(bounds.getMinimumY() + 1, bounds.getMaximumY() - 1);
-            NPC npc = NPCSpawning.spawnNpc(player, mob.getNpcId(), x, y,
-                    height, 0, 0, false, false,
-                    NpcStats.builder()
-                            .setHitpoints(mob.getHitpoints())
-                            .setAttackLevel(mob.getAttack())
-                            .setDefenceLevel(mob.getDefence())
-                            .createNpcStats());
-            if (npc != null) {
-                if (preview) {
-                    npc.getBehaviour().setAggressive(false);
-                    npc.getCombatDefinition().setAggressive(false);
-                    npc.getBehaviour().setRespawn(false);
-                } else {
-                    npc.getBehaviour().setRespawn(true);
-                    npc.getBehaviour().setRespawnWhenPlayerOwned(true);
+        for (BossMob mob : mobs) {
+            for (int i = 0; i < mob.getCount(); i++) {
+                int x = Misc.random(bounds.getMinimumX() + 1, bounds.getMaximumX() - 1);
+                int y = Misc.random(bounds.getMinimumY() + 1, bounds.getMaximumY() - 1);
+                NPC npc = NPCSpawning.spawnNpc(player, mob.getNpcId(), x, y,
+                        height, 0, 0, false, false,
+                        NpcStats.builder()
+                                .setHitpoints(mob.getHitpoints())
+                                .setAttackLevel(mob.getAttack())
+                                .setDefenceLevel(mob.getDefence())
+                                .createNpcStats());
+                if (npc != null) {
+                    if (preview) {
+                        npc.getBehaviour().setAggressive(false);
+                        npc.getCombatDefinition().setAggressive(false);
+                        npc.getBehaviour().setRespawn(false);
+                    } else {
+                        npc.getBehaviour().setRespawn(true);
+                        npc.getBehaviour().setRespawnWhenPlayerOwned(true);
+                    }
+                    area.add(npc);
                 }
                 area.add(npc);
                 spawned++;
