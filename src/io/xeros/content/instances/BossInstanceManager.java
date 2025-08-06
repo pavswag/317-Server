@@ -33,7 +33,7 @@ public class BossInstanceManager {
         private final BossTier tier;
 
         BossInstanceArea(Player owner, BossTier tier, Boundary boundary) {
-            super(InstanceConfiguration.CLOSE_ON_EMPTY, owner, boundary);
+            super(InstanceConfiguration.CLOSE_ON_EMPTY_RESPAWN, owner, boundary);
             this.owner = owner;
             this.tier = tier;
         }
