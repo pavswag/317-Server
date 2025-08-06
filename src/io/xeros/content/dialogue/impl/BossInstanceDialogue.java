@@ -1,20 +1,42 @@
 package io.xeros.content.dialogue.impl;
 
+import io.xeros.Server;
 import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
 import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.instances.BossInstanceManager.BossTier;
-import java.util.Arrays;
 import io.xeros.model.definitions.ItemDef;
 import io.xeros.model.entity.player.Player;
+import io.xeros.model.items.GameItem;
 import io.xeros.util.Misc;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * Dialogue allowing players to enter or unlock personal boss tiers.
+ * Dialogue allowing players to select and enter boss instance tiers.
+ *
+ * <p>This implementation avoids blank options, colour codes locked/unlocked tiers
+ * and supports pagination when more than five tiers exist.</p>
  */
 public class BossInstanceDialogue extends DialogueBuilder {
 
+    /** NPC used for the dialogue head. */
     private static final int NPC_ID = io.xeros.model.Npcs.INSTANCE_MASTER;
+
+    /** Maximum number of options shown per page. */
+    private static final int OPTIONS_PER_PAGE = 5;
+
+    /** Maximum length of an option label before it is truncated. */
+    private static final int MAX_OPTION_LENGTH = 50;
+
+    /** Current page being viewed. */
+    private final int page;
+
+    /** Tiers displayed on the current page mapped by slot. */
+    private final List<BossTier> displayed = new ArrayList<>(OPTIONS_PER_PAGE);
 
     public BossInstanceDialogue(Player player) {
         this(player, 0);
@@ -22,107 +44,131 @@ public class BossInstanceDialogue extends DialogueBuilder {
 
     private BossInstanceDialogue(Player player, int page) {
         super(player);
+        this.page = page;
         setNpcId(NPC_ID);
-        tierMenu(page);
+        start();
     }
 
     /**
-     * Displays the tier selection menu.
+     * Builds and sends the tier options for the current page. Any unused slots
+     * are filled with a red "Unavailable" placeholder to prevent blank lines.
      */
-    private static final int TIERS_PER_PAGE = 2;
-
-    private void tierMenu(int page) {
+    public void start() {
+        Player player = getPlayer();
         BossTier[] tiers = BossTier.values();
-        int start = page * TIERS_PER_PAGE;
-        int end = Math.min(start + TIERS_PER_PAGE, tiers.length);
 
-        // Debug the tiers being shown on this page
-        Misc.println("BossInstanceDialogue page " + page + " tiers: " + Arrays.toString(Arrays.copyOfRange(tiers, start, end)));
+        int startIndex = page * OPTIONS_PER_PAGE;
 
-        // Allocate enough room for tiers plus navigation and exit
-        DialogueOption[] options = new DialogueOption[TIERS_PER_PAGE + 3];
-        int ptr = 0;
-        for (int i = start; i < end; i++) {
-            BossTier tier = tiers[i];
-            options[ptr++] = new DialogueOption(optionText(tier), p -> selectTier(tier));
+        displayed.clear();
+
+        Misc.println("BossInstanceDialogue open page=" + page + " unlocked=" + player.getUnlockedBossTiers());
+
+        List<DialogueOption> opts = new ArrayList<>();
+
+        boolean addBack = page > 0;
+        boolean addMore = startIndex + OPTIONS_PER_PAGE < tiers.length;
+
+        int capacity = OPTIONS_PER_PAGE - (addBack ? 1 : 0) - (addMore ? 1 : 0);
+
+        for (int i = 0; i < capacity && startIndex + i < tiers.length; i++) {
+            BossTier tier = tiers[startIndex + i];
+            displayed.add(tier);
+            String label = buildTierLabel(player, tier);
+            final int slot = opts.size();
+            opts.add(new DialogueOption(label, p -> run(0, slot)));
         }
-        if (page > 0) {
-            int prev = page - 1;
-            options[ptr++] = new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, prev)));
-        }
-        if (end < tiers.length) {
-            int next = page + 1;
-            options[ptr++] = new DialogueOption("More", p -> p.start(new BossInstanceDialogue(p, next)));
-        }
-        options[ptr++] = DialogueOption.nevermind();
-        option(Arrays.copyOf(options, ptr));
-    }
 
-    private String optionText(BossTier tier) {
-        Player player = getPlayer();
-        boolean unlocked = player.getUnlockedBossTiers().contains(tier);
-        String colour = unlocked ? "@gre@" : "@red@";
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(colour).append(BossInstanceManager.getTierDisplayNameSafe(tier));
-
-        if (unlocked) {
-            sb.append(" - Unlocked");
-        } else {
-            BossTier prev = Arrays.stream(BossTier.values())
-                    .filter(t -> t.getNextTier() == tier)
-                    .findFirst()
-                    .orElse(null);
-            if (prev != null) {
-                int current = player.getTierKillCounts().getOrDefault(prev, 0);
-                int required = prev.getRequiredKillCountToUnlockNext();
-                sb.append(" - ").append(current).append("/").append(required).append(" kills");
-                if (current >= required) {
-                    sb.append(" (Ready!)");
-                } else {
-                    sb.append(" (Progressing...)");
-                }
-            }
+        if (addBack) {
+            displayed.add(null);
+            opts.add(new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, page - 1))));
         }
-        return sb.toString();
+        if (addMore) {
+            displayed.add(null);
+            opts.add(new DialogueOption("More", p -> p.start(new BossInstanceDialogue(p, page + 1))));
+        }
+
+        String[] labels = opts.stream().map(DialogueOption::getTitle).toArray(String[]::new);
+        player.getDH().sendOptionDialogue("Choose a Boss Tier", labels);
+        option("Choose a Boss Tier", opts.toArray(new DialogueOption[0]));
     }
 
     /**
-     * Handles unlocking and entering the chosen tier.
+     * Builds a safe, colour-coded label for a tier showing progress and key drops.
+     * <p>
+     * The resulting string is logged and truncated if it exceeds {@link #MAX_OPTION_LENGTH}
+     * to prevent invisible dialogue options.
+     * </p>
      */
-    private void selectTier(BossTier tier) {
-        Player player = getPlayer();
-        Misc.println("BossInstanceDialogue selected tier: " + (tier == null ? "null" : tier.name()));
-        if (!player.getUnlockedBossTiers().contains(tier)) {
-            if (tier.getKillCount(player) < tier.getKillRequirement()) {
-                String name = io.xeros.model.definitions.NpcDef.forId(tier.getKillNpcId()).getName();
-                player.sendMessage("You need " + tier.getKillRequirement() + " " + name + " kills to unlock this tier.");
-                player.getPA().closeAllWindows();
-                return;
-            }
-            if (tier.getItemRequirement() > 0 && !player.getItems().playerHasItem(tier.getItemRequirement())) {
-                player.sendMessage("You need a " + ItemDef.forId(tier.getItemRequirement()).getName() + " to unlock this tier.");
-                player.getPA().closeAllWindows();
-                return;
-            }
-            if (tier.getGpCost() > 0 && !player.getItems().playerHasItem(995, tier.getGpCost())) {
-                player.sendMessage("You need " + Misc.formatCoins(tier.getGpCost()) + " coins to unlock this tier.");
-                player.getPA().closeAllWindows();
-                return;
-            }
-
-            if (tier.getItemRequirement() > 0) {
-                player.getItems().deleteItem(tier.getItemRequirement(), 1);
-            }
-            if (tier.getGpCost() > 0) {
-                player.getItems().deleteItem(995, tier.getGpCost());
-            }
-            player.getUnlockedBossTiers().add(tier);
-            player.sendMessage("You unlock " + tier.getZoneName() + "!");
+    private String buildTierLabel(Player player, BossTier tier) {
+        if (tier == null) {
+            Misc.println("BossInstanceDialogue warning: null tier label");
+            return "@red@Unavailable";
         }
 
-        BossInstanceManager.enter(player, tier);
-        player.getPA().closeAllWindows();
+        String zone = tier.getZoneName();
+        if (zone == null || zone.trim().isEmpty()) {
+            zone = "Unknown Zone";
+            Misc.println("BossInstanceDialogue warning: missing zone name for " + tier);
+        }
+
+        // Sanitize the zone to avoid invisible or client-breaking characters.
+        zone = zone.replaceAll("[^\\p{ASCII}]", "");
+        zone = zone.replaceAll("[–—•]", "-");
+        StringBuilder label = new StringBuilder(BossInstanceManager.getTierDisplayNameSafe(tier, player));
+
+        // Append up to three key drop names
+        List<GameItem> drops = Server.getDropManager().getNPCdrops(tier.getKillNpcId());
+        if (drops != null && !drops.isEmpty()) {
+            String dropNames = drops.stream()
+                    .limit(3)
+                    .map(drop -> {
+                        ItemDef def = ItemDef.forId(drop.getId());
+                        return def != null ? def.getName() : "?";
+                    })
+                    .collect(Collectors.joining(", "));
+            if (!dropNames.isEmpty()) {
+                label.append(" - ").append(dropNames);
+            }
+        }
+
+        String result = label.toString();
+
+        // Strip any remaining non-ASCII characters after building the label.
+        result = result.replaceAll("[^\\p{ASCII}]", "");
+        result = result.replaceAll("[–—•]", "-");
+        if (result.length() > MAX_OPTION_LENGTH) {
+            Misc.println("BossInstanceDialogue truncating label for " + tier + " from " + result.length() + " chars: " + result);
+            result = result.substring(0, MAX_OPTION_LENGTH - 3) + "...";
+        }
+
+        Misc.println("BossInstanceDialogue option tier=" + tier + " zone=" + zone + " display=" + result);
+        return result;
+    }
+
+    /**
+     * Handles option selection. Slots map to the tiers displayed on the current page.
+     */
+    public void run(int interfaceId, int slot) {
+        Player player = getPlayer();
+        if (slot < 0 || slot >= displayed.size()) {
+            return;
+        }
+
+        BossTier tier = displayed.get(slot);
+        Misc.println("BossInstanceDialogue click slot=" + slot + " tier=" + (tier == null ? "null" : tier.name()));
+        if (tier == null) {
+            return; // placeholder option
+        }
+
+        if (player.getUnlockedBossTiers().contains(tier)) {
+            BossInstanceManager.enter(player, tier);
+            player.getPA().closeAllWindows();
+        } else {
+            BossTier prev = Arrays.stream(BossTier.values()).filter(t -> t.getNextTier() == tier).findFirst().orElse(null);
+            int progress = prev != null ? player.getTierKillCounts().getOrDefault(prev, 0) : 0;
+            int required = prev != null ? prev.getRequiredKillCountToUnlockNext() : tier.getKillRequirement();
+            int remaining = Math.max(0, required - progress);
+            player.sendMessage("You must kill " + remaining + " more to unlock this tier.");
+        }
     }
 }
-
