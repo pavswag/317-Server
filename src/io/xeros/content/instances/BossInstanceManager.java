@@ -129,13 +129,13 @@ public class BossInstanceManager {
         private final int gpCost;
         private final int itemRequirement;
         private final int respawnTime;
-        private final int killNpcId;
+        private final int bossNpcId;
         private final BossMob[] mobs;
         private int requiredKillCountToUnlockNext;
         private BossTier nextTier;
 
         BossTier(String zoneName, Boundary zoneBoundary, Position spawnTile, int killRequirement, int gpCost, int itemRequirement,
-                 int respawnTime, int killNpcId, BossMob[] mobs) {
+                 int respawnTime, int bossNpcId, BossMob[] mobs) {
             this.zoneName = zoneName;
             this.zoneBoundary = zoneBoundary;
             this.spawnTile = spawnTile;
@@ -143,7 +143,7 @@ public class BossInstanceManager {
             this.gpCost = gpCost;
             this.itemRequirement = itemRequirement;
             this.respawnTime = respawnTime;
-            this.killNpcId = killNpcId;
+            this.bossNpcId = bossNpcId;
             this.mobs = mobs;
         }
 
@@ -175,8 +175,8 @@ public class BossInstanceManager {
             return respawnTime;
         }
 
-        public int getKillNpcId() {
-            return killNpcId;
+        public int getBossNpcId() {
+            return bossNpcId;
         }
 
         public BossMob[] getMobs() {
@@ -193,7 +193,7 @@ public class BossInstanceManager {
 
         /** Returns the player's kill count for the NPC associated with this tier. */
         public int getKillCount(Player player) {
-            String name = NpcDef.forId(killNpcId).getName();
+            String name = NpcDef.forId(bossNpcId).getName();
             return player.getNpcDeathTracker().getKc(name);
         }
     }
@@ -248,13 +248,11 @@ public class BossInstanceManager {
     }
 
     /**
-     * Spawns NPCs in a grid around the player so the instance feels populated.
-     * NPCs are spaced two tiles apart and up to twenty are spawned from the tier
-     * mob pool.
+     * Spawns NPCs randomly inside the tier's boundary so the instance feels populated.
+     * Up to twenty NPCs are spawned from the tier mob pool within the defined zone.
      */
     private static void spawnInstanceGrid(Player player, BossTier tier, BossInstanceArea area, boolean preview) {
-        int baseX = player.getX();
-        int baseY = player.getY();
+        Boundary bounds = tier.getZoneBoundary();
         int height = area.getHeight();
 
         BossMob[] mobs = tier.getMobs();
@@ -263,28 +261,28 @@ public class BossInstanceManager {
         }
 
         int spawned = 0;
-        for (int dx = -5; dx <= 5 && spawned < 20; dx += 2) {
-            for (int dy = -5; dy <= 5 && spawned < 20; dy += 2) {
-                BossMob mob = mobs[Misc.random(mobs.length - 1)];
-                NPC npc = NPCSpawning.spawnNpc(player, mob.getNpcId(), baseX + dx, baseY + dy,
-                        height, 0, 0, false, false,
-                        NpcStats.builder()
-                                .setHitpoints(mob.getHitpoints())
-                                .setAttackLevel(mob.getAttack())
-                                .setDefenceLevel(mob.getDefence())
-                                .createNpcStats());
-                if (npc != null) {
-                    if (preview) {
-                        npc.getBehaviour().setAggressive(false);
-                        npc.getCombatDefinition().setAggressive(false);
-                        npc.getBehaviour().setRespawn(false);
-                    } else {
-                        npc.getBehaviour().setRespawn(true);
-                        npc.getBehaviour().setRespawnWhenPlayerOwned(true);
-                    }
-                    area.add(npc);
-                    spawned++;
+        for (int attempts = 0; attempts < 100 && spawned < 20; attempts++) {
+            BossMob mob = mobs[Misc.random(mobs.length - 1)];
+            int x = Misc.random(bounds.getMinimumX() + 1, bounds.getMaximumX() - 1);
+            int y = Misc.random(bounds.getMinimumY() + 1, bounds.getMaximumY() - 1);
+            NPC npc = NPCSpawning.spawnNpc(player, mob.getNpcId(), x, y,
+                    height, 0, 0, false, false,
+                    NpcStats.builder()
+                            .setHitpoints(mob.getHitpoints())
+                            .setAttackLevel(mob.getAttack())
+                            .setDefenceLevel(mob.getDefence())
+                            .createNpcStats());
+            if (npc != null) {
+                if (preview) {
+                    npc.getBehaviour().setAggressive(false);
+                    npc.getCombatDefinition().setAggressive(false);
+                    npc.getBehaviour().setRespawn(false);
+                } else {
+                    npc.getBehaviour().setRespawn(true);
+                    npc.getBehaviour().setRespawnWhenPlayerOwned(true);
                 }
+                area.add(npc);
+                spawned++;
             }
         }
     }
