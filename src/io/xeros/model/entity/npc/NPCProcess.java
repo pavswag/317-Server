@@ -131,6 +131,8 @@ public class NPCProcess {
             }
         }
 
+        npc.processAdaptiveMechanics();
+
         if (npc.actionTimer > 0) {
             npc.actionTimer--;
         }
@@ -146,7 +148,10 @@ public class NPCProcess {
             NPCHitPlayer.applyDamage(npc, npcHandler);
         }
         if (npc.attackTimer > 0) {
-            npc.attackTimer--;
+            npc.attackTimer -= npc.isEnraged() ? 2 : 1;
+            if (npc.attackTimer < 0) {
+                npc.attackTimer = 0;
+            }
         }
         if (npc.getNpcId() == 7553) {
             npc.walkingHome = true;

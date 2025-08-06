@@ -524,11 +524,11 @@ public class LoadSpell {
                         npc.attackTimer = 7;
                         npc.hitDelayTimer = 4;
                         handler().groundSpell(npc, player, 280, 281, "vetion", 4);
-                    } else if (chance > 90 && System.currentTimeMillis() - npc.lastSpecialAttack > 15000) {
+                    } else if (chance > 90 && npc.canUseSpecial()) {
                         npc.setAttackType(CombatType.SPECIAL);
                         npc.attackTimer = 5;
                         npc.hitDelayTimer = 2;
-                        npc.lastSpecialAttack = System.currentTimeMillis();
+                        npc.resetSpecialAttack();
                     } else {
                         npc.setAttackType(CombatType.MELEE);
                         npc.attackTimer = 5;
@@ -540,11 +540,11 @@ public class LoadSpell {
                         npc.attackTimer = 7;
                         npc.hitDelayTimer = 4;
                         handler().groundSpell(npc, player, 280, 281, "vetion", 4);
-                    } else if (System.currentTimeMillis() - npc.lastSpecialAttack > 15000) {
+                    } else if (npc.canUseSpecial()) {
                         npc.setAttackType(CombatType.SPECIAL);
                         npc.attackTimer = 5;
                         npc.hitDelayTimer = 2;
-                        npc.lastSpecialAttack = System.currentTimeMillis();
+                        npc.resetSpecialAttack();
                     } else {
                         npc.setAttackType(CombatType.MAGE);
                         npc.attackTimer = 7;
@@ -568,11 +568,11 @@ public class LoadSpell {
                         npc.attackTimer = 7;
                         npc.hitDelayTimer = 4;
                         handler().groundSpell(npc, player, 159, 293, "araphel", 4);
-                    } else if (chance > 90 && System.currentTimeMillis() - npc.lastSpecialAttack > 15000) {
+                    } else if (chance > 90 && npc.canUseSpecial()) {
                         npc.setAttackType(CombatType.SPECIAL);
                         npc.attackTimer = 5;
                         npc.hitDelayTimer = 2;
-                        npc.lastSpecialAttack = System.currentTimeMillis();
+                        npc.resetSpecialAttack();
                     } else {
                         npc.setAttackType(CombatType.MELEE);
                         npc.attackTimer = 5;
@@ -584,11 +584,11 @@ public class LoadSpell {
                         npc.attackTimer = 7;
                         npc.hitDelayTimer = 4;
                         handler().groundSpell(npc, player, 159, 293, "araphel", 4);
-                    } else if (System.currentTimeMillis() - npc.lastSpecialAttack > 15000) {
+                    } else if (npc.canUseSpecial()) {
                         npc.setAttackType(CombatType.SPECIAL);
                         npc.attackTimer = 5;
                         npc.hitDelayTimer = 2;
-                        npc.lastSpecialAttack = System.currentTimeMillis();
+                        npc.resetSpecialAttack();
                     } else {
                         npc.setAttackType(CombatType.MAGE);
                         npc.attackTimer = 7;
