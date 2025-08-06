@@ -542,7 +542,7 @@ public class Boundary {
 
 
 	public static final Boundary Wilderness_Slayer = new Boundary(3328, 10048, 3455, 10175);
-	public static final	Boundary AOEInstance = new Boundary(2880, 5440, 2943, 5503);
+	public static final	Boundary AOEInstance = new Boundary(2270, 4758, 2295, 4785);
 	public static final Boundary WILDERNESS = new Boundary(2941, 3525, 3392, 3968);
 	public static final Boundary WILDERNESS_UNDERGROUND = new Boundary(2980, 10048, 3473, 10373);
 	public static final Boundary[] WILDERNESS_PARAMETERS = {WILDERNESS, WILDERNESS_UNDERGROUND, WILDERNESS_GOD_WARS_BOUNDARY, REV_CAVE};

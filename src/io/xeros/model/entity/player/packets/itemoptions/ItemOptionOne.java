@@ -1722,26 +1722,7 @@ public class ItemOptionOne implements PacketType {
                 }
                 break;
             case 12161:
-                if (!(c.getSuperMysteryBox().canMysteryBox) || !(c.getNormalMysteryBox().canMysteryBox) ||
-                        !(c.getUltraMysteryBox().canMysteryBox) || !(c.getFoeMysteryBox().canMysteryBox)
-                        || !(c.getYoutubeMysteryBox().canMysteryBox) || !(c.getChristmasBox().canMysteryBox)
-                        || !(c.getF2pDivisionBox().canMysteryBox) || !(c.getP2pDivisionBox().canMysteryBox)
-                        || !(c.getAncientCasket().canMysteryBox)|| !(c.getArboBox().canMysteryBox)
-                        || !(c.getCoxBox().canMysteryBox)|| !(c.getTobBox().canMysteryBox)
-                        || !(c.getDonoBox().canMysteryBox)|| !(c.getCosmeticBox().canMysteryBox)
-                        || !(c.getMiniArboBox().canMysteryBox)|| !(c.getMiniCoxBox().canMysteryBox)
-                        || !(c.getMiniDonoBox().canMysteryBox)|| !(c.getMiniNormalMysteryBox().canMysteryBox)
-                        || !(c.getMiniSmb().canMysteryBox)|| !(c.getMiniTobBox().canMysteryBox)
-                        || !(c.getMiniUltraBox().canMysteryBox)) {
-                    c.getPA().showInterface(47000);
-                    c.sendMessage("@red@[WARNING] @blu@Please do not interrupt or you @red@WILL@blu@ lose items! @red@NO REFUNDS");
-                    return;
-                }
-                else if (c.getItems().playerHasItem(12161)) {
-                    c.inDonatorBox = true;
-                    c.getChristmasBox().openInterface();
-                    return;
-                }
+                ChristmasBox.openChristmasBox(c, itemId);
                 break;
             case 13346:
                 if (!(c.getSuperMysteryBox().canMysteryBox) || !(c.getNormalMysteryBox().canMysteryBox) ||

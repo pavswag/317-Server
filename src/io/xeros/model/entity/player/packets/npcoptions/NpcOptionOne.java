@@ -15,6 +15,7 @@ import io.xeros.content.dialogue.impl.IronmanNpcDialogue;
 import io.xeros.content.dialogue.impl.MacDialogue;
 import io.xeros.content.dialogue.impl.MonkChaosAltarDialogue;
 import io.xeros.content.dialogue.impl.PineAwayDialogue;
+import io.xeros.content.dialogue.impl.ScrollConverterDialogue;
 import io.xeros.content.minigames.inferno.Inferno;
 import io.xeros.content.minigames.tob.TobConstants;
 import io.xeros.content.miniquests.magearenaii.dialogue.KolodionDialogue;
@@ -113,14 +114,17 @@ public class NpcOptionOne {
 					player.start(new DialogueBuilder(player).npc(4249, "You don't have anytime left on the island!"));
 				}
 				break;
-		case Npcs.JAMES:
-			player.start(new PineAwayDialogue(player, npc));
-			break;
-		case FarmingTeleport.NPC:
-			player.start(new FarmingTeleport(player, npc));
-			break;
-		case DailyRewardsDialogue.DAILY_REWARDS_NPC:
-			int totalReq = (player.getMode().is5x() ? 100 : 500);
+                case Npcs.JAMES:
+                        player.start(new PineAwayDialogue(player, npc));
+                        break;
+                case Npcs.SCROLL_CONVERTER:
+                        player.start(new ScrollConverterDialogue(player));
+                        break;
+                case FarmingTeleport.NPC:
+                        player.start(new FarmingTeleport(player, npc));
+                        break;
+                case DailyRewardsDialogue.DAILY_REWARDS_NPC:
+                        int totalReq = (player.getMode().is5x() ? 100 : 500);
 			if (player.totalLevel >= totalReq) {
 				player.start(new DailyRewardsDialogue(player));
 			} else {

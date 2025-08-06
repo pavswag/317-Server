@@ -760,37 +760,40 @@ public class ObjectOptionOne {
                 }
                 c.sendMessage("@red@You need a hammer, Hydra Leather, 15 million coins to do this.");
                 break;
-			case 30107:
-				if (c.getItems().freeSlots() < 3) {
-					c.getDH().sendStatement("@red@You need at least 3 free slots for safety");
+                        case 30107:
+                                if (c.getItems().freeSlots() < 1) {
+                                        c.getDH().sendStatement("@red@You need at least 1 free slot to open this.");
+                                        return;
+                                }
+				int plusKeys = c.getItems().getInventoryCount(25432);
+				int rareKeys = c.getItems().getInventoryCount(Raids.RARE_KEY);
+				int commonKeys = c.getItems().getInventoryCount(Raids.COMMON_KEY);
+				int silverKeys = c.getItems().getInventoryCount(3468);
+				if (plusKeys + rareKeys + commonKeys + silverKeys == 0) {
+					c.getDH().sendStatement("@red@You need either a rare or common key.");
 					return;
 				}
-				if (c.getItems().playerHasItem(Raids.COMMON_KEY, 1)) {
-					new RaidsChestCommon().roll(c);
-					return;
+				for (int i = 0; i < plusKeys; i++) {
+					new RaidsChestPlus().roll(c);
 				}
-				if (c.getItems().playerHasItem(Raids.RARE_KEY, 1)) {
+				for (int i = 0; i < rareKeys; i++) {
 					new RaidsChestRare().roll(c);
-					return;
 				}
-				if (c.getItems().playerHasItem(3468, 1)) {
+				for (int i = 0; i < commonKeys; i++) {
+					new RaidsChestCommon().roll(c);
+				}
+				for (int i = 0; i < silverKeys; i++) {
 					if (Misc.random(100) < 25) {
-						c.getItems().deleteItem2(3468,1);
+						c.getItems().deleteItem2(3468, 1);
 						c.getItems().addItem(Raids.RARE_KEY, 1);
 						new RaidsChestPlus().roll(c);
 					} else {
-						c.getItems().deleteItem2(3468,1);
+						c.getItems().deleteItem2(3468, 1);
 						c.getItems().addItem(Raids.COMMON_KEY, 1);
 						new RaidsChestCommon().roll(c);
 					}
-					return;
 				}
-				if (c.getItems().playerHasItem(25432, 1)) {
-					new RaidsChestPlus().roll(c);
-					return;
-				}
-				c.getDH().sendStatement("@red@You need either a rare or common key.");
-				break;
+				return;
             case 32508:
                 c.objectDistance = 13;
 /*				if (!(System.currentTimeMillis() - c.chestDelay > 2000)) {
