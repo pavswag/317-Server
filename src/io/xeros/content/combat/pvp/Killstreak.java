@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import io.xeros.Server;
+import io.xeros.content.activityboss.ActivityType;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.mode.Mode;
 import io.xeros.model.entity.player.mode.ModeType;
@@ -58,11 +59,14 @@ public class Killstreak {
 	 * 
 	 * @param type the type of killstreak
 	 */
-	public void increase(Type type) {
-		int value = 1 + killstreaks.getOrDefault(type, 0);
-		killstreaks.put(type, value);
-		reward(type);
-	}
+        public void increase(Type type) {
+                int value = 1 + killstreaks.getOrDefault(type, 0);
+                killstreaks.put(type, value);
+                if (value >= 10) {
+                        GlobalBossActivityManager.record(ActivityType.KILLSTREAK, 1);
+                }
+                reward(type);
+        }
 
 	/**
 	 * Rewards the player with some item, points, and or some other form of currency.

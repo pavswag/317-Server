@@ -2,6 +2,8 @@ package io.xeros.content.upgrade;
 
 import io.xeros.content.achievement.AchievementType;
 import io.xeros.content.achievement.Achievements;
+import io.xeros.content.activityboss.ActivityType;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.content.prestige.PrestigePerks;
 import io.xeros.content.skills.Skill;
 import io.xeros.model.definitions.ItemDef;
@@ -184,6 +186,7 @@ public class UpgradeInterface {
                                 if (success) {
                                     player.sendMessage("You successfully upgraded your item!");
                                     Achievements.increase(player, AchievementType.UPGRADE, 1);
+                                    GlobalBossActivityManager.record(ActivityType.UPGRADES, 1);
                                     player.getInventory().addToInventory(new ImmutableItem(val.getReward()));
                                     if (val.isRare()) {
                                             String msg = "@blu@<img=18>[UPGRADE]<img=18>@red@ " + player.getDisplayName()

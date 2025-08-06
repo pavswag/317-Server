@@ -285,6 +285,9 @@ public class Player extends Entity {
     public int wintertodtHighscore;
     public boolean usingInfPrayer;
 
+    public boolean bossAlerts = true;
+    private final Deque<String> bossContributions = new ArrayDeque<>();
+
     public boolean itemPickedUpThisTick = false;
 
     public boolean usingInfAgro;
@@ -6445,6 +6448,25 @@ public class Player extends Entity {
     }    /** Whether the player is currently previewing a boss instance tier. */
     private boolean previewingBossInstance;
 
+
+    public boolean isBossAlerts() {
+        return bossAlerts;
+    }
+
+    public void setBossAlerts(boolean bossAlerts) {
+        this.bossAlerts = bossAlerts;
+    }
+
+    public Deque<String> getBossContributions() {
+        return bossContributions;
+    }
+
+    public void addBossContribution(String boss, int damage, int rank) {
+        bossContributions.addFirst(boss + "," + damage + "," + rank);
+        while (bossContributions.size() > 5) {
+            bossContributions.removeLast();
+        }
+    }
 
     public boolean isPreviewingBossInstance() {
         return previewingBossInstance;

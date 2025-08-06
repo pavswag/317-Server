@@ -6,6 +6,8 @@ import java.util.List;
 import io.xeros.Server;
 import io.xeros.content.achievement.AchievementType;
 import io.xeros.content.achievement.Achievements;
+import io.xeros.content.activityboss.ActivityType;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.content.perky.Perks;
 import io.xeros.content.skills.hunter.impling.ItemRarity;
 import io.xeros.model.Items;
@@ -159,26 +161,27 @@ public class TreasureTrails {
 			player.getItems().addItemUnderAnyCircumstance(rewardLevel.getCasketId(),1);
 		}
 
-		switch (rewardLevel) {
-			case EASY:
-				player.setEasyClueCounter(player.getEasyClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getEasyClueCounter() + " Easy Treasure Trails.");
-				break;
-			case MEDIUM:
-				player.setMediumClueCounter(player.getMediumClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getMediumClueCounter() + " medium Treasure Trails.");
-				break;
-			case HARD:
-				player.setHardClueCounter(player.getHardClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getHardClueCounter() + " hard Treasure Trails.");
-				break;
-			case MASTER:
-				player.setMasterClueCounter(player.getMasterClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getMasterClueCounter() + " master Treasure Trails.");
-				PetHandler.roll(player, PetHandler.Pets.BLOODHOUND);
-				break;
-		}
-	}
+                switch (rewardLevel) {
+                        case EASY:
+                                player.setEasyClueCounter(player.getEasyClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getEasyClueCounter() + " Easy Treasure Trails.");
+                                break;
+                        case MEDIUM:
+                                player.setMediumClueCounter(player.getMediumClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getMediumClueCounter() + " medium Treasure Trails.");
+                                break;
+                        case HARD:
+                                player.setHardClueCounter(player.getHardClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getHardClueCounter() + " hard Treasure Trails.");
+                                break;
+                        case MASTER:
+                                player.setMasterClueCounter(player.getMasterClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getMasterClueCounter() + " master Treasure Trails.");
+                                PetHandler.roll(player, PetHandler.Pets.BLOODHOUND);
+                                break;
+                }
+                GlobalBossActivityManager.record(ActivityType.CLUES, 1);
+        }
 
 	private static void openClueScroll(Player c, RewardLevel rewardLevel) {
 		if (rewardLevel == RewardLevel.MASTER && !MasterClue.checkRequirementOnOpen(c)) {
