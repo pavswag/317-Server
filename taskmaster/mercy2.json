@@ -1,0 +1,56 @@
+[
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 10,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "EASY",
+    "taskType": "SKILLING",
+    "weekly": false,
+    "localDateTime": "2025-08-03T12:04:09.6976531",
+    "desc": "Cook @whi@Fish"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 75,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "ELITE",
+    "taskType": "COMBAT",
+    "weekly": false,
+    "localDateTime": "2025-08-03T12:04:09.7036531",
+    "desc": "Callisto"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 300,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "EASY",
+    "taskType": "COMBAT",
+    "weekly": true,
+    "localDateTime": "2025-08-04T11:04:09.7046544",
+    "desc": "Kree\u0027arra"
+  }
+]
