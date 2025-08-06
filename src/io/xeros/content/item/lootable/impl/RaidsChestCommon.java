@@ -51,34 +51,22 @@ public class RaidsChestCommon implements Lootable {
     public void roll(Player c) {
         int twistedhornsroll = Misc.random(120);
         if (twistedhornsroll == 1) {
-            giveReward(c, new GameItem(24466, 1), false);
-            PlayerHandler.executeGlobalMessage("@bla@[@blu@RAIDS@bla@] " + c.getDisplayName() + "@pur@ has just received twisted horns.");
+            c.getItems().addItem(24466, 1);
+            PlayerHandler.executeGlobalMessage("@bla@[@blu@RAIDS@bla@] "+ c.getDisplayName() +"@pur@ has just received twisted horns.");
         }
         if (c.getItems().playerHasItem(KEY)) {
             c.getItems().deleteItem(KEY, 1);
             c.startAnimation(ANIMATION);
-            GameItem reward = randomChestRewards();
+            GameItem reward =  randomChestRewards();
             GameItem reward2 = randomChestRewards();
             GameItem reward3 = randomChestRewards();
 
-            giveReward(c, reward, true);
-            giveReward(c, reward2, true);
-            giveReward(c, reward3, true);
+            c.getItems().addItem(reward.getId(),  (PrestigePerks.hasRelic(c, PrestigePerks.DOUBLE_PC_POINTS) && Misc.isLucky(10) ?reward.getAmount() * 2:reward.getAmount())); //potentially gives the loot 3 times.
+            c.getItems().addItem(reward2.getId(), (PrestigePerks.hasRelic(c, PrestigePerks.DOUBLE_PC_POINTS) && Misc.isLucky(10) ?reward2.getAmount() * 2:reward2.getAmount())); //potentially gives the loot 3 times.
+            c.getItems().addItem(reward3.getId(), (PrestigePerks.hasRelic(c, PrestigePerks.DOUBLE_PC_POINTS) && Misc.isLucky(10) ?reward3.getAmount()* 2:reward3.getAmount())); //potentially gives the loot 3 times.
             c.sendMessage("@blu@You received a common item out of the storage unit.");
         } else {
             c.sendMessage("@blu@The chest is locked, it won't budge!");
-        }
-    }
-
-    private void giveReward(Player c, GameItem reward, boolean allowDouble) {
-        int amount = reward.getAmount();
-        if (allowDouble && PrestigePerks.hasRelic(c, PrestigePerks.DOUBLE_PC_POINTS) && Misc.isLucky(10)) {
-            amount *= 2;
-        }
-        if (c.getItems().addItem(reward.getId(), amount)) {
-            c.sendMessage("You receive " + reward.getDef().getName() + " x" + amount + ".");
-        } else {
-            c.getItems().addItemToBankOrDrop(reward.getId(), amount);
         }
     }
 }

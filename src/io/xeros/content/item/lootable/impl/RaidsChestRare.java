@@ -84,31 +84,19 @@ public class RaidsChestRare implements Lootable {
         if (c.getItems().playerHasItem(KEY)) {
             c.getItems().deleteItem(KEY, 1);
             c.startAnimation(ANIMATION);
-            GameItem reward = randomChestRewards();
+            GameItem reward =  randomChestRewards();
 
             c.getCollectionLog().handleDrop(c, 7554, reward.getId(), reward.getAmount());
             if (reward.getId() == 20851 && c.getItems().getItemCount(20851, false) == 0) {
                 c.getCollectionLog().handleDrop(c, 5, 20851, 1);
             }
-            giveReward(c, reward);
+            c.getItems().addItem(reward.getId(), (PrestigePerks.hasRelic(c, PrestigePerks.DOUBLE_PC_POINTS) && Misc.isLucky(10) ? reward.getAmount() * 2 : reward.getAmount())); //potentially gives the loot 3 times.
             c.sendMessage("@blu@You have received a rare item out of the storage unit.");
             if (reward.getId() == 20997 || reward.getId() == 20851) {
                 NPCDeath.announceKc(c, reward, "Raids chest", c.raidCount);
             }
         } else {
             c.sendMessage("@blu@The chest is locked, it won't budge!");
-        }
-    }
-
-    private void giveReward(Player c, GameItem reward) {
-        int amount = reward.getAmount();
-        if (PrestigePerks.hasRelic(c, PrestigePerks.DOUBLE_PC_POINTS) && Misc.isLucky(10)) {
-            amount *= 2;
-        }
-        if (c.getItems().addItem(reward.getId(), amount)) {
-            c.sendMessage("You receive " + reward.getDef().getName() + " x" + amount + ".");
-        } else {
-            c.getItems().addItemToBankOrDrop(reward.getId(), amount);
         }
     }
 }
