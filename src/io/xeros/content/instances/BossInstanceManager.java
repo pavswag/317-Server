@@ -267,7 +267,10 @@ public class BossInstanceManager {
         }
 
         for (BossMob mob : mobs) {
-            for (int i = 0; i < mob.getCount(); i++) {
+            int spawned = 0;
+            int attempts = 0;
+            // Retry a few extra times in case a random tile is invalid or occupied
+            while (spawned < mob.getCount() && attempts++ < mob.getCount() * 5) {
                 int x = Misc.random(bounds.getMinimumX() + 1, bounds.getMaximumX() - 1);
                 int y = Misc.random(bounds.getMinimumY() + 1, bounds.getMaximumY() - 1);
                 NPC npc = NPCSpawning.spawnNpc(player, mob.getNpcId(), x, y,
@@ -277,19 +280,23 @@ public class BossInstanceManager {
                                 .setAttackLevel(mob.getAttack())
                                 .setDefenceLevel(mob.getDefence())
                                 .createNpcStats());
-                if (npc != null) {
-                    if (preview) {
-                        npc.getBehaviour().setAggressive(false);
-                        npc.getCombatDefinition().setAggressive(false);
-                        npc.getBehaviour().setRespawn(false);
-                    } else {
-                        npc.getBehaviour().setRespawn(true);
-                        npc.getBehaviour().setRespawnWhenPlayerOwned(true);
-                    }
-                    area.add(npc);
+                if (npc == null) {
+                    continue;
+                }
+                if (preview) {
+                    npc.getBehaviour().setAggressive(false);
+                    npc.getCombatDefinition().setAggressive(false);
+                    npc.getBehaviour().setRespawn(false);
+                } else {
+                    npc.getBehaviour().setRespawn(true);
+                    npc.getBehaviour().setRespawnWhenPlayerOwned(true);
                 }
                 area.add(npc);
                 spawned++;
+            }
+            if (spawned < mob.getCount()) {
+                Misc.println("BossInstanceManager warning: spawned " + spawned + "/" + mob.getCount()
+                        + " NPCs for id " + mob.getNpcId());
             }
         }
     }
