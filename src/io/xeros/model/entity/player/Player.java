@@ -689,6 +689,14 @@ public class Player extends Entity {
     private final ChargeTrident chargeTrident = new ChargeTrident(this);
     private PlayerMovementState movementState = PlayerMovementState.getDefault();
     private Slayer slayer;
+    private Optional<io.xeros.content.skills.slayer.DemonSlayerMaster.DemonSlayerTask> demonHunterTask = Optional.empty();
+    private int demonHunterTaskProgress;
+    private int demonHunterXP;
+    private int demonTaskStreak;
+    private int demonHunterTierUnlocked;
+    private final java.util.Set<Integer> demonHunterMilestones = new java.util.HashSet<>();
+    private int demonMarks;
+    private Optional<io.xeros.content.skills.slayer.DemonSlayerContract> demonContract = Optional.empty();
     private final AgilityHandler agilityHandler = new AgilityHandler();
     private final PointItems pointItems = new PointItems(this);
     private final GnomeAgility gnomeAgility = new GnomeAgility();
@@ -3021,6 +3029,75 @@ public class Player extends Entity {
     public Slayer getSlayer() {
         if (slayer == null) slayer = new Slayer(this);
         return slayer;
+    }
+
+    public Optional<io.xeros.content.skills.slayer.DemonSlayerMaster.DemonSlayerTask> getDemonHunterTask() {
+        return demonHunterTask;
+    }
+
+    public void setDemonHunterTask(io.xeros.content.skills.slayer.DemonSlayerMaster.DemonSlayerTask task) {
+        this.demonHunterTask = Optional.ofNullable(task);
+    }
+
+    public int getDemonHunterTaskProgress() {
+        return demonHunterTaskProgress;
+    }
+
+    public void setDemonHunterTaskProgress(int progress) {
+        this.demonHunterTaskProgress = progress;
+    }
+
+    public int getDemonHunterXP() {
+        return demonHunterXP;
+    }
+
+    public void addDemonHunterXP(int amount) {
+        this.demonHunterXP += amount;
+        getPA().addSkillXPMultiplied(amount, Skill.DEMON_HUNTER.getId(), true);
+    }
+
+    public int getDemonTaskStreak() {
+        return demonTaskStreak;
+    }
+
+    public void incrementDemonTaskStreak() {
+        demonTaskStreak++;
+    }
+
+    public void resetDemonTaskStreak() {
+        demonTaskStreak = 0;
+    }
+
+    public int getDemonHunterTierUnlocked() {
+        return demonHunterTierUnlocked;
+    }
+
+    public void setDemonHunterTierUnlocked(int tier) {
+        this.demonHunterTierUnlocked = tier;
+    }
+
+    public java.util.Set<Integer> getDemonHunterMilestones() {
+        return demonHunterMilestones;
+    }
+
+    public int getDemonMarks() {
+        return demonMarks;
+    }
+
+    public void addDemonMarks(int amount) {
+        demonMarks += amount;
+    }
+
+    public void removeDemonMarks(int amount) {
+        demonMarks = Math.max(0, demonMarks - amount);
+    }
+
+    public Optional<io.xeros.content.skills.slayer.DemonSlayerContract> getDemonContract() {
+        return demonContract;
+    }
+
+    public void setDemonContract(io.xeros.content.skills.slayer.DemonSlayerContract contract) {
+        this.demonContract = Optional.ofNullable(contract);
     }
 
     public Agility getAgility() {
