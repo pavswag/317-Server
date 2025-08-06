@@ -431,6 +431,7 @@ public class Player extends Entity {
     public StringInput stringInputHandler;
     public AmountInput amountInputHandler;
     private long aggressionTimer = System.currentTimeMillis();
+    @Getter
     private long aggroTimer;
     private boolean printAttackStats = Server.isTest();
     private boolean printDefenceStats = Server.isTest();
@@ -466,8 +467,25 @@ public class Player extends Entity {
         aggroTimer = time;
     }
 
+    /**
+     * Extends the current aggression timer by the given duration. If no timer is
+     * active the duration starts from the current time.
+     */
+    public void extendAggroTimer(long durationMillis) {
+        if (durationMillis == Long.MAX_VALUE) {
+            aggroTimer = Long.MAX_VALUE;
+            return;
+        }
+        long base = Math.max(System.currentTimeMillis(), aggroTimer);
+        aggroTimer = base + durationMillis;
+    }
+
+    public long getAggroTimeRemaining() {
+        return Math.max(0, aggroTimer - System.currentTimeMillis());
+    }
+
     public boolean isAggroTimerActive() {
-        return System.currentTimeMillis() - aggroTimer < TimeUnit.MINUTES.toMillis(2);
+        return System.currentTimeMillis() < aggroTimer;
     }
 
     public boolean isAggressionTimeout(Player player) {
@@ -2092,6 +2110,7 @@ public class Player extends Entity {
         setSidebarInterface(12, 147); // run tab
         getPA().showOption(4, 0, "Follow");
         getPA().showOption(5, 0, "Trade with");
+        getPA().showOption(1, 0, "Force-Aggro Nearby");
         getItems().sendInventoryInterface(3214);
         getItems().setEquipment(playerEquipment[playerHat], 1, playerHat, false);
         getItems().setEquipment(playerEquipment[playerCape], 1, playerCape, false);
@@ -2847,6 +2866,8 @@ public class Player extends Entity {
             getPA().showOption(3, 0, "null");
             getPA().showOption(1, 0, "null");
         }
+
+        getPA().showOption(1, 0, "Force-Aggro Nearby");
 
         // Walkable interfaces in this if-else
         if (getPosition().inWild() && !getPosition().inClanWars()) {
