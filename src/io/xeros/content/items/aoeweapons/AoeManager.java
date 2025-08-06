@@ -10,9 +10,8 @@ import io.xeros.model.collisionmap.doors.Location;
 import io.xeros.model.entity.Entity;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.npc.NPCHandler;
-import io.xeros.model.entity.player.Boundary;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.model.entity.player.Player;
-import io.xeros.model.entity.player.Position;
 import io.xeros.util.Misc;
 
 import java.util.Arrays;
@@ -24,7 +23,8 @@ public class AoeManager {
 
     public static boolean canAOE(Player player) {
 
-        return Boundary.isIn(player, Boundary.AOEInstance) &&
+        BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(player);
+        return area != null && area.isWithinAoeZone(player.getPosition()) &&
                 Arrays.stream(AoeWeapons.values()).anyMatch(i -> i.ID == player.playerEquipment[Player.playerWeapon]);
     }
 
@@ -50,12 +50,16 @@ public class AoeManager {
         player.startAnimation(anim);
 
         if (player.isPlayer() && victim.isNPC()) {
+            BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(player);
             victim.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
             for (NPC next : NPCHandler.npcs) {
                 if (next == null) {
                     continue;
                 }
                 if (next.getInstance() != player.getInstance() || next.getHeight() != player.getHeight()) {
+                    continue;
+                }
+                if (area != null && !area.isWithinAoeZone(next.getPosition())) {
                     continue;
                 }
                 if (!player.getPosition().withinDistance(next.getPosition(), range) || next.getHealth().getCurrentHealth() <= 0) {
