@@ -6,6 +6,8 @@ import java.util.List;
 import io.xeros.Server;
 import io.xeros.content.achievement.AchievementType;
 import io.xeros.content.achievement.Achievements;
+import io.xeros.content.activityboss.ActivityType;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.content.perky.Perks;
 import io.xeros.content.skills.hunter.impling.ItemRarity;
 import io.xeros.model.Items;
@@ -52,7 +54,7 @@ public class TreasureTrails {
 		return 0;
 	}
 
-	private static void announceRare(Player player, GameItem item, RewardLevel difficulty) {
+        public static void announceRare(Player player, GameItem item, RewardLevel difficulty) {
 		PlayerHandler.executeGlobalMessage("[<col=CC0000>Treasure</col>] <col=255>" + player.getDisplayNameFormatted() + "</col> " +
 				"<col=CC0000>received " +
 				"<col=255>" + ItemDef.forId(item.getId()).getName() + "</col> " +
@@ -69,24 +71,29 @@ public class TreasureTrails {
 	 * This method is used by clues.
 	 * Rolls=1+rand(1, 2)
 	 */
-	public List<GameItem> generateRewardList(RewardLevel rewardLevel) {
-		return generateRewardList(rewardLevel, 1 + Misc.random(2));
-	}
+        public List<GameItem> generateRewardList(RewardLevel rewardLevel) {
+                return generateRewardList(rewardLevel, 1 + Misc.random(2), true);
+        }
 
-	/**
-	 * This will generate the drop list, globally announce rares and update collection log. It's assumed
-	 * that you will be dropped/adding these items immediately after calling!
-	 * @param rewardLevel The {@link RewardLevel}
-	 * @return List of random items.
-	 */
-	public List<GameItem> generateRewardList(RewardLevel rewardLevel, int rolls) {
-		player.getNpcDeathTracker().add(Misc.optimizeText(rewardLevel.name().toLowerCase()), -1, 0);
-		List<GameItem> rewards = TreasureTrailsRewards.getRandomRewardItems(rewardLevel, rolls);
+        public List<GameItem> generateRewardList(RewardLevel rewardLevel, int rolls) {
+                return generateRewardList(rewardLevel, rolls, true);
+        }
 
-		for (GameItem item : rewards) {
-			if (ItemDef.forId(item.getId()).getName().contains("3rd") || item.getId() == 2577 || ItemDef.forId(item.getId()).getName().contains("mage's")) {
-				announceRare(player, item, rewardLevel);
-			}
+        /**
+         * This will generate the drop list, optionally globally announce rares and update collection log. It's assumed
+         * that you will be dropped/adding these items immediately after calling!
+         * @param rewardLevel The {@link RewardLevel}
+         * @param announce should global announcements be sent for rare items
+         * @return List of random items.
+         */
+        public List<GameItem> generateRewardList(RewardLevel rewardLevel, int rolls, boolean announce) {
+                player.getNpcDeathTracker().add(Misc.optimizeText(rewardLevel.name().toLowerCase()), -1, 0);
+                List<GameItem> rewards = TreasureTrailsRewards.getRandomRewardItems(rewardLevel, rolls);
+
+                for (GameItem item : rewards) {
+                        if (announce && (ItemDef.forId(item.getId()).getName().contains("3rd") || item.getId() == 2577 || ItemDef.forId(item.getId()).getName().contains("mage's"))) {
+                                announceRare(player, item, rewardLevel);
+                        }
 
 			if (TreasureTrailsRewards.possibleDrops.get(rewardLevel).stream().anyMatch(it -> it.getItemId() == item.getId())) {
 				player.getCollectionLog().handleDrop(player, rewardLevel.ordinal(), item.getId(), item.getAmount());
@@ -154,26 +161,27 @@ public class TreasureTrails {
 			player.getItems().addItemUnderAnyCircumstance(rewardLevel.getCasketId(),1);
 		}
 
-		switch (rewardLevel) {
-			case EASY:
-				player.setEasyClueCounter(player.getEasyClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getEasyClueCounter() + " Easy Treasure Trails.");
-				break;
-			case MEDIUM:
-				player.setMediumClueCounter(player.getMediumClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getMediumClueCounter() + " medium Treasure Trails.");
-				break;
-			case HARD:
-				player.setHardClueCounter(player.getHardClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getHardClueCounter() + " hard Treasure Trails.");
-				break;
-			case MASTER:
-				player.setMasterClueCounter(player.getMasterClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getMasterClueCounter() + " master Treasure Trails.");
-				PetHandler.roll(player, PetHandler.Pets.BLOODHOUND);
-				break;
-		}
-	}
+                switch (rewardLevel) {
+                        case EASY:
+                                player.setEasyClueCounter(player.getEasyClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getEasyClueCounter() + " Easy Treasure Trails.");
+                                break;
+                        case MEDIUM:
+                                player.setMediumClueCounter(player.getMediumClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getMediumClueCounter() + " medium Treasure Trails.");
+                                break;
+                        case HARD:
+                                player.setHardClueCounter(player.getHardClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getHardClueCounter() + " hard Treasure Trails.");
+                                break;
+                        case MASTER:
+                                player.setMasterClueCounter(player.getMasterClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getMasterClueCounter() + " master Treasure Trails.");
+                                PetHandler.roll(player, PetHandler.Pets.BLOODHOUND);
+                                break;
+                }
+                GlobalBossActivityManager.record(ActivityType.CLUE_CASKET, 1);
+        }
 
 	private static void openClueScroll(Player c, RewardLevel rewardLevel) {
 		if (rewardLevel == RewardLevel.MASTER && !MasterClue.checkRequirementOnOpen(c)) {
