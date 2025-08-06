@@ -8,6 +8,7 @@ import io.xeros.model.SoundType;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
+import io.xeros.model.entity.npc.actions.AggressionHandler;
 import io.xeros.model.entity.HealthStatus;
 import io.xeros.model.items.ContainerUpdate;
 import io.xeros.model.items.ItemAssistant;
@@ -78,10 +79,11 @@ public class Potions {
         c.getPA().refreshSkill(3);
 
         c.getPA().sendConfig(36, 0);
-        c.getPA().sendGameTimer(ClientGameTimer.INF_AGGRESSION, TimeUnit.MINUTES, 30);
-        c.InfAgroTimer = 3000;
+        c.getPA().sendGameTimer(ClientGameTimer.INF_AGGRESSION, TimeUnit.SECONDS, 60);
+        c.InfAgroTimer = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(60);
         c.getPA().sendConfig(36, 1);
         c.usingInfAgro = true;
+        startAggressionTimer(TimeUnit.SECONDS.toMillis(60));
 
         c.getPA().sendConfig(35, 0);
         c.getPA().sendGameTimer(ClientGameTimer.INF_PRAYER_POT, TimeUnit.MINUTES, 30);
@@ -929,13 +931,24 @@ public class Potions {
             return;
         }
         c.getPA().sendConfig(36, 0);
-        c.getPA().sendGameTimer(ClientGameTimer.INF_AGGRESSION, TimeUnit.MINUTES, 30);
+        c.getPA().sendGameTimer(ClientGameTimer.INF_AGGRESSION, TimeUnit.DAYS, 1);
         c.startAnimation(829);
         c.getItems().addContainerUpdate(ContainerUpdate.INVENTORY);
         c.InfAgroTimer = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(60);
         c.getPA().sendConfig(36, 1);
         handleInfArgoTimers();
         c.usingInfAgro = true;
+        startAggressionTimer(Long.MAX_VALUE);
+    }
+
+    public void drinkSuperAggroPot() {
+        c.getPA().sendConfig(36, 0);
+        c.getPA().sendGameTimer(ClientGameTimer.INF_AGGRESSION, TimeUnit.MINUTES, 3);
+        c.startAnimation(829);
+        c.getItems().addContainerUpdate(ContainerUpdate.INVENTORY);
+        c.getPA().sendConfig(36, 1);
+        c.usingInfAgro = true;
+        startAggressionTimer(TimeUnit.MINUTES.toMillis(3));
     }
 
     public void drinkRagePot() {
@@ -1258,6 +1271,25 @@ public class Potions {
                 b.stop();
             }
         }, 3000); // 3 minutes
+    }
+
+    private void startAggressionTimer(long durationMillis) {
+        c.extendAggroTimer(durationMillis);
+        long remaining = c.getAggroTimeRemaining();
+        int display = remaining > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) remaining;
+        c.getPA().sendGameTimer(ClientGameTimer.INF_AGGRESSION, TimeUnit.MILLISECONDS, display);
+        CycleEventHandler.getSingleton().stopEvents(c, CycleEventHandler.Event.FORCE_AGGRESSION);
+        AggressionHandler.forceAggro(c, 10);
+        CycleEventHandler.getSingleton().addEvent(CycleEventHandler.Event.FORCE_AGGRESSION, c, new CycleEvent() {
+            @Override
+            public void execute(CycleEventContainer container) {
+                if (c == null || !c.isAggroTimerActive()) {
+                    container.stop();
+                    return;
+                }
+                AggressionHandler.forceAggro(c, 10);
+            }
+        }, 5);
     }
 
     public void handleRageTimers() {

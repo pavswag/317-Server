@@ -2,6 +2,7 @@ package io.xeros.model.entity.player.packets;
 
 import io.xeros.Configuration;
 import io.xeros.content.combat.stats.MonsterKillLog;
+import io.xeros.model.entity.npc.actions.AggressionHandler;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.PacketType;
 import io.xeros.model.entity.player.Player;
@@ -64,44 +65,46 @@ public class PlayerOptionsHandler implements PacketType {
 
 		switch (opCode) {
 
-		case 128:
-			/**
-			 * Duel challenge / Flower Poker
-			 */
+                case 128:
+                        String option = player.getPA().getPlayerOptions().getOrDefault(1, "null");
+                        if ("Force-Aggro Nearby".equals(option)) {
+                                AggressionHandler.forceAggro(player, 10);
+                                return;
+                        }
 
-			if (Boundary.isIn(player, Boundary.DUEL_ARENA) || Boundary.isIn(requested, Boundary.DUEL_ARENA)) {
-				player.sendMessage("You cannot do this inside of the duel arena.");
-				return;
-			}
+                        if (Boundary.isIn(player, Boundary.DUEL_ARENA) || Boundary.isIn(requested, Boundary.DUEL_ARENA)) {
+                                player.sendMessage("You cannot do this inside of the duel arena.");
+                                return;
+                        }
 
-			if (Boundary.isIn(player, FlowerPoker.BOUNDARIES)) {
-				if (Boundary.isIn(requested, FlowerPoker.BOUNDARIES)) {
-					if (player.getFlowerPokerRequest().requestable(requested)) {
-						player.getFlowerPokerRequest().request(requested);
-						return;
-					}
-				}
-				return;
-			}
+                        if (Boundary.isIn(player, FlowerPoker.BOUNDARIES)) {
+                                if (Boundary.isIn(requested, FlowerPoker.BOUNDARIES)) {
+                                        if (player.getFlowerPokerRequest().requestable(requested)) {
+                                                player.getFlowerPokerRequest().request(requested);
+                                                return;
+                                        }
+                                }
+                                return;
+                        }
 
-			if (requested.getPosition().inDuelArena()) {
-				if (!Boundary.isIn(player, Boundary.DUEL_ARENA)) {
-					if (!Configuration.NEW_DUEL_ARENA_ACTIVE) {
-						player.getDH().sendStatement("@red@Dueling Temporarily Disabled", "The duel arena minigame is currently being rewritten.",
-								"No player has access to this minigame during this time.", "", "Thank you for your patience, Developer J.");
-						player.nextChat = -1;
-						return;
-					}
-					if (player.getDuel().requestable(requested)) {
-						player.getDuel().request(requested);
-					}
-				}
-			}
+                        if (requested.getPosition().inDuelArena()) {
+                                if (!Boundary.isIn(player, Boundary.DUEL_ARENA)) {
+                                        if (!Configuration.NEW_DUEL_ARENA_ACTIVE) {
+                                                player.getDH().sendStatement("@red@Dueling Temporarily Disabled", "The duel arena minigame is currently being rewritten.",
+                                                                "No player has access to this minigame during this time.", "", "Thank you for your patience, Developer J.");
+                                                player.nextChat = -1;
+                                                return;
+                                        }
+                                        if (player.getDuel().requestable(requested)) {
+                                                player.getDuel().request(requested);
+                                        }
+                                }
+                        }
 
-			if (MonsterKillLog.onPlayerOption(player,requested,"PlayerOptions") && !Boundary.isIn(player, FlowerPoker.BOUNDARIES)){
-				return;
-			}
-			return;
+                        if (MonsterKillLog.onPlayerOption(player, requested, option) && !Boundary.isIn(player, FlowerPoker.BOUNDARIES)){
+                                return;
+                        }
+                        return;
 		}
 	}
 }
