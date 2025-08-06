@@ -535,4 +535,9 @@ public final class Position {
                 Math.pow(this.y - other.y, 2) +
                 Math.pow(this.height - other.height, 2));
     }
+
+    @JsonIgnore
+    public int getRegionId() {
+        return ((x >> 6) << 8) | (y >> 6);
+    }
 }

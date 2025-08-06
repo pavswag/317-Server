@@ -111,7 +111,20 @@ public class ClueCasketHandler {
                 player.getItems().addItemUnderAnyCircumstance(entry.getKey(), entry.getValue());
             }
         }
-        player.getTrails().displayRewards(rewardList);
+
+        List<GameItem> display = rewardList.size() > 28 ? rewardList.subList(0, 28) : rewardList;
+        player.getTrails().displayRewards(display);
+        if (rewardList.size() > 28) {
+            StringBuilder extra = new StringBuilder("You also receive: ");
+            for (int i = 28; i < rewardList.size(); i++) {
+                GameItem gi = rewardList.get(i);
+                extra.append(ItemDef.forId(gi.getId()).getName()).append(" x").append(gi.getAmount());
+                if (i < rewardList.size() - 1) {
+                    extra.append(", ");
+                }
+            }
+            player.sendMessage(extra.toString());
+        }
         for (int id : announced) {
             TreasureTrails.announceRare(player, new GameItem(id, rewards.get(id)), level);
         }
