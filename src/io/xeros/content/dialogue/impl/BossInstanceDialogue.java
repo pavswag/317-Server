@@ -117,7 +117,7 @@ public class BossInstanceDialogue extends DialogueBuilder {
         StringBuilder label = new StringBuilder(BossInstanceManager.getTierDisplayNameSafe(tier, player));
 
         // Append up to three key drop names
-        List<GameItem> drops = Server.getDropManager().getNPCdrops(tier.getKillNpcId());
+        List<GameItem> drops = Server.getDropManager().getNPCdrops(tier.getBossNpcId());
         if (drops != null && !drops.isEmpty()) {
             String dropNames = drops.stream()
                     .limit(3)
