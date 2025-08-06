@@ -288,6 +288,8 @@ public class BossInstanceManager {
                     }
                     area.add(npc);
                 }
+                area.add(npc);
+                spawned++;
             }
         }
     }
