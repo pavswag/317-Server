@@ -2,6 +2,7 @@ package io.xeros.content.skills.slayer;
 
 import io.xeros.content.skills.Skill;
 import io.xeros.model.entity.player.Player;
+import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.util.Misc;
 
 import java.util.Arrays;
@@ -108,6 +109,7 @@ public class DemonSlayerMaster extends SlayerMaster {
             player.setDemonHunterTaskProgress(amount);
             DemonHunterTaskOverlayManager.send(player);
             DemonHunterTaskOverlayManager.schedule(player);
+            PlayerHandler.executeGlobalMessage("[Demon Slayer] " + player.getDisplayName() + " received an elite task: " + boss.getNpcName() + ".");
             return task;
         }
 

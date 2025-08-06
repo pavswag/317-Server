@@ -1,6 +1,7 @@
 package io.xeros.content.skills.slayer;
 
 import io.xeros.model.entity.player.Player;
+import io.xeros.model.entity.player.PlayerHandler;
 
 import java.util.Arrays;
 
@@ -32,6 +33,7 @@ public class DemonSlayerMilestoneManager {
                     default:
                         player.sendMessage("Streak " + milestone + " reached!");
                 }
+                PlayerHandler.executeGlobalMessage("[Demon Slayer] " + player.getDisplayName() + " reached a streak of " + milestone + "!");
             }
         });
     }
