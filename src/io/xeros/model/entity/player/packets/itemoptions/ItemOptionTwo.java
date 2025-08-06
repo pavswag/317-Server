@@ -3,6 +3,7 @@ package io.xeros.model.entity.player.packets.itemoptions;
 import io.xeros.Configuration;
 import io.xeros.Server;
 import io.xeros.content.bosspoints.JarsToPoints;
+import io.xeros.content.trails.ClueCasketHandler;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.magic.SanguinestiStaff;
 import io.xeros.content.displayname.ChangeDisplayName;
@@ -96,7 +97,6 @@ public class ItemOptionTwo implements PacketType {
                         duelSession.finish(MultiplayerSessionFinalizeType.WITHDRAW_ITEMS);
                         return;
                 }
-
 
                 if (JarsToPoints.open(player, itemId)) {
                         return;

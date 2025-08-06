@@ -19,6 +19,7 @@ import io.xeros.content.minigames.pk_arena.Highpkarena;
 import io.xeros.content.minigames.pk_arena.Lowpkarena;
 import io.xeros.content.minigames.raids.Raids;
 import io.xeros.content.tournaments.TourneyManager;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.model.Items;
 import io.xeros.model.SoundType;
 import io.xeros.model.collisionmap.doors.Location;
@@ -98,6 +99,7 @@ public class PlayerDeath {
 
     public static void applyDead(Player c) {
         beforeDeath(c);
+        BossInstanceManager.leave(c);
         c.getPA().sendSound(513, SoundType.SOUND);
         MultiplayerSession session = Server.getMultiplayerSessionListener().getMultiplayerSession(c, MultiplayerSessionType.TRADE);
         if (session != null && Server.getMultiplayerSessionListener().inSession(c, MultiplayerSessionType.TRADE)) {

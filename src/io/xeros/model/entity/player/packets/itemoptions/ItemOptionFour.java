@@ -18,6 +18,7 @@ import io.xeros.model.items.ItemAction;
 import io.xeros.model.multiplayersession.MultiplayerSessionFinalizeType;
 import io.xeros.model.multiplayersession.MultiplayerSessionStage;
 import io.xeros.model.multiplayersession.MultiplayerSessionType;
+import io.xeros.content.trails.ClueCasketHandler;
 import io.xeros.model.multiplayersession.duel.DuelSession;
 import io.xeros.util.Misc;
 
