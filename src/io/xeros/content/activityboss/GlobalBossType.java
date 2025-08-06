@@ -55,7 +55,6 @@ public enum GlobalBossType {
     public Position getSpawnPosition() {
         return spawnPosition;
     }
-
     public CombatType getCombatType() {
         return combatType;
     }

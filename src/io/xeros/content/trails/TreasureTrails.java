@@ -54,7 +54,7 @@ public class TreasureTrails {
 		return 0;
 	}
 
-	private static void announceRare(Player player, GameItem item, RewardLevel difficulty) {
+        public static void announceRare(Player player, GameItem item, RewardLevel difficulty) {
 		PlayerHandler.executeGlobalMessage("[<col=CC0000>Treasure</col>] <col=255>" + player.getDisplayNameFormatted() + "</col> " +
 				"<col=CC0000>received " +
 				"<col=255>" + ItemDef.forId(item.getId()).getName() + "</col> " +
@@ -71,24 +71,29 @@ public class TreasureTrails {
 	 * This method is used by clues.
 	 * Rolls=1+rand(1, 2)
 	 */
-	public List<GameItem> generateRewardList(RewardLevel rewardLevel) {
-		return generateRewardList(rewardLevel, 1 + Misc.random(2));
-	}
+        public List<GameItem> generateRewardList(RewardLevel rewardLevel) {
+                return generateRewardList(rewardLevel, 1 + Misc.random(2), true);
+        }
 
-	/**
-	 * This will generate the drop list, globally announce rares and update collection log. It's assumed
-	 * that you will be dropped/adding these items immediately after calling!
-	 * @param rewardLevel The {@link RewardLevel}
-	 * @return List of random items.
-	 */
-	public List<GameItem> generateRewardList(RewardLevel rewardLevel, int rolls) {
-		player.getNpcDeathTracker().add(Misc.optimizeText(rewardLevel.name().toLowerCase()), -1, 0);
-		List<GameItem> rewards = TreasureTrailsRewards.getRandomRewardItems(rewardLevel, rolls);
+        public List<GameItem> generateRewardList(RewardLevel rewardLevel, int rolls) {
+                return generateRewardList(rewardLevel, rolls, true);
+        }
 
-		for (GameItem item : rewards) {
-			if (ItemDef.forId(item.getId()).getName().contains("3rd") || item.getId() == 2577 || ItemDef.forId(item.getId()).getName().contains("mage's")) {
-				announceRare(player, item, rewardLevel);
-			}
+        /**
+         * This will generate the drop list, optionally globally announce rares and update collection log. It's assumed
+         * that you will be dropped/adding these items immediately after calling!
+         * @param rewardLevel The {@link RewardLevel}
+         * @param announce should global announcements be sent for rare items
+         * @return List of random items.
+         */
+        public List<GameItem> generateRewardList(RewardLevel rewardLevel, int rolls, boolean announce) {
+                player.getNpcDeathTracker().add(Misc.optimizeText(rewardLevel.name().toLowerCase()), -1, 0);
+                List<GameItem> rewards = TreasureTrailsRewards.getRandomRewardItems(rewardLevel, rolls);
+
+                for (GameItem item : rewards) {
+                        if (announce && (ItemDef.forId(item.getId()).getName().contains("3rd") || item.getId() == 2577 || ItemDef.forId(item.getId()).getName().contains("mage's"))) {
+                                announceRare(player, item, rewardLevel);
+                        }
 
 			if (TreasureTrailsRewards.possibleDrops.get(rewardLevel).stream().anyMatch(it -> it.getItemId() == item.getId())) {
 				player.getCollectionLog().handleDrop(player, rewardLevel.ordinal(), item.getId(), item.getAmount());
