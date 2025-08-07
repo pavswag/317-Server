@@ -31,6 +31,17 @@ public class GlobalBossContributionTracker {
                 .collect(Collectors.toList());
     }
 
+    public static Map<Player, Integer> getContributors(NPC npc) {
+        Map<Entity, List<Damage>> map = npc.getDamageTaken();
+        if (map.isEmpty()) {
+            return Map.of();
+        }
+        return map.entrySet().stream()
+                .filter(e -> e.getKey() != null && e.getKey().isPlayer())
+                .collect(Collectors.toMap(e -> (Player) e.getKey(),
+                        e -> e.getValue().stream().mapToInt(Damage::getAmount).sum()));
+    }
+
     public static class Contribution {
         private final Player player;
         private final int damage;

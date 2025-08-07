@@ -63,7 +63,7 @@ public class Killstreak {
                 int value = 1 + killstreaks.getOrDefault(type, 0);
                 killstreaks.put(type, value);
                 if (value >= 10) {
-                        GlobalBossActivityManager.record(ActivityType.KILLSTREAK, 1);
+                        GlobalBossActivityManager.record(ActivityType.KILLSTREAK_10, 1);
                 }
                 reward(type);
         }

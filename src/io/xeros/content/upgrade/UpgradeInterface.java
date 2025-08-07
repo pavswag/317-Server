@@ -186,7 +186,7 @@ public class UpgradeInterface {
                                 if (success) {
                                     player.sendMessage("You successfully upgraded your item!");
                                     Achievements.increase(player, AchievementType.UPGRADE, 1);
-                                    GlobalBossActivityManager.record(ActivityType.UPGRADES, 1);
+                                    GlobalBossActivityManager.record(ActivityType.UPGRADE_ITEM, 1);
                                     player.getInventory().addToInventory(new ImmutableItem(val.getReward()));
                                     if (val.isRare()) {
                                             String msg = "@blu@<img=18>[UPGRADE]<img=18>@red@ " + player.getDisplayName()

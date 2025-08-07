@@ -13,17 +13,20 @@ public class GlobalBossSpawnZoneManager {
     private static final Map<GlobalBossType, String> ZONE_NAMES = new EnumMap<>(GlobalBossType.class);
 
     static {
-        ZONES.put(GlobalBossType.CORRUPTED_HYDRA, new Position[]{new Position(1310, 3615, 0)});
-        ZONE_NAMES.put(GlobalBossType.CORRUPTED_HYDRA, "Toxic Swamp");
+        ZONES.put(GlobalBossType.AHRIM, new Position[]{new Position(3222, 9800, 0)});
+        ZONE_NAMES.put(GlobalBossType.AHRIM, "Ahrim's Crypt");
 
-        ZONES.put(GlobalBossType.TREASURE_MIMIC, new Position[]{new Position(3087, 3495, 0)});
-        ZONE_NAMES.put(GlobalBossType.TREASURE_MIMIC, "Edgeville");
+        ZONES.put(GlobalBossType.DHAROK, new Position[]{new Position(3225, 9802, 0)});
+        ZONE_NAMES.put(GlobalBossType.DHAROK, "Dharok's Crypt");
 
-        ZONES.put(GlobalBossType.ASHEN_BEAST, new Position[]{new Position(3039, 3432, 0)});
-        ZONE_NAMES.put(GlobalBossType.ASHEN_BEAST, "Ardougne");
+        ZONES.put(GlobalBossType.KARIL, new Position[]{new Position(3228, 9805, 0)});
+        ZONE_NAMES.put(GlobalBossType.KARIL, "Karil's Crypt");
 
-        ZONES.put(GlobalBossType.BLOOD_REAPER, new Position[]{new Position(3245, 3945, 0)});
-        ZONE_NAMES.put(GlobalBossType.BLOOD_REAPER, "Wilderness");
+        ZONES.put(GlobalBossType.GUTHAN, new Position[]{new Position(3231, 9803, 0)});
+        ZONE_NAMES.put(GlobalBossType.GUTHAN, "Guthan's Crypt");
+
+        ZONES.put(GlobalBossType.VERAC, new Position[]{new Position(3229, 9797, 0)});
+        ZONE_NAMES.put(GlobalBossType.VERAC, "Verac's Crypt");
     }
 
     private GlobalBossSpawnZoneManager() {

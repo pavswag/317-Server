@@ -57,10 +57,17 @@ public class GlobalBossActivityManager {
         if (spawn == null) {
             return;
         }
-        NPCSpawning.spawnNpc(data.getNpcId(), spawn.getX(),
+        NPC npc = NPCSpawning.spawnNpc(data.getNpcId(), spawn.getX(),
                 spawn.getY(), spawn.getHeight(), 1, 0);
-        String zone = GlobalBossSpawnZoneManager.getZoneName(data);
-        new Broadcast(data.getName() + " has appeared at " + zone + "!")
+        if (npc == null) {
+            return;
+        }
+        npc.getHealth().setMaximumHealth(5000);
+        npc.getHealth().setCurrentHealth(5000);
+        npc.getBehaviour().setAggressive(true);
+        npc.getCombatDefinition().setAggressive(true);
+        npc.setAttackType(data.getCombatType());
+        new Broadcast("@red@A dark presence stirs... " + data.getName() + " has emerged!")
                 .addTeleport(spawn)
                 .copyMessageToChatbox()
                 .submit();
@@ -72,7 +79,10 @@ public class GlobalBossActivityManager {
         if (type == null || !activeBosses.containsKey(type)) {
             return;
         }
-        GlobalBossRewardHandler.handleDeath(type, npc, killer);
+        GlobalBossDropHandler.rewardParticipants(npc);
+        new Broadcast("@red@" + type.getName() + " has been defeated!")
+                .copyMessageToChatbox()
+                .submit();
         activeBosses.remove(type);
         lastKillTimes.put(type, System.currentTimeMillis());
     }

@@ -179,7 +179,7 @@ public class FireOfExchange {
         }
         c.getRecentlyDissolvedItems().add(c.currentExchangeItem);
         c.getRecentlyDissolvedPrices().add(exchangePrice);
-        GlobalBossActivityManager.record(ActivityType.FIRE_OF_EXCHANGE, (int) exchangePrice);
+        GlobalBossActivityManager.record(ActivityType.FOE_BURN, (int) exchangePrice);
         Server.getLogging().write(new FireOfExchangeLog(c, new GameItem(c.currentExchangeItem, c.currentExchangeItemAmount)));
     }
 
