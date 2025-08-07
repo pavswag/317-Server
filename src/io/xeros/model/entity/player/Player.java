@@ -6414,6 +6414,11 @@ public class Player extends Entity {
     public long EliteCentBoost = 0;
     public long EliteCentCooldown = 0;
 
+    /**
+     * True when the player is within the aura radius of a Freakazoid bot.
+     */
+    private boolean freakazoidAura;
+
     @Getter
     @Setter
     private POSManager tradePost;
@@ -6474,5 +6479,13 @@ public class Player extends Entity {
 
     public void setPreviewingBossInstance(boolean previewingBossInstance) {
         this.previewingBossInstance = previewingBossInstance;
+    }
+
+    public boolean hasFreakazoidAura() {
+        return freakazoidAura;
+    }
+
+    public void setFreakazoidAura(boolean freakazoidAura) {
+        this.freakazoidAura = freakazoidAura;
     }
 }

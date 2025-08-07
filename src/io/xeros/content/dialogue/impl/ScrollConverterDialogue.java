@@ -25,5 +25,12 @@ public class ScrollConverterDialogue extends DialogueBuilder {
                 new DialogueOption("Nevermind", p -> p.getPA().closeAllWindows())
         );
     }
+
+    private static void openConvertMenu(Player player) {
+        ScrollConversionService.openConvertMenu(player);
+    }
+
+    private static void openReverseMenu(Player player) {
+        ScrollConversionService.openReverseMenu(player);
     }
 }
