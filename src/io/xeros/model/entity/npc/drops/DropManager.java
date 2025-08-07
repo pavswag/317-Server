@@ -538,6 +538,7 @@ public class DropManager {
         // Misc boosts
         if (VotePanelManager.hasDropBoost(player)) modifier += 0.10D;//10%
         if (Hespori.KRONOS_TIMER > 0) modifier += 0.10D;
+        if (player.hasFreakazoidAura()) modifier += 0.05D;
 
         // Location based boosts
         if (player.isSkulled && player.insideBoundary(Boundary.REV_CAVE)) modifier += 0.10D;
