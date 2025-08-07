@@ -31,6 +31,7 @@ import io.xeros.content.bosspoints.BossPoints;
 import io.xeros.content.cheatprevention.RandomEventInterface;
 import io.xeros.content.collection_log.CollectionLog;
 import io.xeros.content.combat.CombatItems;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.combat.EntityDamageQueue;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.core.AttackEntity;
@@ -2405,7 +2406,10 @@ public class Player extends Entity {
         if (heal > getHealth().getMaximumHealth()) getHealth().reset();
         getHealth().increase(amount);
         getPA().refreshSkill(3);
-
+        BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(this);
+        if (area != null && amount >= getHealth().getMaximumHealth() * 0.3) {
+            area.getHazardScheduler().trigger("HEAL_BIG", this);
+        }
     }
 
     public void resetOnDeath() {

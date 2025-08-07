@@ -27,7 +27,7 @@ public class BossInstanceOverlayManager {
         player.getPA().sendFrame126("\u2620\uFE0F Kills: " + current + " / " + tier.getRequiredKillCountToUnlockNext(), 8145);
         player.getPA().sendFrame126("\uD83D\uDD13 Unlocks: " + (next != null ? BossInstanceManager.getTierDisplayNameSafe(next) : "Maxed"), 8146);
         player.getPA().sendFrame126("Mutators: " + getActiveDisplay(), 8147);
-        player.getPA().sendFrame126("", 8148);
+        player.getPA().sendFrame126("Danger: " + InstanceMutatorManager.getDangerLevel() + "%", 8148);
     }
 
     /**

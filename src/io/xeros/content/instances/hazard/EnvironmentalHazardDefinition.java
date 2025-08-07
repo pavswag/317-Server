@@ -18,12 +18,16 @@ public class EnvironmentalHazardDefinition {
     private int drain;
     private int stun;
     private int duration;
+    private String triggerCondition;
+    private int cooldownWindow;
 
     public EnvironmentalHazardType getType() { return type; }
     public int getDamage() { return damage; }
     public int getDrain() { return drain; }
     public int getStun() { return stun; }
     public int getDuration() { return duration; }
+    public String getTriggerCondition() { return triggerCondition; }
+    public int getCooldownWindow() { return cooldownWindow; }
 
     public void activate(BossInstanceArea area) {
         Boundary b = area.getTier().getZoneBoundary();

@@ -1,7 +1,7 @@
 {
   "TIER1": {"frequency": 50, "hazards": [
-    {"type": "FIRE_TILE", "damage": 2, "duration": 5},
-    {"type": "POISON_MIST", "drain": 1, "duration": 5},
+    {"type": "FIRE_TILE", "damage": 2, "duration": 5, "triggerCondition": "PRAYER_USED", "cooldownWindow": 5000},
+    {"type": "POISON_MIST", "drain": 1, "duration": 5, "triggerCondition": "HEAL_BIG", "cooldownWindow": 8000},
     {"type": "CRUMBLING_FLOOR", "stun": 5, "duration": 10}
   ]},
   "TIER2": {"frequency": 48, "hazards": [

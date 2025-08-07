@@ -57,6 +57,10 @@ public class BossInstanceManager {
         public boolean isWithinAoeZone(Position pos) {
             return tier.getZoneBoundary().inside(pos);
         }
+
+        public io.xeros.content.instances.hazard.EnvironmentalHazardScheduler getHazardScheduler() {
+            return hazards;
+        }
     }
 
     /** Description for each mob that can spawn in a tier. */
@@ -259,6 +263,7 @@ public class BossInstanceManager {
         player.getInstancePerformanceTracker().start(tier);
         BossInstanceOverlayManager.sendKillOverlay(player);
         area.startHazards();
+        InstanceMutatorManager.resetDanger();
         player.sendMessage("Active mutators: " + InstanceMutatorManager.getActiveDisplay());
     }
 
@@ -283,6 +288,7 @@ public class BossInstanceManager {
         spawnInstanceGrid(player, tier, area, true);
         player.setPreviewingBossInstance(true);
         BossInstanceOverlayManager.sendKillOverlay(player);
+        InstanceMutatorManager.resetDanger();
         player.sendMessage("Active mutators: " + InstanceMutatorManager.getActiveDisplay());
     }
 
