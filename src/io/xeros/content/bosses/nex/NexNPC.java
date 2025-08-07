@@ -34,7 +34,7 @@ public class NexNPC {
     static final int MAGE_ANIM = 9179;
     static final int RANGE_ANIM = 9180;
     static final int SIPHON_ANIM = 9183;
-    private static int attackSpeed = 4;
+    private static int attackSpeed = 3;
     private static boolean canAttack;
     private boolean healthIncreased;
 
@@ -58,7 +58,7 @@ public class NexNPC {
     public static List<Player> targets;
     static Phase currentPhase = Phase.SMOKE;
     static Player currenTarget;
-    static int specialTimer = 75;
+    static int specialTimer = 60;
     static boolean canBeAttacked;
     boolean started = false;
     public static boolean siphoning = false;
@@ -131,7 +131,7 @@ public class NexNPC {
     }
     private static void meleeAttack(NPC npc, Player target) {
         npc.startAnimation(MELEE_ANIM);
-        int dmg = Misc.random(0,15);
+        int dmg = Misc.random(0,30);
         if (target.protectingMelee()) {
             dmg = (dmg/2);
         }
@@ -175,7 +175,7 @@ public class NexNPC {
     private static final CombatProjectile BASIC_MAGIC_PROJECTILE = new CombatProjectile(2004, 50, 25, 4, 50, 0, 50);
 
     private static void attack(NPC npc) {
-        attackSpeed = 4;
+        attackSpeed = 3;
         updateTargets();
         if (targets == null || targets.isEmpty()) {
             return;
@@ -192,14 +192,14 @@ public class NexNPC {
                     meleeAttack(npc, currenTarget);
                     npc.startAnimation(MELEE_ANIM);
                 } else if (Misc.random(0, 10) == 0 && specialTimer <= 0) {
-                    specialTimer = 75;
+                    specialTimer = 60;
                     npc.forceChat("Let the virus flow through you!");
                     npc.startAnimation(9188);
                     new ChokeAttack(getRandomTarget());
                 } else {
                     for (Player player : targets) {
                         npc.startAnimation(MAGE_ANIM);
-                        sendProjectile(npc, player, SMOKE_RUSH_PROJECTILE, CombatType.MAGE, 33);
+                        sendProjectile(npc, player, SMOKE_RUSH_PROJECTILE, CombatType.MAGE, 45);
                         player.startGraphic(new Graphic(387, Graphic.GraphicHeight.HIGH));
                         if (player.usingInfAgro) {
                             player.attackEntity(npc);
@@ -212,7 +212,7 @@ public class NexNPC {
                     meleeAttack(npc, currenTarget);
                     npc.startAnimation(MELEE_ANIM);
                 } else if (Misc.random(0, 10) == 0 && specialTimer <= 0) {
-                    specialTimer = 75;
+                    specialTimer = 60;
                     npc.forceChat("Fear the shadow!");
                     npc.startAnimation(9188);
                     new ShadowSmash(targets);
@@ -223,7 +223,7 @@ public class NexNPC {
                     for (Player player : targets) {
                         npc.forceChat("Shadow Fire!");
                         player.startGraphic(new Graphic(382, Graphic.GraphicHeight.HIGH));
-                        sendProjectile(npc, player, SHADOW_RANGE_PROJECTILE, CombatType.RANGE, 35);
+                        sendProjectile(npc, player, SHADOW_RANGE_PROJECTILE, CombatType.RANGE, 50);
                         npc.startAnimation(RANGE_ANIM);
                         if (player.usingInfAgro) {
                             player.attackEntity(npc);
@@ -235,13 +235,13 @@ public class NexNPC {
                 if (Misc.random(0,10) == 0 && specialTimer <= 0) {
                     new BloodBarrage(npc, getRandomTarget(), targets);
                     npc.startAnimation(MAGE_ANIM);
-                    specialTimer = 75;
+                    specialTimer = 60;
                 } else if (Misc.random(0, 10) == 0 && specialTimer <= 0) {
-                    specialTimer = 75;
+                    specialTimer = 60;
                     new BloodSacrifice(npc, getRandomTarget());
                     npc.forceChat("I demand a blood sacrifice!");
                 } else if (Misc.random(0, 10) == 0 && specialTimer <= 0) {
-                    specialTimer = 75;
+                    specialTimer = 60;
                     npc.forceChat("A siphon will solve this!");
                     nexSiphon(npc);
                     npc.startAnimation(SIPHON_ANIM);
@@ -258,7 +258,7 @@ public class NexNPC {
                     updateTargets();
                     System.out.println("IcePrison");
                     npc.startAnimation(MAGE_ANIM);
-                    specialTimer = 75;
+                    specialTimer = 60;
                     for (Player target : targets) {
                         new IceBarrage(target, targets);
                         npc.startAnimation(MAGE_ANIM);
@@ -276,12 +276,12 @@ public class NexNPC {
                             target.attackEntity(npc);
                         }
                     }
-                    specialTimer = 75;
+                    specialTimer = 60;
                 } else if (Misc.random(0, 10) == 0 && specialTimer <= 0) {
                     npc.forceChat("Die now, in a prison of ice!");
                     updateTargets();
                     npc.startAnimation(MAGE_ANIM);
-                    specialTimer = 75;
+                    specialTimer = 60;
                     for (Player target : targets) {
                         new IceBarrage(target, targets);
                         npc.startAnimation(MAGE_ANIM);
@@ -301,7 +301,7 @@ public class NexNPC {
 //                    this.startAnimation(9181); // 9175 = walk / 9176 = speed walk / 9178 = Fly?
                 } else {
                     for (Player player : targets) {
-                        sendProjectile(npc, player, BASIC_MAGIC_PROJECTILE, CombatType.MAGE, 40);
+                        sendProjectile(npc, player, BASIC_MAGIC_PROJECTILE, CombatType.MAGE, 60);
                         npc.startAnimation(MAGE_ANIM);
                         if (player.usingInfAgro) {
                             player.attackEntity(npc);

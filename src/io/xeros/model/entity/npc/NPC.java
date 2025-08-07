@@ -10,6 +10,7 @@ import io.xeros.content.bosses.Sol;
 import io.xeros.content.bosses.Solak;
 import io.xeros.content.bosses.hydra.AlchemicalHydra;
 import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
+import io.xeros.model.entity.npc.AdaptiveBoss;
 import io.xeros.content.combat.CombatHit;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.common.CombatMethod;
@@ -112,6 +113,21 @@ public class NPC extends Entity {
      */
     public long lastSpecialAttack;
 
+    @Getter
+    @Setter
+    private long specialAttackCooldown = 15000;
+    private long combatStartTime;
+    @Getter
+    @Setter
+    private boolean adaptive;
+    private boolean specialBoosted;
+    private boolean adaptiveMinionsSummoned;
+    @Getter
+    private boolean enraged;
+    @Getter
+    @Setter
+    private AdaptiveBoss adaptiveBoss;
+
     public boolean spawnedMinions;
 
     @Setter
@@ -205,6 +221,9 @@ public class NPC extends Entity {
         clearUpdateFlags();
         fetchDefaultNpcStats();
         setNpcCombatDefinition();
+        if (this.definition.getCombatLevel() >= 100) {
+            enableAdaptive(null);
+        }
         if (this.getNpcStats() != null && this.getNpcStats().scripts != null && this.getNpcStats().scripts.combat_ != null) {
             this.setCombatMethod(this.getNpcStats().scripts.newCombatInstance());
         }
@@ -222,6 +241,9 @@ public class NPC extends Entity {
         if (this.getNpcStats() != null && this.getNpcStats().scripts != null && this.getNpcStats().scripts.combat_ != null) {
             this.setCombatMethod(this.getNpcStats().scripts.newCombatInstance());
         }
+        if (this.definition.getCombatLevel() >= 100) {
+            enableAdaptive(null);
+        }
     }
 
     public NPC(int index, int npcId, NpcDef definition) {
@@ -235,6 +257,9 @@ public class NPC extends Entity {
         setNpcCombatDefinition();
         if (this.getNpcStats() != null && this.getNpcStats().scripts != null && this.getNpcStats().scripts.combat_ != null) {
             this.setCombatMethod(this.getNpcStats().scripts.newCombatInstance());
+        }
+        if (this.definition.getCombatLevel() >= 100) {
+            enableAdaptive(null);
         }
     }
 
@@ -286,6 +311,67 @@ public class NPC extends Entity {
         //this.defence = defaultNpcStats.getDefenceLevel();
         getHealth().setMaximumHealth(getNpcStats().getHitpoints());
         getHealth().reset();
+    }
+
+    public void enableAdaptive(AdaptiveBoss hook) {
+        this.adaptive = true;
+        this.adaptiveBoss = hook;
+    }
+
+    public boolean canUseSpecial() {
+        return System.currentTimeMillis() - lastSpecialAttack > specialAttackCooldown;
+    }
+
+    public void resetSpecialAttack() {
+        lastSpecialAttack = System.currentTimeMillis();
+    }
+
+    public void processAdaptiveMechanics() {
+        if (!adaptive) {
+            return;
+        }
+
+        if (combatStartTime == 0 && (underAttack || playerAttackingIndex > 0 || npcAttackingIndex > 0)) {
+            combatStartTime = System.currentTimeMillis();
+        }
+
+        int max = getHealth().getMaximumHealth();
+        int current = getHealth().getCurrentHealth();
+
+        if (!specialBoosted && current <= max / 2) {
+            specialAttackCooldown = Math.max(1000, specialAttackCooldown / 2);
+            if (adaptiveBoss != null) {
+                adaptiveBoss.onSpecialBoost(this);
+            }
+            specialBoosted = true;
+        }
+
+        if (!adaptiveMinionsSummoned && current <= (int) (max * 0.3)) {
+            if (adaptiveBoss != null) {
+                adaptiveBoss.onSummonMinions(this);
+            } else {
+                summonDefaultMinions();
+            }
+            adaptiveMinionsSummoned = true;
+        }
+
+        if (!enraged && combatStartTime > 0 && System.currentTimeMillis() - combatStartTime > 90_000) {
+            enraged = true;
+            maxHit += (int) Math.ceil(maxHit * 0.5);
+            if (adaptiveBoss != null) {
+                adaptiveBoss.onEnrage(this);
+            }
+        }
+    }
+
+    private void summonDefaultMinions() {
+        for (int offset = -1; offset <= 1; offset += 2) {
+            NPC minion = NPCSpawning.spawnNpc(getNpcId(), absX + offset, absY + offset, heightLevel, 1, Math.max(1, maxHit / 2));
+            if (minion != null) {
+                minion.getBehaviour().setRespawn(false);
+                minion.setAdaptive(false);
+            }
+        }
     }
 
     public boolean canBeAttacked(Entity entity) {

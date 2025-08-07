@@ -32,7 +32,7 @@ public class Containment {
 
         for (Player player: targets) {
             if(iceBounds.in(player)) {
-                player.appendDamage(Misc.random(20, 60), Hitmark.HIT);
+                player.appendDamage(Misc.random(35, 80), Hitmark.HIT);
             }
         }
     }
