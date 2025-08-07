@@ -4,6 +4,7 @@ import io.xeros.content.instances.impl.LegacySoloPlayerInstance;
 import io.xeros.model.Npcs;
 import io.xeros.model.definitions.NpcDef;
 import io.xeros.model.definitions.NpcStats;
+import io.xeros.model.definitions.NpcStatsBuilder;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.npc.NPCSpawning;
 import io.xeros.model.entity.player.Boundary;
@@ -11,8 +12,7 @@ import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Position;
 import io.xeros.util.Misc;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -31,16 +31,23 @@ public class BossInstanceManager {
     public static class BossInstanceArea extends LegacySoloPlayerInstance {
         private final Player owner;
         private final BossTier tier;
+        private final io.xeros.content.instances.hazard.EnvironmentalHazardScheduler hazards;
 
         BossInstanceArea(Player owner, BossTier tier, Boundary boundary) {
             super(InstanceConfiguration.CLOSE_ON_EMPTY_RESPAWN, owner, boundary);
             this.owner = owner;
             this.tier = tier;
+            this.hazards = new io.xeros.content.instances.hazard.EnvironmentalHazardScheduler(this);
         }
 
         @Override
         public void onDispose() {
+            hazards.stop();
             INSTANCES.remove(owner);
+        }
+
+        public void startHazards() {
+            hazards.start();
         }
 
         public BossTier getTier() {
@@ -49,6 +56,10 @@ public class BossInstanceManager {
 
         public boolean isWithinAoeZone(Position pos) {
             return tier.getZoneBoundary().inside(pos);
+        }
+
+        public io.xeros.content.instances.hazard.EnvironmentalHazardScheduler getHazardScheduler() {
+            return hazards;
         }
     }
 
@@ -59,13 +70,15 @@ public class BossInstanceManager {
         private final int attack;
         private final int defence;
         private final int count;
+        private final List<String> specialAttacks;
 
-        public BossMob(int npcId, int hitpoints, int attack, int defence, int count) {
+        public BossMob(int npcId, int hitpoints, int attack, int defence, int count, List<String> specialAttacks) {
             this.npcId = npcId;
             this.hitpoints = hitpoints;
             this.attack = attack;
             this.defence = defence;
             this.count = count;
+            this.specialAttacks = specialAttacks;
         }
 
         public int getNpcId() {
@@ -84,8 +97,12 @@ public class BossInstanceManager {
             return defence;
         }
 
-        public int getCount() {
+        public int getCount() { 
             return count;
+        }
+
+        public List<String> getSpecialAttacks() {
+            return specialAttacks;
         }
     }
 
@@ -95,25 +112,35 @@ public class BossInstanceManager {
      */
     public enum BossTier {
         TIER1("Training Grounds", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 0, 0, -1, 5, Npcs.COW,
-                new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1, 5)}),
+                new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1, 5, List.of())},
+                new TierCombatProfile(1.0,1.0,1.0,1.0,1.0,List.of())),
         TIER2("Goblin Camp", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.GOBLIN,
-                new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5, 5)}),
+                new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5, 5, List.of())},
+                new TierCombatProfile(1.1,1.05,1.05,1.05,1.0,List.of())),
         TIER3("Giants' Den", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT,
-                new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20, 6)}),
+                new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20, 6, List.of())},
+                new TierCombatProfile(1.2,1.1,1.1,1.1,1.05,List.of())),
         TIER4("Moss Cave", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.MOSS_GIANT,
-                new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40, 6)}),
+                new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40, 6, List.of())},
+                new TierCombatProfile(1.3,1.15,1.15,1.15,1.1,List.of())),
         TIER5("Fire Pit", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT,
-                new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60, 7)}),
+                new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60, 7, List.of())},
+                new TierCombatProfile(1.4,1.2,1.2,1.2,1.15,List.of())),
         TIER6("Green Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.GREEN_DRAGON,
-                new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90, 7)}),
+                new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90, 7, List.of())},
+                new TierCombatProfile(1.5,1.25,1.25,1.25,1.2,List.of())),
         TIER7("Red Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.RED_DRAGON,
-                new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110, 8)}),
+                new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110, 8, List.of())},
+                new TierCombatProfile(1.6,1.3,1.3,1.3,1.25,List.of())),
         TIER8("Black Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON,
-                new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130, 8)}),
+                new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130, 8, List.of())},
+                new TierCombatProfile(1.7,1.35,1.35,1.35,1.3,List.of())),
         TIER9("Demon Domain", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON,
-                new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150, 9)}),
+                new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150, 9, List.of("infernal_slam"))},
+                new TierCombatProfile(1.8,1.4,1.4,1.4,1.35,List.of("infernal_slam"))),
         TIER10("Dragon King", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON,
-                new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180, 1)});
+                new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180, 1, List.of("infernal_slam"))},
+                new TierCombatProfile(2.0,1.5,1.5,1.45,1.4,List.of("infernal_slam")));
 
         static {
             TIER1.requiredKillCountToUnlockNext = 25;  TIER1.nextTier = TIER2;
@@ -137,11 +164,12 @@ public class BossInstanceManager {
         private final int respawnTime;
         private final int bossNpcId;
         private final BossMob[] mobs;
+        private final TierCombatProfile combatProfile;
         private int requiredKillCountToUnlockNext;
         private BossTier nextTier;
 
         BossTier(String zoneName, Boundary zoneBoundary, Position spawnTile, int killRequirement, int gpCost, int itemRequirement,
-                 int respawnTime, int bossNpcId, BossMob[] mobs) {
+                 int respawnTime, int bossNpcId, BossMob[] mobs, TierCombatProfile combatProfile) {
             this.zoneName = zoneName;
             this.zoneBoundary = zoneBoundary;
             this.spawnTile = spawnTile;
@@ -151,6 +179,7 @@ public class BossInstanceManager {
             this.respawnTime = respawnTime;
             this.bossNpcId = bossNpcId;
             this.mobs = mobs;
+            this.combatProfile = combatProfile;
         }
 
         public String getZoneName() {
@@ -187,6 +216,10 @@ public class BossInstanceManager {
 
         public BossMob[] getMobs() {
             return mobs;
+        }
+
+        public TierCombatProfile getCombatProfile() {
+            return combatProfile;
         }
 
         public int getRequiredKillCountToUnlockNext() {
@@ -227,7 +260,11 @@ public class BossInstanceManager {
         player.getPA().movePlayerUnconditionally(spawn.getX(), spawn.getY(), area.getHeight());
 
         spawnInstanceGrid(player, tier, area, false);
+        player.getInstancePerformanceTracker().start(tier);
         BossInstanceOverlayManager.sendKillOverlay(player);
+        area.startHazards();
+        InstanceMutatorManager.resetDanger();
+        player.sendMessage("Active mutators: " + InstanceMutatorManager.getActiveDisplay());
     }
 
     /**
@@ -251,6 +288,8 @@ public class BossInstanceManager {
         spawnInstanceGrid(player, tier, area, true);
         player.setPreviewingBossInstance(true);
         BossInstanceOverlayManager.sendKillOverlay(player);
+        InstanceMutatorManager.resetDanger();
+        player.sendMessage("Active mutators: " + InstanceMutatorManager.getActiveDisplay());
     }
 
     /**
@@ -261,6 +300,7 @@ public class BossInstanceManager {
         Boundary bounds = tier.getZoneBoundary();
         int height = area.getHeight();
 
+        TierCombatProfile profile = tier.getCombatProfile();
         BossMob[] mobs = tier.getMobs();
         if (mobs.length == 0) {
             return;
@@ -273,13 +313,15 @@ public class BossInstanceManager {
             while (spawned < mob.getCount() && attempts++ < mob.getCount() * 5) {
                 int x = Misc.random(bounds.getMinimumX() + 1, bounds.getMaximumX() - 1);
                 int y = Misc.random(bounds.getMinimumY() + 1, bounds.getMaximumY() - 1);
+                NpcStats base = NpcStats.forId(mob.getNpcId());
+                NpcStatsBuilder builder = NpcStats.builder();
+                builder.from(base);
+                builder.setHitpoints((int) (mob.getHitpoints() * profile.getHpMultiplier()));
+                builder.setAttackLevel((int) (mob.getAttack() * profile.getAttackMultiplier()));
+                builder.setDefenceLevel((int) (mob.getDefence() * profile.getDefenceMultiplier()));
+                builder.setAttackSpeed((int) Math.max(1, base.getAttackSpeed() / profile.getAttackSpeedMultiplier()));
                 NPC npc = NPCSpawning.spawnNpc(player, mob.getNpcId(), x, y,
-                        height, 0, 0, false, false,
-                        NpcStats.builder()
-                                .setHitpoints(mob.getHitpoints())
-                                .setAttackLevel(mob.getAttack())
-                                .setDefenceLevel(mob.getDefence())
-                                .createNpcStats());
+                        height, 0, 0, false, false, builder.createNpcStats());
                 if (npc == null) {
                     continue;
                 }
@@ -292,6 +334,14 @@ public class BossInstanceManager {
                     npc.getCombatDefinition().setAggressive(true);
                     npc.getBehaviour().setRespawn(true);
                     npc.getBehaviour().setRespawnWhenPlayerOwned(true);
+                }
+                List<NpcSpecialAttack> specials = NpcSpecialAttackLoader.getAll(mob.getSpecialAttacks());
+                if (!specials.isEmpty()) {
+                    List<NpcSpecialAttack> scaled = new ArrayList<>();
+                    for (NpcSpecialAttack sa : specials) {
+                        scaled.add(sa.withAdjustedChance(sa.getActivationChance() * profile.getSpecialFrequencyMultiplier()));
+                    }
+                    npc.getAttributes().set("tier_special_attacks", scaled);
                 }
                 area.add(npc);
                 spawned++;
@@ -314,6 +364,20 @@ public class BossInstanceManager {
         BossInstanceArea area = INSTANCES.remove(player);
         if (area != null) {
             area.dispose();
+        }
+        InstancePerformanceTracker.InstanceResult result = player.getInstancePerformanceTracker().finish();
+        if (result != null) {
+            long seconds = java.util.concurrent.TimeUnit.MILLISECONDS.toSeconds(result.timeMs);
+            player.sendMessage("@blu@Instance complete in " + seconds + "s, score: " + result.score);
+            // Update personal bests
+            player.getBestInstanceScores().merge(result.tier, result.score, Math::max);
+            player.getBestInstanceTimes().merge(result.tier, result.timeMs, Math::min);
+            InstanceRewardLoader.giveRewards(player, result.score);
+            InstanceLeaderboard.record(player.getLoginName(), result.tier, result.timeMs, result.score);
+            PerformanceRank rank = PerformanceRank.forScore(result.score);
+            if (rank.ordinal() >= PerformanceRank.GOLD.ordinal()) {
+                player.sendMessage("@gre@Achievement unlocked: " + rank.name() + " performer!");
+            }
         }
         player.setPreviewingBossInstance(false);
     }

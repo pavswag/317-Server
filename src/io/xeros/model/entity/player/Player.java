@@ -31,6 +31,7 @@ import io.xeros.content.bosspoints.BossPoints;
 import io.xeros.content.cheatprevention.RandomEventInterface;
 import io.xeros.content.collection_log.CollectionLog;
 import io.xeros.content.combat.CombatItems;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.combat.EntityDamageQueue;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.core.AttackEntity;
@@ -876,6 +877,12 @@ public class Player extends Entity {
     private java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> unlockedBossTiers = java.util.EnumSet.of(io.xeros.content.instances.BossInstanceManager.BossTier.TIER1);
     /** Kill counts tracked per {@link io.xeros.content.instances.BossInstanceManager.BossTier}. */
     private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> tierKillCounts = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
+    /** Best performance score achieved per tier. */
+    private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> bestInstanceScores = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
+    /** Fastest completion time per tier in milliseconds. */
+    private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Long> bestInstanceTimes = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
+    /** Runtime tracker for the active boss instance. */
+    private final io.xeros.content.instances.InstancePerformanceTracker instancePerformanceTracker = new io.xeros.content.instances.InstancePerformanceTracker();
     public int totalEarnedExchangePoints;
     public int referallFlag;
     public int amDonated;
@@ -2438,7 +2445,10 @@ public class Player extends Entity {
         if (heal > getHealth().getMaximumHealth()) getHealth().reset();
         getHealth().increase(amount);
         getPA().refreshSkill(3);
-
+        BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(this);
+        if (area != null && amount >= getHealth().getMaximumHealth() * 0.3) {
+            area.getHazardScheduler().trigger("HEAL_BIG", this);
+        }
     }
 
     public void resetOnDeath() {
@@ -4636,6 +4646,10 @@ public class Player extends Entity {
 
         MeleeExtras.handleRedemption(this, damage);
 
+        if (getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea) {
+            instancePerformanceTracker.addDamageTaken(damage);
+        }
+
         if (entity != null && entity.isPlayer()) playerHitIndex = entity.asPlayer().getIndex();
 
         if (teleTimer <= 0) {
@@ -6361,6 +6375,18 @@ public class Player extends Entity {
      */
     public java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> getTierKillCounts() {
         return tierKillCounts;
+    }
+
+    public java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> getBestInstanceScores() {
+        return bestInstanceScores;
+    }
+
+    public java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Long> getBestInstanceTimes() {
+        return bestInstanceTimes;
+    }
+
+    public io.xeros.content.instances.InstancePerformanceTracker getInstancePerformanceTracker() {
+        return instancePerformanceTracker;
     }
 
     public BlastFurnace getBlastFurnace() {
