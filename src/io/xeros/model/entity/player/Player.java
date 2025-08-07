@@ -2130,7 +2130,7 @@ public class Player extends Entity {
         setSidebarInterface(12, 147); // run tab
         getPA().showOption(4, 0, "Follow");
         getPA().showOption(5, 0, "Trade with");
-        getPA().showOption(1, 0, "Force-Aggro Nearby");
+      //  getPA().showOption(1, 0, "Force-Aggro Nearby");
         getItems().sendInventoryInterface(3214);
         getItems().setEquipment(playerEquipment[playerHat], 1, playerHat, false);
         getItems().setEquipment(playerEquipment[playerCape], 1, playerCape, false);
@@ -6587,27 +6587,9 @@ public class Player extends Entity {
     private boolean previewingBossInstance;
 
 
-    public boolean isBossAlerts() {
-        return bossAlerts;
-    }
-
-    public boolean isBossAlerts() {
-        return bossAlerts;
-    }
 
     public void setBossAlerts(boolean bossAlerts) {
         this.bossAlerts = bossAlerts;
-    }
-
-    public Deque<String> getBossContributions() {
-        return bossContributions;
-    }
-
-    public void addBossContribution(String boss, int damage, int rank) {
-        bossContributions.addFirst(boss + "," + damage + "," + rank);
-        while (bossContributions.size() > 5) {
-            bossContributions.removeLast();
-        }
     }
 
 

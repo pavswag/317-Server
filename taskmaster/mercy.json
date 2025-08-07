@@ -8,14 +8,14 @@
         "stackable": false
       }
     ],
-    "amountToKill": 300,
+    "amountToKill": 50,
     "claimedReward": false,
     "amountKilled": 0,
-    "taskDifficulty": "EASY",
+    "taskDifficulty": "HARD",
     "taskType": "COMBAT",
     "weekly": true,
-    "localDateTime": "2025-08-03T16:15:02.9755457",
-    "desc": "Corporeal Beast"
+    "localDateTime": "2025-08-06T15:46:35.907657",
+    "desc": "Theatre Of Blood"
   },
   {
     "items": [
@@ -26,14 +26,14 @@
         "stackable": false
       }
     ],
-    "amountToKill": 10,
+    "amountToKill": 50,
     "claimedReward": false,
     "amountKilled": 0,
-    "taskDifficulty": "EASY",
+    "taskDifficulty": "MEDIUM",
     "taskType": "COMBAT",
     "weekly": false,
-    "localDateTime": "2025-08-02T21:00:07.5440149",
-    "desc": "Kalphite Queen"
+    "localDateTime": "2025-08-06T11:08:55.7228669",
+    "desc": "K\u0027ril Tsutsaroth"
   },
   {
     "items": [
@@ -50,7 +50,7 @@
     "taskDifficulty": "HARD",
     "taskType": "SKILLING",
     "weekly": false,
-    "localDateTime": "2025-08-02T21:00:07.5480152",
-    "desc": "Use @whi@Dragon bones(altar)"
+    "localDateTime": "2025-08-06T11:08:55.7268687",
+    "desc": "Cook @whi@Fish"
   }
 ]
