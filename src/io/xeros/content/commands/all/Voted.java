@@ -7,6 +7,8 @@ import io.xeros.content.afkzone.AfkBoss;
 import io.xeros.content.bonus.DoubleExperience;
 import io.xeros.content.commands.Command;
 import io.xeros.content.commands.moderator.vboss;
+import io.xeros.content.activityboss.ActivityType;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.content.vote_panel.VotePanelManager;
 import io.xeros.content.vote_panel.VoteUser;
 import io.xeros.content.wogw.Wogw;
@@ -123,6 +125,7 @@ public class Voted extends Command {
                         player.sendMessage("You have gained " +  (voteCount * 2) + " voting points and gp!");
                 }
                 player.getItems().addItemUnderAnyCircumstance(Items.COINS, amount);
+                GlobalBossActivityManager.record(ActivityType.VOTE_CLAIM, voteCount);
         }
 
         public static void incrementGlobalVote(final int voteCount) {

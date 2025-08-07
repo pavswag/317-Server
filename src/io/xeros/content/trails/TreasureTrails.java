@@ -6,6 +6,8 @@ import java.util.List;
 import io.xeros.Server;
 import io.xeros.content.achievement.AchievementType;
 import io.xeros.content.achievement.Achievements;
+import io.xeros.content.activityboss.ActivityType;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.content.perky.Perks;
 import io.xeros.content.skills.hunter.impling.ItemRarity;
 import io.xeros.model.Items;
@@ -123,27 +125,29 @@ public class TreasureTrails {
 		displayRewards(rewards);
 	}
 
-	public void displayRewards(List<GameItem> rewards) {
-		player.outStream.createFrameVarSizeWord(53);
-		player.outStream.writeUnsignedWord(6963);
-		player.outStream.writeUnsignedWord(rewards.size());
-		for (int i = 0; i < rewards.size(); i++) {
-			if (player.playerItemsN[i] > 254) {
-				player.outStream.writeByte(255);
-				player.outStream.writeDWord_v2(rewards.get(i).getAmount());
-			} else {
-				player.outStream.writeByte(rewards.get(i).getAmount());
-			}
-			if (rewards.size() > 0) {
-				player.outStream.writeWordBigEndianA(rewards.get(i).getId() + 1);
-			} else {
-				player.outStream.writeWordBigEndianA(0);
-			}
-		}
-		player.outStream.endFrameVarSizeWord();
-		player.flushOutStream();
-		player.getPA().showInterface(6960);
-	}
+        public void displayRewards(List<GameItem> rewards) {
+                int displayCount = Math.min(28, rewards.size());
+                player.outStream.createFrameVarSizeWord(53);
+                player.outStream.writeUnsignedWord(6963);
+                player.outStream.writeUnsignedWord(displayCount);
+                for (int i = 0; i < displayCount; i++) {
+                        GameItem reward = rewards.get(i);
+                        if (reward.getAmount() > 254) {
+                                player.outStream.writeByte(255);
+                                player.outStream.writeDWord_v2(reward.getAmount());
+                        } else {
+                                player.outStream.writeByte(reward.getAmount());
+                        }
+                        if (reward.getId() > 0) {
+                                player.outStream.writeWordBigEndianA(reward.getId() + 1);
+                        } else {
+                                player.outStream.writeWordBigEndianA(0);
+                        }
+                }
+                player.outStream.endFrameVarSizeWord();
+                player.flushOutStream();
+                player.getPA().showInterface(6960);
+        }
 
 	private static void openCasket(Player player, RewardLevel rewardLevel) {
 		if (player.getItems().freeSlots() < 3) {
@@ -159,26 +163,27 @@ public class TreasureTrails {
 			player.getItems().addItemUnderAnyCircumstance(rewardLevel.getCasketId(),1);
 		}
 
-		switch (rewardLevel) {
-			case EASY:
-				player.setEasyClueCounter(player.getEasyClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getEasyClueCounter() + " Easy Treasure Trails.");
-				break;
-			case MEDIUM:
-				player.setMediumClueCounter(player.getMediumClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getMediumClueCounter() + " medium Treasure Trails.");
-				break;
-			case HARD:
-				player.setHardClueCounter(player.getHardClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getHardClueCounter() + " hard Treasure Trails.");
-				break;
-			case MASTER:
-				player.setMasterClueCounter(player.getMasterClueCounter() + 1);
-				player.sendMessage("<col=2d256d>You have completed " + player.getMasterClueCounter() + " master Treasure Trails.");
-				PetHandler.roll(player, PetHandler.Pets.BLOODHOUND);
-				break;
-		}
-	}
+                switch (rewardLevel) {
+                        case EASY:
+                                player.setEasyClueCounter(player.getEasyClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getEasyClueCounter() + " Easy Treasure Trails.");
+                                break;
+                        case MEDIUM:
+                                player.setMediumClueCounter(player.getMediumClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getMediumClueCounter() + " medium Treasure Trails.");
+                                break;
+                        case HARD:
+                                player.setHardClueCounter(player.getHardClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getHardClueCounter() + " hard Treasure Trails.");
+                                break;
+                        case MASTER:
+                                player.setMasterClueCounter(player.getMasterClueCounter() + 1);
+                                player.sendMessage("<col=2d256d>You have completed " + player.getMasterClueCounter() + " master Treasure Trails.");
+                                PetHandler.roll(player, PetHandler.Pets.BLOODHOUND);
+                                break;
+                }
+                GlobalBossActivityManager.record(ActivityType.CLUE_CASKET, 1);
+        }
 
 	private static void openClueScroll(Player c, RewardLevel rewardLevel) {
 		if (rewardLevel == RewardLevel.MASTER && !MasterClue.checkRequirementOnOpen(c)) {

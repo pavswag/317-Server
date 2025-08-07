@@ -26,6 +26,7 @@ import io.xeros.content.seasons.ChristmasBoss;
 import io.xeros.content.seasons.HalloweenBoss;
 import io.xeros.content.taskmaster.TaskMasterKills;
 import io.xeros.content.taskmaster.Tasks;
+import io.xeros.content.skills.slayer.DemonHunterTaskManager;
 import io.xeros.model.*;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
@@ -130,6 +131,8 @@ public class NPCProcess {
             }
         }
 
+        npc.processAdaptiveMechanics();
+
         if (npc.actionTimer > 0) {
             npc.actionTimer--;
         }
@@ -145,7 +148,10 @@ public class NPCProcess {
             NPCHitPlayer.applyDamage(npc, npcHandler);
         }
         if (npc.attackTimer > 0) {
-            npc.attackTimer--;
+            npc.attackTimer -= npc.isEnraged() ? 2 : 1;
+            if (npc.attackTimer < 0) {
+                npc.attackTimer = 0;
+            }
         }
         if (npc.getNpcId() == 7553) {
             npc.walkingHome = true;
@@ -716,6 +722,7 @@ public class NPCProcess {
                             for (Player p : PlayerHandler.getPlayers()) {
                                 if (p.getDisplayName().equalsIgnoreCase(target.slayerPartner)) {
                                     p.getSlayer().killTaskMonster(npc);
+                                    DemonHunterTaskManager.handleKill(p, npc);
                                 }
                             }
                         }
@@ -746,6 +753,7 @@ public class NPCProcess {
                         }
 
                         target.getSlayer().killTaskMonster(npc);
+                        DemonHunterTaskManager.handleKill(target, npc);
                         if (npc.getNpcId() != 239 || npc.getNpcId() != 965 || npc.getNpcId() != 8713 || npc.getNpcId() != 11278) {
                             target.getBossTimers().death(npc);
                         }

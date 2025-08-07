@@ -22,9 +22,9 @@ public class BloodBarrage {
                 possibleTargets.gfx100(377);
                 int dam;
                 if(possibleTargets.protectingMagic())
-                    dam = Misc.random(40);
-                else
                     dam = Misc.random(60);
+                else
+                    dam = Misc.random(80);
                 if (npc.getHealth().getCurrentHealth() >= 99) {
                     npc.appendHeal(dam, Hitmark.HEAL_PURPLE);
                 }

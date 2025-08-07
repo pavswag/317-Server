@@ -5,6 +5,7 @@ import io.xeros.Server;
 import io.xeros.content.achievement.AchievementType;
 import io.xeros.content.achievement.Achievements;
 import io.xeros.content.achievement_diary.impl.FremennikDiaryEntry;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.content.achievement_diary.impl.MorytaniaDiaryEntry;
 import io.xeros.content.battlepass.Pass;
 import io.xeros.content.bosses.Hunllef;
@@ -121,6 +122,8 @@ public class NPCDeath {
             }, 1);
         }
         player.getAchievements().kill(npc);
+
+        GlobalBossActivityManager.onBossDeath(npc, player);
 
         PetHandler.rollOnNpcDeath(player, npc);
 
