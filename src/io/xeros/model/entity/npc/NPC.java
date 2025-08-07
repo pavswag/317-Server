@@ -67,6 +67,13 @@ public class NPC extends Entity {
 
     public boolean isGodmode;
 
+    @Setter
+    @Getter
+    private boolean attackable = true;
+
+    @Setter
+    private String customName;
+
     public int summonedBy;
     public int absX, absY;
     public int heightLevel;
@@ -1460,7 +1467,7 @@ public class NPC extends Entity {
     }
 
     public String getName() {
-        return getDefinition().getName();
+        return customName != null ? customName : getDefinition().getName();
     }
 
     @Override
