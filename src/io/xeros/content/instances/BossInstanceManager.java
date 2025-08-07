@@ -249,6 +249,7 @@ public class BossInstanceManager {
         player.getPA().movePlayerUnconditionally(spawn.getX(), spawn.getY(), area.getHeight());
 
         spawnInstanceGrid(player, tier, area, false);
+        player.getInstancePerformanceTracker().start(tier);
         BossInstanceOverlayManager.sendKillOverlay(player);
     }
 
@@ -347,6 +348,20 @@ public class BossInstanceManager {
         BossInstanceArea area = INSTANCES.remove(player);
         if (area != null) {
             area.dispose();
+        }
+        InstancePerformanceTracker.InstanceResult result = player.getInstancePerformanceTracker().finish();
+        if (result != null) {
+            long seconds = java.util.concurrent.TimeUnit.MILLISECONDS.toSeconds(result.timeMs);
+            player.sendMessage("@blu@Instance complete in " + seconds + "s, score: " + result.score);
+            // Update personal bests
+            player.getBestInstanceScores().merge(result.tier, result.score, Math::max);
+            player.getBestInstanceTimes().merge(result.tier, result.timeMs, Math::min);
+            InstanceRewardLoader.giveRewards(player, result.score);
+            InstanceLeaderboard.record(player.getLoginName(), result.tier, result.timeMs, result.score);
+            PerformanceRank rank = PerformanceRank.forScore(result.score);
+            if (rank.ordinal() >= PerformanceRank.GOLD.ordinal()) {
+                player.sendMessage("@gre@Achievement unlocked: " + rank.name() + " performer!");
+            }
         }
         player.setPreviewingBossInstance(false);
     }

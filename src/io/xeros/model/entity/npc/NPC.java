@@ -1409,6 +1409,9 @@ public class NPC extends Entity {
             }
 
             addDamageTaken(player, damage);
+            if (player.getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea) {
+                player.getInstancePerformanceTracker().addDamageDealt(damage);
+            }
 
             if (player.getRaidsInstance() != null && Boundary.isIn(player, Boundary.FULL_RAIDS)) {
                 Raids.damage(player, damage);
