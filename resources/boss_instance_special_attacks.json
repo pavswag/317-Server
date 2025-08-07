@@ -1,0 +1,12 @@
+[
+  {
+    "name": "infernal_slam",
+    "activationChance": 0.2,
+    "cooldown": 12,
+    "animation": 7004,
+    "gfx": 78,
+    "sound": 123,
+    "effect": "INFERNAL_SLAM",
+    "messages": ["The demon slams the ground, scorching flames erupt!"]
+  }
+]
