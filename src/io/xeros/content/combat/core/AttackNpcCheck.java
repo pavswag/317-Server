@@ -75,6 +75,10 @@ public class AttackNpcCheck {
         if (ThrallSystem.isThrall(npc.getNpcId())) {
             return false;
         }
+
+        if (!npc.isAttackable()) {
+            return false;
+        }
 //        if (!npc.getPosition().inMulti()) {
             //!npcs[i].getPosition().inMulti() && ((c.underAttackByPlayer > 0 && c.underAttackByNpc != i)
             //        || (c.underAttackByNpc > 0 && c.underAttackByNpc != i))

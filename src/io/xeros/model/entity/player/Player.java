@@ -285,6 +285,9 @@ public class Player extends Entity {
     public int wintertodtHighscore;
     public boolean usingInfPrayer;
 
+    public boolean bossAlerts = true;
+    private final Deque<String> bossContributions = new ArrayDeque<>();
+
     public boolean itemPickedUpThisTick = false;
 
     public boolean usingInfAgro;
@@ -432,6 +435,8 @@ public class Player extends Entity {
     public StringInput stringInputHandler;
     public AmountInput amountInputHandler;
     private long aggressionTimer = System.currentTimeMillis();
+    @Getter
+    private long aggroTimer;
     private boolean printAttackStats = Server.isTest();
     private boolean printDefenceStats = Server.isTest();
     private boolean helpCcMuted = false;
@@ -460,6 +465,31 @@ public class Player extends Entity {
 
     public void resetAggressionTimer() {
         aggressionTimer = System.currentTimeMillis();
+    }
+
+    public void setAggroTimer(long time) {
+        aggroTimer = time;
+    }
+
+    /**
+     * Extends the current aggression timer by the given duration. If no timer is
+     * active the duration starts from the current time.
+     */
+    public void extendAggroTimer(long durationMillis) {
+        if (durationMillis == Long.MAX_VALUE) {
+            aggroTimer = Long.MAX_VALUE;
+            return;
+        }
+        long base = Math.max(System.currentTimeMillis(), aggroTimer);
+        aggroTimer = base + durationMillis;
+    }
+
+    public long getAggroTimeRemaining() {
+        return Math.max(0, aggroTimer - System.currentTimeMillis());
+    }
+
+    public boolean isAggroTimerActive() {
+        return System.currentTimeMillis() < aggroTimer;
     }
 
     public boolean isAggressionTimeout(Player player) {
@@ -686,6 +716,14 @@ public class Player extends Entity {
     private final ChargeTrident chargeTrident = new ChargeTrident(this);
     private PlayerMovementState movementState = PlayerMovementState.getDefault();
     private Slayer slayer;
+    private Optional<io.xeros.content.skills.slayer.DemonSlayerMaster.DemonSlayerTask> demonHunterTask = Optional.empty();
+    private int demonHunterTaskProgress;
+    private int demonHunterXP;
+    private int demonTaskStreak;
+    private int demonHunterTierUnlocked;
+    private final java.util.Set<Integer> demonHunterMilestones = new java.util.HashSet<>();
+    private int demonMarks;
+    private Optional<io.xeros.content.skills.slayer.DemonSlayerContract> demonContract = Optional.empty();
     private final AgilityHandler agilityHandler = new AgilityHandler();
     private final PointItems pointItems = new PointItems(this);
     private final GnomeAgility gnomeAgility = new GnomeAgility();
@@ -2085,6 +2123,7 @@ public class Player extends Entity {
         setSidebarInterface(12, 147); // run tab
         getPA().showOption(4, 0, "Follow");
         getPA().showOption(5, 0, "Trade with");
+        getPA().showOption(1, 0, "Force-Aggro Nearby");
         getItems().sendInventoryInterface(3214);
         getItems().setEquipment(playerEquipment[playerHat], 1, playerHat, false);
         getItems().setEquipment(playerEquipment[playerCape], 1, playerCape, false);
@@ -2841,6 +2880,8 @@ public class Player extends Entity {
             getPA().showOption(1, 0, "null");
         }
 
+        getPA().showOption(1, 0, "Force-Aggro Nearby");
+
         // Walkable interfaces in this if-else
         if (getPosition().inWild() && !getPosition().inClanWars()) {
 
@@ -3018,6 +3059,75 @@ public class Player extends Entity {
     public Slayer getSlayer() {
         if (slayer == null) slayer = new Slayer(this);
         return slayer;
+    }
+
+    public Optional<io.xeros.content.skills.slayer.DemonSlayerMaster.DemonSlayerTask> getDemonHunterTask() {
+        return demonHunterTask;
+    }
+
+    public void setDemonHunterTask(io.xeros.content.skills.slayer.DemonSlayerMaster.DemonSlayerTask task) {
+        this.demonHunterTask = Optional.ofNullable(task);
+    }
+
+    public int getDemonHunterTaskProgress() {
+        return demonHunterTaskProgress;
+    }
+
+    public void setDemonHunterTaskProgress(int progress) {
+        this.demonHunterTaskProgress = progress;
+    }
+
+    public int getDemonHunterXP() {
+        return demonHunterXP;
+    }
+
+    public void addDemonHunterXP(int amount) {
+        this.demonHunterXP += amount;
+        getPA().addSkillXPMultiplied(amount, Skill.DEMON_HUNTER.getId(), true);
+    }
+
+    public int getDemonTaskStreak() {
+        return demonTaskStreak;
+    }
+
+    public void incrementDemonTaskStreak() {
+        demonTaskStreak++;
+    }
+
+    public void resetDemonTaskStreak() {
+        demonTaskStreak = 0;
+    }
+
+    public int getDemonHunterTierUnlocked() {
+        return demonHunterTierUnlocked;
+    }
+
+    public void setDemonHunterTierUnlocked(int tier) {
+        this.demonHunterTierUnlocked = tier;
+    }
+
+    public java.util.Set<Integer> getDemonHunterMilestones() {
+        return demonHunterMilestones;
+    }
+
+    public int getDemonMarks() {
+        return demonMarks;
+    }
+
+    public void addDemonMarks(int amount) {
+        demonMarks += amount;
+    }
+
+    public void removeDemonMarks(int amount) {
+        demonMarks = Math.max(0, demonMarks - amount);
+    }
+
+    public Optional<io.xeros.content.skills.slayer.DemonSlayerContract> getDemonContract() {
+        return demonContract;
+    }
+
+    public void setDemonContract(io.xeros.content.skills.slayer.DemonSlayerContract contract) {
+        this.demonContract = Optional.ofNullable(contract);
     }
 
     public Agility getAgility() {
@@ -6411,6 +6521,11 @@ public class Player extends Entity {
     public long EliteCentBoost = 0;
     public long EliteCentCooldown = 0;
 
+    /**
+     * True when the player is within the aura radius of a Freakazoid bot.
+     */
+    private boolean freakazoidAura;
+
     @Getter
     @Setter
     private POSManager tradePost;
@@ -6446,11 +6561,54 @@ public class Player extends Entity {
     private boolean previewingBossInstance;
 
 
+    public boolean isBossAlerts() {
+        return bossAlerts;
+    }
+
+    public boolean isBossAlerts() {
+        return bossAlerts;
+    }
+
+    public void setBossAlerts(boolean bossAlerts) {
+        this.bossAlerts = bossAlerts;
+    }
+
+    public Deque<String> getBossContributions() {
+        return bossContributions;
+    }
+
+    public void addBossContribution(String boss, int damage, int rank) {
+        bossContributions.addFirst(boss + "," + damage + "," + rank);
+        while (bossContributions.size() > 5) {
+            bossContributions.removeLast();
+        }
+    }
+
+
+    public Deque<String> getBossContributions() {
+        return bossContributions;
+    }
+
+    public void addBossContribution(String boss, int damage, int rank) {
+        bossContributions.addFirst(boss + "," + damage + "," + rank);
+        while (bossContributions.size() > 5) {
+            bossContributions.removeLast();
+        }
+    }
+
     public boolean isPreviewingBossInstance() {
         return previewingBossInstance;
     }
 
     public void setPreviewingBossInstance(boolean previewingBossInstance) {
         this.previewingBossInstance = previewingBossInstance;
+    }
+
+    public boolean hasFreakazoidAura() {
+        return freakazoidAura;
+    }
+
+    public void setFreakazoidAura(boolean freakazoidAura) {
+        this.freakazoidAura = freakazoidAura;
     }
 }
