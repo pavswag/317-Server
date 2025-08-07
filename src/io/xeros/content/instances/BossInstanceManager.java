@@ -31,16 +31,23 @@ public class BossInstanceManager {
     public static class BossInstanceArea extends LegacySoloPlayerInstance {
         private final Player owner;
         private final BossTier tier;
+        private final io.xeros.content.instances.hazard.EnvironmentalHazardScheduler hazards;
 
         BossInstanceArea(Player owner, BossTier tier, Boundary boundary) {
             super(InstanceConfiguration.CLOSE_ON_EMPTY_RESPAWN, owner, boundary);
             this.owner = owner;
             this.tier = tier;
+            this.hazards = new io.xeros.content.instances.hazard.EnvironmentalHazardScheduler(this);
         }
 
         @Override
         public void onDispose() {
+            hazards.stop();
             INSTANCES.remove(owner);
+        }
+
+        public void startHazards() {
+            hazards.start();
         }
 
         public BossTier getTier() {
@@ -251,6 +258,8 @@ public class BossInstanceManager {
         spawnInstanceGrid(player, tier, area, false);
         player.getInstancePerformanceTracker().start(tier);
         BossInstanceOverlayManager.sendKillOverlay(player);
+        area.startHazards();
+        player.sendMessage("Active mutators: " + InstanceMutatorManager.getActiveDisplay());
     }
 
     /**
@@ -274,6 +283,7 @@ public class BossInstanceManager {
         spawnInstanceGrid(player, tier, area, true);
         player.setPreviewingBossInstance(true);
         BossInstanceOverlayManager.sendKillOverlay(player);
+        player.sendMessage("Active mutators: " + InstanceMutatorManager.getActiveDisplay());
     }
 
     /**
