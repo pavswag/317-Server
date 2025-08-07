@@ -94,25 +94,25 @@ public class BossInstanceManager {
      * the NPCs that can spawn.
      */
     public enum BossTier {
-        TIER1("Training Grounds", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 0, 0, -1, 5, Npcs.COW,
+        TIER1("Training Grounds", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 0, 0, -1, 5, Npcs.COW,
                 new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1, 5)}),
-        TIER2("Goblin Camp", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.GOBLIN,
+        TIER2("Goblin Camp", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.GOBLIN,
                 new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5, 5)}),
-        TIER3("Giants' Den", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT,
+        TIER3("Giants' Den", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT,
                 new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20, 6)}),
-        TIER4("Moss Cave", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.MOSS_GIANT,
+        TIER4("Moss Cave", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.MOSS_GIANT,
                 new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40, 6)}),
-        TIER5("Fire Pit", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT,
+        TIER5("Fire Pit", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT,
                 new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60, 7)}),
-        TIER6("Green Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.GREEN_DRAGON,
+        TIER6("Green Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.GREEN_DRAGON,
                 new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90, 7)}),
-        TIER7("Red Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.RED_DRAGON,
+        TIER7("Red Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.RED_DRAGON,
                 new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110, 8)}),
-        TIER8("Black Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON,
+        TIER8("Black Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON,
                 new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130, 8)}),
-        TIER9("Demon Domain", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON,
+        TIER9("Demon Domain", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON,
                 new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150, 9)}),
-        TIER10("Dragon King", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON,
+        TIER10("Dragon King", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON,
                 new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180, 1)});
 
         static {
@@ -288,6 +288,8 @@ public class BossInstanceManager {
                     npc.getCombatDefinition().setAggressive(false);
                     npc.getBehaviour().setRespawn(false);
                 } else {
+                    npc.getBehaviour().setAggressive(true);
+                    npc.getCombatDefinition().setAggressive(true);
                     npc.getBehaviour().setRespawn(true);
                     npc.getBehaviour().setRespawnWhenPlayerOwned(true);
                 }
