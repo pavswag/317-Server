@@ -54,9 +54,6 @@ public class BossInstanceManager {
             return tier;
         }
 
-        public boolean isWithinAoeZone(Position pos) {
-            return tier.getZoneBoundary().inside(pos);
-        }
 
         public io.xeros.content.instances.hazard.EnvironmentalHazardScheduler getHazardScheduler() {
             return hazards;
