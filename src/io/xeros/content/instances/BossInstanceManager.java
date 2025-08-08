@@ -178,6 +178,7 @@ public class BossInstanceManager {
 
         BossTier(String zoneName, Boundary zoneBoundary, Position spawnTile, int killRequirement, int gpCost, int itemRequirement,
                  int respawnTime, int bossNpcId, int desiredNpcDensity, BossMob[] mobs, TierCombatProfile combatProfile) {
+
             this.zoneName = zoneName;
             this.zoneBoundary = zoneBoundary;
             this.spawnTile = spawnTile;

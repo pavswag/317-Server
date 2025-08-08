@@ -98,6 +98,7 @@ public class EnvironmentalHazardDefinition {
                                     ((IHazardReactive)n).onHazardTriggered(ctx);
                                     HazardDebugLogger.logNpcReaction(area, n, ctx);
                                 }
+
                             }
                         }
                         if (++ticks >= duration) {

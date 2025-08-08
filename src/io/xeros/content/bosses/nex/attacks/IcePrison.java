@@ -36,7 +36,7 @@ public class IcePrison {
                     for (Player player :
                             targets) {
                         if (iceBounds.in(player)) {
-                            player.appendDamage(Misc.random(20, 75), Hitmark.HIT);
+                            player.appendDamage(Misc.random(40, 90), Hitmark.HIT);
                         }
                     }
                     container.stop();

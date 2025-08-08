@@ -537,7 +537,7 @@ public class Region {
     public static void load() {
         try {
             System.out.println("Loading mapdata..");
-            MapLoadLogger.log("Region.load", -1, "map_index", false, true, null);
+            //MapLoadLogger.log("Region.load", -1, "map_index", false, true, null);
             File f = new File("./mapdata/map_index");
             byte[] buffer = new byte[(int) f.length()];
             DataInputStream dis = new DataInputStream(new FileInputStream(f));
@@ -668,17 +668,17 @@ public class Region {
             byte[] file2 = getBuffer(new File("./mapdata/index4/" + regionData.getLandscape() + ".gz"));
             if (file1 == null || file1.length == 0 || file2 == null || file2.length == 0) {
                 System.err.println("[Map] Missing or corrupt map for regionId=" + regionId);
-                MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, false, null);
+            //    MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, false, null);
                 return false;
             }
             loadMaps(regionId, new ByteStream(file1), new ByteStream(file2));
-            MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, true, null);
+          //  MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, true, null);
             regions.put(regionId, regionData);
             return true;
         } catch (Exception e) {
             errors.add(regionData.getLandscape());
             errors.add(regionData.getObjects());
-            MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, false, e);
+            //MapLoadLogger.log("Region.loadMap", regionId, mapFile, alreadyLoaded, false, e);
             return false;
         }
     }

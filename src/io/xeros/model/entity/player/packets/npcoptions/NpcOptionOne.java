@@ -16,6 +16,7 @@ import io.xeros.content.dialogue.impl.MacDialogue;
 import io.xeros.content.dialogue.impl.MonkChaosAltarDialogue;
 import io.xeros.content.dialogue.impl.PineAwayDialogue;
 import io.xeros.content.dialogue.impl.ScrollConverterDialogue;
+import io.xeros.content.bots.FreakazoidBot;
 import io.xeros.content.minigames.inferno.Inferno;
 import io.xeros.content.minigames.tob.TobConstants;
 import io.xeros.content.miniquests.magearenaii.dialogue.KolodionDialogue;
@@ -96,7 +97,7 @@ public class NpcOptionOne {
 			return;
 		}
 
-		switch (npcType) {
+                switch (npcType) {
 			case 11675:
 				player.getPA().showInterface(24960);
 				player.sendErrorMessage("We only accept US Phone Numbers!");
@@ -119,6 +120,9 @@ public class NpcOptionOne {
                         break;
                 case Npcs.SCROLL_CONVERTER:
                         player.start(new ScrollConverterDialogue(player));
+                        break;
+                case FreakazoidBot.NPC_ID:
+                        FreakazoidBot.talk(player, npc);
                         break;
                 case FarmingTeleport.NPC:
                         player.start(new FarmingTeleport(player, npc));

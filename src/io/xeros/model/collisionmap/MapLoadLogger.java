@@ -15,9 +15,9 @@ public final class MapLoadLogger {
     public static void log(String source, int regionId, String mapFile, boolean alreadyLoaded, boolean success, Throwable t) {
         String message = String.format("[MapLoad] source=%s regionId=%d file=%s alreadyLoaded=%s success=%s", source, regionId, mapFile, alreadyLoaded, success);
         if (t != null) {
-            logger.warning(message + " error=" + t.getMessage());
+           // logger.warning(message + " error=" + t.getMessage());
         } else {
-            logger.info(message);
+           // logger.info(message);
         }
     }
 }

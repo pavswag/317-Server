@@ -604,6 +604,10 @@ public abstract class Entity {
         damageTaken.clear();
     }
 
+    public Map<Entity, List<Damage>> getDamageTaken() {
+        return damageTaken;
+    }
+
     /**
      * The status of the entities health whether it's normal, poisoned, or some
      * other nature.
