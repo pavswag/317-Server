@@ -25,5 +25,4 @@ public class ScrollConverterDialogue extends DialogueBuilder {
                 new DialogueOption("Nevermind", p -> p.getPA().closeAllWindows())
         );
     }
-    }
 }

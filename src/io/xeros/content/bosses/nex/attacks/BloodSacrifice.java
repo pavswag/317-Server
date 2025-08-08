@@ -28,7 +28,7 @@ public class BloodSacrifice {
                 if(container.getTotalTicks() == 7 && target.getPosition().getAbsDistance(npc.getPosition()) < 7) {
                     int newPrayerPoints = (int) (target.prayerPoint * 0.67);
                     target.prayerPoint = newPrayerPoints;
-                    int damage = Misc.random(30, 50);
+                    int damage = Misc.random(40, 70);
                     if (target.protectingMagic()) {
                         damage = (damage / 2);
                     }

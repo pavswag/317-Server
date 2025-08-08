@@ -1,0 +1,5 @@
+[
+  {"name":"Blood Leech", "description":"Heals for 5% of damage dealt"},
+  {"name":"Arcane Shield", "description":"Reduces magic damage taken by 30%"},
+  {"name":"Soul Echo", "description":"Launches a phantom hit 2 ticks after every special"}
+]
