@@ -21,9 +21,9 @@ public class IceBarrage {
 
                 int dam;
                 if(possibleTargets.protectingMagic())
-                    dam = Misc.random(15);
+                    dam = Misc.random(25);
                 else
-                    dam = Misc.random(33);
+                    dam = Misc.random(45);
                 possibleTargets.appendDamage(dam, (dam > 0 ? Hitmark.HIT : Hitmark.MISS));
                 if (dam > 0) {
                     possibleTargets.gfx0(369);
