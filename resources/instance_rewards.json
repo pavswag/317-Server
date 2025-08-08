@@ -1,0 +1,17 @@
+{
+  "bronze": [
+    {"id": 995, "amount": 1000}
+  ],
+  "silver": [
+    {"id": 995, "amount": 5000}
+  ],
+  "gold": [
+    {"id": 995, "amount": 10000}
+  ],
+  "platinum": [
+    {"id": 995, "amount": 20000}
+  ],
+  "diamond": [
+    {"id": 995, "amount": 50000}
+  ]
+}

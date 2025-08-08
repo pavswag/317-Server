@@ -12,6 +12,7 @@ import io.xeros.model.multiplayersession.MultiplayerSessionStage;
 import io.xeros.model.multiplayersession.MultiplayerSessionType;
 import io.xeros.model.multiplayersession.duel.DuelSession;
 import io.xeros.model.multiplayersession.duel.DuelSessionRules;
+import io.xeros.content.instances.BossInstanceManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -334,9 +335,13 @@ public class CombatPrayer {
 		activatePrayer(c, i, true);
 	}
 
-	private static void activatePrayer(Player c, int i, boolean shift) {
-		// Shift prayers right
-		if (shift && c.isProtectionPrayersShiftRight()) {
+    private static void activatePrayer(Player c, int i, boolean shift) {
+        BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(c);
+        if (area != null) {
+            area.getHazardScheduler().trigger("PRAYER_USED", c);
+        }
+        // Shift prayers right
+        if (shift && c.isProtectionPrayersShiftRight()) {
 			if (i == 18) {
 				i = 16;
 			} else if (i == 17) {

@@ -1,0 +1,10 @@
+{
+  "TIER_1": {
+    "frequency": 50,
+    "patterns": [
+      { "type": "FLAME_RING" },
+      { "type": "VOID_PULSE" },
+      { "type": "TOXIC_TORRENT" }
+    ]
+  }
+}

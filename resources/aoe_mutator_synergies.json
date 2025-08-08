@@ -1,0 +1,6 @@
+[
+  {
+    "mutators": ["DOUBLE_HAZARD_MODE", "UNSTABLE_TILES"],
+    "name": "Hazard Spiral"
+  }
+]

@@ -43,6 +43,7 @@ import io.xeros.model.items.EquipmentSet;
 import io.xeros.model.items.GameItem;
 import io.xeros.util.Location3D;
 import io.xeros.util.Misc;
+import io.xeros.content.instances.InstanceMutatorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -368,6 +369,7 @@ public class NPCDeath {
                 }
             }
             BossInstanceOverlayManager.sendKillOverlay(player);
+            InstanceMutatorManager.spikeGlobal(5);
         }
 
         if (NpcDef.forId(npcId).getCombatLevel() >= 1) {
