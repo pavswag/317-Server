@@ -38,6 +38,8 @@ import io.xeros.model.entity.npc.stats.NpcCombatDefinition;
 import io.xeros.model.entity.npc.stats.NpcCombatSkill;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
+import java.util.*;
+import java.util.stream.Collectors;
 import io.xeros.content.instances.hazard.IHazardReactive;
 import io.xeros.content.instances.hazard.HazardContext;
 import io.xeros.model.entity.player.PlayerHandler;
@@ -137,6 +139,8 @@ public class NPC extends Entity implements IHazardReactive {
     private List<AdaptiveTrait> adaptiveTraits = new ArrayList<>();
     private long spawnTime;
     private final Map<Integer, Integer> threatLevels = new HashMap<>();
+    @Getter
+    private final List<NPC> adaptiveMinions = new ArrayList<>();
 
     public boolean spawnedMinions;
 
@@ -349,6 +353,15 @@ public class NPC extends Entity implements IHazardReactive {
             return;
         }
 
+        Player target = playerAttackingIndex > 0 ? PlayerHandler.players[playerAttackingIndex] : null;
+
+        if (!adaptiveMinions.isEmpty()) {
+            if (target == null || target.respawnTimer > 0 || target.heightLevel != heightLevel
+                    || !target.goodDistance(absX, absY, target.getX(), target.getY(), 20)) {
+                clearMinions();
+            }
+        }
+
         if (combatStartTime == 0 && (underAttack || playerAttackingIndex > 0 || npcAttackingIndex > 0)) {
             combatStartTime = System.currentTimeMillis();
         }
@@ -419,13 +432,37 @@ public class NPC extends Entity implements IHazardReactive {
     }
 
     private void summonDefaultMinions() {
+        Player target = playerAttackingIndex > 0 ? PlayerHandler.players[playerAttackingIndex] : null;
         for (int offset = -1; offset <= 1; offset += 2) {
-            NPC minion = NPCSpawning.spawnNpc(getNpcId(), absX + offset, absY + offset, heightLevel, 1, Math.max(1, maxHit / 2));
+            NPC minion;
+            if (target != null) {
+                minion = NPCSpawning.spawnNpc(target, getNpcId(), absX + offset, absY + offset, heightLevel, 1,
+                        Math.max(1, maxHit / 2), true, false);
+            } else {
+                minion = NPCSpawning.spawnNpc(getNpcId(), absX + offset, absY + offset, heightLevel, 1,
+                        Math.max(1, maxHit / 2));
+            }
             if (minion != null) {
                 minion.getBehaviour().setRespawn(false);
                 minion.setAdaptive(false);
+                registerMinion(minion);
             }
         }
+    }
+
+    public void registerMinion(NPC minion) {
+        if (minion != null) {
+            adaptiveMinions.add(minion);
+        }
+    }
+
+    public void clearMinions() {
+        for (NPC minion : adaptiveMinions) {
+            if (minion != null) {
+                minion.unregister();
+            }
+        }
+        adaptiveMinions.clear();
     }
 
     private void addThreat(Player player, int amount) {
@@ -668,6 +705,7 @@ public class NPC extends Entity implements IHazardReactive {
     public void unregister() {
         setUnregister(true);
         this.getRegionProvider().removeNpcClipping(this);
+        clearMinions();
     }
 
     /**

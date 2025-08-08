@@ -27,5 +27,4 @@ public class ScrollConverterDialogue extends DialogueBuilder {
     private static void openConvertMenu(Player player) {
         ScrollConversionService.batchConvert(player);
     }
-
 }

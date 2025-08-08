@@ -29,7 +29,8 @@ public interface AdaptiveBoss {
 
     /**
      * Called once when the boss drops below 30% hitpoints and default minions
-     * are about to be spawned.
+     * are about to be spawned. Use {@link NPC#registerMinion(NPC)} after
+     * spawning custom minions so they can be cleaned up automatically.
      */
     default void onSummonMinions(NPC npc) {}
 
