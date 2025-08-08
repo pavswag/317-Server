@@ -38,6 +38,9 @@ import io.xeros.model.entity.npc.stats.NpcCombatDefinition;
 import io.xeros.model.entity.npc.stats.NpcCombatSkill;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
+import io.xeros.content.instances.hazard.IHazardReactive;
+import io.xeros.content.instances.hazard.HazardContext;
+import io.xeros.content.instances.hazard.HazardReaction;
 import java.util.*;
 import java.util.stream.Collectors;
 import io.xeros.content.instances.hazard.IHazardReactive;
@@ -1764,7 +1767,17 @@ public class NPC extends Entity implements IHazardReactive {
 
     }
     @Override
-    public void onHazardTriggered(HazardContext ctx) {
-        // NPCs can override for custom reactions.
+    public HazardReaction onHazardTriggered(HazardContext ctx) {
+        int delay = Misc.random(2, 6);
+        switch (ctx.getType()) {
+            case FIRE_TILE:
+                return HazardReaction.of("Vengeance Shout", 1, delay, n -> n.forceChat("Vengeance!"));
+            case CRUMBLING_FLOOR:
+                return HazardReaction.of("Phase Shift", 2, delay, n -> n.forceChat("Phase shift!"));
+            case POISON_MIST:
+                return HazardReaction.of("Toxic Drain", 1, delay, n -> n.forceChat("Toxic drain!"));
+            default:
+                return null;
+        }
     }
 }

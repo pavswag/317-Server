@@ -6,6 +6,7 @@ import io.xeros.content.instances.InstanceMutatorManager;
 import io.xeros.content.instances.hazard.HazardTier;
 import io.xeros.content.instances.hazard.HazardEffectModifier;
 import io.xeros.content.instances.hazard.WeeklyHazardManager;
+import io.xeros.content.instances.hazard.HazardDebugLogger;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
@@ -21,6 +22,8 @@ public class EnvironmentalHazardScheduler {
     private boolean started;
     private final Map<String, Long> cooldowns = new HashMap<>();
     private boolean inProgress;
+    private final Map<EnvironmentalHazardType, HazardRecord> lastHazards = new EnumMap<>(EnvironmentalHazardType.class);
+    private String lastDamageTick = "none";
 
     public EnvironmentalHazardScheduler(BossInstanceArea area) {
         this.area = area;
@@ -66,7 +69,8 @@ public class EnvironmentalHazardScheduler {
                             }
                         }
                     }
-                    def.activate(area, hazardTier, dmgMod, synergyMsg);
+                    HazardContext ctx = def.activate(area, hazardTier, dmgMod, synergyMsg);
+                    recordLast(def, ctx);
                     InstanceMutatorManager.increaseDanger(5);
                     inProgress = false;
                 }
@@ -135,7 +139,8 @@ public class EnvironmentalHazardScheduler {
                         }
                     }
                 }
-                def.activate(area, hazardTier, dmgMod, synergyMsg);
+                HazardContext ctx = def.activate(area, hazardTier, dmgMod, synergyMsg);
+                recordLast(def, ctx);
                 cooldowns.put(trigger, now);
                 InstanceMutatorManager.increaseDanger(7);
             }
@@ -159,6 +164,35 @@ public class EnvironmentalHazardScheduler {
         List<String> list = new ArrayList<>();
         list.add("started=" + started + ", inProgress=" + inProgress);
         list.add("cooldowns=" + cooldowns.toString());
+        list.add("lastHazards=" + lastHazards.keySet());
+        list.add("lastDamage=" + lastDamageTick);
+        list.addAll(InstanceMutatorManager.getSynergyLog());
         return list;
         }
+
+    private void recordLast(EnvironmentalHazardDefinition def, HazardContext ctx) {
+        lastHazards.put(def.getType(), new HazardRecord(def, ctx));
+        HazardDebugLogger.log(area, "trigger:" + def.getType());
+    }
+
+    public void recordDamage(String info) {
+        lastDamageTick = info;
+        HazardDebugLogger.log(area, "damage:" + info);
+    }
+
+    public boolean replay(EnvironmentalHazardType type) {
+        HazardRecord r = lastHazards.get(type);
+        if (r == null) return false;
+        r.def.activate(area, r.ctx.getTier(), 1.0, null, r.ctx.getPosition());
+        HazardDebugLogger.log(area, "replay:" + type);
+        return true;
+    }
+
+    private static class HazardRecord {
+        final EnvironmentalHazardDefinition def;
+        final HazardContext ctx;
+        HazardRecord(EnvironmentalHazardDefinition def, HazardContext ctx) {
+            this.def = def; this.ctx = ctx;
+        }
+    }
 }

@@ -33,6 +33,8 @@ public class InstanceMutatorManager {
     private static int globalDanger;
     private static final Map<InstanceMutator, List<HazardEffectModifier>> HAZARD_SYNERGIES = new EnumMap<>(InstanceMutator.class);
     private static final List<String> SYNERGY_LOG = new ArrayList<>();
+    /** Owner used for global cycle events. */
+    private static final Object EVENT_OWNER = new Object();
 
     static {
         try {
@@ -61,7 +63,7 @@ public class InstanceMutatorManager {
                 List.of(new HazardEffectModifier(EnvironmentalHazardType.POISON_MIST, 1.5,
                         "Venomous mutator intensifies the toxic fumes!")));
         // decay global danger every ~60s
-        CycleEventHandler.getSingleton().addEvent(null, new CycleEvent() {
+        CycleEventHandler.getSingleton().addEvent(EVENT_OWNER, new CycleEvent() {
             @Override
             public void execute(CycleEventContainer container) {
                 globalDanger = Math.max(0, globalDanger - 1);

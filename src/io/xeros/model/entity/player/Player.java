@@ -80,6 +80,7 @@ import io.xeros.content.leaderboards.LeaderboardPeriodicity;
 import io.xeros.content.leaderboards.LeaderboardUtils;
 import io.xeros.content.instances.hazard.IHazardReactive;
 import io.xeros.content.instances.hazard.HazardContext;
+import io.xeros.content.instances.hazard.HazardReaction;
 import io.xeros.content.lootbag.LootingBag;
 import io.xeros.content.minigames.arbograve.ArbograveConstants;
 import io.xeros.content.minigames.arbograve.ArbograveContainer;
@@ -6615,7 +6616,8 @@ public class Player extends Entity implements IHazardReactive {
     }
 
     @Override
-    public void onHazardTriggered(HazardContext ctx) {
-        // Hook for future hazard reactions.
+    public HazardReaction onHazardTriggered(HazardContext ctx) {
+        // Players currently have no special reactions.
+        return null;
     }
 }

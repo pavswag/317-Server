@@ -39,12 +39,14 @@ public class BossInstanceManager {
         private final Player owner;
         private final BossTier tier;
         private final io.xeros.content.instances.hazard.EnvironmentalHazardScheduler hazards;
+        private final boolean dynamicWaveScaling;
 
         BossInstanceArea(Player owner, BossTier tier, Boundary boundary) {
             super(InstanceConfiguration.CLOSE_ON_EMPTY_RESPAWN, owner, boundary);
             this.owner = owner;
             this.tier = tier;
             this.hazards = new io.xeros.content.instances.hazard.EnvironmentalHazardScheduler(this);
+            this.dynamicWaveScaling = tier.isDynamicWaveScaling();
         }
 
         @Override
@@ -55,6 +57,25 @@ public class BossInstanceManager {
 
         public void startHazards() {
             hazards.start();
+        }
+
+        public void startDynamicSpawns() {
+            if (!dynamicWaveScaling) {
+                return;
+            }
+            CycleEventHandler.getSingleton().addEvent(this, new CycleEvent() {
+                int ticks;
+                @Override
+                public void execute(CycleEventContainer container) {
+                    ticks++;
+                    if (ticks % 50 == 0) {
+                        spawnInstanceGrid(owner, tier, BossInstanceArea.this, false);
+                    }
+                    if (InstanceMutatorManager.getGlobalDanger() > 90) {
+                        spawnInstanceGrid(owner, tier, BossInstanceArea.this, false);
+                    }
+                }
+            }, 1);
         }
 
         public BossTier getTier() {
@@ -118,34 +139,34 @@ public class BossInstanceManager {
      * the NPCs that can spawn.
      */
     public enum BossTier {
-        TIER1("Training Grounds", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 0, 0, -1, 5, Npcs.COW, 20,
+        TIER1("Training Grounds", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 0, 0, -1, 5, Npcs.COW, 20,
                 new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1, 5, List.of())},
                 new TierCombatProfile(1.0,1.0,1.0,1.0,1.0,List.of())),
-        TIER2("Goblin Camp", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.GOBLIN, 20,
+        TIER2("Goblin Camp", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.GOBLIN, 20,
                 new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5, 5, List.of())},
                 new TierCombatProfile(1.1,1.05,1.05,1.05,1.0,List.of())),
-        TIER3("Giants' Den", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT, 20,
+        TIER3("Giants' Den", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT, 20,
                 new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20, 6, List.of())},
                 new TierCombatProfile(1.2,1.1,1.1,1.1,1.05,List.of())),
-        TIER4("Moss Cave", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.MOSS_GIANT, 20,
+        TIER4("Moss Cave", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.MOSS_GIANT, 20,
                 new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40, 6, List.of())},
                 new TierCombatProfile(1.3,1.15,1.15,1.15,1.1,List.of())),
-        TIER5("Fire Pit", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT, 20,
+        TIER5("Fire Pit", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT, 20,
                 new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60, 7, List.of())},
                 new TierCombatProfile(1.4,1.2,1.2,1.2,1.15,List.of())),
-        TIER6("Green Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.GREEN_DRAGON, 20,
+        TIER6("Green Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.GREEN_DRAGON, 20,
                 new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90, 7, List.of())},
                 new TierCombatProfile(1.5,1.25,1.25,1.25,1.2,List.of())),
-        TIER7("Red Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.RED_DRAGON, 20,
+        TIER7("Red Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.RED_DRAGON, 20,
                 new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110, 8, List.of())},
                 new TierCombatProfile(1.6,1.3,1.3,1.3,1.25,List.of())),
-        TIER8("Black Dragons", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON, 20,
+        TIER8("Black Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON, 20,
                 new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130, 8, List.of())},
                 new TierCombatProfile(1.7,1.35,1.35,1.35,1.3,List.of())),
-        TIER9("Demon Domain", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON, 20,
+        TIER9("Demon Domain", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON, 20,
                 new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150, 9, List.of("infernal_slam"))},
                 new TierCombatProfile(1.8,1.4,1.4,1.4,1.35,List.of("infernal_slam"))),
-        TIER10("Dragon King", new Boundary(2273, 4762, 2292, 4781), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON, 20,
+        TIER10("Dragon King", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON, 20,
                 new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180, 1, List.of("infernal_slam"))},
                 new TierCombatProfile(2.0,1.5,1.5,1.45,1.4,List.of("infernal_slam")));
 
@@ -173,12 +194,19 @@ public class BossInstanceManager {
         private final int desiredNpcDensity;
         private final BossMob[] mobs;
         private final TierCombatProfile combatProfile;
+        private final boolean dynamicWaveScaling;
         private int requiredKillCountToUnlockNext;
         private BossTier nextTier;
 
         BossTier(String zoneName, Boundary zoneBoundary, Position spawnTile, int killRequirement, int gpCost, int itemRequirement,
                  int respawnTime, int bossNpcId, int desiredNpcDensity, BossMob[] mobs, TierCombatProfile combatProfile) {
+            this(zoneName, zoneBoundary, spawnTile, killRequirement, gpCost, itemRequirement, respawnTime, bossNpcId,
+                    desiredNpcDensity, mobs, combatProfile, false);
+        }
 
+        BossTier(String zoneName, Boundary zoneBoundary, Position spawnTile, int killRequirement, int gpCost, int itemRequirement,
+                 int respawnTime, int bossNpcId, int desiredNpcDensity, BossMob[] mobs, TierCombatProfile combatProfile,
+                 boolean dynamicWaveScaling) {
             this.zoneName = zoneName;
             this.zoneBoundary = zoneBoundary;
             this.spawnTile = spawnTile;
@@ -190,6 +218,7 @@ public class BossInstanceManager {
             this.desiredNpcDensity = desiredNpcDensity;
             this.mobs = mobs;
             this.combatProfile = combatProfile;
+            this.dynamicWaveScaling = dynamicWaveScaling;
         }
 
         public String getZoneName() {
@@ -232,9 +261,9 @@ public class BossInstanceManager {
             return mobs;
         }
 
-        public TierCombatProfile getCombatProfile() {
-            return combatProfile;
-        }
+        public TierCombatProfile getCombatProfile() { return combatProfile; }
+
+        public boolean isDynamicWaveScaling() { return dynamicWaveScaling; }
 
         public int getRequiredKillCountToUnlockNext() {
             return requiredKillCountToUnlockNext;
@@ -277,6 +306,7 @@ public class BossInstanceManager {
         player.getInstancePerformanceTracker().start(tier);
         BossInstanceOverlayManager.sendKillOverlay(player);
         area.startHazards();
+        area.startDynamicSpawns();
         InstanceMutatorManager.resetDanger();
         player.sendMessage("Active mutators: " + InstanceMutatorManager.getActiveDisplay());
     }
@@ -302,6 +332,7 @@ public class BossInstanceManager {
         spawnInstanceGrid(player, tier, area, true);
         player.setPreviewingBossInstance(true);
         BossInstanceOverlayManager.sendKillOverlay(player);
+        area.startDynamicSpawns();
         InstanceMutatorManager.resetDanger();
         player.sendMessage("Active mutators: " + InstanceMutatorManager.getActiveDisplay());
     }

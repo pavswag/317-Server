@@ -6,7 +6,8 @@ package io.xeros.content.instances.hazard;
  */
 public interface IHazardReactive {
 
-    default void onHazardTriggered(HazardContext ctx) {
+    default HazardReaction onHazardTriggered(HazardContext ctx) {
         // Default no-op.
+        return null;
     }
 }
