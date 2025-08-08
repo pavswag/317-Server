@@ -38,6 +38,8 @@ import io.xeros.model.entity.npc.stats.NpcCombatDefinition;
 import io.xeros.model.entity.npc.stats.NpcCombatSkill;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
+import java.util.*;
+import java.util.stream.Collectors;
 import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.model.entity.player.Position;
 import io.xeros.model.entity.thrall.ThrallSystem;
@@ -127,6 +129,14 @@ public class NPC extends Entity {
     @Getter
     @Setter
     private AdaptiveBoss adaptiveBoss;
+    @Getter
+    private AdaptivePhase[] adaptivePhases = new AdaptivePhase[0];
+    @Getter
+    private int currentPhase;
+    @Getter
+    private List<AdaptiveTrait> adaptiveTraits = new ArrayList<>();
+    private long spawnTime;
+    private final Map<Integer, Integer> threatLevels = new HashMap<>();
 
     public boolean spawnedMinions;
 
@@ -316,6 +326,14 @@ public class NPC extends Entity {
     public void enableAdaptive(AdaptiveBoss hook) {
         this.adaptive = true;
         this.adaptiveBoss = hook;
+        this.adaptivePhases = hook != null ? hook.getPhases() : new AdaptivePhase[0];
+        this.currentPhase = 0;
+        this.spawnTime = System.currentTimeMillis();
+        this.adaptiveTraits = AdaptiveTraitLoader.randomTraits();
+        if (!adaptiveTraits.isEmpty()) {
+            String traitsText = adaptiveTraits.stream().map(AdaptiveTrait::getName).collect(Collectors.joining(", "));
+            forceChat(traitsText);
+        }
     }
 
     public boolean canUseSpecial() {
@@ -337,6 +355,38 @@ public class NPC extends Entity {
 
         int max = getHealth().getMaximumHealth();
         int current = getHealth().getCurrentHealth();
+
+        long elapsed = System.currentTimeMillis() - spawnTime;
+        if (adaptivePhases.length > 0 && currentPhase + 1 < adaptivePhases.length) {
+            AdaptivePhase next = adaptivePhases[currentPhase + 1];
+            boolean hpTrigger = next.getHpPercent() > 0 && current <= (int) (max * next.getHpPercent());
+            boolean timeTrigger = next.getTimeMillis() > 0 && elapsed >= next.getTimeMillis();
+            if (hpTrigger || timeTrigger) {
+                currentPhase++;
+                if (next.getIntroMessage() != null) {
+                    forceChat(next.getIntroMessage());
+                }
+                next.activateEnvironment(this);
+                if (adaptiveBoss != null) {
+                    adaptiveBoss.onPhaseStart(this, next);
+                }
+            }
+        }
+
+        for (Player p : PlayerHandler.players) {
+            if (p == null) {
+                continue;
+            }
+            int dist = Math.max(Math.abs(p.absX - absX), Math.abs(p.absY - absY));
+            if (dist <= 1) {
+                addThreat(p, 5);
+            } else if (dist <= 6) {
+                addThreat(p, 1);
+            }
+        }
+        if (adaptiveBoss != null) {
+            adaptiveBoss.updateThreat(this, threatLevels);
+        }
 
         if (!specialBoosted && current <= max / 2) {
             specialAttackCooldown = Math.max(1000, specialAttackCooldown / 2);
@@ -362,6 +412,10 @@ public class NPC extends Entity {
                 adaptiveBoss.onEnrage(this);
             }
         }
+
+        if (enraged) {
+            reprioritizeTarget();
+        }
     }
 
     private void summonDefaultMinions() {
@@ -372,6 +426,34 @@ public class NPC extends Entity {
                 minion.setAdaptive(false);
             }
         }
+    }
+
+    private void addThreat(Player player, int amount) {
+        threatLevels.merge(player.getIndex(), amount, Integer::sum);
+    }
+
+    private void reprioritizeTarget() {
+        if (threatLevels.isEmpty()) {
+            return;
+        }
+        int top = threatLevels.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(-1);
+        if (top > 0) {
+            setPlayerAttackingIndex(top);
+        }
+    }
+
+    public String getNextPhaseInfo() {
+        if (adaptivePhases == null || currentPhase + 1 >= adaptivePhases.length) {
+            return "none";
+        }
+        AdaptivePhase next = adaptivePhases[currentPhase + 1];
+        if (next.getHpPercent() > 0) {
+            return (int) (next.getHpPercent() * 100) + "% HP";
+        }
+        if (next.getTimeMillis() > 0) {
+            return (next.getTimeMillis() / 1000) + "s";
+        }
+        return "unknown";
     }
 
     public boolean canBeAttacked(Entity entity) {
