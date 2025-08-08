@@ -1,0 +1,24 @@
+[
+  {
+    "npcId": 12345,
+    "name": "freakazoid",
+    "displayName": "@blu@Freakazoid",
+    "position": {"x":3092,"y":3505,"z":0},
+    "emotes": [866,2109,2110,2106],
+    "messages": [
+      "\uD83D\uDD25 Vote daily to help us grow! ::vote \uD83D\uDD25",
+      "\uD83D\uDC8E Donating supports server development! ::donate \uD83D\uDC8E",
+      "\uD83D\uDCA1 Tip: You can exchange unwanted gear in the Fire of Exchange!",
+      "\uD83C\uDFAF Set a goal today: A new drop? A new pet? Let's go!",
+      "\uD83D\uDCE3 Join the Discord for giveaways and events! ::discord"
+    ],
+    "quotes": [
+      "Keep grinding, the drop will come!",
+      "Every day is a chance to improve!",
+      "You're doing great, adventurer!"
+    ],
+    "emoteDelay": 50,
+    "emoteVariance": 10,
+    "messageDelay": 50
+  }
+]

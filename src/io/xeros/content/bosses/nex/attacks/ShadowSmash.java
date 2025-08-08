@@ -15,7 +15,7 @@ public class ShadowSmash {
         for (Player player : targets) {
             if (player != null) {
                 player.gfx0(381);
-                int dmg = Misc.random(50);
+                int dmg = Misc.random(65);
                 if (player.protectingMagic()) {
                     dmg = (dmg / 2);
                 }

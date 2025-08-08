@@ -10,6 +10,7 @@ public class HazardDebugLogger {
     private static final Map<BossInstanceArea, Deque<String>> NPC_LOGS = new HashMap<>();
     private static final Map<BossInstanceArea, List<String>> AUDIT_LOGS = new HashMap<>();
 
+
     public static void logNpcReaction(BossInstanceArea area, NPC npc, HazardContext ctx) {
         Deque<String> q = NPC_LOGS.computeIfAbsent(area, k -> new ArrayDeque<>());
         String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -29,7 +30,6 @@ public class HazardDebugLogger {
             logs.remove(0);
         }
     }
-
     public static List<String> getNpcLogs(BossInstanceArea area) {
         Deque<String> q = NPC_LOGS.get(area);
         if (q == null) {

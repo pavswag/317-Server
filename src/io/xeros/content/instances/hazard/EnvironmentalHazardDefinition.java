@@ -68,8 +68,7 @@ public class EnvironmentalHazardDefinition {
                                 p.appendDamage(scaledDamage, Hitmark.HIT);
                                 names.add(p.getDisplayName());
                                 HazardReaction r = ((IHazardReactive)p).onHazardTriggered(ctx);
-                                // players currently have no reactions
-                            }
+                                // players currently have no reactions                            }
                         }
                         for (NPC n : area.getNpcs()) {
                             if (n.getPosition().equals(pos) && n instanceof IHazardReactive) {
@@ -109,8 +108,7 @@ public class EnvironmentalHazardDefinition {
                                 p.getPA().refreshSkill(5);
                                 p.sendMessage("@pur@Poison mist drains your prayer!");
                                 HazardReaction r = ((IHazardReactive)p).onHazardTriggered(ctx);
-                                names.add(p.getDisplayName());
-                            }
+                                names.add(p.getDisplayName());                            }
                         }
                         for (NPC n : area.getNpcs()) {
                             Position np = n.getPosition();

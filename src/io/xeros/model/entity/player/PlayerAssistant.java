@@ -3365,12 +3365,16 @@ public class PlayerAssistant {
 		return addSkillXP((int) (player.getExpMode().getType().getExperienceRate(Skill.forId(skill)) * amount), skill, dropExperience);
 	}
 
-	public boolean addSkillXP(int amount, int skill, boolean dropExperience) {
-		if (amount <= 0)
-			return false;
-		if (amount >= 200_000_000) {
-			amount = 200_000_000;
-		}
+        public boolean addSkillXP(int amount, int skill, boolean dropExperience) {
+                if (amount <= 0)
+                        return false;
+                if (amount >= 200_000_000) {
+                        amount = 200_000_000;
+                }
+
+                if (player.hasFreakazoidAura()) {
+                        amount += (int) (amount * 0.02);
+                }
 
 		if (player.skillLock[skill]) {
 			return false;

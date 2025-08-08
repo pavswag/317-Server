@@ -1,0 +1,12 @@
+[
+  {"tier":1, "xpMultiplier":2.0},
+  {"tier":2, "xpMultiplier":2.5},
+  {"tier":3, "xpMultiplier":3.0},
+  {"tier":4, "xpMultiplier":3.5},
+  {"tier":5, "xpMultiplier":4.0},
+  {"tier":6, "xpMultiplier":4.5},
+  {"tier":7, "xpMultiplier":5.0},
+  {"tier":8, "xpMultiplier":5.5},
+  {"tier":9, "xpMultiplier":5.8},
+  {"tier":10, "xpMultiplier":6.0}
+]

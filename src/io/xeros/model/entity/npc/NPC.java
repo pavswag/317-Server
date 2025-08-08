@@ -10,6 +10,7 @@ import io.xeros.content.bosses.Sol;
 import io.xeros.content.bosses.Solak;
 import io.xeros.content.bosses.hydra.AlchemicalHydra;
 import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
+import io.xeros.model.entity.npc.AdaptiveBoss;
 import io.xeros.content.combat.CombatHit;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.common.CombatMethod;
@@ -40,6 +41,10 @@ import io.xeros.model.entity.player.Player;
 import io.xeros.content.instances.hazard.IHazardReactive;
 import io.xeros.content.instances.hazard.HazardContext;
 import io.xeros.content.instances.hazard.HazardReaction;
+import java.util.*;
+import java.util.stream.Collectors;
+import io.xeros.content.instances.hazard.IHazardReactive;
+import io.xeros.content.instances.hazard.HazardContext;
 import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.model.entity.player.Position;
 import io.xeros.model.entity.thrall.ThrallSystem;
@@ -68,6 +73,13 @@ public class NPC extends Entity implements IHazardReactive {
     public int npcId;
 
     public boolean isGodmode;
+
+    @Setter
+    @Getter
+    private boolean attackable = true;
+
+    @Setter
+    private String customName;
 
     public int summonedBy;
     public int absX, absY;
@@ -107,6 +119,31 @@ public class NPC extends Entity implements IHazardReactive {
      * attackType: 0 = melee, 1 = range, 2 = mage
      */
     public long lastSpecialAttack;
+
+    @Getter
+    @Setter
+    private long specialAttackCooldown = 15000;
+    private long combatStartTime;
+    @Getter
+    @Setter
+    private boolean adaptive;
+    private boolean specialBoosted;
+    private boolean adaptiveMinionsSummoned;
+    @Getter
+    private boolean enraged;
+    @Getter
+    @Setter
+    private AdaptiveBoss adaptiveBoss;
+    @Getter
+    private AdaptivePhase[] adaptivePhases = new AdaptivePhase[0];
+    @Getter
+    private int currentPhase;
+    @Getter
+    private List<AdaptiveTrait> adaptiveTraits = new ArrayList<>();
+    private long spawnTime;
+    private final Map<Integer, Integer> threatLevels = new HashMap<>();
+    @Getter
+    private final List<NPC> adaptiveMinions = new ArrayList<>();
 
     public boolean spawnedMinions;
 
@@ -201,6 +238,9 @@ public class NPC extends Entity implements IHazardReactive {
         clearUpdateFlags();
         fetchDefaultNpcStats();
         setNpcCombatDefinition();
+        if (this.definition.getCombatLevel() >= 100) {
+            enableAdaptive(null);
+        }
         if (this.getNpcStats() != null && this.getNpcStats().scripts != null && this.getNpcStats().scripts.combat_ != null) {
             this.setCombatMethod(this.getNpcStats().scripts.newCombatInstance());
         }
@@ -218,6 +258,9 @@ public class NPC extends Entity implements IHazardReactive {
         if (this.getNpcStats() != null && this.getNpcStats().scripts != null && this.getNpcStats().scripts.combat_ != null) {
             this.setCombatMethod(this.getNpcStats().scripts.newCombatInstance());
         }
+        if (this.definition.getCombatLevel() >= 100) {
+            enableAdaptive(null);
+        }
     }
 
     public NPC(int index, int npcId, NpcDef definition) {
@@ -231,6 +274,9 @@ public class NPC extends Entity implements IHazardReactive {
         setNpcCombatDefinition();
         if (this.getNpcStats() != null && this.getNpcStats().scripts != null && this.getNpcStats().scripts.combat_ != null) {
             this.setCombatMethod(this.getNpcStats().scripts.newCombatInstance());
+        }
+        if (this.definition.getCombatLevel() >= 100) {
+            enableAdaptive(null);
         }
     }
 
@@ -282,6 +328,172 @@ public class NPC extends Entity implements IHazardReactive {
         //this.defence = defaultNpcStats.getDefenceLevel();
         getHealth().setMaximumHealth(getNpcStats().getHitpoints());
         getHealth().reset();
+    }
+
+    public void enableAdaptive(AdaptiveBoss hook) {
+        this.adaptive = true;
+        this.adaptiveBoss = hook;
+        this.adaptivePhases = hook != null ? hook.getPhases() : new AdaptivePhase[0];
+        this.currentPhase = 0;
+        this.spawnTime = System.currentTimeMillis();
+        this.adaptiveTraits = AdaptiveTraitLoader.randomTraits();
+        if (!adaptiveTraits.isEmpty()) {
+            String traitsText = adaptiveTraits.stream().map(AdaptiveTrait::getName).collect(Collectors.joining(", "));
+            forceChat(traitsText);
+        }
+    }
+
+    public boolean canUseSpecial() {
+        return System.currentTimeMillis() - lastSpecialAttack > specialAttackCooldown;
+    }
+
+    public void resetSpecialAttack() {
+        lastSpecialAttack = System.currentTimeMillis();
+    }
+
+    public void processAdaptiveMechanics() {
+        if (!adaptive) {
+            return;
+        }
+
+        Player target = playerAttackingIndex > 0 ? PlayerHandler.players[playerAttackingIndex] : null;
+
+        if (!adaptiveMinions.isEmpty()) {
+            if (target == null || target.respawnTimer > 0 || target.heightLevel != heightLevel
+                    || !target.goodDistance(absX, absY, target.getX(), target.getY(), 20)) {
+                clearMinions();
+            }
+        }
+
+        if (combatStartTime == 0 && (underAttack || playerAttackingIndex > 0 || npcAttackingIndex > 0)) {
+            combatStartTime = System.currentTimeMillis();
+        }
+
+        int max = getHealth().getMaximumHealth();
+        int current = getHealth().getCurrentHealth();
+
+        long elapsed = System.currentTimeMillis() - spawnTime;
+        if (adaptivePhases.length > 0 && currentPhase + 1 < adaptivePhases.length) {
+            AdaptivePhase next = adaptivePhases[currentPhase + 1];
+            boolean hpTrigger = next.getHpPercent() > 0 && current <= (int) (max * next.getHpPercent());
+            boolean timeTrigger = next.getTimeMillis() > 0 && elapsed >= next.getTimeMillis();
+            if (hpTrigger || timeTrigger) {
+                currentPhase++;
+                if (next.getIntroMessage() != null) {
+                    forceChat(next.getIntroMessage());
+                }
+                next.activateEnvironment(this);
+                if (adaptiveBoss != null) {
+                    adaptiveBoss.onPhaseStart(this, next);
+                }
+            }
+        }
+
+        for (Player p : PlayerHandler.players) {
+            if (p == null) {
+                continue;
+            }
+            int dist = Math.max(Math.abs(p.absX - absX), Math.abs(p.absY - absY));
+            if (dist <= 1) {
+                addThreat(p, 5);
+            } else if (dist <= 6) {
+                addThreat(p, 1);
+            }
+        }
+        if (adaptiveBoss != null) {
+            adaptiveBoss.updateThreat(this, threatLevels);
+        }
+
+        if (!specialBoosted && current <= max / 2) {
+            specialAttackCooldown = Math.max(1000, specialAttackCooldown / 2);
+            if (adaptiveBoss != null) {
+                adaptiveBoss.onSpecialBoost(this);
+            }
+            specialBoosted = true;
+        }
+
+        if (!adaptiveMinionsSummoned && current <= (int) (max * 0.3)) {
+            if (adaptiveBoss != null) {
+                adaptiveBoss.onSummonMinions(this);
+            } else {
+                summonDefaultMinions();
+            }
+            adaptiveMinionsSummoned = true;
+        }
+
+        if (!enraged && combatStartTime > 0 && System.currentTimeMillis() - combatStartTime > 90_000) {
+            enraged = true;
+            maxHit += (int) Math.ceil(maxHit * 0.5);
+            if (adaptiveBoss != null) {
+                adaptiveBoss.onEnrage(this);
+            }
+        }
+
+        if (enraged) {
+            reprioritizeTarget();
+        }
+    }
+
+    private void summonDefaultMinions() {
+        Player target = playerAttackingIndex > 0 ? PlayerHandler.players[playerAttackingIndex] : null;
+        for (int offset = -1; offset <= 1; offset += 2) {
+            NPC minion;
+            if (target != null) {
+                minion = NPCSpawning.spawnNpc(target, getNpcId(), absX + offset, absY + offset, heightLevel, 1,
+                        Math.max(1, maxHit / 2), true, false);
+            } else {
+                minion = NPCSpawning.spawnNpc(getNpcId(), absX + offset, absY + offset, heightLevel, 1,
+                        Math.max(1, maxHit / 2));
+            }
+            if (minion != null) {
+                minion.getBehaviour().setRespawn(false);
+                minion.setAdaptive(false);
+                registerMinion(minion);
+            }
+        }
+    }
+
+    public void registerMinion(NPC minion) {
+        if (minion != null) {
+            adaptiveMinions.add(minion);
+        }
+    }
+
+    public void clearMinions() {
+        for (NPC minion : adaptiveMinions) {
+            if (minion != null) {
+                minion.unregister();
+            }
+        }
+        adaptiveMinions.clear();
+    }
+
+    private void addThreat(Player player, int amount) {
+        threatLevels.merge(player.getIndex(), amount, Integer::sum);
+    }
+
+    private void reprioritizeTarget() {
+        if (threatLevels.isEmpty()) {
+            return;
+        }
+        int top = threatLevels.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(-1);
+        if (top > 0) {
+            setPlayerAttackingIndex(top);
+        }
+    }
+
+    public String getNextPhaseInfo() {
+        if (adaptivePhases == null || currentPhase + 1 >= adaptivePhases.length) {
+            return "none";
+        }
+        AdaptivePhase next = adaptivePhases[currentPhase + 1];
+        if (next.getHpPercent() > 0) {
+            return (int) (next.getHpPercent() * 100) + "% HP";
+        }
+        if (next.getTimeMillis() > 0) {
+            return (next.getTimeMillis() / 1000) + "s";
+        }
+        return "unknown";
     }
 
     public boolean canBeAttacked(Entity entity) {
@@ -496,6 +708,7 @@ public class NPC extends Entity implements IHazardReactive {
     public void unregister() {
         setUnregister(true);
         this.getRegionProvider().removeNpcClipping(this);
+        clearMinions();
     }
 
     /**
@@ -1377,7 +1590,7 @@ public class NPC extends Entity implements IHazardReactive {
     }
 
     public String getName() {
-        return getDefinition().getName();
+        return customName != null ? customName : getDefinition().getName();
     }
 
     @Override

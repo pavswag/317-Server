@@ -130,13 +130,13 @@ public abstract class InstancedArea extends RegionProvider {
         int regionId = getHash(x, y);
         boolean alreadyLoaded = contains(x, y);
         if (alreadyLoaded) {
-            MapLoadLogger.log("InstancedArea.get", regionId, "dynamic", true, true, null);
+            //MapLoadLogger.log("InstancedArea.get", regionId, "dynamic", true, true, null);
             return super.get(x, y);
         } else {
             try {
                 Region region = RegionProvider.getGlobal().get(x, y).clone(this);
                 add(region);
-                MapLoadLogger.log("InstancedArea.get", regionId, "dynamic", false, true, null);
+               // MapLoadLogger.log("InstancedArea.get", regionId, "dynamic", false, true, null);
                 return region;
             } catch (Exception e) {
                 MapLoadLogger.log("InstancedArea.get", regionId, "dynamic", false, false, e);
