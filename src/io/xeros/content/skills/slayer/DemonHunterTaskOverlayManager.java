@@ -8,7 +8,6 @@ import io.xeros.model.entity.player.Player;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
 /**
  * Displays Demon Hunter task information to players.
  */

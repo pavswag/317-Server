@@ -6,6 +6,7 @@ import io.xeros.content.combat.Hitmark;
 import io.xeros.model.collisionmap.Region;
 import io.xeros.model.collisionmap.RegionProvider;
 import io.xeros.model.collisionmap.WorldObject;
+import io.xeros.model.collisionmap.MapLoadLogger;
 import io.xeros.model.entity.Entity;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.player.Boundary;
@@ -126,12 +127,21 @@ public abstract class InstancedArea extends RegionProvider {
 
     @Override
     public Region get(int x, int y) {
-        if (contains(x, y)) {
+        int regionId = getHash(x, y);
+        boolean alreadyLoaded = contains(x, y);
+        if (alreadyLoaded) {
+            //MapLoadLogger.log("InstancedArea.get", regionId, "dynamic", true, true, null);
             return super.get(x, y);
         } else {
-            Region region = RegionProvider.getGlobal().get(x, y).clone(this);
-            add(region);
-            return region;
+            try {
+                Region region = RegionProvider.getGlobal().get(x, y).clone(this);
+                add(region);
+               // MapLoadLogger.log("InstancedArea.get", regionId, "dynamic", false, true, null);
+                return region;
+            } catch (Exception e) {
+                MapLoadLogger.log("InstancedArea.get", regionId, "dynamic", false, false, e);
+                return RegionProvider.getGlobal().get(x, y);
+            }
         }
     }
 

@@ -19,6 +19,7 @@ import io.xeros.model.Items;
 import io.xeros.model.definitions.ItemDef;
 import io.xeros.model.entity.player.PacketType;
 import io.xeros.model.entity.player.Player;
+import io.xeros.content.trails.ClueCasketHandler;
 import io.xeros.model.entity.player.Right;
 import io.xeros.model.items.GameItem;
 import io.xeros.model.items.ItemAction;
@@ -186,7 +187,10 @@ public class ItemOptionThree implements PacketType {
                 break;
 
             case 12161:
-                new ChristmasBox(c).quickOpen();
+                int amount = c.getItems().getInventoryCount(itemId);
+                for (int i = 0; i < amount; i++) {
+                    ChristmasBox.openChristmasBox(c, itemId);
+                }
                 break;
             case 22322:
                 c.getDH().sendDialogues(333, 7456);

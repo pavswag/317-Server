@@ -31,6 +31,7 @@ import io.xeros.content.bosspoints.BossPoints;
 import io.xeros.content.cheatprevention.RandomEventInterface;
 import io.xeros.content.collection_log.CollectionLog;
 import io.xeros.content.combat.CombatItems;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.combat.EntityDamageQueue;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.combat.core.AttackEntity;
@@ -38,6 +39,7 @@ import io.xeros.content.combat.death.PlayerDeath;
 import io.xeros.content.combat.effects.damageeffect.impl.amuletofthedamned.impl.ToragsEffect;
 import io.xeros.content.combat.formula.MeleeMaxHit;
 import io.xeros.content.combat.magic.CombatSpellData;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.combat.melee.CombatPrayer;
 import io.xeros.content.combat.melee.MeleeData;
 import io.xeros.content.combat.melee.MeleeExtras;
@@ -76,6 +78,8 @@ import io.xeros.content.items.pouch.RunePouch;
 import io.xeros.content.itemskeptondeath.perdu.PerduLostPropertyShop;
 import io.xeros.content.leaderboards.LeaderboardPeriodicity;
 import io.xeros.content.leaderboards.LeaderboardUtils;
+import io.xeros.content.instances.hazard.IHazardReactive;
+import io.xeros.content.instances.hazard.HazardContext;
 import io.xeros.content.lootbag.LootingBag;
 import io.xeros.content.minigames.arbograve.ArbograveConstants;
 import io.xeros.content.minigames.arbograve.ArbograveContainer;
@@ -227,7 +231,7 @@ import java.util.stream.IntStream;
 import static io.xeros.util.discord.DiscordIntegration.updateDiscordInterface;
 import static io.xeros.util.discord.DiscordIntegration.updateDiscordPoints;
 
-public class Player extends Entity {
+public class Player extends Entity implements IHazardReactive {
 
     private static Logger logger = LoggerFactory.getLogger(Player.class);
 
@@ -283,6 +287,9 @@ public class Player extends Entity {
     public int wintertodtKills;
     public int wintertodtHighscore;
     public boolean usingInfPrayer;
+
+    public boolean bossAlerts = true;
+    private final Deque<String> bossContributions = new ArrayDeque<>();
 
     public boolean itemPickedUpThisTick = false;
 
@@ -431,6 +438,8 @@ public class Player extends Entity {
     public StringInput stringInputHandler;
     public AmountInput amountInputHandler;
     private long aggressionTimer = System.currentTimeMillis();
+    @Getter
+    private long aggroTimer;
     private boolean printAttackStats = Server.isTest();
     private boolean printDefenceStats = Server.isTest();
     private boolean helpCcMuted = false;
@@ -459,6 +468,31 @@ public class Player extends Entity {
 
     public void resetAggressionTimer() {
         aggressionTimer = System.currentTimeMillis();
+    }
+
+    public void setAggroTimer(long time) {
+        aggroTimer = time;
+    }
+
+    /**
+     * Extends the current aggression timer by the given duration. If no timer is
+     * active the duration starts from the current time.
+     */
+    public void extendAggroTimer(long durationMillis) {
+        if (durationMillis == Long.MAX_VALUE) {
+            aggroTimer = Long.MAX_VALUE;
+            return;
+        }
+        long base = Math.max(System.currentTimeMillis(), aggroTimer);
+        aggroTimer = base + durationMillis;
+    }
+
+    public long getAggroTimeRemaining() {
+        return Math.max(0, aggroTimer - System.currentTimeMillis());
+    }
+
+    public boolean isAggroTimerActive() {
+        return System.currentTimeMillis() < aggroTimer;
     }
 
     public boolean isAggressionTimeout(Player player) {
@@ -845,6 +879,12 @@ public class Player extends Entity {
     private java.util.EnumSet<io.xeros.content.instances.BossInstanceManager.BossTier> unlockedBossTiers = java.util.EnumSet.of(io.xeros.content.instances.BossInstanceManager.BossTier.TIER1);
     /** Kill counts tracked per {@link io.xeros.content.instances.BossInstanceManager.BossTier}. */
     private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> tierKillCounts = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
+    /** Best performance score achieved per tier. */
+    private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> bestInstanceScores = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
+    /** Fastest completion time per tier in milliseconds. */
+    private final java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Long> bestInstanceTimes = new java.util.EnumMap<>(io.xeros.content.instances.BossInstanceManager.BossTier.class);
+    /** Runtime tracker for the active boss instance. */
+    private final io.xeros.content.instances.InstancePerformanceTracker instancePerformanceTracker = new io.xeros.content.instances.InstancePerformanceTracker();
     public int totalEarnedExchangePoints;
     public int referallFlag;
     public int amDonated;
@@ -1790,6 +1830,7 @@ public class Player extends Entity {
     public void destruct() {
         if (destructed)
             return;
+        BossInstanceManager.leave(this);
         destructed = true;
         getPA().sendLogout();
 
@@ -2091,6 +2132,7 @@ public class Player extends Entity {
         setSidebarInterface(12, 147); // run tab
         getPA().showOption(4, 0, "Follow");
         getPA().showOption(5, 0, "Trade with");
+      //  getPA().showOption(1, 0, "Force-Aggro Nearby");
         getItems().sendInventoryInterface(3214);
         getItems().setEquipment(playerEquipment[playerHat], 1, playerHat, false);
         getItems().setEquipment(playerEquipment[playerCape], 1, playerCape, false);
@@ -2405,7 +2447,10 @@ public class Player extends Entity {
         if (heal > getHealth().getMaximumHealth()) getHealth().reset();
         getHealth().increase(amount);
         getPA().refreshSkill(3);
-
+        BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(this);
+        if (area != null && amount >= getHealth().getMaximumHealth() * 0.3) {
+            area.getHazardScheduler().trigger("HEAL_BIG", this);
+        }
     }
 
     public void resetOnDeath() {
@@ -2846,6 +2891,8 @@ public class Player extends Entity {
             getPA().showOption(3, 0, "null");
             getPA().showOption(1, 0, "null");
         }
+
+        getPA().showOption(1, 0, "Force-Aggro Nearby");
 
         // Walkable interfaces in this if-else
         if (getPosition().inWild() && !getPosition().inClanWars()) {
@@ -4601,6 +4648,10 @@ public class Player extends Entity {
 
         MeleeExtras.handleRedemption(this, damage);
 
+        if (getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea) {
+            instancePerformanceTracker.addDamageTaken(damage);
+        }
+
         if (entity != null && entity.isPlayer()) playerHitIndex = entity.asPlayer().getIndex();
 
         if (teleTimer <= 0) {
@@ -6328,6 +6379,18 @@ public class Player extends Entity {
         return tierKillCounts;
     }
 
+    public java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Integer> getBestInstanceScores() {
+        return bestInstanceScores;
+    }
+
+    public java.util.EnumMap<io.xeros.content.instances.BossInstanceManager.BossTier, Long> getBestInstanceTimes() {
+        return bestInstanceTimes;
+    }
+
+    public io.xeros.content.instances.InstancePerformanceTracker getInstancePerformanceTracker() {
+        return instancePerformanceTracker;
+    }
+
     public BlastFurnace getBlastFurnace() {
         return blastFurnace;
     }
@@ -6486,6 +6549,11 @@ public class Player extends Entity {
     public long EliteCentBoost = 0;
     public long EliteCentCooldown = 0;
 
+    /**
+     * True when the player is within the aura radius of a Freakazoid bot.
+     */
+    private boolean freakazoidAura;
+
     @Getter
     @Setter
     private POSManager tradePost;
@@ -6517,7 +6585,37 @@ public class Player extends Entity {
     public void updateAppearance() {
         setUpdateRequired(true);
         setAppearanceUpdateRequired(true);
+    }    /** Whether the player is currently previewing a boss instance tier. */
+    private boolean previewingBossInstance;
+
+
+
+    public void setBossAlerts(boolean bossAlerts) {
+        this.bossAlerts = bossAlerts;
     }
 
 
+    public Deque<String> getBossContributions() {
+        return bossContributions;
+    }
+
+    public void addBossContribution(String boss, int damage, int rank) {
+        bossContributions.addFirst(boss + "," + damage + "," + rank);
+        while (bossContributions.size() > 5) {
+            bossContributions.removeLast();
+        }
+    }
+
+    public boolean isPreviewingBossInstance() {
+        return previewingBossInstance;
+    }
+
+    public void setPreviewingBossInstance(boolean previewingBossInstance) {
+        this.previewingBossInstance = previewingBossInstance;
+    }
+
+    @Override
+    public void onHazardTriggered(HazardContext ctx) {
+        // Hook for future hazard reactions.
+    }
 }

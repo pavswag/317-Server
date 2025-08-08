@@ -1,0 +1,5 @@
+{
+  "staticHazards": ["FIRE_TILE", "POISON_MIST", "CRUMBLING_FLOOR"],
+  "synergyMutators": ["VENOMOUS", "UNSTABLE_TILES"],
+  "eliteHazard": "FIRE_TILE"
+}

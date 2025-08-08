@@ -30,6 +30,7 @@ import io.xeros.content.tournaments.TourneyManager;
 import io.xeros.content.trails.TreasureTrailsRewards;
 import io.xeros.content.vote_panel.VotePanelManager;
 import io.xeros.content.wogw.Wogw;
+import io.xeros.content.bots.FreakazoidBot;
 import io.xeros.content.worldevent.WorldEventContainer;
 import io.xeros.model.Npcs;
 import io.xeros.model.collisionmap.ObjectDef;
@@ -167,6 +168,7 @@ public class ServerStartup {
 
         ZamorakGuardian.spawn();
         new SarachnisNpc(Npcs.SARACHNIS, SarachnisNpc.SPAWN_POSITION);
+     //   FreakazoidBot.init();
 
         PlayerSaveBackup.start(Configuration.PLAYER_SAVE_TIMER_MILLIS, Configuration.PLAYER_SAVE_BACKUP_EVERY_X_SAVE_TICKS);
 

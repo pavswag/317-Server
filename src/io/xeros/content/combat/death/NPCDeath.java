@@ -5,6 +5,7 @@ import io.xeros.Server;
 import io.xeros.content.achievement.AchievementType;
 import io.xeros.content.achievement.Achievements;
 import io.xeros.content.achievement_diary.impl.FremennikDiaryEntry;
+import io.xeros.content.activityboss.GlobalBossActivityManager;
 import io.xeros.content.achievement_diary.impl.MorytaniaDiaryEntry;
 import io.xeros.content.battlepass.Pass;
 import io.xeros.content.bosses.Hunllef;
@@ -15,10 +16,12 @@ import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
 import io.xeros.content.bosses.wildypursuit.TheUnbearable;
 import io.xeros.content.bosspoints.BossPoints;
 import io.xeros.content.instances.BossInstanceManager;
+import io.xeros.content.instances.BossInstanceOverlayManager;
 import io.xeros.content.instances.BossInstanceUIManager;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.event.eventcalendar.EventChallenge;
 import io.xeros.content.events.monsterhunt.MonsterHunt;
+import io.xeros.content.instances.TierRewardManager;
 import io.xeros.content.minigames.warriors_guild.AnimatedArmour;
 import io.xeros.content.skills.Skill;
 import io.xeros.content.skills.hunter.impling.ItemRarity;
@@ -41,6 +44,7 @@ import io.xeros.model.items.EquipmentSet;
 import io.xeros.model.items.GameItem;
 import io.xeros.util.Location3D;
 import io.xeros.util.Misc;
+import io.xeros.content.instances.InstanceMutatorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +101,7 @@ public class NPCDeath {
                                 npc.getHealth().setMaximumHealth(1);
                                 npc.addEntityProperty(EntityProperties.SHADOW);
                                 npcs.add(npc);
-                               // NPCSpawning.spawn(npc);
+                                // NPCSpawning.spawn(npc);
                             });
                         }
                         case 3 -> {
@@ -119,6 +123,8 @@ public class NPCDeath {
             }, 1);
         }
         player.getAchievements().kill(npc);
+
+        GlobalBossActivityManager.onBossDeath(npc, player);
 
         PetHandler.rollOnNpcDeath(player, npc);
 
@@ -347,19 +353,26 @@ public class NPCDeath {
         BossPoints.addPoints(player, bossPoints, false);
 
         if (npc.getInstance() instanceof BossInstanceManager.BossInstanceArea area) {
+            if (player.isPreviewingBossInstance()) {
+                BossInstanceOverlayManager.sendKillOverlay(player);
+                return;
+            }
             BossInstanceManager.BossTier tier = area.getTier();
             int newCount = player.getTierKillCounts().merge(tier, 1, Integer::sum);
-            if (newCount >= tier.getRequiredKillCountToUnlockNext()) {
+            if (newCount == tier.getRequiredKillCountToUnlockNext()) {
+                TierRewardManager.reward(player, tier);
                 BossInstanceManager.BossTier next = tier.getNextTier();
                 if (next != null && BossInstanceManager.isFirstTierUnlock(player, next)) {
                     player.gfx0(199);
+                    player.startAnimation(862);
                     int number = next.ordinal() + 1;
                     String name = next.getZoneName();
-                    player.sendMessage("\uD83C\uDF89 You’ve unlocked Tier " + number + ": " + name + "!");
+                    player.sendMessage("<col=ff00ff><shad=000000>\uD83C\uDF89 You’ve unlocked Tier " + number + ": " + name + "!</col>");
                     PlayerHandler.executeGlobalMessage(player.getDisplayName() + " has unlocked Tier " + number + " – " + name + "! \uD83D\uDD25");
                 }
             }
-            BossInstanceUIManager.sendKillOverlay(player);
+            BossInstanceOverlayManager.sendKillOverlay(player);
+            InstanceMutatorManager.spikeGlobal(5);
         }
 
         if (NpcDef.forId(npcId).getCombatLevel() >= 1) {
