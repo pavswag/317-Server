@@ -1,0 +1,52 @@
+{
+  "TIER1": {"frequency": 50, "hazards": [
+    {"type": "FIRE_TILE", "damage": 2, "duration": 5, "triggerCondition": "PRAYER_USED", "cooldownWindow": 5000},
+    {"type": "POISON_MIST", "drain": 1, "duration": 5, "triggerCondition": "HEAL_BIG", "cooldownWindow": 8000},
+    {"type": "CRUMBLING_FLOOR", "stun": 5, "duration": 10}
+  ]},
+  "TIER2": {"frequency": 48, "hazards": [
+    {"type": "FIRE_TILE", "damage": 3, "duration": 5},
+    {"type": "POISON_MIST", "drain": 1, "duration": 6},
+    {"type": "CRUMBLING_FLOOR", "stun": 6, "duration": 10}
+  ]},
+  "TIER3": {"frequency": 46, "hazards": [
+    {"type": "FIRE_TILE", "damage": 4, "duration": 5},
+    {"type": "POISON_MIST", "drain": 2, "duration": 6},
+    {"type": "CRUMBLING_FLOOR", "stun": 6, "duration": 10}
+  ]},
+  "TIER4": {"frequency": 44, "hazards": [
+    {"type": "FIRE_TILE", "damage": 5, "duration": 6},
+    {"type": "POISON_MIST", "drain": 2, "duration": 6},
+    {"type": "CRUMBLING_FLOOR", "stun": 7, "duration": 11}
+  ]},
+  "TIER5": {"frequency": 42, "hazards": [
+    {"type": "FIRE_TILE", "damage": 6, "duration": 6},
+    {"type": "POISON_MIST", "drain": 2, "duration": 6},
+    {"type": "CRUMBLING_FLOOR", "stun": 8, "duration": 11}
+  ]},
+  "TIER6": {"frequency": 40, "hazards": [
+    {"type": "FIRE_TILE", "damage": 7, "duration": 6},
+    {"type": "POISON_MIST", "drain": 3, "duration": 7},
+    {"type": "CRUMBLING_FLOOR", "stun": 9, "duration": 11}
+  ]},
+  "TIER7": {"frequency": 38, "hazards": [
+    {"type": "FIRE_TILE", "damage": 7, "duration": 6},
+    {"type": "POISON_MIST", "drain": 3, "duration": 7},
+    {"type": "CRUMBLING_FLOOR", "stun": 9, "duration": 12}
+  ]},
+  "TIER8": {"frequency": 36, "hazards": [
+    {"type": "FIRE_TILE", "damage": 8, "duration": 6},
+    {"type": "POISON_MIST", "drain": 3, "duration": 7},
+    {"type": "CRUMBLING_FLOOR", "stun": 10, "duration": 12}
+  ]},
+  "TIER9": {"frequency": 34, "hazards": [
+    {"type": "FIRE_TILE", "damage": 9, "duration": 7},
+    {"type": "POISON_MIST", "drain": 4, "duration": 7},
+    {"type": "CRUMBLING_FLOOR", "stun": 11, "duration": 12}
+  ]},
+  "TIER10": {"frequency": 30, "hazards": [
+    {"type": "FIRE_TILE", "damage": 10, "duration": 7},
+    {"type": "POISON_MIST", "drain": 4, "duration": 7},
+    {"type": "CRUMBLING_FLOOR", "stun": 12, "duration": 12}
+  ]}
+}

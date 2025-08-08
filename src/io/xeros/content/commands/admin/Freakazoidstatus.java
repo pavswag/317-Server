@@ -1,19 +1,21 @@
-package io.xeros.content.commands.all;
+package io.xeros.content.commands.admin;
 
 import io.xeros.content.commands.Command;
+import io.xeros.content.bots.FreakazoidBot;
 import io.xeros.model.entity.player.Player;
 
 import java.util.Optional;
 
 /**
- * Toggles global boss progress alerts for the player.
+ * Prints the status of all active Freakazoid bots.
  */
-public class Togglebossalerts extends Command {
+public class Freakazoidstatus extends Command {
 
     @Override
     public void execute(Player player, String commandName, String input) {
-//        player.setBossAlerts(!player.isBossAlerts());
-//        player.sendMessage("Global boss alerts " + (player.isBossAlerts() ? "enabled" : "disabled"));
+        FreakazoidBot.getBots().forEach(bot ->
+                player.sendMessage(bot.getStatus())
+        );
     }
 
     @Override
@@ -23,6 +25,6 @@ public class Togglebossalerts extends Command {
 
     @Override
     public Optional<String> getDescription() {
-        return Optional.of("Toggles global boss alert messages");
+        return Optional.of("Shows Freakazoid bot statuses");
     }
 }

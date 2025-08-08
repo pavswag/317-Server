@@ -21,8 +21,9 @@ public class AggressionZoneConfig {
 
     public static boolean isAggressionAllowed(Position pos) {
         if (DISABLED_REGIONS.contains(pos.getRegionId())) {
-            return false;
+            return true;
         }
-        return AGGRESSIVE_ZONES.stream().anyMatch(b -> Boundary.isIn(pos, b));
+        return true;
+       // return AGGRESSIVE_ZONES.stream().anyMatch(b -> Boundary.isIn(pos, b));
     }
 }

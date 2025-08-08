@@ -31,7 +31,7 @@ public class Configuration {
 	public static final String DISCORD_INVITE = "";
 	public static final String RULES_LINK = "";
 	public static final String GUIDES_LINK = "";
-	public static final String DONATOR_BENEFITS_LINK = "";
+        public static final String DONATOR_BENEFITS_LINK = "";
 	public static final String PRICE_GUIDE = "";
 
 	public static final LocalDate XEROS_V1_LAUNCH_DATE = LocalDate.of(2020, Month.MARCH, 13);
@@ -74,8 +74,11 @@ public class Configuration {
 	public static boolean DISABLE_DISPLAY_NAMES = false;
 	public static boolean DISABLE_LOGIN_THROTTLE = false;
 	public static boolean DISABLE_CC_MESSAGE = false;
-	public static boolean DISABLE_FLOWER_POKER = false;
-	public static boolean DISABLE_HC_LOSS_ON_DEATH = false;
+        public static boolean DISABLE_FLOWER_POKER = false;
+        public static boolean DISABLE_HC_LOSS_ON_DEATH = false;
+
+        /** Enables proximity aura boosts from Freakazoid bots. */
+        public static boolean FREAKAZOID_AURA_ENABLED = true;
 
 
 	// Logging

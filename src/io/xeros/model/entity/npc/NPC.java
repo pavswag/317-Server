@@ -69,6 +69,13 @@ public class NPC extends Entity {
 
     public boolean isGodmode;
 
+    @Setter
+    @Getter
+    private boolean attackable = true;
+
+    @Setter
+    private String customName;
+
     public int summonedBy;
     public int absX, absY;
     public int heightLevel;
@@ -1542,7 +1549,7 @@ public class NPC extends Entity {
     }
 
     public String getName() {
-        return getDefinition().getName();
+        return customName != null ? customName : getDefinition().getName();
     }
 
     @Override
@@ -1577,6 +1584,9 @@ public class NPC extends Entity {
             }
 
             addDamageTaken(player, damage);
+            if (player.getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea) {
+                player.getInstancePerformanceTracker().addDamageDealt(damage);
+            }
 
             if (player.getRaidsInstance() != null && Boundary.isIn(player, Boundary.FULL_RAIDS)) {
                 Raids.damage(player, damage);

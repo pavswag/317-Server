@@ -342,10 +342,10 @@ public class AttackEntity {
             //  return;
         } else {
             BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(attacker);
-            if (area != null && area.isWithinAoeZone(attacker.getPosition()) && aoeData == null) {
-                attacker.sendMessage("You cannot use this weapon inside the instance!");
-                return;
-            }
+//            if (area != null && area.isWithinAoeZone(attacker.getPosition()) && aoeData == null) {
+//                attacker.sendMessage("You cannot use this weapon inside the instance!");
+//                return;
+//            }
         }
 
         if (getCombatType() == CombatType.MAGE && !MagicRequirements.checkMagicReqs(attacker, attacker.getSpellId(),
