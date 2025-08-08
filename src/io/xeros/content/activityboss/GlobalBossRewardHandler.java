@@ -20,7 +20,7 @@ public class GlobalBossRewardHandler {
         for (GlobalBossContributionTracker.Contribution c : rankings) {
             rank++;
             giveScaledLoot(type, c.getPlayer(), rank);
-            c.getPlayer().addBossContribution(type.getName(), c.getDamage(), rank);
+           c.getPlayer().addBossContribution(type.getName(), c.getDamage(), rank);
             c.getPlayer().sendMessage("You dealt " + c.getDamage() + " damage to " + type.getName() +
                     " (" + formatRank(rank) + " place)");
         }

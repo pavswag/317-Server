@@ -19,4 +19,8 @@ public class DemonMarkRewardHandler {
         }
         return false;
     }
+
+    public static void openShop(Player player) {
+        player.sendMessage("The Demon Mark reward shop is currently unavailable.");
+    }
 }

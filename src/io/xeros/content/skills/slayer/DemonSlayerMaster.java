@@ -1,12 +1,12 @@
 package io.xeros.content.skills.slayer;
 
 import io.xeros.content.skills.Skill;
+import io.xeros.model.Npcs;
+import io.xeros.model.definitions.NpcStats;
 import io.xeros.model.entity.player.Player;
-import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.util.Misc;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -22,15 +22,36 @@ public class DemonSlayerMaster extends SlayerMaster {
 
     /** Difficulty tiers used to scale experience rewards. */
     public enum Tier {
-        TIER1(1, 1), TIER2(2, 20), TIER3(3, 50), TIER4(4, 90), ELITE(5, 99);
-        private final int multiplier;
+        TIER1(1, 5),
+        TIER2(2, 15),
+        TIER3(3, 30),
+        TIER4(4, 45),
+        TIER5(5, 60),
+        TIER6(6, 75),
+        TIER7(7, 85),
+        TIER8(8, 90),
+        TIER9(9, 95),
+        TIER10(10, 99);
+
+        private final int id;
         private final int levelReq;
-        Tier(int multiplier, int levelReq) {
-            this.multiplier = multiplier;
+
+        Tier(int id, int levelReq) {
+            this.id = id;
             this.levelReq = levelReq;
         }
-        public int getMultiplier() { return multiplier; }
-        public int getLevelRequirement() { return levelReq; }
+
+        public int getId() {
+            return id;
+        }
+
+        public int getLevelRequirement() {
+            return levelReq;
+        }
+
+        public static Optional<Tier> forId(int id) {
+            return Arrays.stream(values()).filter(t -> t.id == id).findFirst();
+        }
     }
 
     /**
@@ -38,29 +59,48 @@ public class DemonSlayerMaster extends SlayerMaster {
      * base experience reward.
      */
     public enum BossTier {
-        ICE_DEMON("Ice Demon", Tier.TIER1, 200),
-        CRAZY_ARCHAEOLOGIST("Crazy Archaeologist", Tier.TIER1, 220),
-        BARRELCHEST("Barrelchest", Tier.TIER2, 350),
-        CORPOREAL_BEAST("Corporeal Beast", Tier.TIER2, 400),
-        CHAOS_FANATIC("Chaos Fanatic", Tier.TIER2, 360),
-        NEX("Nex", Tier.TIER3, 600),
-        GHOST_OF_DARKNESS("Ghost of Darkness", Tier.TIER3, 650),
-        CRYOMANCER_RANGER("Cryomancer Ranger", Tier.TIER3, 700),
-        DEMONIC_REVENANT_LORD("Demonic Revenant Lord", Tier.ELITE, 900),
-        NIGHTSTALKER("Nightstalker", Tier.ELITE, 950);
+        GENERAL_GRAARDOR("General Graardor", Npcs.GENERAL_GRAARDOR, Tier.TIER1),
+        KRIL_TSUTSAROTH("K'ril Tsutsaroth", Npcs.KRIL_TSUTSAROTH, Tier.TIER2),
+        COMMANDER_ZILYANA("Commander Zilyana", Npcs.COMMANDER_ZILYANA, Tier.TIER3),
+        KREE_ARRA("Kree'Arra", Npcs.KREEARRA, Tier.TIER3),
+        CHAOS_FANATIC("Chaos Fanatic", Npcs.CHAOS_FANATIC, Tier.TIER4),
+        VENENATIS("Venenatis", Npcs.VENENATIS, Tier.TIER5),
+        CALLISTO("Callisto", Npcs.CALLISTO, Tier.TIER6),
+        VETION("Vet'ion", Npcs.VETION, Tier.TIER6),
+        SKOTIZO("Skotizo", Npcs.SKOTIZO, Tier.TIER7),
+        GHOST_OF_DARKNESS("Ghost of Darkness", 1429, Tier.TIER8),
+        CRYOMANCER_RANGER("Cryomancer Ranger", 1656, Tier.TIER9),
+        THE_NIGHTMARE("The Nightmare", Npcs.THE_NIGHTMARE, Tier.TIER10);
 
         private final String npcName;
+        private final int npcId;
         private final Tier tier;
-        private final int xpReward;
-        BossTier(String npcName, Tier tier, int xpReward) {
+
+        BossTier(String npcName, int npcId, Tier tier) {
             this.npcName = npcName;
+            this.npcId = npcId;
             this.tier = tier;
-            this.xpReward = xpReward;
         }
+
         public String getNpcName() { return npcName; }
+
+        public int getNpcId() { return npcId; }
+
         public Tier getTier() { return tier; }
-        public int getXpReward() { return xpReward; }
+
         public boolean matches(String other) { return npcName.equalsIgnoreCase(other); }
+
+        public int getBaseXp() {
+            return NpcStats.forId(npcId).getHitpoints();
+        }
+
+        public static Optional<BossTier> forName(String name) {
+            return Arrays.stream(values()).filter(b -> b.matches(name)).findFirst();
+        }
+
+        public static Optional<BossTier> forId(int id) {
+            return Arrays.stream(values()).filter(b -> b.npcId == id).findFirst();
+        }
     }
 
     /**
@@ -86,38 +126,21 @@ public class DemonSlayerMaster extends SlayerMaster {
         int level = player.playerLevel[Skill.DEMON_HUNTER.getId()];
 
         for (Tier t : Tier.values()) {
-            if (level >= t.getLevelRequirement() && t.ordinal() + 1 > player.getDemonHunterTierUnlocked()) {
-                player.setDemonHunterTierUnlocked(t.ordinal() + 1);
+            if (level >= t.getLevelRequirement() && t.getId() > player.getDemonHunterTierUnlocked()) {
+                player.setDemonHunterTierUnlocked(t.getId());
                 String unlocked = Arrays.stream(BossTier.values())
                         .filter(b -> b.getTier() == t)
                         .map(BossTier::getNpcName)
-                        .findFirst().orElse("new foes");
-                player.sendMessage("\uD83D\uDD13 New Tier Unlocked! You can now be assigned " + unlocked + " (Tier " + (t.ordinal()+1) + ")");
+                        .collect(Collectors.joining(", "));
+                player.sendMessage("\uD83D\uDD13 New Tier Unlocked! You can now be assigned " + unlocked + " (Tier " + t.getId() + ")");
             }
         }
 
-        if (level >= Tier.ELITE.getLevelRequirement() && player.getDemonTaskStreak() >= 100) {
-            List<BossTier> elitePool = Arrays.asList(
-                    BossTier.CRYOMANCER_RANGER,
-                    BossTier.GHOST_OF_DARKNESS,
-                    BossTier.DEMONIC_REVENANT_LORD,
-                    BossTier.NIGHTSTALKER);
-            BossTier boss = elitePool.get(Misc.random(elitePool.size() - 1));
-            int amount = 15 + Misc.random(20);
-            DemonSlayerTask task = new DemonSlayerTask(boss, amount);
-            player.setDemonHunterTask(task);
-            player.setDemonHunterTaskProgress(amount);
-            DemonHunterTaskOverlayManager.send(player);
-            DemonHunterTaskOverlayManager.schedule(player);
-            PlayerHandler.executeGlobalMessage("[Demon Slayer] " + player.getDisplayName() + " received an elite task: " + boss.getNpcName() + ".");
-            return task;
-        }
-
         List<BossTier> pool = Arrays.stream(BossTier.values())
-                .filter(b -> level >= b.getTier().getLevelRequirement() && b.getTier() != Tier.ELITE)
+                .filter(b -> level >= b.getTier().getLevelRequirement())
                 .collect(Collectors.toList());
         if (pool.isEmpty()) {
-            pool = Arrays.asList(BossTier.ICE_DEMON, BossTier.CRAZY_ARCHAEOLOGIST);
+            pool = Arrays.asList(BossTier.GENERAL_GRAARDOR);
         }
         BossTier boss = pool.get(Misc.random(pool.size() - 1));
         int amount = 5 + Misc.random(30); // 5-35

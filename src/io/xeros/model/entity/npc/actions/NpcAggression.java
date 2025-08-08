@@ -9,6 +9,7 @@ import io.xeros.content.bosses.wildypursuit.FragmentOfSeren;
 import io.xeros.content.bosses.zulrah.Zulrah;
 import io.xeros.content.minigames.arbograve.ArbograveConstants;
 import io.xeros.content.questing.hftd.DagannothMother;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.model.Bonus;
 import io.xeros.model.Npcs;
 import io.xeros.model.entity.npc.NPC;
@@ -177,6 +178,9 @@ public class NpcAggression {
     }
 
     private static int getAggressionDistance(NPC npc, Player player, int baseDistance) {
+        if (Boundary.isIn(npc, Boundary.AOEInstance)) {
+            return Math.max(baseDistance, BossInstanceManager.getMinimumAggroRange());
+        }
         if (Boundary.isIn(npc, Boundary.GODWARS_BOSSROOMS) && npc.getNpcId() > 0) return 25;
         if (Boundary.isIn(npc, Boundary.GODWARS_OTHER_ROOMS) && npc.getNpcId() > 0) return 8;
         if (Boundary.isIn(npc, Boundary.SARACHNIS_LAIR) || Boundary.isIn(npc, Boundary.MIMIC_LAIR) || Boundary.isIn(npc, Boundary.GROTESQUE_LAIR))

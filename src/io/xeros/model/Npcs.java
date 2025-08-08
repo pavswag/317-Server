@@ -7936,7 +7936,7 @@ public class Npcs {
     public static final int LADY_KELYN_ITHELL = 8_913;
     public static final int KELYN = 8_914;
     public static final int LADY_KELYN_ITHELL_2 = 8_915;
-    public static final int SCROLL_CONVERTER = 8_916;
+    public static final int SCROLL_CONVERTER = 8_910;
     public static final int FRAGMENT_OF_SEREN = 8_917;
     public static final int FRAGMENT_OF_SEREN_2 = 8_918;
     public static final int FRAGMENT_OF_SEREN_3 = 8_919;
@@ -9561,5 +9561,6 @@ public class Npcs {
     public static final int THE_GREAT_GUARDIAN_2 = 11_455;
     public static final int THE_GREAT_GUARDIAN_3 = 11_456;
     public static final int INSTANCE_MASTER = 9_020;
+    public static final int DEMON_HUNTER_MASTER = 9_021;
 
 }
