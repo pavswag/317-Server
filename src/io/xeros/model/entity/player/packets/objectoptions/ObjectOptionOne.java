@@ -36,6 +36,7 @@ import io.xeros.content.donor.DonoSlayerInstances;
 import io.xeros.content.donor.DonorVault;
 import io.xeros.content.event.eventcalendar.EventChallenge;
 import io.xeros.content.item.lootable.impl.*;
+import io.xeros.content.tools.ToolAugments;
 import io.xeros.content.leaderboards.LeaderboardInterface;
 import io.xeros.content.minigames.pest_control.PestControl;
 import io.xeros.content.minigames.pk_arena.Highpkarena;
@@ -928,6 +929,9 @@ public class ObjectOptionOne {
                 if (c.absY == 3494 || c.absY == 3495 || c.absY == 3496) {
                     AgilityHandler.delayEmote(c, "CLIMB_DOWN", c.getX(), c.getY(), c.getHeight() - 1, 2);
                 }
+                break;
+            case ToolAugments.TINKER_TABLE_ID:
+                c.sendMessage("Use a skilling tool on the table to manage augments.");
                 break;
             case 33311:
                 Hespori.burnEssence(c);

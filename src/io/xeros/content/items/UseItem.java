@@ -64,6 +64,7 @@ import io.xeros.model.items.ImmutableItem;
 import io.xeros.model.items.ItemCombination;
 import io.xeros.util.Misc;
 import io.xeros.util.logging.player.ItemOnItemLog;
+import io.xeros.content.tools.ToolAugments;
 
 import java.util.Arrays;
 import java.util.List;
@@ -205,11 +206,14 @@ public class UseItem {
 			return;
 		}
 
-		switch (objectID) {
-			case 33311:
-				c.objectYOffset = 5;
-				c.objectXOffset = 5;
-				c.objectDistance = 5;
+                switch (objectID) {
+                        case ToolAugments.TINKER_TABLE_ID:
+                                ToolAugments.useOnTable(c, itemId);
+                                break;
+                        case 33311:
+                                c.objectYOffset = 5;
+                                c.objectXOffset = 5;
+                                c.objectDistance = 5;
 
 				switch (itemId) {
 					case 9698:

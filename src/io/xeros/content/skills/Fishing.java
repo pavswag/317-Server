@@ -17,6 +17,8 @@ import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.model.items.ItemAssistant;
 import io.xeros.util.Misc;
+import io.xeros.content.tools.ToolAugments;
+import io.xeros.content.skills.Skill;
 
 import static io.xeros.content.skills.Cooking.cookThisFood;
 import static io.xeros.content.skills.Cooking.fishIds;
@@ -248,8 +250,12 @@ public class Fishing extends SkillHandler {
 								if (player.getPerkSytem().gameItems.stream().anyMatch(item -> item.getId() == 33100) && Misc.random(0,100) <= 10) {
 									amt *= 3;
 								}
-								if (!player.isBot())
-									player.getItems().addItem(player.playerSkillProp[10][1], amt);
+                                                                if (!player.isBot()) {
+                                                                        player.getItems().addItem(player.playerSkillProp[10][1], amt);
+                                                                        if (ToolAugments.rollDoubleGather(player, player.playerSkillProp[10][4])) {
+                                                                                player.getItems().addItem(player.playerSkillProp[10][1], amt);
+                                                                        }
+                                                                }
 
 							}
 							player.startAnimation(player.playerSkillProp[10][0]);
@@ -321,19 +327,26 @@ public class Fishing extends SkillHandler {
 								break;
 						}
 
-						if (experience > 0) {
-							player.getPA().addSkillXPMultiplied((int)(experience), Player.playerFishing, true);
-						}
-						if (player.playerSkillProp[10][3] > 0) {
-							player.getItems().deleteItem(player.playerSkillProp[10][3], player.getItems().getInventoryItemSlot(player.playerSkillProp[10][3]), 1);
+                                               if (experience > 0) {
+                                                       int xp = (int) experience;
+                                                       xp = ToolAugments.applyXpBoost(player, player.playerSkillProp[10][4], xp);
+                                                       player.getPA().addSkillXPMultiplied(xp, Player.playerFishing, true);
+                                                       ToolAugments.decrementDurability(player, player.playerSkillProp[10][4]);
+                                                       ToolAugments.tryGiveCrystal(player, Skill.FISHING);
+                                               }
+                                               if (player.playerSkillProp[10][3] > 0) {
+                                                       boolean preserve = ToolAugments.rollSaveResource(player, player.playerSkillProp[10][4]);
+                                                       if (!preserve) {
+                                                               player.getItems().deleteItem(player.playerSkillProp[10][3], player.getItems().getInventoryItemSlot(player.playerSkillProp[10][3]), 1);
 
-							if (!player.getItems().playerHasItem(player.playerSkillProp[10][3])) {
-								player.sendMessage("You haven't got any " + ItemAssistant.getItemName(player.playerSkillProp[10][3]) + " left!");
-								player.sendMessage("You need " + ItemAssistant.getItemName(player.playerSkillProp[10][3]) + " to fish here.");
-								stop();
-								resetFishing(player);
-							}
-						}
+                                                               if (!player.getItems().playerHasItem(player.playerSkillProp[10][3])) {
+                                                                       player.sendMessage("You haven't got any " + ItemAssistant.getItemName(player.playerSkillProp[10][3]) + " left!");
+                                                                       player.sendMessage("You need " + ItemAssistant.getItemName(player.playerSkillProp[10][3]) + " to fish here.");
+                                                                       stop();
+                                                                       resetFishing(player);
+                                                               }
+                                                       }
+                                               }
 						if (!hasFishingEquipment(player, player.playerSkillProp[10][4])) {
 							stop();
 							resetFishing(player);

@@ -40,6 +40,7 @@ import io.xeros.model.multiplayersession.duel.DuelSession;
 import io.xeros.model.multiplayersession.duel.DuelSessionRules;
 import io.xeros.model.shops.ShopAssistant;
 import io.xeros.util.Misc;
+import io.xeros.content.tools.ToolAugments;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.util.*;
@@ -1661,15 +1662,16 @@ public class ItemAssistant {
 				player.updateGodItems();
 			}
 
-			player.getPA().sendSound(Sounds.getEquipItemSound(wearID));
-			this.addContainerUpdate(ContainerUpdate.EQUIPMENT);
-			this.addContainerUpdate(ContainerUpdate.INVENTORY);
-			sendEquipmentContainer();
-			return true;
-		} else {
-			return false;
-		}
-	}
+                        player.getPA().sendSound(Sounds.getEquipItemSound(wearID));
+                        this.addContainerUpdate(ContainerUpdate.EQUIPMENT);
+                        this.addContainerUpdate(ContainerUpdate.INVENTORY);
+                        sendEquipmentContainer();
+                        ToolAugments.onEquip(player, wearID);
+                        return true;
+                } else {
+                        return false;
+                }
+        }
 
 	/**
 	 * Indicates the action to wear an item.

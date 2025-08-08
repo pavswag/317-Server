@@ -58,6 +58,8 @@ import io.xeros.util.ClassGraphHandler;
 import io.xeros.util.Reflection;
 import io.xeros.util.discord.DiscordIntegration;
 import io.xeros.util.offlinestorage.ItemCollection;
+import io.xeros.model.world.objects.GlobalObject;
+import io.xeros.content.tools.ToolAugments;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,6 +171,7 @@ public class ServerStartup {
         ZamorakGuardian.spawn();
         new SarachnisNpc(Npcs.SARACHNIS, SarachnisNpc.SPAWN_POSITION);
         FreakazoidBot.init();
+        Server.getGlobalObjects().add(new GlobalObject(ToolAugments.TINKER_TABLE_ID, 3095, 3494, 0, 0, 10, -1));
 
         PlayerSaveBackup.start(Configuration.PLAYER_SAVE_TIMER_MILLIS, Configuration.PLAYER_SAVE_BACKUP_EVERY_X_SAVE_TICKS);
 
