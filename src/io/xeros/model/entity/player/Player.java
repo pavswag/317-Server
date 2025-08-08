@@ -78,6 +78,8 @@ import io.xeros.content.items.pouch.RunePouch;
 import io.xeros.content.itemskeptondeath.perdu.PerduLostPropertyShop;
 import io.xeros.content.leaderboards.LeaderboardPeriodicity;
 import io.xeros.content.leaderboards.LeaderboardUtils;
+import io.xeros.content.instances.hazard.IHazardReactive;
+import io.xeros.content.instances.hazard.HazardContext;
 import io.xeros.content.lootbag.LootingBag;
 import io.xeros.content.minigames.arbograve.ArbograveConstants;
 import io.xeros.content.minigames.arbograve.ArbograveContainer;
@@ -229,7 +231,7 @@ import java.util.stream.IntStream;
 import static io.xeros.util.discord.DiscordIntegration.updateDiscordInterface;
 import static io.xeros.util.discord.DiscordIntegration.updateDiscordPoints;
 
-public class Player extends Entity {
+public class Player extends Entity implements IHazardReactive {
 
     private static Logger logger = LoggerFactory.getLogger(Player.class);
 
@@ -6612,11 +6614,8 @@ public class Player extends Entity {
         this.previewingBossInstance = previewingBossInstance;
     }
 
-    public boolean hasFreakazoidAura() {
-        return freakazoidAura;
-    }
-
-    public void setFreakazoidAura(boolean freakazoidAura) {
-        this.freakazoidAura = freakazoidAura;
+    @Override
+    public void onHazardTriggered(HazardContext ctx) {
+        // Hook for future hazard reactions.
     }
 }

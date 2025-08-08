@@ -7,6 +7,12 @@ import io.xeros.util.Misc;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.*;
+import io.xeros.content.instances.hazard.EnvironmentalHazardType;
+import io.xeros.content.instances.hazard.HazardEffectModifier;
+import io.xeros.model.cycleevent.CycleEvent;
+import io.xeros.model.cycleevent.CycleEventContainer;
+import io.xeros.model.cycleevent.CycleEventHandler;
+import io.xeros.model.entity.player.PlayerHandler;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +30,9 @@ public class InstanceMutatorManager {
     private static final List<MutatorSynergy> SYNERGIES = new ArrayList<>();
     private static final EnumSet<InstanceMutator> ACTIVE = EnumSet.noneOf(InstanceMutator.class);
     private static int dangerLevel;
+    private static int globalDanger;
+    private static final Map<InstanceMutator, List<HazardEffectModifier>> HAZARD_SYNERGIES = new EnumMap<>(InstanceMutator.class);
+    private static final List<String> SYNERGY_LOG = new ArrayList<>();
 
     static {
         try {
@@ -47,6 +56,20 @@ public class InstanceMutatorManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // hazard synergy definitions
+        HAZARD_SYNERGIES.put(InstanceMutator.VENOMOUS,
+                List.of(new HazardEffectModifier(EnvironmentalHazardType.POISON_MIST, 1.5,
+                        "Venomous mutator intensifies the toxic fumes!")));
+        // decay global danger every ~60s
+        CycleEventHandler.getSingleton().addEvent(null, new CycleEvent() {
+            @Override
+            public void execute(CycleEventContainer container) {
+                globalDanger = Math.max(0, globalDanger - 1);
+                if (globalDanger > 80) {
+                    PlayerHandler.executeGlobalMessage("@red@The world trembles from hazardous energy!");
+                }
+            }
+        }, 100);
     }
 
     /** Rolls a new weekly set of mutators based on rarity weights. */
@@ -109,6 +132,7 @@ public class InstanceMutatorManager {
 
     public static void increaseDanger(int amount) {
         dangerLevel = Math.min(100, dangerLevel + amount);
+        spikeGlobal(amount / 2);
         if (dangerLevel >= 100) {
             // placeholder: would spawn mega hazard or boss
         }
@@ -120,5 +144,37 @@ public class InstanceMutatorManager {
 
     public static void resetDanger() {
         dangerLevel = 0;
+    }
+
+    public static void spikeGlobal(int amount) {
+        globalDanger = Math.min(100, globalDanger + amount);
+    }
+
+    public static int getGlobalDanger() {
+        return globalDanger;
+    }
+
+    public static Set<InstanceMutator> getActiveMutators() {
+        return EnumSet.copyOf(ACTIVE);
+    }
+
+    public static MutatorRarity getRarity(InstanceMutator mutator) {
+        MutatorConfig cfg = DEFINITIONS.get(mutator);
+        return cfg == null ? MutatorRarity.COMMON : cfg.getRarity();
+    }
+
+    public static List<HazardEffectModifier> getHazardSynergies(InstanceMutator mutator) {
+        return HAZARD_SYNERGIES.getOrDefault(mutator, List.of());
+    }
+
+    public static void logSynergy(String message) {
+        SYNERGY_LOG.add(message);
+        if (SYNERGY_LOG.size() > 50) {
+            SYNERGY_LOG.remove(0);
+        }
+    }
+
+    public static List<String> getSynergyLog() {
+        return SYNERGY_LOG;
     }
 }

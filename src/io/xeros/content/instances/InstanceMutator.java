@@ -5,5 +5,6 @@ public enum InstanceMutator {
     NO_PRAYER_RECOVERY,
     RANDOM_BOSS_PHASE_SHIFT,
     UNSTABLE_TILES,
+    VENOMOUS,
     ANOMALY
 }

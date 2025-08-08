@@ -3,5 +3,6 @@
   "NO_PRAYER_RECOVERY": {"rarity": "UNCOMMON"},
   "RANDOM_BOSS_PHASE_SHIFT": {"rarity": "RARE"},
   "UNSTABLE_TILES": {"rarity": "UNCOMMON"},
+  "VENOMOUS": {"rarity": "UNCOMMON"},
   "ANOMALY": {"rarity": "LEGENDARY"}
 }

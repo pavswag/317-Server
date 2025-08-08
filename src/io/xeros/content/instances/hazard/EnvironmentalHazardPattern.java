@@ -15,13 +15,19 @@ public class EnvironmentalHazardPattern {
     public enum PatternType {
         FLAME_RING,
         VOID_PULSE,
-        TOXIC_TORRENT
+        TOXIC_TORRENT,
+        SHOCKWAVE,
+        CHAOS_RIFT
     }
 
     private PatternType type;
 
     public PatternType getType() {
         return type;
+    }
+
+    public void setType(PatternType type) {
+        this.type = type;
     }
 
     /**
@@ -41,6 +47,18 @@ public class EnvironmentalHazardPattern {
                     p.prayerPoint = Math.max(0, p.prayerPoint - 10);
                     p.getPA().refreshSkill(5);
                     p.sendMessage("@gre@Toxic fumes drain your prayer!");
+                }
+                break;
+            case SHOCKWAVE:
+                for (Player p : area.getPlayers()) {
+                    p.appendDamage(10, io.xeros.content.combat.Hitmark.HIT);
+                }
+                break;
+            case CHAOS_RIFT:
+                for (Player p : area.getPlayers()) {
+                    p.getPA().movePlayer(p.getPosition().getX() + io.xeros.util.Misc.random(-1,1),
+                            p.getPosition().getY() + io.xeros.util.Misc.random(-1,1), p.getHeight());
+                    p.sendMessage("@pur@Chaotic forces warp your position!");
                 }
                 break;
             case FLAME_RING:

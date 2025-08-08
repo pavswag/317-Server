@@ -24,7 +24,7 @@ public class AoeManager {
     public static boolean canAOE(Player player) {
 
         BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(player);
-        return area != null &&
+        return area != null && area.isWithinAoeZone(player.getPosition()) &&
                 Arrays.stream(AoeWeapons.values()).anyMatch(i -> i.ID == player.playerEquipment[Player.playerWeapon]);
     }
 
@@ -59,9 +59,9 @@ public class AoeManager {
                 if (next.getInstance() != player.getInstance() || next.getHeight() != player.getHeight()) {
                     continue;
                 }
-//                if (area != null && !area.isWithinAoeZone(next.getPosition())) {
-//                    continue;
-//                }
+                if (area != null && !area.isWithinAoeZone(next.getPosition())) {
+                    continue;
+                }
                 if (!player.getPosition().withinDistance(next.getPosition(), range) || next.getHealth().getCurrentHealth() <= 0) {
                     continue;
                 }
