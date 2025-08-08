@@ -31,6 +31,7 @@ import io.xeros.model.entity.EntityReference;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.npc.NPCClipping;
 import io.xeros.model.entity.npc.NPCHandler;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.PlayerHandler;
@@ -339,9 +340,12 @@ public class AttackEntity {
                 }
             }
             //  return;
-        } else if (Boundary.isIn(attacker, Boundary.AOEInstance) && aoeData == null) {
-            attacker.sendMessage("You cannot use this weapon inside the instance!");
-            return;
+        } else {
+            BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(attacker);
+            if (area != null && area.isWithinAoeZone(attacker.getPosition()) && aoeData == null) {
+                attacker.sendMessage("You cannot use this weapon inside the instance!");
+                return;
+            }
         }
 
         if (getCombatType() == CombatType.MAGE && !MagicRequirements.checkMagicReqs(attacker, attacker.getSpellId(),

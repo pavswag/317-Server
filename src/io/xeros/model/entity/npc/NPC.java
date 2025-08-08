@@ -37,6 +37,8 @@ import io.xeros.model.entity.npc.stats.NpcCombatDefinition;
 import io.xeros.model.entity.npc.stats.NpcCombatSkill;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
+import io.xeros.content.instances.hazard.IHazardReactive;
+import io.xeros.content.instances.hazard.HazardContext;
 import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.model.entity.player.Position;
 import io.xeros.model.entity.thrall.ThrallSystem;
@@ -52,7 +54,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class NPC extends Entity {
+public class NPC extends Entity implements IHazardReactive {
 
     public List<Player> localPlayers = new ArrayList<>();
 
@@ -1409,6 +1411,9 @@ public class NPC extends Entity {
             }
 
             addDamageTaken(player, damage);
+            if (player.getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea) {
+                player.getInstancePerformanceTracker().addDamageDealt(damage);
+            }
 
             if (player.getRaidsInstance() != null && Boundary.isIn(player, Boundary.FULL_RAIDS)) {
                 Raids.damage(player, damage);
@@ -1547,5 +1552,8 @@ public class NPC extends Entity {
         };
 
     }
-
+    @Override
+    public void onHazardTriggered(HazardContext ctx) {
+        // NPCs can override for custom reactions.
+    }
 }
