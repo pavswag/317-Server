@@ -9561,5 +9561,6 @@ public class Npcs {
     public static final int THE_GREAT_GUARDIAN_2 = 11_455;
     public static final int THE_GREAT_GUARDIAN_3 = 11_456;
     public static final int INSTANCE_MASTER = 9_020;
+    public static final int DEMON_HUNTER_MASTER = 9_021;
 
 }
