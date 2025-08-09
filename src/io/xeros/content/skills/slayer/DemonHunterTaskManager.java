@@ -25,18 +25,20 @@ public class DemonHunterTaskManager {
             player.setDemonHunterTaskProgress(Math.max(0, remaining));
 
             int xp = DemonHunterXPTable.getXPFor(baseXp, boss.getTier());
-            if (player.getDemonHunterMilestones().contains(10)) {
-                xp = (int) (xp * 1.05);
-            }
             if (player.getDemonContract().isPresent() && !player.getDemonContract().get().isCompleted()
                     && player.getDemonContract().get().matches(boss)) {
                 xp *= 2;
                 player.getDemonContract().get().complete();
-                player.sendMessage("\uD83C\uDFAF Bonus contract complete!");
+                player.addDemonMarks(1);
+                player.sendMessage("\uD83C\uDFAF Contract complete! +2 Demon Marks");
+            }
+            if (player.getDemonTaskStreak() > 10) {
+                xp = (int) (xp * 1.05);
             }
             player.addDemonHunterXP(xp);
             player.getPA().addSkillXPMultiplied(baseXp, Skill.SLAYER.getId(), true);
             DemonSlayerLeaderboardManager.addXp(player, xp);
+            player.addDemonMarks(1);
 
             if (remaining <= 0) {
                 player.sendMessage("\uD83C\uDFAF Task Complete: You've slain " + boss.getNpcName() + "! +" + (xp * player.getDemonHunterTask().get().getAmount()) + " Demon Hunter XP");
