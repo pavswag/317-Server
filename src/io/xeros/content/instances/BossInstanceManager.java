@@ -41,6 +41,8 @@ public class BossInstanceManager {
         private final BossTier tier;
         private final io.xeros.content.instances.hazard.EnvironmentalHazardScheduler hazards;
         private final boolean dynamicWaveScaling;
+        /** Tracks consecutive kills per player for killstreak rewards. */
+        private final Map<Player, Integer> killStreaks = new HashMap<>();
 
         BossInstanceArea(Player owner, BossTier tier, Boundary boundary) {
             super(InstanceConfiguration.CLOSE_ON_EMPTY_RESPAWN, owner, boundary);
@@ -93,6 +95,19 @@ public class BossInstanceManager {
         public io.xeros.content.instances.hazard.EnvironmentalHazardScheduler getHazardScheduler() {
             return hazards;
         }
+
+        /** Records a kill for the player and distributes killstreak rewards. */
+        public void recordKill(Player player) {
+            int streak = killStreaks.merge(player, 1, Integer::sum);
+            if (streak % 10 == 0) {
+                TierRewardManager.rewardKillstreak(player, tier, streak);
+            }
+        }
+
+        /** Clears any tracked streak for the supplied player. */
+        public void resetStreak(Player player) {
+            killStreaks.remove(player);
+        }
     }
 
     /** Description for each mob that can spawn in a tier. */
@@ -143,11 +158,13 @@ public class BossInstanceManager {
      * the NPCs that can spawn.
      */
     public enum BossTier {
-        TIER1("Training Grounds", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 0, 0, -1, 5, Npcs.COW, 20,
-                new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1, 5, List.of())},
+        // drops/unicow.yml showcases generous horn and hide drops ideal for beginners.
+        TIER1("Unicow Pasture", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 0, 0, -1, 5, Npcs.UNICOW, 20,
+                new BossMob[]{new BossMob(Npcs.UNICOW, 25, 10, 5, 6, List.of())},
                 new TierCombatProfile(1.0,1.0,1.0,1.0,1.0,List.of())),
-        TIER2("Goblin Camp", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.GOBLIN, 20,
-                new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5, 5, List.of())},
+        // drops/basilisk.yml offers mid-level gear making it a suitable step up.
+        TIER2("Basilisk Lair", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.BASILISK, 20,
+                new BossMob[]{new BossMob(Npcs.BASILISK, 40, 30, 30, 5, List.of())},
                 new TierCombatProfile(1.1,1.05,1.05,1.05,1.0,List.of())),
         TIER3("Giants' Den", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT, 20,
                 new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20, 6, List.of())},
@@ -266,6 +283,9 @@ public class BossInstanceManager {
         }
 
         public TierCombatProfile getCombatProfile() { return combatProfile; }
+
+        /** Multiplier applied to damage dealt by hazards and NPCs in this tier. */
+        public double getDamageMultiplier() { return 1.0 + (ordinal() * 0.1); }
 
         public boolean isDynamicWaveScaling() { return dynamicWaveScaling; }
 
@@ -450,6 +470,7 @@ public class BossInstanceManager {
         BossInstanceOverlayManager.clear(player);
         BossInstanceArea area = INSTANCES.remove(player);
         if (area != null) {
+            area.resetStreak(player);
             area.dispose();
         }
         InstancePerformanceTracker.InstanceResult result = player.getInstancePerformanceTracker().finish();

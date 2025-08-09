@@ -7,6 +7,10 @@ import io.xeros.content.instances.hazard.HazardTier;
 import io.xeros.content.instances.hazard.HazardEffectModifier;
 import io.xeros.content.instances.hazard.WeeklyHazardManager;
 import io.xeros.content.instances.hazard.HazardDebugLogger;
+import io.xeros.content.instances.TierRewardManager;
+import io.xeros.content.combat.Hitmark;
+import io.xeros.model.StillGraphic;
+import io.xeros.Server;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
@@ -109,6 +113,27 @@ public class EnvironmentalHazardScheduler {
                 }
             }, pfreq);
         }
+
+        // Periodic unavoidable pulses that keep players attentive.
+        CycleEventHandler.getSingleton().addEvent(area, new CycleEvent() {
+            @Override
+            public void execute(CycleEventContainer container) {
+                for (Player p : area.getPlayers()) {
+                    Position pos = clampPosition(p.getPosition());
+                    Server.playerHandler.sendStillGfx(new StillGraphic(EnvironmentalHazardType.DIRECT_HIT.getGfxId(), pos), area);
+                    int dmg = (int) Math.max(1, 4 * area.getTier().getDamageMultiplier());
+                    CycleEventHandler.getSingleton().addEvent(p, new CycleEvent() {
+                        @Override
+                        public void execute(CycleEventContainer c) {
+                            p.appendDamage(dmg, Hitmark.HIT);
+                            p.sendMessage("@red@A direct hit strikes you!");
+                            TierRewardManager.rewardHazardDrop(p, area.getTier());
+                            c.stop();
+                        }
+                    }, 2);
+                }
+            }
+        }, 50);
     }
 
     public void stop() {
