@@ -35,6 +35,7 @@ import io.xeros.content.items.aoeweapons.AoeWeapons;
 import io.xeros.content.minigames.pest_control.PestControl;
 import io.xeros.content.prestige.PrestigePerks;
 import io.xeros.content.skills.Skill;
+import io.xeros.content.skills.slayer.DemonHunterPerks;
 import io.xeros.content.tournaments.TourneyManager;
 import io.xeros.model.*;
 import io.xeros.model.cycleevent.CycleEvent;
@@ -278,8 +279,15 @@ public abstract class HitDispatcher {
                 }
             }
 
-            if (attacker.bonusDmg) {
-                damage = (int) (damage + (damage * 0.20));
+             if (attacker.bonusDmg) {
+                 damage = (int) (damage + (damage * 0.20));
+             }
+
+            if (defender.isNPC()) {
+                double bonus = DemonHunterPerks.getDamageBonus(attacker, defender.asNPC());
+                if (bonus > 0) {
+                    damage = (int) (damage + damage * bonus);
+                }
             }
 
             if (attacker.dailyDamage > 0) {
@@ -439,6 +447,13 @@ public abstract class HitDispatcher {
 
             if (attacker.bonusDmg) {
                 maximumDamage *= 1.20;
+            }
+
+            if (defender.isNPC()) {
+                double bonus = DemonHunterPerks.getDamageBonus(attacker, defender.asNPC());
+                if (bonus > 0) {
+                    maximumDamage *= 1 + bonus;
+                }
             }
             if (attacker.dailyDamage > 0) {
                 maximumDamage *= 1.10;
@@ -640,6 +655,13 @@ public abstract class HitDispatcher {
 
             if (attacker.bonusDmg) {
                 damage *= 1.20;
+            }
+
+            if (defender.isNPC()) {
+                double bonus = DemonHunterPerks.getDamageBonus(attacker, defender.asNPC());
+                if (bonus > 0) {
+                    damage *= 1 + bonus;
+                }
             }
 
             if (attacker.dailyDamage > 0) {
