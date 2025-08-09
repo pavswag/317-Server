@@ -23,6 +23,11 @@ public class Burnhistory extends Command {
     }
 
     @Override
+    public boolean hasPrivilege(Player player) {
+        return true;
+    }
+
+    @Override
     public Optional<String> getDescription() {
         return Optional.of("Shows last 10 Fire of Exchange burns.");
     }

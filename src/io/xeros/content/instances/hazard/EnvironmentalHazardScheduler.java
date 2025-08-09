@@ -16,6 +16,8 @@ import io.xeros.util.Misc;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.xeros.content.leaderboards.LeaderboardUtils.weekly;
+
 public class EnvironmentalHazardScheduler {
 
     private final BossInstanceArea area;
@@ -128,9 +130,9 @@ public class EnvironmentalHazardScheduler {
                 double dmgMod = 1.0;
                 String synergyMsg = null;
                 for (InstanceMutator mut : InstanceMutatorManager.getActiveMutators()) {
-                    if (weekly != null && !weekly.synergyMutators.contains(mut)) {
-                        continue;
-                    }
+//                    if (weekly != null && !weekly.synergyMutators.contains(mut)) {
+//                        continue;
+//                    }
                     for (HazardEffectModifier mod : InstanceMutatorManager.getHazardSynergies(mut)) {
                         if (mod.getTarget() == def.getType()) {
                             dmgMod *= mod.getDamageMultiplier();

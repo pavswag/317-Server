@@ -1,13 +1,7 @@
 package io.xeros.content.instances.hazard;
 
 import io.xeros.content.combat.Hitmark;
-import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.instances.BossInstanceManager.BossInstanceArea;
-import io.xeros.content.instances.hazard.HazardTier;
-import io.xeros.content.instances.hazard.IHazardReactive;
-import io.xeros.content.instances.hazard.HazardContext;
-import io.xeros.content.instances.hazard.HazardReaction;
-import io.xeros.content.instances.hazard.HazardDebugLogger;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
@@ -68,7 +62,8 @@ public class EnvironmentalHazardDefinition {
                                 p.appendDamage(scaledDamage, Hitmark.HIT);
                                 names.add(p.getDisplayName());
                                 HazardReaction r = ((IHazardReactive)p).onHazardTriggered(ctx);
-                                // players currently have no reactions                            }
+                                // players currently have no reactions
+                            }
                         }
                         for (NPC n : area.getNpcs()) {
                             if (n.getPosition().equals(pos) && n instanceof IHazardReactive) {
@@ -108,7 +103,8 @@ public class EnvironmentalHazardDefinition {
                                 p.getPA().refreshSkill(5);
                                 p.sendMessage("@pur@Poison mist drains your prayer!");
                                 HazardReaction r = ((IHazardReactive)p).onHazardTriggered(ctx);
-                                names.add(p.getDisplayName());                            }
+                                names.add(p.getDisplayName());
+                            }
                         }
                         for (NPC n : area.getNpcs()) {
                             Position np = n.getPosition();

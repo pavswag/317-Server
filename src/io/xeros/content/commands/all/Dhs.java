@@ -10,4 +10,9 @@ public class Dhs extends Command {
     public void execute(Player player, String commandName, String input) {
         DemonHunterTaskOverlayManager.send(player);
     }
+
+    @Override
+    public boolean hasPrivilege(Player player) {
+        return true;
+    }
 }

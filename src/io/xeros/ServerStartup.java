@@ -170,7 +170,7 @@ public class ServerStartup {
 
         ZamorakGuardian.spawn();
         new SarachnisNpc(Npcs.SARACHNIS, SarachnisNpc.SPAWN_POSITION);
-        FreakazoidBot.init();
+        //FreakazoidBot.init();
         Server.getGlobalObjects().add(new GlobalObject(ToolAugments.TINKER_TABLE_ID, 3095, 3494, 0, 0, 10, -1));
 
         PlayerSaveBackup.start(Configuration.PLAYER_SAVE_TIMER_MILLIS, Configuration.PLAYER_SAVE_BACKUP_EVERY_X_SAVE_TICKS);

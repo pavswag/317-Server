@@ -3372,9 +3372,9 @@ public class PlayerAssistant {
                         amount = 200_000_000;
                 }
 
-                if (player.hasFreakazoidAura()) {
-                        amount += (int) (amount * 0.02);
-                }
+//                if (player.hasFreakazoidAura()) {
+//                        amount += (int) (amount * 0.02);
+//                }
 
 		if (player.skillLock[skill]) {
 			return false;

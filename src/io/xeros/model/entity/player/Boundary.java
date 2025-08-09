@@ -699,4 +699,5 @@ public class Boundary {
 	public Location getMinLocation() {
 		return new Location(minX, minY);
 	}
+
 }

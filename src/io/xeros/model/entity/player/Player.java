@@ -6679,4 +6679,12 @@ public class Player extends Entity implements IHazardReactive {
         // Players currently have no special reactions.
         return null;
     }
+
+    public boolean hasFreakazoidAura() {
+        return freakazoidAura;
+    }
+
+    public void setFreakazoidAura(boolean freakazoidAura) {
+        this.freakazoidAura = freakazoidAura;
+    }
 }

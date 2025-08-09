@@ -40,7 +40,7 @@ public class DemonHunterTaskOverlayManager {
         CycleEventHandler.getSingleton().addEvent(EVENT_ID, player, new CycleEvent() {
             @Override
             public void execute(CycleEventContainer container) {
-                if (player.disconnected || player.getDemonHunterTask().isEmpty()) {
+                if (player.getDemonHunterTask().isEmpty()) {
                     container.stop();
                     return;
                 }
