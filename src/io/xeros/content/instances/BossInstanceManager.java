@@ -10,6 +10,7 @@ import io.xeros.model.entity.npc.NPCSpawning;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Position;
+import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.util.Misc;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
@@ -83,7 +84,10 @@ public class BossInstanceManager {
         }
 
         public boolean isWithinAoeZone(Position pos) {
-            return true;
+            Boundary boundary = tier.getZoneBoundary();
+            return pos.getHeight() == getHeight()
+                    && pos.getX() >= boundary.getMinimumX() && pos.getX() <= boundary.getMaximumX()
+                    && pos.getY() >= boundary.getMinimumY() && pos.getY() <= boundary.getMaximumY();
         }
 
         public io.xeros.content.instances.hazard.EnvironmentalHazardScheduler getHazardScheduler() {
@@ -356,6 +360,11 @@ public class BossInstanceManager {
         int desiredTotal = Math.max(1, areaTiles / Math.max(1, tier.getDesiredNpcDensity()));
         int baseTotal = Arrays.stream(mobs).mapToInt(BossMob::getCount).sum();
         double ratio = baseTotal > 0 ? Math.max(1.0, (double) desiredTotal / baseTotal) : 1.0;
+        if (tier.ordinal() <= BossTier.TIER4.ordinal()) {
+            ratio *= 1.2;
+        } else if (tier.ordinal() >= BossTier.TIER7.ordinal()) {
+            ratio *= 0.8;
+        }
 
         Position spawnTile = tier.getSpawnTile();
         for (BossMob mob : mobs) {
@@ -455,6 +464,11 @@ public class BossInstanceManager {
             PerformanceRank rank = PerformanceRank.forScore(result.score);
             if (rank.ordinal() >= PerformanceRank.GOLD.ordinal()) {
                 player.sendMessage("@gre@Achievement unlocked: " + rank.name() + " performer!");
+            }
+            int kills = player.getTierKillCounts().getOrDefault(result.tier, 0);
+            if (kills >= result.tier.getRequiredKillCountToUnlockNext()) {
+                String msg = player.getDisplayName() + " has completed " + getTierDisplayNameSafe(result.tier) + "!";
+                PlayerHandler.nonNullStream().forEach(p -> p.sendMessage(msg));
             }
         }
         player.setPreviewingBossInstance(false);
