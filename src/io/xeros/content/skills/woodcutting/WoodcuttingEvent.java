@@ -24,6 +24,7 @@ import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.model.entity.player.Position;
 import io.xeros.model.world.objects.GlobalObject;
 import io.xeros.util.Misc;
+import io.xeros.content.tools.ToolAugments;
 
 import java.util.Optional;
 
@@ -143,7 +144,9 @@ public class WoodcuttingEvent extends Event<Player> {
                 else
                     attachment.getItems().addItem(tree.getWood(), 9);
             }
-            attachment.getPA().addSkillXPMultiplied((int) osrsExperience, Skill.WOODCUTTING.getId(), true);
+            attachment.getPA().addSkillXPMultiplied(ToolAugments.applyXpBoost(attachment, hatchet.getItemId(), (int) osrsExperience),
+                    Skill.WOODCUTTING.getId(), true);
+            ToolAugments.decrementDurability(attachment, hatchet.getItemId());
             handleRewards();
             Hespori.deleteEventItems(attachment);
             attachment.getPA().addSkillXPMultiplied(330, 19, true);
@@ -163,9 +166,19 @@ public class WoodcuttingEvent extends Event<Player> {
             }
             if (attachment.isBot())
                 attachment.getItems().addItemToBankOrDrop(tree.getWood(), SkillcapePerks.WOODCUTTING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment) ? 2 : 1);
-            else
-                attachment.getItems().addItem(tree.getWood(), SkillcapePerks.WOODCUTTING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment) ? 2 : 1);
-            attachment.getPA().addSkillXPMultiplied(attachment.playerLevel[Skill.WOODCUTTING.getId()] * 4, 8, true);
+            else {
+                int amt = SkillcapePerks.WOODCUTTING.isWearing(attachment) || SkillcapePerks.isWearingMaxCape(attachment) ? 2 : 1;
+                attachment.getItems().addItem(tree.getWood(), amt);
+                if (ToolAugments.rollDoubleGather(attachment, hatchet.getItemId())) {
+                    attachment.getItems().addItem(tree.getWood(), amt);
+                }
+            }
+            int xp = attachment.playerLevel[Skill.WOODCUTTING.getId()] * 4;
+            attachment.getPA().addSkillXPMultiplied(
+                    ToolAugments.applyXpBoost(attachment, hatchet.getItemId(), xp),
+                    8, true);
+            ToolAugments.decrementDurability(attachment, hatchet.getItemId());
+            ToolAugments.tryGiveCrystal(attachment, Skill.WOODCUTTING);
             attachment.startAnimation(hatchet.getAnimation());
             return;
         }
@@ -189,11 +202,18 @@ public class WoodcuttingEvent extends Event<Player> {
 
             if (attachment.isBot())
                 attachment.getItems().addItemToBankOrDrop(tree.getWood(), 1);
-            else
+            else {
                 attachment.getItems().addItem(tree.getWood(), 1);
+                if (ToolAugments.rollDoubleGather(attachment, hatchet.getItemId())) {
+                    attachment.getItems().addItem(tree.getWood(), 1);
+                }
+            }
             attachment.sendSpamMessage("You get some logs.");
             attachment.getEventCalendar().progress(EventChallenge.CUT_DOWN_X_MAGIC_LOGS);
-            attachment.getPA().addSkillXPMultiplied((int) osrsExperience, Skill.WOODCUTTING.getId(), true);
+            attachment.getPA().addSkillXPMultiplied(ToolAugments.applyXpBoost(attachment, hatchet.getItemId(), (int) osrsExperience),
+                    Skill.WOODCUTTING.getId(), true);
+            ToolAugments.decrementDurability(attachment, hatchet.getItemId());
+            ToolAugments.tryGiveCrystal(attachment, Skill.WOODCUTTING);
             Achievements.increase(attachment, AchievementType.WOODCUT, 1);
             attachment.getPA().sendSound(472);
             handleRewards();
@@ -205,7 +225,10 @@ public class WoodcuttingEvent extends Event<Player> {
             if (Misc.random(chopChance) == 1 || chops >= tree.getChopsRequired()) {
                 chops = 0;
                 int random = Misc.random(4);
-                attachment.getPA().addSkillXPMultiplied((int) osrsExperience, Skill.WOODCUTTING.getId(), true);
+                attachment.getPA().addSkillXPMultiplied(
+                        ToolAugments.applyXpBoost(attachment, hatchet.getItemId(), (int) osrsExperience),
+                        Skill.WOODCUTTING.getId(), true);
+                ToolAugments.decrementDurability(attachment, hatchet.getItemId());
                 Achievements.increase(attachment, AchievementType.WOODCUT, 1);
                 if (attachment.getItems().isWearingItem(25066)
                         || (attachment.getItems().isWearingItem(13241) || attachment.getItems().playerHasItem(13241))

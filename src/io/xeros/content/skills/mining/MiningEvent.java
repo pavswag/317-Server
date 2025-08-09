@@ -29,6 +29,7 @@ import io.xeros.model.world.objects.GlobalObject;
 import io.xeros.util.Location3D;
 import io.xeros.util.Misc;
 import org.apache.commons.lang3.RandomUtils;
+import io.xeros.content.tools.ToolAugments;
 
 /**
  * Represents a singular event that is executed when a player attempts to mine.
@@ -260,7 +261,11 @@ public class MiningEvent extends Event<Player> {
 		if (BoostScrolls.checkHarvestBoost(attachment)) {
 			osrsExperience *= 1.15;
 		}
-		attachment.getPA().addSkillXPMultiplied((int) osrsExperience, Skill.MINING.getId(), true);
+                attachment.getPA().addSkillXPMultiplied(
+                        ToolAugments.applyXpBoost(attachment, pickaxe.getItemId(), (int) osrsExperience),
+                        Skill.MINING.getId(), true);
+                ToolAugments.decrementDurability(attachment, pickaxe.getItemId());
+                ToolAugments.tryGiveCrystal(attachment, Skill.MINING);
 		switch (mineral) {
 			case ADAMANT:
 				break;
@@ -367,8 +372,12 @@ public class MiningEvent extends Event<Player> {
                 if (!attachment.isBot()) {
                         if (attachment.playerEquipment[Player.playerWeapon] == 25112 || attachment.playerEquipmentCosmetic[Player.playerWeapon] == 25112)
                                 attachment.getItems().addItemToBankOrDrop(itemId, amount);
-                        else
+                        else {
                                 attachment.getItems().addItem(itemId, amount);
+                                if (ToolAugments.rollDoubleGather(attachment, pickaxe.getItemId())) {
+                                        attachment.getItems().addItem(itemId, amount);
+                                }
+                        }
                 }
 
 		attachment.sendSpamMessage("You just mined some " + mineral.name().toLowerCase() + ".");//restart that so i can do client side  once i got these done i can send u other skilling messages if needed

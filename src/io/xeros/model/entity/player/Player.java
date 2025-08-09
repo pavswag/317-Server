@@ -148,6 +148,8 @@ import io.xeros.content.tutorial.TutorialDialogue;
 import io.xeros.content.upgrade.UpgradeInterface;
 import io.xeros.content.vote_panel.VotePanelManager;
 import io.xeros.content.vote_panel.VoteUser;
+import io.xeros.content.tools.AugmentInstance;
+import io.xeros.content.tools.ToolAugment;
 import io.xeros.content.wilderness.ActiveVolcano;
 import io.xeros.content.wogw.WogwContributeInterface;
 import io.xeros.model.*;
@@ -642,6 +644,19 @@ public class Player extends Entity implements IHazardReactive {
     private final MiniSmb miniSmb = new MiniSmb(this);
     private final MiniTobBox miniTobBox = new MiniTobBox(this);
     private final MiniUltraBox miniUltraBox = new MiniUltraBox(this);
+
+    // Tool augment system
+    private final Set<ToolAugment> unlockedToolAugments = new HashSet<>();
+    /** Tool id -> applied augments with rarity/durability. */
+    private final Map<Integer, List<AugmentInstance>> toolAugments = new HashMap<>();
+    /** Whether the precision set bonus is active. */
+    private boolean precisionSetActive;
+    /** Last 10 FoE burns. */
+    private final Deque<String> burnHistory = new ArrayDeque<>();
+    /** Last 10 tinker actions. */
+    private final Deque<String> tinkerLogs = new ArrayDeque<>();
+    private int crystalsFoundThisHour;
+    private long crystalHourStart;
 
     private final EntityDamageQueue entityDamageQueue = new EntityDamageQueue(this);
     private BountyHunter bountyHunter = new BountyHunter(this);
@@ -3559,6 +3574,50 @@ public class Player extends Entity implements IHazardReactive {
 
     public EntityDamageQueue getDamageQueue() {
         return entityDamageQueue;
+    }
+
+    public Set<ToolAugment> getUnlockedToolAugments() {
+        return unlockedToolAugments;
+    }
+
+    public Map<Integer, List<AugmentInstance>> getToolAugments() {
+        return toolAugments;
+    }
+
+    public boolean isPrecisionSetActive() {
+        return precisionSetActive;
+    }
+
+    public void setPrecisionSetActive(boolean active) {
+        this.precisionSetActive = active;
+    }
+
+    public Deque<String> getBurnHistory() {
+        return burnHistory;
+    }
+
+    public Deque<String> getTinkerLogs() {
+        return tinkerLogs;
+    }
+
+    public int getCrystalsFoundThisHour() {
+        return crystalsFoundThisHour;
+    }
+
+    public void setCrystalsFoundThisHour(int crystalsFoundThisHour) {
+        this.crystalsFoundThisHour = crystalsFoundThisHour;
+    }
+
+    public long getCrystalHourStart() {
+        return crystalHourStart;
+    }
+
+    public void setCrystalHourStart(long crystalHourStart) {
+        this.crystalHourStart = crystalHourStart;
+    }
+
+    public boolean wearingFullSkillingOutfit() {
+        return false;
     }
 
     public long[] reduceSpellDelay = new long[6];

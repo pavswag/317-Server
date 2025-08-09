@@ -22,6 +22,7 @@ import io.xeros.model.items.ItemAssistant;
 import io.xeros.util.Misc;
 import io.xeros.util.discord.Discord;
 import io.xeros.util.logging.player.FireOfExchangeLog;
+import io.xeros.content.tools.ToolAugments;
 
 import java.util.List;
 import java.util.Objects;
@@ -181,6 +182,25 @@ public class FireOfExchange {
         c.getRecentlyDissolvedPrices().add(exchangePrice);
         GlobalBossActivityManager.record(ActivityType.FOE_BURN, (int) exchangePrice);
         Server.getLogging().write(new FireOfExchangeLog(c, new GameItem(c.currentExchangeItem, c.currentExchangeItemAmount)));
+        ToolAugments.unlockFromBurn(c, c.currentExchangeItem);
+        Skill skill = ToolAugments.getSkillForTool(c.currentExchangeItem);
+        boolean crystal = false;
+        if (skill != null && Math.random() < 0.10) {
+            int crystalId = ToolAugments.SKILLING_CRYSTALS.getOrDefault(skill, -1);
+            if (crystalId > 0) {
+                c.getItems().addItem(crystalId, 1);
+                c.sendMessage("The flames return a skilling crystal.");
+                crystal = true;
+            }
+        }
+        String log = ItemAssistant.getItemName(c.currentExchangeItem);
+        if (crystal) {
+            log += " -> crystal";
+        }
+        c.getBurnHistory().addFirst(log);
+        if (c.getBurnHistory().size() > 10) {
+            c.getBurnHistory().removeLast();
+        }
     }
 
     /**
