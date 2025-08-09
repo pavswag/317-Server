@@ -20,7 +20,7 @@ public class ScrollConversionService {
             return;
         }
         player.getItems().deleteItem2(FIVE_SCROLL, required);
-        player.getItems().addItem(result.getItemId(), 1);
+        player.getItems().addItemUnderAnyCircumstance(result.getItemId(), 1);
         player.sendMessage("Converted " + required + "x $5 scrolls into a $" + result.getDonationAmount() + " scroll.");
         ScrollConversionLogger.log(player, "Converted " + required + "x $5 into $" + result.getDonationAmount());
         player.getPA().closeAllWindows();
@@ -39,7 +39,7 @@ public class ScrollConversionService {
             return;
         }
         player.getItems().deleteItem2(from.getItemId(), 1);
-        player.getItems().addItem(FIVE_SCROLL, fiveScrolls);
+        player.getItems().addItemUnderAnyCircumstance(FIVE_SCROLL, fiveScrolls);
         player.sendMessage("Converted a $" + from.getDonationAmount() + " scroll into " + fiveScrolls + "x $5 scrolls.");
         ScrollConversionLogger.log(player, "Converted $" + from.getDonationAmount() + " into " + fiveScrolls + "x $5");
         player.getPA().closeAllWindows();
@@ -59,25 +59,25 @@ public class ScrollConversionService {
         if (num100 > 0) {
             results.put(DonationScroll.ONE_HUNDRED, num100);
             remaining -= num100 * 20;
-            player.getItems().addItem(DonationScroll.ONE_HUNDRED.getItemId(), num100);
+            player.getItems().addItemUnderAnyCircumstance(DonationScroll.ONE_HUNDRED.getItemId(), num100);
         }
         int num50 = remaining / 10;
         if (num50 > 0) {
             results.put(DonationScroll.FIFTY, num50);
             remaining -= num50 * 10;
-            player.getItems().addItem(DonationScroll.FIFTY.getItemId(), num50);
+            player.getItems().addItemUnderAnyCircumstance(DonationScroll.FIFTY.getItemId(), num50);
         }
         int num25 = remaining / 5;
         if (num25 > 0) {
             results.put(DonationScroll.TWENTY_FIVE, num25);
             remaining -= num25 * 5;
-            player.getItems().addItem(DonationScroll.TWENTY_FIVE.getItemId(), num25);
+            player.getItems().addItemUnderAnyCircumstance(DonationScroll.TWENTY_FIVE.getItemId(), num25);
         }
         int num10 = remaining / 2;
         if (num10 > 0) {
             results.put(DonationScroll.TEN, num10);
             remaining -= num10 * 2;
-            player.getItems().addItem(DonationScroll.TEN.getItemId(), num10);
+            player.getItems().addItemUnderAnyCircumstance(DonationScroll.TEN.getItemId(), num10);
         }
         int used = total - remaining;
         if (used > 0) {

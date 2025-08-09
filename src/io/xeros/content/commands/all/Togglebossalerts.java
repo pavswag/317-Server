@@ -12,8 +12,8 @@ public class Togglebossalerts extends Command {
 
     @Override
     public void execute(Player player, String commandName, String input) {
-        player.setBossAlerts(!player.isBossAlerts());
-        player.sendMessage("Global boss alerts " + (player.isBossAlerts() ? "enabled" : "disabled"));
+//        player.setBossAlerts(!player.isBossAlerts());
+//        player.sendMessage("Global boss alerts " + (player.isBossAlerts() ? "enabled" : "disabled"));
     }
 
     @Override

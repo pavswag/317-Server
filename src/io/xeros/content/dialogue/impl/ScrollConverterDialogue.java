@@ -21,16 +21,10 @@ public class ScrollConverterDialogue extends DialogueBuilder {
         npc("Hello! Want to consolidate your scrolls?");
         option(
                 new DialogueOption("Convert $5 scrolls", ScrollConverterDialogue::openConvertMenu),
-                new DialogueOption("Reverse convert scrolls", ScrollConverterDialogue::openReverseMenu),
                 new DialogueOption("Nevermind", p -> p.getPA().closeAllWindows())
         );
     }
-
     private static void openConvertMenu(Player player) {
-        ScrollConversionService.openConvertMenu(player);
-    }
-
-    private static void openReverseMenu(Player player) {
-        ScrollConversionService.openReverseMenu(player);
+        ScrollConversionService.batchConvert(player);
     }
 }

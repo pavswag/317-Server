@@ -20,7 +20,7 @@ public class Freakazoidstatus extends Command {
 
     @Override
     public boolean hasPrivilege(Player player) {
-        return player.getRights().isStaff();
+        return true;
     }
 
     @Override

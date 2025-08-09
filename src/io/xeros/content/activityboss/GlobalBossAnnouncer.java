@@ -20,7 +20,7 @@ public class GlobalBossAnnouncer {
         }
         String message = "@dre@Global Boss nearly ready! " + percent + "% progress to trigger!";
         for (Player p : PlayerHandler.getPlayers()) {
-            if (p != null && p.isBossAlerts()) {
+            if (p != null) {
                 p.sendMessage(message);
             }
         }
