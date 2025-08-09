@@ -371,6 +371,7 @@ public class NPCDeath {
                     PlayerHandler.executeGlobalMessage(player.getDisplayName() + " has unlocked Tier " + number + " – " + name + "! \uD83D\uDD25");
                 }
             }
+            area.recordKill(player);
             BossInstanceOverlayManager.sendKillOverlay(player);
             InstanceMutatorManager.spikeGlobal(5);
         }
