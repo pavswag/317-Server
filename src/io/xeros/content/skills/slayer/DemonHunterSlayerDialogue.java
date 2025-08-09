@@ -117,7 +117,10 @@ public class DemonHunterSlayerDialogue {
         builder.npc("Demon Hunter is an elite mode", "focused on demon bosses.");
         builder.npc("Assignments scale with your level", "and grant Demon Marks.");
         builder.npc("Milestones unlock perks and tasks", "while contracts add bonuses.");
-        builder.option(new DialogueOption("Back to menu", p -> showMainMenu(p, false)));
+        builder.option(
+                new DialogueOption("Back to menu", p -> showMainMenu(p, false)),
+                DialogueBuilder.EXIT_DIALOGUE_OPTION
+        );
         player.start(builder);
     }
 
@@ -165,7 +168,10 @@ public class DemonHunterSlayerDialogue {
                     .collect(Collectors.joining(", "));
             builder.npc("Tier " + tier.getId() + " (lvl " + tier.getLevelRequirement() + "):", bosses);
         }
-        builder.option(new DialogueOption("Back", p -> showMainMenu(p, false)));
+        builder.option(
+                new DialogueOption("Back to menu", p -> showMainMenu(p, false)),
+                DialogueBuilder.EXIT_DIALOGUE_OPTION
+        );
         player.start(builder);
     }
 
@@ -175,7 +181,10 @@ public class DemonHunterSlayerDialogue {
         builder.npc("Each Demon Hunter level", "adds +1% task damage.");
         builder.npc("Lvl20: +5% drops, Lvl40:", "faster kills, Lvl60: +1 mark");
         builder.npc("Off-task kills give 25%", "base XP and no marks.");
-        builder.option(new DialogueOption("Back", p -> showMainMenu(p, false)));
+        builder.option(
+                new DialogueOption("Back to menu", p -> showMainMenu(p, false)),
+                DialogueBuilder.EXIT_DIALOGUE_OPTION
+        );
         player.start(builder);
     }
 
