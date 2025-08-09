@@ -27,13 +27,19 @@ public class DemonHunterSlayerDialogue {
      * Opens the main Demon Hunter menu.
      */
     public static void showMainMenu(Player player) {
+        showMainMenu(player, true);
+    }
+
+    private static void showMainMenu(Player player, boolean greet) {
         DialogueBuilder builder = new DialogueBuilder(player).setNpcId(NPC);
-        builder.npc("Greetings, slayer. How can I assist you on your Demon Hunter journey?");
+        if (greet) {
+            builder.npc("Greetings, slayer. Need help with demon hunts?");
+        }
 
         List<DialogueOption> options = new ArrayList<>();
         options.add(new DialogueOption("What's Demon Hunter Slayer?", DemonHunterSlayerDialogue::explainSystem));
-        options.add(new DialogueOption("What are the Demon Hunter tiers?", DemonHunterSlayerDialogue::explainTiers));
-        options.add(new DialogueOption("What are the rewards and XP like?", DemonHunterSlayerDialogue::explainRewards));
+        options.add(new DialogueOption("What are the Demon tiers?", DemonHunterSlayerDialogue::explainTiers));
+        options.add(new DialogueOption("Rewards and XP?", DemonHunterSlayerDialogue::explainRewards));
         options.add(new DialogueOption("Task Menu", DemonHunterSlayerDialogue::showTaskMenu));
         if (player.getRights().isOrInherits(Right.ADMINISTRATOR)) {
             options.add(new DialogueOption("Admin Options", DemonHunterSlayerDialogue::showAdminMenu));
@@ -52,7 +58,7 @@ public class DemonHunterSlayerDialogue {
                 new DialogueOption("Abandon Task", DemonHunterSlayerDialogue::abandonTask),
                 new DialogueOption("View Stats / Contract", DemonHunterSlayerDialogue::viewStats),
                 new DialogueOption("Open Reward Shop", DemonHunterSlayerDialogue::openShop),
-                new DialogueOption("Back", DemonHunterSlayerDialogue::showMainMenu)
+                new DialogueOption("Back", p -> showMainMenu(p, false))
         );
         player.start(builder);
     }
@@ -100,7 +106,7 @@ public class DemonHunterSlayerDialogue {
                     }
                 }),
                 new DialogueOption("Open Reward Shop", DemonMarkRewardHandler::openShop),
-                new DialogueOption("Back", DemonHunterSlayerDialogue::showMainMenu),
+                new DialogueOption("Back", p -> showMainMenu(p, false)),
                 new DialogueOption("Previous", DemonHunterSlayerDialogue::showAdminMenu)
         );
         player.start(builder);
@@ -108,12 +114,10 @@ public class DemonHunterSlayerDialogue {
 
     private static void explainSystem(Player player) {
         DialogueBuilder builder = new DialogueBuilder(player).setNpcId(NPC);
-        builder.npc("Demon Hunter Slayer is an elite slayer mode focused on defeating demon bosses.");
-        builder.npc("You'll receive powerful assignments based on your Demon Hunter level.");
-        builder.npc("Progress builds your streak, earns Slayer XP, and rewards Demon Marks.");
-        builder.npc("Milestones unlock perks and elite tasks, and contracts offer extra rewards.");
-        builder.npc("Track your progress, climb the leaderboard, and claim your glory.");
-        builder.option(new DialogueOption("Got it. Back to menu.", DemonHunterSlayerDialogue::showMainMenu));
+        builder.npc("Demon Hunter is an elite mode", "focused on demon bosses.");
+        builder.npc("Assignments scale with your level", "and grant Demon Marks.");
+        builder.npc("Milestones unlock perks and tasks", "while contracts add bonuses.");
+        builder.option(new DialogueOption("Back to menu", p -> showMainMenu(p, false)));
         player.start(builder);
     }
 
@@ -159,18 +163,18 @@ public class DemonHunterSlayerDialogue {
                     .filter(b -> b.getTier() == tier)
                     .map(DemonSlayerMaster.BossTier::getNpcName)
                     .collect(Collectors.joining(", "));
-            builder.npc("Tier " + tier.getId() + " (lvl " + tier.getLevelRequirement() + "): " + bosses);
+            builder.npc("Tier " + tier.getId() + " (lvl " + tier.getLevelRequirement() + "):", bosses);
         }
-        builder.option(new DialogueOption("Back", DemonHunterSlayerDialogue::showMainMenu));
+        builder.option(new DialogueOption("Back", p -> showMainMenu(p, false)));
         player.start(builder);
     }
 
     private static void explainRewards(Player player) {
         DialogueBuilder builder = new DialogueBuilder(player).setNpcId(NPC);
-        builder.npc("On-task kills grant full Demon Hunter XP and Marks.");
-        builder.npc("Off-task kills only award 25% of the base XP and no marks.");
-        builder.npc("Higher tiers have larger XP multipliers from the configuration file.");
-        builder.option(new DialogueOption("Back", DemonHunterSlayerDialogue::showMainMenu));
+        builder.npc("On-task kills give full Hunter XP", "and Demon Marks.");
+        builder.npc("Off-task kills give 25% base XP", "and no marks.");
+        builder.npc("Higher tiers boost XP via", "the config file.");
+        builder.option(new DialogueOption("Back", p -> showMainMenu(p, false)));
         player.start(builder);
     }
 
@@ -178,6 +182,6 @@ public class DemonHunterSlayerDialogue {
     public static void init() {
         NPCSpawning.spawnNpc(Npcs.DEMON_HUNTER_MASTER, 3095, 3500, 0, 0, 0);
         NPCAction.register(Npcs.DEMON_HUNTER_MASTER, 1,
-                (player, npc) -> DemonHunterSlayerDialogue.showMainMenu(player));
+                (player, npc) -> DemonHunterSlayerDialogue.showMainMenu(player, true));
     }
 }
