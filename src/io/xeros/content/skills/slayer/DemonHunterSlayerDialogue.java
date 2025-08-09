@@ -171,9 +171,10 @@ public class DemonHunterSlayerDialogue {
 
     private static void explainRewards(Player player) {
         DialogueBuilder builder = new DialogueBuilder(player).setNpcId(NPC);
-        builder.npc("On-task kills give full Hunter XP", "and Demon Marks.");
-        builder.npc("Off-task kills give 25% base XP", "and no marks.");
-        builder.npc("Higher tiers boost XP via", "the config file.");
+        builder.npc("On-task kills give full XP", "and Demon Marks.");
+        builder.npc("Each Demon Hunter level", "adds +1% task damage.");
+        builder.npc("Lvl20: +5% drops, Lvl40:", "faster kills, Lvl60: +1 mark");
+        builder.npc("Off-task kills give 25%", "base XP and no marks.");
         builder.option(new DialogueOption("Back", p -> showMainMenu(p, false)));
         player.start(builder);
     }
