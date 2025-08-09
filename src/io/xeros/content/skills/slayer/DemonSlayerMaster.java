@@ -143,7 +143,15 @@ public class DemonSlayerMaster extends SlayerMaster {
             pool = Arrays.asList(BossTier.GENERAL_GRAARDOR);
         }
         BossTier boss = pool.get(Misc.random(pool.size() - 1));
-        int amount = 5 + Misc.random(30); // 5-35
+        int tier = boss.getTier().getId();
+        int amount;
+        if (tier <= 4) {
+            amount = Misc.random(15) + 10; // 10-25
+        } else if (tier <= 7) {
+            amount = Misc.random(10) + 5; // 5-15
+        } else {
+            amount = Misc.random(7) + 3; // 3-10
+        }
         DemonSlayerTask task = new DemonSlayerTask(boss, amount);
         player.setDemonHunterTask(task);
         player.setDemonHunterTaskProgress(amount);
