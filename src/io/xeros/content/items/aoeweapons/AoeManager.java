@@ -43,6 +43,12 @@ public class AoeManager {
         int dmg = Misc.random(aoeData.DMG);
         int range = aoeData.Size;
         int delay = aoeData.Delay;
+        BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(player);
+        if (area != null && area.isWithinAoeZone(player.getPosition())) {
+            BossInstanceManager.BossTier tier = area.getTier();
+            dmg = (int) Math.round(dmg * tier.getAoeDamageMultiplier());
+            delay = (int) Math.max(1, Math.round(delay * tier.getAoeCooldownMultiplier()));
+        }
         int anim = aoeData.anim;
         int gfx = aoeData.gfx;
         String style = aoeData.style;
@@ -50,7 +56,6 @@ public class AoeManager {
         player.startAnimation(anim);
 
         if (player.isPlayer() && victim.isNPC()) {
-            BossInstanceManager.BossInstanceArea area = BossInstanceManager.get(player);
             victim.startGraphic(new Graphic(gfx, 0, Graphic.GraphicHeight.MIDDLE));
             for (NPC next : NPCHandler.npcs) {
                 if (next == null) {

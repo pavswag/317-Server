@@ -12,6 +12,7 @@ import io.xeros.content.instances.hazard.HazardEffectModifier;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
+import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.model.entity.player.PlayerHandler;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,9 @@ public class InstanceMutatorManager {
             public void execute(CycleEventContainer container) {
                 globalDanger = Math.max(0, globalDanger - 1);
                 if (globalDanger > 80) {
-                    PlayerHandler.executeGlobalMessage("@red@The world trembles from hazardous energy!");
+                    PlayerHandler.nonNullStream()
+                            .filter(p -> BossInstanceManager.get(p) != null)
+                            .forEach(p -> p.sendMessage("@red@The world trembles from hazardous energy!"));
                 }
             }
         }, 100);
