@@ -49,6 +49,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.xeros.content.skills.slayer.DemonHunterPerks;
 
 import java.io.File;
 import java.io.IOException;
@@ -491,6 +492,7 @@ public class DropManager {
         final List<GameItem> perkItems = perkSystem.gameItems;
         if (perkItems.contains(GameItem.get(33112))) modifier += 0.20D;
         if (perkItems.contains(GameItem.get(33108))) modifier += 0.10D;
+        if (DemonHunterPerks.has(player, DemonHunterPerks.Perk.DROP_RATE)) modifier += 0.05D;
 
         // Game modes
         if (player.experienceModeEquals(ExpModeType.OneTimes)) modifier += 0.20D;
