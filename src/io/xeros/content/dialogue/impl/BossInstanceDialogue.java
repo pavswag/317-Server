@@ -57,7 +57,18 @@ public class BossInstanceDialogue extends DialogueBuilder {
         Player player = getPlayer();
         BossTier[] tiers = BossTier.values();
 
-        int startIndex = page * OPTIONS_PER_PAGE;
+        // First page can show four tiers (one slot reserved for "More"),
+        // subsequent pages show three tiers because both navigation options
+        // may be present. Compute the starting index accordingly so tiers
+        // are not skipped.
+        int startIndex;
+        if (page == 0) {
+            startIndex = 0;
+        } else {
+            int firstPageCount = OPTIONS_PER_PAGE - 1; // 4 tiers on page 0
+            int subsequentPageCount = OPTIONS_PER_PAGE - 2; // 3 tiers when back+more are shown
+            startIndex = firstPageCount + (page - 1) * subsequentPageCount;
+        }
 
         displayed.clear();
 
