@@ -8,49 +8,49 @@
         "stackable": false
       }
     ],
-    "amountToKill": 50,
-    "claimedReward": false,
-    "amountKilled": 0,
-    "taskDifficulty": "HARD",
-    "taskType": "COMBAT",
-    "weekly": true,
-    "localDateTime": "2025-08-06T15:46:35.907657",
-    "desc": "Theatre Of Blood"
-  },
-  {
-    "items": [
-      {
-        "id": 995,
-        "amount": 25000,
-        "slot": 0,
-        "stackable": false
-      }
-    ],
-    "amountToKill": 50,
-    "claimedReward": false,
-    "amountKilled": 0,
-    "taskDifficulty": "MEDIUM",
-    "taskType": "COMBAT",
-    "weekly": false,
-    "localDateTime": "2025-08-06T11:08:55.7228669",
-    "desc": "K\u0027ril Tsutsaroth"
-  },
-  {
-    "items": [
-      {
-        "id": 995,
-        "amount": 25000,
-        "slot": 0,
-        "stackable": false
-      }
-    ],
     "amountToKill": 250,
     "claimedReward": false,
     "amountKilled": 0,
     "taskDifficulty": "HARD",
     "taskType": "SKILLING",
     "weekly": false,
-    "localDateTime": "2025-08-06T11:08:55.7268687",
-    "desc": "Cook @whi@Fish"
+    "localDateTime": "2025-08-09T17:58:24.1359263",
+    "desc": "Fletch @whi@bows"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 10,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "EASY",
+    "taskType": "COMBAT",
+    "weekly": false,
+    "localDateTime": "2025-08-09T17:58:24.1389253",
+    "desc": "Commander Zilyana"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 300,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "EASY",
+    "taskType": "COMBAT",
+    "weekly": true,
+    "localDateTime": "2025-08-10T16:58:24.1389253",
+    "desc": "Kree\u0027arra"
   }
 ]

@@ -205,8 +205,8 @@ public class BossInstanceManager {
         // drops/fire_giant.yml and drops/hellhound.yml reward rune gear and crystals fitting the mid-game.
         TIER5("Fire Pit", new Boundary(2268, 4756, 2296, 4786), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT, 18,
                 new BossMob[]{
-                        new BossMob(Npcs.FIRE_GIANT, 80, 60, 60, 5, List.of()),
-                        new BossMob(Npcs.HELLHOUND, 90, 70, 65, 3, List.of())
+                        new BossMob(Npcs.FIRE_GIANT_10, 80, 60, 60, 5, List.of()),
+                        new BossMob(Npcs.HELLHOUND_3, 90, 70, 65, 3, List.of())
                 },
                 new TierCombatProfile(1.4,1.2,1.2,1.2,1.15,List.of()), 1.0, 1.0),
         // drops/green_dragon.yml, drops/baby_green_dragon.yml and drops/bronze_dragon.yml contain hides and metals for crafting progression.
@@ -250,15 +250,15 @@ public class BossInstanceManager {
                 new TierCombatProfile(2.0,1.5,1.5,1.45,1.4,List.of("infernal_slam")), 0.9, 1.2);
 
         static {
-            TIER1.requiredKillCountToUnlockNext = 25;  TIER1.nextTier = TIER2;
-            TIER2.requiredKillCountToUnlockNext = 50;  TIER2.nextTier = TIER3;
-            TIER3.requiredKillCountToUnlockNext = 75;  TIER3.nextTier = TIER4;
-            TIER4.requiredKillCountToUnlockNext = 100; TIER4.nextTier = TIER5;
-            TIER5.requiredKillCountToUnlockNext = 150; TIER5.nextTier = TIER6;
-            TIER6.requiredKillCountToUnlockNext = 200; TIER6.nextTier = TIER7;
-            TIER7.requiredKillCountToUnlockNext = 250; TIER7.nextTier = TIER8;
-            TIER8.requiredKillCountToUnlockNext = 300; TIER8.nextTier = TIER9;
-            TIER9.requiredKillCountToUnlockNext = 400; TIER9.nextTier = TIER10;
+            TIER1.requiredKillCountToUnlockNext = 250;  TIER1.nextTier = TIER2;
+            TIER2.requiredKillCountToUnlockNext = 500;  TIER2.nextTier = TIER3;
+            TIER3.requiredKillCountToUnlockNext = 850;  TIER3.nextTier = TIER4;
+            TIER4.requiredKillCountToUnlockNext = 1200; TIER4.nextTier = TIER5;
+            TIER5.requiredKillCountToUnlockNext = 1750; TIER5.nextTier = TIER6;
+            TIER6.requiredKillCountToUnlockNext = 2000; TIER6.nextTier = TIER7;
+            TIER7.requiredKillCountToUnlockNext = 2500; TIER7.nextTier = TIER8;
+            TIER8.requiredKillCountToUnlockNext = 5000; TIER8.nextTier = TIER9;
+            TIER9.requiredKillCountToUnlockNext = 10000; TIER9.nextTier = TIER10;
             TIER10.requiredKillCountToUnlockNext = 0;  TIER10.nextTier = null;
         }
 

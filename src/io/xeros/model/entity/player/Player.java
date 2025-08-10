@@ -2908,7 +2908,7 @@ public class Player extends Entity implements IHazardReactive {
             getPA().showOption(1, 0, "null");
         }
 
-        getPA().showOption(1, 0, "Force-Aggro Nearby");
+      //  getPA().showOption(1, 0, "Force-Aggro Nearby");
 
         // Walkable interfaces in this if-else
         if (getPosition().inWild() && !getPosition().inClanWars()) {
