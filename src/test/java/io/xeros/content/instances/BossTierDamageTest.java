@@ -4,6 +4,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.xeros.content.instances.TierRewardManager;
+import io.xeros.model.Npcs;
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
 
 public class BossTierDamageTest {
 
@@ -24,9 +28,9 @@ public class BossTierDamageTest {
 
     @Test
     public void npcDensityDecreasesWithTier() {
-        assertTrue(BossInstanceManager.BossTier.TIER1.getDesiredNpcDensity() <
+        assertTrue(BossInstanceManager.BossTier.TIER1.getDesiredNpcDensity() >
                 BossInstanceManager.BossTier.TIER7.getDesiredNpcDensity());
-        assertTrue(BossInstanceManager.BossTier.TIER7.getDesiredNpcDensity() <
+        assertTrue(BossInstanceManager.BossTier.TIER7.getDesiredNpcDensity() >
                 BossInstanceManager.BossTier.TIER10.getDesiredNpcDensity());
     }
 
@@ -44,8 +48,16 @@ public class BossTierDamageTest {
     }
 
     @Test
-    public void killstreakRewardValuesReducedAgain() {
-        assertEquals(6_250, TierRewardManager.calculateKillstreakReward(BossInstanceManager.BossTier.TIER1, 10));
-        assertEquals(2_500, TierRewardManager.calculateAoeKillstreakReward(BossInstanceManager.BossTier.TIER1, 5));
+    public void killstreakRewardValuesUpdated() {
+        assertEquals(10_000, TierRewardManager.calculateKillstreakReward(BossInstanceManager.BossTier.TIER1, 10));
+        assertEquals(4_000, TierRewardManager.calculateAoeKillstreakReward(BossInstanceManager.BossTier.TIER1, 5));
+    }
+
+    @Test
+    public void highTierContainsEndgameBosses() {
+        int[] ids = Arrays.stream(BossInstanceManager.BossTier.TIER10.getMobs())
+                .mapToInt(BossInstanceManager.BossMob::getNpcId).toArray();
+        assertTrue(IntStream.of(ids).anyMatch(i -> i == Npcs.THE_NIGHTMARE));
+        assertTrue(IntStream.of(ids).anyMatch(i -> i == Npcs.ZULRAH));
     }
 }

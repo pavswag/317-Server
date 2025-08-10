@@ -180,72 +180,71 @@ public class BossInstanceManager {
                         new BossMob(Npcs.IMP, 10, 5, 3, 6, List.of())
                 },
                 new TierCombatProfile(1.0,1.0,1.0,1.0,1.0,List.of()), 1.1, 1.0),
-        // drops/basilisk.yml, drops/lesser_demon.yml and drops/imp.yml introduce demonical threats with useful rune drops.
-        TIER2("Basilisk Lair", new Boundary(2274, 4762, 2290, 4778), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.BASILISK, 10,
+        // drops/aberrant_spectre.yml and drops/banshee.yml add herb and seed drops for early profit.
+        TIER2("Spectre Crypt", new Boundary(2274, 4762, 2290, 4778), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.ABERRANT_SPECTRE, 10,
                 new BossMob[]{
-                        new BossMob(Npcs.BASILISK, 40, 30, 30, 6, List.of()),
-                        new BossMob(Npcs.LESSER_DEMON, 50, 45, 35, 4, List.of()),
-                        new BossMob(Npcs.IMP, 15, 10, 5, 4, List.of())
+                        new BossMob(Npcs.ABERRANT_SPECTRE, 60, 45, 30, 6, List.of()),
+                        new BossMob(Npcs.BANSHEE, 20, 15, 10, 4, List.of()),
+                        new BossMob(Npcs.TWISTED_BANSHEE, 25, 20, 15, 2, List.of())
                 },
                 new TierCombatProfile(1.1,1.05,1.05,1.05,1.0,List.of()), 1.1, 1.0),
-        // drops/hill_giant.yml and drops/ogre.yml note big bones and crude loot for developing players.
-        TIER3("Giants' Den", new Boundary(2272, 4760, 2292, 4780), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT, 12,
+        // drops/abyssal_demon.yml and drops/bloodveld.yml showcase whip and blood rune loot.
+        TIER3("Abyssal Pit", new Boundary(2272, 4760, 2292, 4780), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.ABYSSAL_DEMON, 8,
                 new BossMob[]{
-                        new BossMob(Npcs.HILL_GIANT, 35, 20, 20, 6, List.of()),
-                        new BossMob(Npcs.OGRE, 50, 30, 25, 4, List.of())
+                        new BossMob(Npcs.ABYSSAL_DEMON, 150, 115, 110, 4, List.of()),
+                        new BossMob(Npcs.BLOODVELD, 120, 90, 85, 4, List.of()),
+                        new BossMob(Npcs.NECHRYAEL, 170, 120, 110, 2, List.of())
                 },
                 new TierCombatProfile(1.2,1.1,1.1,1.1,1.05,List.of()), 1.1, 1.0),
-        // drops/moss_giant.yml and drops/earth_warrior.yml provide nature rune supplies and warrior gear encouraging AoE magic.
-        TIER4("Moss Cave", new Boundary(2270, 4758, 2294, 4784), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.MOSS_GIANT, 15,
+        // drops/cerberus.yml pairs the hound of hell with its lesser cousins for a fiery challenge.
+        TIER4("Cerberus Pits", new Boundary(2270, 4758, 2294, 4784), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.CERBERUS, 6,
                 new BossMob[]{
-                        new BossMob(Npcs.MOSS_GIANT, 60, 40, 40, 6, List.of()),
-                        new BossMob(Npcs.EARTH_WARRIOR, 70, 50, 45, 4, List.of())
+                        new BossMob(Npcs.CERBERUS, 600, 300, 250, 2, List.of()),
+                        new BossMob(Npcs.HELLHOUND, 150, 120, 110, 4, List.of())
                 },
                 new TierCombatProfile(1.3,1.15,1.15,1.15,1.1,List.of()), 1.1, 1.0),
-        // drops/fire_giant.yml and drops/hellhound.yml reward rune gear and crystals fitting the mid-game.
-        TIER5("Fire Pit", new Boundary(2268, 4756, 2296, 4786), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT, 18,
+        // drops/callisto.yml, drops/vetion.yml and drops/venenatis.yml bring wilderness bosses together for dangerous rewards.
+        TIER5("Wilderness Lairs", new Boundary(2268, 4756, 2296, 4786), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.CALLISTO, 4,
                 new BossMob[]{
-                        new BossMob(Npcs.FIRE_GIANT_10, 80, 60, 60, 5, List.of()),
-                        new BossMob(Npcs.HELLHOUND_3, 90, 70, 65, 3, List.of())
+                        new BossMob(Npcs.CALLISTO, 400, 280, 260, 1, List.of()),
+                        new BossMob(Npcs.VETION, 450, 300, 280, 1, List.of()),
+                        new BossMob(Npcs.VENENATIS, 330, 250, 240, 1, List.of())
                 },
                 new TierCombatProfile(1.4,1.2,1.2,1.2,1.15,List.of()), 1.0, 1.0),
-        // drops/green_dragon.yml, drops/baby_green_dragon.yml and drops/bronze_dragon.yml contain hides and metals for crafting progression.
-        TIER6("Green Dragons", new Boundary(2266, 4754, 2298, 4788), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.GREEN_DRAGON, 22,
+        // drops/abyssal_sire.yml leverages abyssal demons and gorillas for mid-tier bossing.
+        TIER6("Sire Den", new Boundary(2266, 4754, 2298, 4788), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.ABYSSAL_SIRE, 3,
                 new BossMob[]{
-                        new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90, 5, List.of()),
-                        new BossMob(Npcs.BABY_GREEN_DRAGON, 100, 80, 80, 4, List.of()),
-                        new BossMob(Npcs.BRONZE_DRAGON, 160, 120, 120, 2, List.of())
+                        new BossMob(Npcs.ABYSSAL_SIRE, 400, 300, 250, 1, List.of()),
+                        new BossMob(Npcs.ABYSSAL_DEMON, 220, 160, 160, 2, List.of()),
+                        new BossMob(Npcs.DEMONIC_GORILLA, 210, 170, 170, 1, List.of())
                 },
                 new TierCombatProfile(1.5,1.25,1.25,1.25,1.2,List.of()), 1.0, 1.0),
-        // drops/red_dragon.yml and drops/brutal_red_dragon.yml emphasise high hp foes that resist AoE.
-        TIER7("Red Dragons", new Boundary(2264, 4752, 2300, 4790), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.RED_DRAGON, 26,
+        // drops/commander_zilyana.yml and drops/kril_tsutsaroth.yml pit rival gods in a cramped antechamber.
+        TIER7("Godwars Antechamber", new Boundary(2264, 4752, 2300, 4790), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.COMMANDER_ZILYANA, 3,
                 new BossMob[]{
-                        new BossMob(Npcs.RED_DRAGON, 150, 110, 110, 4, List.of()),
-                        new BossMob(Npcs.BABY_RED_DRAGON, 130, 100, 100, 3, List.of()),
-                        new BossMob(Npcs.BRUTAL_RED_DRAGON, 220, 160, 160, 1, List.of())
+                        new BossMob(Npcs.COMMANDER_ZILYANA, 300, 250, 220, 1, List.of()),
+                        new BossMob(Npcs.KRIL_TSUTSAROTH, 350, 270, 250, 1, List.of())
                 },
                 new TierCombatProfile(1.6,1.3,1.3,1.3,1.25,List.of()), 0.9, 1.2),
-        // drops/black_dragon.yml and drops/brutal_black_dragon.yml feature valuable hides but punishing stats.
-        TIER8("Black Dragons", new Boundary(2262, 4750, 2302, 4792), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON, 30,
+        // drops/general_graardor.yml and drops/skotizo.yml supply high-end uniques like Bandos armour and dark totems.
+        TIER8("Bandos Stronghold", new Boundary(2262, 4750, 2302, 4792), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.GENERAL_GRAARDOR, 2,
                 new BossMob[]{
-                        new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130, 4, List.of()),
-                        new BossMob(Npcs.BRUTAL_BLACK_DRAGON, 260, 180, 180, 2, List.of())
+                        new BossMob(Npcs.GENERAL_GRAARDOR, 350, 300, 300, 1, List.of()),
+                        new BossMob(Npcs.SKOTIZO, 400, 320, 300, 1, List.of())
                 },
                 new TierCombatProfile(1.7,1.35,1.35,1.35,1.3,List.of()), 0.9, 1.2),
-        // drops/black_demon.yml, drops/abyssal_demon.yml and drops/greater_demon.yml include rare rune drops befitting late tiers.
-        TIER9("Demon Domain", new Boundary(2260, 4748, 2304, 4794), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON, 35,
+        // drops/alchemical_hydra.yml and drops/vorkath.yml combine two lucrative dragon bosses.
+        TIER9("Dragon's Apex", new Boundary(2260, 4748, 2304, 4794), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.ALCHEMICAL_HYDRA, 2,
                 new BossMob[]{
-                        new BossMob(Npcs.BLACK_DEMON, 200, 150, 150, 3, List.of("infernal_slam")),
-                        new BossMob(Npcs.ABYSSAL_DEMON, 220, 160, 160, 2, List.of()),
-                        new BossMob(Npcs.GREATER_DEMON, 170, 140, 140, 3, List.of())
+                        new BossMob(Npcs.ALCHEMICAL_HYDRA, 450, 300, 300, 1, List.of()),
+                        new BossMob(Npcs.VORKATH, 750, 350, 350, 1, List.of())
                 },
-                new TierCombatProfile(1.8,1.4,1.4,1.4,1.35,List.of("infernal_slam")), 0.9, 1.2),
-        // drops/king_black_dragon.yml and drops/steel_dragon.yml grant elite loot for coordinated play.
-        TIER10("Dragon King", new Boundary(2258, 4746, 2306, 4796), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON, 40,
+                new TierCombatProfile(1.8,1.4,1.4,1.4,1.35,List.of()), 0.9, 1.2),
+        // drops/the_nightmare.yml and drops/zulrah.yml headline the final tier with coveted uniques.
+        TIER10("Nightmare Lair", new Boundary(2258, 4746, 2306, 4796), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.THE_NIGHTMARE, 2,
                 new BossMob[]{
-                        new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180, 1, List.of("infernal_slam")),
-                        new BossMob(Npcs.BRUTAL_BLACK_DRAGON, 260, 180, 180, 2, List.of("infernal_slam")),
-                        new BossMob(Npcs.STEEL_DRAGON, 200, 170, 170, 2, List.of())
+                        new BossMob(Npcs.THE_NIGHTMARE, 1_000, 350, 350, 1, List.of("infernal_slam")),
+                        new BossMob(Npcs.ZULRAH, 500, 300, 300, 1, List.of())
                 },
                 new TierCombatProfile(2.0,1.5,1.5,1.45,1.4,List.of("infernal_slam")), 0.9, 1.2);
 
