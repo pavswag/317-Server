@@ -524,6 +524,9 @@ public class NPC extends Entity implements IHazardReactive {
     }
 
     public int modifyDamage(Player player, int damage) {
+        if (player.getInstance() instanceof io.xeros.content.instances.BossInstanceManager.BossInstanceArea area) {
+            damage = (int) Math.max(1, damage * area.getTier().getDamageMultiplier());
+        }
         return damage;
     }
 
