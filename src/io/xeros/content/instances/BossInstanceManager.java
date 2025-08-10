@@ -10,6 +10,7 @@ import io.xeros.model.entity.npc.NPCSpawning;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Position;
+import io.xeros.model.entity.player.PlayerHandler;
 import io.xeros.util.Misc;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
@@ -40,6 +41,10 @@ public class BossInstanceManager {
         private final BossTier tier;
         private final io.xeros.content.instances.hazard.EnvironmentalHazardScheduler hazards;
         private final boolean dynamicWaveScaling;
+        /** Tracks consecutive kills per player for killstreak rewards. */
+        private final Map<Player, Integer> killStreaks = new HashMap<>();
+        /** Tracks consecutive AoE kills for bonus rewards. */
+        private final Map<Player, Integer> aoeStreaks = new HashMap<>();
 
         BossInstanceArea(Player owner, BossTier tier, Boundary boundary) {
             super(InstanceConfiguration.CLOSE_ON_EMPTY_RESPAWN, owner, boundary);
@@ -83,11 +88,40 @@ public class BossInstanceManager {
         }
 
         public boolean isWithinAoeZone(Position pos) {
-            return true;
+            Boundary boundary = tier.getZoneBoundary();
+            return pos.getHeight() == getHeight()
+                    && pos.getX() >= boundary.getMinimumX() && pos.getX() <= boundary.getMaximumX()
+                    && pos.getY() >= boundary.getMinimumY() && pos.getY() <= boundary.getMaximumY();
         }
 
         public io.xeros.content.instances.hazard.EnvironmentalHazardScheduler getHazardScheduler() {
             return hazards;
+        }
+
+        /** Records a kill for the player and distributes killstreak rewards. */
+        public void recordKill(Player player) {
+            int streak = killStreaks.merge(player, 1, Integer::sum);
+            if (streak % 10 == 0) {
+                TierRewardManager.rewardKillstreak(player, tier, streak);
+            }
+        }
+
+        /** Records an AoE kill for bonus streak rewards. */
+        public void recordAoeKill(Player player) {
+            int streak = aoeStreaks.merge(player, 1, Integer::sum);
+            if (streak % 5 == 0) {
+                TierRewardManager.rewardAoeKillstreak(player, tier, streak);
+            }
+        }
+
+        /** Clears any tracked streaks for the supplied player. */
+        public void resetStreak(Player player) {
+            killStreaks.remove(player);
+            aoeStreaks.remove(player);
+        }
+        /** Clears only the AoE streak for cases where a normal kill occurs. */
+        public void resetAoeStreak(Player player) {
+            aoeStreaks.remove(player);
         }
     }
 
@@ -139,36 +173,80 @@ public class BossInstanceManager {
      * the NPCs that can spawn.
      */
     public enum BossTier {
-        TIER1("Training Grounds", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 0, 0, -1, 5, Npcs.COW, 20,
-                new BossMob[]{new BossMob(Npcs.COW, 10, 1, 1, 5, List.of())},
-                new TierCombatProfile(1.0,1.0,1.0,1.0,1.0,List.of())),
-        TIER2("Goblin Camp", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.GOBLIN, 20,
-                new BossMob[]{new BossMob(Npcs.GOBLIN, 15, 5, 5, 5, List.of())},
-                new TierCombatProfile(1.1,1.05,1.05,1.05,1.0,List.of())),
-        TIER3("Giants' Den", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.HILL_GIANT, 20,
-                new BossMob[]{new BossMob(Npcs.HILL_GIANT, 35, 20, 20, 6, List.of())},
-                new TierCombatProfile(1.2,1.1,1.1,1.1,1.05,List.of())),
-        TIER4("Moss Cave", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.MOSS_GIANT, 20,
-                new BossMob[]{new BossMob(Npcs.MOSS_GIANT, 60, 40, 40, 6, List.of())},
-                new TierCombatProfile(1.3,1.15,1.15,1.15,1.1,List.of())),
-        TIER5("Fire Pit", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.FIRE_GIANT, 20,
-                new BossMob[]{new BossMob(Npcs.FIRE_GIANT, 80, 60, 60, 7, List.of())},
-                new TierCombatProfile(1.4,1.2,1.2,1.2,1.15,List.of())),
-        TIER6("Green Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.GREEN_DRAGON, 20,
-                new BossMob[]{new BossMob(Npcs.GREEN_DRAGON, 120, 90, 90, 7, List.of())},
-                new TierCombatProfile(1.5,1.25,1.25,1.25,1.2,List.of())),
-        TIER7("Red Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.RED_DRAGON, 20,
-                new BossMob[]{new BossMob(Npcs.RED_DRAGON, 150, 110, 110, 8, List.of())},
-                new TierCombatProfile(1.6,1.3,1.3,1.3,1.25,List.of())),
-        TIER8("Black Dragons", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.BLACK_DRAGON, 20,
-                new BossMob[]{new BossMob(Npcs.BLACK_DRAGON, 180, 130, 130, 8, List.of())},
-                new TierCombatProfile(1.7,1.35,1.35,1.35,1.3,List.of())),
-        TIER9("Demon Domain", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.BLACK_DEMON, 20,
-                new BossMob[]{new BossMob(Npcs.BLACK_DEMON, 200, 150, 150, 9, List.of("infernal_slam"))},
-                new TierCombatProfile(1.8,1.4,1.4,1.4,1.35,List.of("infernal_slam"))),
-        TIER10("Dragon King", new Boundary(2270, 4758, 2295, 4785), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.KING_BLACK_DRAGON, 20,
-                new BossMob[]{new BossMob(Npcs.KING_BLACK_DRAGON, 250, 180, 180, 1, List.of("infernal_slam"))},
-                new TierCombatProfile(2.0,1.5,1.5,1.45,1.4,List.of("infernal_slam")));
+        // drops/unicow.yml and drops/imp.yml supply beginner hides and beads.
+        TIER1("Unicow Pasture", new Boundary(2276, 4764, 2288, 4776), new Position(2282, 4770), 0, 0, -1, 5, Npcs.UNICOW, 8,
+                new BossMob[]{
+                        new BossMob(Npcs.UNICOW, 25, 10, 5, 8, List.of()),
+                        new BossMob(Npcs.IMP, 10, 5, 3, 6, List.of())
+                },
+                new TierCombatProfile(1.0,1.0,1.0,1.0,1.0,List.of()), 1.1, 1.0),
+        // drops/aberrant_spectre.yml and drops/banshee.yml add herb and seed drops for early profit.
+        TIER2("Spectre Crypt", new Boundary(2274, 4762, 2290, 4778), new Position(2282, 4770), 25, 10_000, -1, 10, Npcs.ABERRANT_SPECTRE, 10,
+                new BossMob[]{
+                        new BossMob(Npcs.ABERRANT_SPECTRE, 60, 45, 30, 6, List.of()),
+                        new BossMob(Npcs.BANSHEE, 20, 15, 10, 4, List.of()),
+                        new BossMob(Npcs.TWISTED_BANSHEE, 25, 20, 15, 2, List.of())
+                },
+                new TierCombatProfile(1.1,1.05,1.05,1.05,1.0,List.of()), 1.1, 1.0),
+        // drops/abyssal_demon.yml and drops/bloodveld.yml showcase whip and blood rune loot.
+        TIER3("Abyssal Pit", new Boundary(2272, 4760, 2292, 4780), new Position(2282, 4770), 75, 100_000, -1, 20, Npcs.ABYSSAL_DEMON, 8,
+                new BossMob[]{
+                        new BossMob(Npcs.ABYSSAL_DEMON, 150, 115, 110, 4, List.of()),
+                        new BossMob(Npcs.BLOODVELD, 120, 90, 85, 4, List.of()),
+                        new BossMob(Npcs.NECHRYAEL, 170, 120, 110, 2, List.of())
+                },
+                new TierCombatProfile(1.2,1.1,1.1,1.1,1.05,List.of()), 1.1, 1.0),
+        // drops/cerberus.yml pairs the hound of hell with its lesser cousins for a fiery challenge.
+        TIER4("Cerberus Pits", new Boundary(2270, 4758, 2294, 4784), new Position(2282, 4770), 150, 250_000, -1, 25, Npcs.CERBERUS, 6,
+                new BossMob[]{
+                        new BossMob(Npcs.CERBERUS, 600, 300, 250, 2, List.of()),
+                        new BossMob(Npcs.HELLHOUND, 150, 120, 110, 4, List.of())
+                },
+                new TierCombatProfile(1.3,1.15,1.15,1.15,1.1,List.of()), 1.1, 1.0),
+        // drops/callisto.yml, drops/vetion.yml and drops/venenatis.yml bring wilderness bosses together for dangerous rewards.
+        TIER5("Wilderness Lairs", new Boundary(2268, 4756, 2296, 4786), new Position(2282, 4770), 250, 500_000, -1, 30, Npcs.CALLISTO, 4,
+                new BossMob[]{
+                        new BossMob(Npcs.CALLISTO, 400, 280, 260, 1, List.of()),
+                        new BossMob(Npcs.VETION, 450, 300, 280, 1, List.of()),
+                        new BossMob(Npcs.VENENATIS, 330, 250, 240, 1, List.of())
+                },
+                new TierCombatProfile(1.4,1.2,1.2,1.2,1.15,List.of()), 1.0, 1.0),
+        // drops/abyssal_sire.yml leverages abyssal demons and gorillas for mid-tier bossing.
+        TIER6("Sire Den", new Boundary(2266, 4754, 2298, 4788), new Position(2282, 4770), 350, 750_000, -1, 35, Npcs.ABYSSAL_SIRE, 3,
+                new BossMob[]{
+                        new BossMob(Npcs.ABYSSAL_SIRE, 400, 300, 250, 1, List.of()),
+                        new BossMob(Npcs.ABYSSAL_DEMON, 220, 160, 160, 2, List.of()),
+                        new BossMob(Npcs.DEMONIC_GORILLA, 210, 170, 170, 1, List.of())
+                },
+                new TierCombatProfile(1.5,1.25,1.25,1.25,1.2,List.of()), 1.0, 1.0),
+        // drops/commander_zilyana.yml and drops/kril_tsutsaroth.yml pit rival gods in a cramped antechamber.
+        TIER7("Godwars Antechamber", new Boundary(2264, 4752, 2300, 4790), new Position(2282, 4770), 500, 1_000_000, -1, 40, Npcs.COMMANDER_ZILYANA, 3,
+                new BossMob[]{
+                        new BossMob(Npcs.COMMANDER_ZILYANA, 300, 250, 220, 1, List.of()),
+                        new BossMob(Npcs.KRIL_TSUTSAROTH, 350, 270, 250, 1, List.of())
+                },
+                new TierCombatProfile(1.6,1.3,1.3,1.3,1.25,List.of()), 0.9, 1.2),
+        // drops/general_graardor.yml and drops/skotizo.yml supply high-end uniques like Bandos armour and dark totems.
+        TIER8("Bandos Stronghold", new Boundary(2262, 4750, 2302, 4792), new Position(2282, 4770), 650, 2_000_000, -1, 45, Npcs.GENERAL_GRAARDOR, 2,
+                new BossMob[]{
+                        new BossMob(Npcs.GENERAL_GRAARDOR, 350, 300, 300, 1, List.of()),
+                        new BossMob(Npcs.SKOTIZO, 400, 320, 300, 1, List.of())
+                },
+                new TierCombatProfile(1.7,1.35,1.35,1.35,1.3,List.of()), 0.9, 1.2),
+        // drops/alchemical_hydra.yml and drops/vorkath.yml combine two lucrative dragon bosses.
+        TIER9("Dragon's Apex", new Boundary(2260, 4748, 2304, 4794), new Position(2282, 4770), 800, 3_000_000, -1, 50, Npcs.ALCHEMICAL_HYDRA, 2,
+                new BossMob[]{
+                        new BossMob(Npcs.ALCHEMICAL_HYDRA, 450, 300, 300, 1, List.of()),
+                        new BossMob(Npcs.VORKATH, 750, 350, 350, 1, List.of())
+                },
+                new TierCombatProfile(1.8,1.4,1.4,1.4,1.35,List.of()), 0.9, 1.2),
+        // drops/the_nightmare.yml and drops/zulrah.yml headline the final tier with coveted uniques.
+        TIER10("Nightmare Lair", new Boundary(2258, 4746, 2306, 4796), new Position(2282, 4770), 1_000, 5_000_000, 11286, 60, Npcs.THE_NIGHTMARE, 2,
+                new BossMob[]{
+                        new BossMob(Npcs.THE_NIGHTMARE, 1_000, 350, 350, 1, List.of("infernal_slam")),
+                        new BossMob(Npcs.ZULRAH, 500, 300, 300, 1, List.of())
+                },
+                new TierCombatProfile(2.0,1.5,1.5,1.45,1.4,List.of("infernal_slam")), 0.9, 1.2);
 
         static {
             TIER1.requiredKillCountToUnlockNext = 25;  TIER1.nextTier = TIER2;
@@ -194,19 +272,22 @@ public class BossInstanceManager {
         private final int desiredNpcDensity;
         private final BossMob[] mobs;
         private final TierCombatProfile combatProfile;
+        private final double aoeDamageMultiplier;
+        private final double aoeCooldownMultiplier;
         private final boolean dynamicWaveScaling;
         private int requiredKillCountToUnlockNext;
         private BossTier nextTier;
 
         BossTier(String zoneName, Boundary zoneBoundary, Position spawnTile, int killRequirement, int gpCost, int itemRequirement,
-                 int respawnTime, int bossNpcId, int desiredNpcDensity, BossMob[] mobs, TierCombatProfile combatProfile) {
+                 int respawnTime, int bossNpcId, int desiredNpcDensity, BossMob[] mobs, TierCombatProfile combatProfile,
+                 double aoeDamageMultiplier, double aoeCooldownMultiplier) {
             this(zoneName, zoneBoundary, spawnTile, killRequirement, gpCost, itemRequirement, respawnTime, bossNpcId,
-                    desiredNpcDensity, mobs, combatProfile, false);
+                    desiredNpcDensity, mobs, combatProfile, aoeDamageMultiplier, aoeCooldownMultiplier, false);
         }
 
         BossTier(String zoneName, Boundary zoneBoundary, Position spawnTile, int killRequirement, int gpCost, int itemRequirement,
                  int respawnTime, int bossNpcId, int desiredNpcDensity, BossMob[] mobs, TierCombatProfile combatProfile,
-                 boolean dynamicWaveScaling) {
+                 double aoeDamageMultiplier, double aoeCooldownMultiplier, boolean dynamicWaveScaling) {
             this.zoneName = zoneName;
             this.zoneBoundary = zoneBoundary;
             this.spawnTile = spawnTile;
@@ -218,6 +299,8 @@ public class BossInstanceManager {
             this.desiredNpcDensity = desiredNpcDensity;
             this.mobs = mobs;
             this.combatProfile = combatProfile;
+            this.aoeDamageMultiplier = aoeDamageMultiplier;
+            this.aoeCooldownMultiplier = aoeCooldownMultiplier;
             this.dynamicWaveScaling = dynamicWaveScaling;
         }
 
@@ -262,6 +345,13 @@ public class BossInstanceManager {
         }
 
         public TierCombatProfile getCombatProfile() { return combatProfile; }
+
+        /** Multiplier applied to damage dealt by hazards and NPCs in this tier. */
+        public double getDamageMultiplier() { return 1.0 + (ordinal() * 0.1); }
+
+        public double getAoeDamageMultiplier() { return aoeDamageMultiplier; }
+
+        public double getAoeCooldownMultiplier() { return aoeCooldownMultiplier; }
 
         public boolean isDynamicWaveScaling() { return dynamicWaveScaling; }
 
@@ -356,6 +446,11 @@ public class BossInstanceManager {
         int desiredTotal = Math.max(1, areaTiles / Math.max(1, tier.getDesiredNpcDensity()));
         int baseTotal = Arrays.stream(mobs).mapToInt(BossMob::getCount).sum();
         double ratio = baseTotal > 0 ? Math.max(1.0, (double) desiredTotal / baseTotal) : 1.0;
+        if (tier.ordinal() <= BossTier.TIER4.ordinal()) {
+            ratio *= 1.2;
+        } else if (tier.ordinal() >= BossTier.TIER7.ordinal()) {
+            ratio *= 0.8;
+        }
 
         Position spawnTile = tier.getSpawnTile();
         for (BossMob mob : mobs) {
@@ -441,6 +536,7 @@ public class BossInstanceManager {
         BossInstanceOverlayManager.clear(player);
         BossInstanceArea area = INSTANCES.remove(player);
         if (area != null) {
+            area.resetStreak(player);
             area.dispose();
         }
         InstancePerformanceTracker.InstanceResult result = player.getInstancePerformanceTracker().finish();
@@ -455,6 +551,11 @@ public class BossInstanceManager {
             PerformanceRank rank = PerformanceRank.forScore(result.score);
             if (rank.ordinal() >= PerformanceRank.GOLD.ordinal()) {
                 player.sendMessage("@gre@Achievement unlocked: " + rank.name() + " performer!");
+            }
+            int kills = player.getTierKillCounts().getOrDefault(result.tier, 0);
+            if (kills >= result.tier.getRequiredKillCountToUnlockNext()) {
+                String msg = player.getDisplayName() + " has completed " + getTierDisplayNameSafe(result.tier) + "!";
+                PlayerHandler.nonNullStream().forEach(p -> p.sendMessage(msg));
             }
         }
         player.setPreviewingBossInstance(false);
