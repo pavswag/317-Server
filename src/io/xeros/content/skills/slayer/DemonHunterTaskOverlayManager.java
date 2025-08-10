@@ -1,6 +1,7 @@
 package io.xeros.content.skills.slayer;
 
 import io.xeros.content.skills.Skill;
+import io.xeros.content.skills.slayer.DemonHunterPerks;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
@@ -24,6 +25,12 @@ public class DemonHunterTaskOverlayManager {
             player.sendMessage("Kills Left: " + player.getDemonHunterTaskProgress());
             player.sendMessage("XP per kill: " + xp);
             player.sendMessage("Streak: " + player.getDemonTaskStreak() + " | Marks: " + player.getDemonMarks());
+            int level = player.getLevel(Skill.DEMON_HUNTER);
+            player.sendMessage("Damage Bonus: +" + level + "%");
+            String perks = DemonHunterPerks.unlockedDescriptions(player);
+            if (!perks.isEmpty()) {
+                player.sendMessage("Perks: " + perks);
+            }
             player.getDemonContract().ifPresent(c -> player.sendMessage("\uD83C\uDFAF Bonus: Defeat " + c.getTarget().getNpcName() + " for 2x XP"));
             DemonSlayerMaster.Tier.forId(player.getDemonHunterTierUnlocked() + 1).ifPresent(t -> {
                 String bosses = Arrays.stream(DemonSlayerMaster.BossTier.values())
