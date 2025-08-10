@@ -9,7 +9,9 @@ import io.xeros.model.cycleevent.CycleEventHandler;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Position;
+import io.xeros.model.StillGraphic;
 import io.xeros.util.Misc;
+import io.xeros.Server;
 
 public class EnvironmentalHazardDefinition {
 
@@ -40,11 +42,13 @@ public class EnvironmentalHazardDefinition {
         int x = forced != null ? forced.getX() : Misc.random(b.getMinimumX(), b.getMaximumX());
         int y = forced != null ? forced.getY() : Misc.random(b.getMinimumY(), b.getMaximumY());
         Position pos = new Position(x, y, area.getHeight());
-        int scaledDamage = (int) (finalTier.scale(damage) * dmgMod);
-        int scaledDrain = (int) (finalTier.scale(drain) * dmgMod);
-        int scaledStun = (int) (finalTier.scale(stun) * dmgMod);
+        double tierMod = area.getTier().getDamageMultiplier();
+        int scaledDamage = (int) (finalTier.scale(damage) * dmgMod * tierMod);
+        int scaledDrain = (int) (finalTier.scale(drain) * dmgMod * tierMod);
+        int scaledStun = (int) (finalTier.scale(stun) * dmgMod * tierMod);
         HazardContext ctx = new HazardContext(type, finalTier, pos);
         HazardDebugLogger.log(area, "Hazard " + type + " at " + pos);
+        Server.playerHandler.sendStillGfx(new StillGraphic(type.getGfxId(), pos), area);
         if (synergyMsg != null) {
             for (Player p : area.getPlayers()) {
                 p.sendMessage(synergyMsg);

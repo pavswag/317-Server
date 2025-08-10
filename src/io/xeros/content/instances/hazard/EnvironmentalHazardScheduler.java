@@ -7,10 +7,16 @@ import io.xeros.content.instances.hazard.HazardTier;
 import io.xeros.content.instances.hazard.HazardEffectModifier;
 import io.xeros.content.instances.hazard.WeeklyHazardManager;
 import io.xeros.content.instances.hazard.HazardDebugLogger;
+import io.xeros.content.instances.TierRewardManager;
+import io.xeros.content.combat.Hitmark;
+import io.xeros.model.StillGraphic;
+import io.xeros.Server;
 import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
 import io.xeros.model.entity.player.Player;
+import io.xeros.model.entity.player.Boundary;
+import io.xeros.model.entity.player.Position;
 import io.xeros.util.Misc;
 
 import java.util.*;
@@ -71,7 +77,8 @@ public class EnvironmentalHazardScheduler {
                             }
                         }
                     }
-                    HazardContext ctx = def.activate(area, hazardTier, dmgMod, synergyMsg);
+                    Position rand = randomPosition();
+                    HazardContext ctx = def.activate(area, hazardTier, dmgMod, synergyMsg, rand);
                     recordLast(def, ctx);
                     InstanceMutatorManager.increaseDanger(5);
                     inProgress = false;
@@ -86,7 +93,8 @@ public class EnvironmentalHazardScheduler {
                                     .filter(h -> h.getType() == weekly.eliteHazard)
                                     .findFirst().orElse(null);
                             if (elite != null) {
-                                elite.activate(area, HazardTier.EXTREME, 1.0, "@red@Elite hazard empowered by global danger!");
+                                Position rand = randomPosition();
+                                elite.activate(area, HazardTier.EXTREME, 1.0, "@red@Elite hazard empowered by global danger!", rand);
                                 InstanceMutatorManager.increaseDanger(10);
                             }
                         }
@@ -105,6 +113,27 @@ public class EnvironmentalHazardScheduler {
                 }
             }, pfreq);
         }
+
+        // Periodic unavoidable pulses that keep players attentive.
+        CycleEventHandler.getSingleton().addEvent(area, new CycleEvent() {
+            @Override
+            public void execute(CycleEventContainer container) {
+                for (Player p : area.getPlayers()) {
+                    Position pos = clampPosition(p.getPosition());
+                    Server.playerHandler.sendStillGfx(new StillGraphic(EnvironmentalHazardType.DIRECT_HIT.getGfxId(), pos), area);
+                    int dmg = (int) Math.max(1, 4 * area.getTier().getDamageMultiplier());
+                    CycleEventHandler.getSingleton().addEvent(p, new CycleEvent() {
+                        @Override
+                        public void execute(CycleEventContainer c) {
+                            p.appendDamage(dmg, Hitmark.HIT);
+                            p.sendMessage("@red@A direct hit strikes you!");
+                            TierRewardManager.rewardHazardDrop(p, area.getTier());
+                            c.stop();
+                        }
+                    }, 2);
+                }
+            }
+        }, 50);
     }
 
     public void stop() {
@@ -141,7 +170,8 @@ public class EnvironmentalHazardScheduler {
                         }
                     }
                 }
-                HazardContext ctx = def.activate(area, hazardTier, dmgMod, synergyMsg);
+                Position rand = randomPosition();
+                HazardContext ctx = def.activate(area, hazardTier, dmgMod, synergyMsg, rand);
                 recordLast(def, ctx);
                 cooldowns.put(trigger, now);
                 InstanceMutatorManager.increaseDanger(7);
@@ -185,7 +215,8 @@ public class EnvironmentalHazardScheduler {
     public boolean replay(EnvironmentalHazardType type) {
         HazardRecord r = lastHazards.get(type);
         if (r == null) return false;
-        r.def.activate(area, r.ctx.getTier(), 1.0, null, r.ctx.getPosition());
+        Position pos = clampPosition(r.ctx.getPosition());
+        r.def.activate(area, r.ctx.getTier(), 1.0, null, pos);
         HazardDebugLogger.log(area, "replay:" + type);
         return true;
     }
@@ -196,5 +227,19 @@ public class EnvironmentalHazardScheduler {
         HazardRecord(EnvironmentalHazardDefinition def, HazardContext ctx) {
             this.def = def; this.ctx = ctx;
         }
+    }
+
+    private Position randomPosition() {
+        Boundary b = area.getTier().getZoneBoundary();
+        int x = Misc.random(b.getMinimumX(), b.getMaximumX());
+        int y = Misc.random(b.getMinimumY(), b.getMaximumY());
+        return clampPosition(new Position(x, y, area.getHeight()));
+    }
+
+    private Position clampPosition(Position pos) {
+        Boundary b = area.getTier().getZoneBoundary();
+        int x = Math.max(b.getMinimumX(), Math.min(b.getMaximumX(), pos.getX()));
+        int y = Math.max(b.getMinimumY(), Math.min(b.getMaximumY(), pos.getY()));
+        return new Position(x, y, area.getHeight());
     }
 }
