@@ -4,14 +4,19 @@ import io.xeros.content.dialogue.DialogueAction;
 import io.xeros.content.dialogue.types.OptionDialogue;
 import io.xeros.content.dialogue.DialogueObject;
 import io.xeros.content.skills.slayer.DemonHunterSlayerDialogue;
+import io.xeros.content.skills.slayer.DemonHunterTaskOverlayManager;
+import io.xeros.content.skills.slayer.DemonSlayerMaster;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Right;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,6 +55,33 @@ public class DemonHunterSlayerDialogueTest {
         assertTrue(mainTitles.contains("What's Demon Hunter Slayer?"));
     }
 
+    @Test
+    void viewTaskAssignsWhenMissing() throws Exception {
+        Player player = mock(Player.class);
+        when(player.getRights()).thenReturn(Right.PLAYER);
+        DemonSlayerMaster.DemonSlayerTask task = mock(DemonSlayerMaster.DemonSlayerTask.class);
+        when(player.getDemonHunterTask()).thenReturn(Optional.empty(), Optional.of(task));
+
+        try (MockedConstruction<DemonSlayerMaster> cons = mockConstruction(DemonSlayerMaster.class,
+                (mock, context) -> when(mock.assign(any())).thenReturn(task));
+             MockedStatic<DemonHunterTaskOverlayManager> overlay = mockStatic(DemonHunterTaskOverlayManager.class)) {
+
+            ArgumentCaptor<DialogueBuilder> captor = ArgumentCaptor.forClass(DialogueBuilder.class);
+            DemonHunterSlayerDialogue.showTaskMenu(player);
+            verify(player).start(captor.capture());
+            DialogueBuilder menu = captor.getValue();
+
+            OptionDialogue options = (OptionDialogue) getLastDialogue(menu);
+            DialogueOption[] opts = getOptions(options);
+            opts[0].getConsumer().accept(player);
+
+            DemonSlayerMaster constructed = cons.constructed().get(0);
+            verify(constructed).assign(player);
+            overlay.verify(() -> DemonHunterTaskOverlayManager.schedule(player));
+            verify(player, never()).sendMessage("You don't currently have a Demon Hunter task.");
+        }
+    }
+
     private static DialogueObject getLastDialogue(DialogueBuilder builder) throws Exception {
         Field rootField = DialogueBuilder.class.getDeclaredField("root");
         rootField.setAccessible(true);
@@ -65,5 +97,11 @@ public class DemonHunterSlayerDialogueTest {
         optionsField.setAccessible(true);
         DialogueOption[] options = (DialogueOption[]) optionsField.get(dialogue);
         return Arrays.stream(options).map(DialogueOption::getTitle).collect(Collectors.toList());
+    }
+
+    private static DialogueOption[] getOptions(OptionDialogue dialogue) throws Exception {
+        Field optionsField = OptionDialogue.class.getDeclaredField("options");
+        optionsField.setAccessible(true);
+        return (DialogueOption[]) optionsField.get(dialogue);
     }
 }

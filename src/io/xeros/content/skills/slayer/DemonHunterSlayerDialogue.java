@@ -54,7 +54,12 @@ public class DemonHunterSlayerDialogue {
     public static void showTaskMenu(Player player) {
         DialogueBuilder builder = new DialogueBuilder(player).setNpcId(NPC);
         builder.option(
-                new DialogueOption("View Current Task", DemonHunterSlayerDialogue::viewTask),
+                new DialogueOption("View Current Task", p -> {
+                    if (p.getDemonHunterTask().isEmpty()) {
+                        new DemonSlayerMaster().assign(p);
+                    }
+                    viewTask(p);
+                }),
                 new DialogueOption("Abandon Task", DemonHunterSlayerDialogue::abandonTask),
                 new DialogueOption("View Stats / Contract", DemonHunterSlayerDialogue::viewStats),
                 new DialogueOption("Open Reward Shop", DemonHunterSlayerDialogue::openShop),
