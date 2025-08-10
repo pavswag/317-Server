@@ -42,4 +42,10 @@ public class BossTierDamageTest {
         int t10 = TierRewardManager.calculateKillstreakReward(BossInstanceManager.BossTier.TIER10, 10);
         assertTrue(t10 > t1);
     }
+
+    @Test
+    public void killstreakRewardValuesHalved() {
+        assertEquals(12_500, TierRewardManager.calculateKillstreakReward(BossInstanceManager.BossTier.TIER1, 10));
+        assertEquals(5_000, TierRewardManager.calculateAoeKillstreakReward(BossInstanceManager.BossTier.TIER1, 5));
+    }
 }
