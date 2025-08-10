@@ -4,6 +4,9 @@ import io.xeros.content.skills.Skill;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.player.Player;
 
+import static io.xeros.content.skills.slayer.DemonHunterPerks.Perk;
+import io.xeros.content.skills.slayer.DemonHunterPerks;
+
 import java.util.Optional;
 
 /**
@@ -21,22 +24,28 @@ public class DemonHunterTaskManager {
         int baseXp = boss.getBaseXp();
 
         if (player.getDemonHunterTask().isPresent() && player.getDemonHunterTask().get().getBoss() == boss) {
-            int remaining = player.getDemonHunterTaskProgress() - 1;
+            int decrement = DemonHunterPerks.has(player, Perk.FAST_TRACK) ? 2 : 1;
+            int remaining = player.getDemonHunterTaskProgress() - decrement;
             player.setDemonHunterTaskProgress(Math.max(0, remaining));
 
             int xp = DemonHunterXPTable.getXPFor(baseXp, boss.getTier());
-            if (player.getDemonHunterMilestones().contains(10)) {
-                xp = (int) (xp * 1.05);
-            }
             if (player.getDemonContract().isPresent() && !player.getDemonContract().get().isCompleted()
                     && player.getDemonContract().get().matches(boss)) {
                 xp *= 2;
                 player.getDemonContract().get().complete();
-                player.sendMessage("\uD83C\uDFAF Bonus contract complete!");
+                player.addDemonMarks(1);
+                player.sendMessage("\uD83C\uDFAF Contract complete! +2 Demon Marks");
+            }
+            if (player.getDemonTaskStreak() > 10) {
+                xp = (int) (xp * 1.05);
             }
             player.addDemonHunterXP(xp);
             player.getPA().addSkillXPMultiplied(baseXp, Skill.SLAYER.getId(), true);
             DemonSlayerLeaderboardManager.addXp(player, xp);
+            player.addDemonMarks(1);
+            if (DemonHunterPerks.has(player, Perk.MARK_MASTER)) {
+                player.addDemonMarks(1);
+            }
 
             if (remaining <= 0) {
                 player.sendMessage("\uD83C\uDFAF Task Complete: You've slain " + boss.getNpcName() + "! +" + (xp * player.getDemonHunterTask().get().getAmount()) + " Demon Hunter XP");

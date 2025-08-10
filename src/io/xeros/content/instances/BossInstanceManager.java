@@ -249,15 +249,15 @@ public class BossInstanceManager {
                 new TierCombatProfile(2.0,1.5,1.5,1.45,1.4,List.of("infernal_slam")), 0.9, 1.2);
 
         static {
-            TIER1.requiredKillCountToUnlockNext = 25;  TIER1.nextTier = TIER2;
-            TIER2.requiredKillCountToUnlockNext = 50;  TIER2.nextTier = TIER3;
-            TIER3.requiredKillCountToUnlockNext = 75;  TIER3.nextTier = TIER4;
-            TIER4.requiredKillCountToUnlockNext = 100; TIER4.nextTier = TIER5;
-            TIER5.requiredKillCountToUnlockNext = 150; TIER5.nextTier = TIER6;
-            TIER6.requiredKillCountToUnlockNext = 200; TIER6.nextTier = TIER7;
-            TIER7.requiredKillCountToUnlockNext = 250; TIER7.nextTier = TIER8;
-            TIER8.requiredKillCountToUnlockNext = 300; TIER8.nextTier = TIER9;
-            TIER9.requiredKillCountToUnlockNext = 400; TIER9.nextTier = TIER10;
+            TIER1.requiredKillCountToUnlockNext = 250;  TIER1.nextTier = TIER2;
+            TIER2.requiredKillCountToUnlockNext = 500;  TIER2.nextTier = TIER3;
+            TIER3.requiredKillCountToUnlockNext = 850;  TIER3.nextTier = TIER4;
+            TIER4.requiredKillCountToUnlockNext = 1200; TIER4.nextTier = TIER5;
+            TIER5.requiredKillCountToUnlockNext = 1750; TIER5.nextTier = TIER6;
+            TIER6.requiredKillCountToUnlockNext = 2000; TIER6.nextTier = TIER7;
+            TIER7.requiredKillCountToUnlockNext = 2500; TIER7.nextTier = TIER8;
+            TIER8.requiredKillCountToUnlockNext = 5000; TIER8.nextTier = TIER9;
+            TIER9.requiredKillCountToUnlockNext = 10000; TIER9.nextTier = TIER10;
             TIER10.requiredKillCountToUnlockNext = 0;  TIER10.nextTier = null;
         }
 

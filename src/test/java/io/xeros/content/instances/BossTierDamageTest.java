@@ -8,6 +8,7 @@ import io.xeros.model.Npcs;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+
 public class BossTierDamageTest {
 
     @Test

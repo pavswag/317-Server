@@ -11,11 +11,7 @@ import io.xeros.content.bosses.nightmare.NightmareActionHandler;
 import io.xeros.content.dailyrewards.DailyRewardsDialogue;
 import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
-import io.xeros.content.dialogue.impl.IronmanNpcDialogue;
-import io.xeros.content.dialogue.impl.MacDialogue;
-import io.xeros.content.dialogue.impl.MonkChaosAltarDialogue;
-import io.xeros.content.dialogue.impl.PineAwayDialogue;
-import io.xeros.content.dialogue.impl.ScrollConverterDialogue;
+import io.xeros.content.dialogue.impl.*;
 import io.xeros.content.bots.FreakazoidBot;
 import io.xeros.content.minigames.inferno.Inferno;
 import io.xeros.content.minigames.tob.TobConstants;
@@ -135,6 +131,9 @@ public class NpcOptionOne {
 				player.sendMessage("@red@ You need a total level of 500 to start collecting your daily reward!");
 			}
 			break;
+					case 6599:
+						player.start(new BossInstanceDialogue(player));
+						break;
 			case 10529:
 				if (!player.getRecentlyDissolvedItems().isEmpty() && !player.getRecentlyDissolvedPrices().isEmpty()) {
 					if (player.getRecentlyDissolvedItems().size() > 6 && player.getRecentlyDissolvedPrices().size() > 6) {

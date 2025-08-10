@@ -434,10 +434,10 @@ public class AttackNpcCheck {
 //                return false;
 //            }
 //        }
-        if (npc.spawnedBy != c.getIndex() && npc.spawnedBy > 0 && !Boundary.isIn(c, Boundary.XERIC)) {
-            sendCheckMessage(c, sendMessages, "This monster was not spawned for you.");
-            return false;
-        }
+//        if (npc.spawnedBy != c.getIndex() && npc.spawnedBy > 0 && !Boundary.isIn(c, Boundary.XERIC)) {
+//            sendCheckMessage(c, sendMessages, "This monster was not spawned for you.");
+//            return false;
+//        }
         if (c.getX() == npc.getX() && c.getY() == npc.getY()) {
             c.getPA().walkTo(0, 1);
         }
