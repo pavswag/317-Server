@@ -5,6 +5,7 @@ import io.xeros.model.cycleevent.CycleEvent;
 import io.xeros.model.cycleevent.CycleEventContainer;
 import io.xeros.model.cycleevent.CycleEventHandler;
 import io.xeros.model.entity.player.Player;
+import io.xeros.model.entity.player.Boundary;
 
 /**
  * Simple arena wide hazard patterns. The behaviour here is intentionally
@@ -55,9 +56,13 @@ public class EnvironmentalHazardPattern {
                 }
                 break;
             case CHAOS_RIFT:
+                Boundary b = area.getTier().getZoneBoundary();
                 for (Player p : area.getPlayers()) {
-                    p.getPA().movePlayer(p.getPosition().getX() + io.xeros.util.Misc.random(-1,1),
-                            p.getPosition().getY() + io.xeros.util.Misc.random(-1,1), p.getHeight());
+                    int nx = p.getPosition().getX() + io.xeros.util.Misc.random(-1,1);
+                    int ny = p.getPosition().getY() + io.xeros.util.Misc.random(-1,1);
+                    nx = Math.max(b.getMinimumX(), Math.min(b.getMaximumX(), nx));
+                    ny = Math.max(b.getMinimumY(), Math.min(b.getMaximumY(), ny));
+                    p.getPA().movePlayer(nx, ny, area.getHeight());
                     p.sendMessage("@pur@Chaotic forces warp your position!");
                 }
                 break;
