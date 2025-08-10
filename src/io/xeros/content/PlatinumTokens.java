@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class PlatinumTokens {
 
-    private static final int TOKEN_VALUE = 1_000;
+    public static final int TOKEN_VALUE = 1_000;
     private static final int MAX_COINS_FROM_TOKENS = 2_147_483_000;
     private static final int MAX_TOKENS = MAX_COINS_FROM_TOKENS / TOKEN_VALUE;
 
