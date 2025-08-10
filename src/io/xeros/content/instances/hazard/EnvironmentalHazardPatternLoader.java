@@ -31,7 +31,12 @@ public class EnvironmentalHazardPatternLoader {
             InputStreamReader reader = new InputStreamReader(EnvironmentalHazardPatternLoader.class.getResourceAsStream("/aoe_environmental_patterns.json"));
             Map<String, PatternConfig> map = new Gson().fromJson(reader, type);
             for (Map.Entry<String, PatternConfig> e : map.entrySet()) {
-                BossTier tier = BossTier.valueOf(e.getKey().toUpperCase());
+                // Pattern resources historically used keys like "TIER_1" whereas the enum
+                // constants are defined without the underscore ("TIER1").  To remain backwards
+                // compatible with existing JSON we normalise the key by stripping underscores
+                // before resolving the {@link BossTier}.
+                String normalised = e.getKey().replace("_", "").toUpperCase();
+                BossTier tier = BossTier.valueOf(normalised);
                 CONFIGS.put(tier, e.getValue());
             }
         } catch (Exception e) {
