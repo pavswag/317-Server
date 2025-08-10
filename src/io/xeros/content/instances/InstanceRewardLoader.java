@@ -43,7 +43,7 @@ public class InstanceRewardLoader {
         // Ultra rare roll scales with score.
         double chance = Math.max(1, 500 - (score / 100));
         if (Misc.random((int)chance) == 0) {
-            player.getItems().addItem(4151, 1); // example ultra loot
+            player.getItems().addItem(12588, 1); // example ultra loot
             player.sendMessage("@dre@You have received an ultra rare item!");
         }
     }
