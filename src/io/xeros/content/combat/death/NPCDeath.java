@@ -22,6 +22,7 @@ import io.xeros.content.combat.Hitmark;
 import io.xeros.content.event.eventcalendar.EventChallenge;
 import io.xeros.content.events.monsterhunt.MonsterHunt;
 import io.xeros.content.instances.TierRewardManager;
+import io.xeros.content.items.aoeweapons.AoeManager;
 import io.xeros.content.minigames.warriors_guild.AnimatedArmour;
 import io.xeros.content.skills.Skill;
 import io.xeros.content.skills.hunter.impling.ItemRarity;
@@ -370,6 +371,12 @@ public class NPCDeath {
                     player.sendMessage("<col=ff00ff><shad=000000>\uD83C\uDF89 You’ve unlocked Tier " + number + ": " + name + "!</col>");
                     PlayerHandler.executeGlobalMessage(player.getDisplayName() + " has unlocked Tier " + number + " – " + name + "! \uD83D\uDD25");
                 }
+            }
+            area.recordKill(player);
+            if (AoeManager.canAOE(player)) {
+                area.recordAoeKill(player);
+            } else {
+                area.resetAoeStreak(player);
             }
             BossInstanceOverlayManager.sendKillOverlay(player);
             InstanceMutatorManager.spikeGlobal(5);
