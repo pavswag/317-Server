@@ -585,14 +585,17 @@ public class UseItem {
 		if (ChristmasWeapons.handleItemOnItem(c, itemUsed, useWith))
 			return;
 
-		if (BryophytaStaff.handleItemOnItem(c, itemUsed, useWith))
-			return;
-		if (SanguinestiStaff.useItem(c, itemUsed, useWith)) {
-			return;
-		}
-		if (WintertodtActions.useItemOnItem(c, itemUsed, useWith)) {
-			return;
-		}
+                if (BryophytaStaff.handleItemOnItem(c, itemUsed, useWith))
+                        return;
+                if (SanguinestiStaff.useItem(c, itemUsed, useWith)) {
+                        return;
+                }
+                if (WraithWeaponCharge.useItem(c, itemUsed, useWith)) {
+                        return;
+                }
+                if (WintertodtActions.useItemOnItem(c, itemUsed, useWith)) {
+                        return;
+                }
 		if (itemUsed == RunePouch.RUNE_POUCH_ID || useWith == RunePouch.RUNE_POUCH_ID) {
 			c.getRunePouch().addRunesFromInventory(itemUsed == RunePouch.RUNE_POUCH_ID ? useWith : itemUsed, Integer.MAX_VALUE);
 			return;

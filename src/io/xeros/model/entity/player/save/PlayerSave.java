@@ -564,6 +564,12 @@ public class PlayerSave {
                                 p.setArcLightCharge(Integer.parseInt(token2));
                             } else if (token.equals("sang-staff-charge")) {
                                 p.setSangStaffCharge(Integer.parseInt(token2));
+                            } else if (token.equals("wraith-scythe-charge")) {
+                                p.setWraithScytheCharge(Integer.parseInt(token2));
+                            } else if (token.equals("wraith-staff-charge")) {
+                                p.setWraithStaffCharge(Integer.parseInt(token2));
+                            } else if (token.equals("wraith-bow-charge")) {
+                                p.setWraithBowCharge(Integer.parseInt(token2));
                             } else if (token.equals("bryophyta-charge")) {
                                 p.bryophytaStaffCharges = Integer.parseInt(token2);
                             } else if (token.equals("crystal-bow-shots")) {
@@ -2029,6 +2035,12 @@ public class PlayerSave {
             characterfile.write("arclight-charge = " + p.getArcLightCharge());
             characterfile.newLine();
             characterfile.write("sang-staff-charge = " + p.getSangStaffCharge());
+            characterfile.newLine();
+            characterfile.write("wraith-scythe-charge = " + p.getWraithScytheCharge());
+            characterfile.newLine();
+            characterfile.write("wraith-staff-charge = " + p.getWraithStaffCharge());
+            characterfile.newLine();
+            characterfile.write("wraith-bow-charge = " + p.getWraithBowCharge());
             characterfile.newLine();
 
             characterfile.write("bryophyta-charge = " + p.bryophytaStaffCharges);

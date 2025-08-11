@@ -23,10 +23,10 @@ public class MeleeData {
 			return true;
 		} else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(33184)) {
 			return true;
-		} else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(33431)) {
-			return true;
-		} else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(33203)) {
-			return true;
+                } else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(33431)) {
+                        return player.getWraithScytheCharge() > 0;
+                } else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(33203)) {
+                        return true;
 		} else if (player.attacking.getCombatType() == CombatType.MELEE && player.getItems().isWearingItem(27610)) {
 			return true;
 		}
