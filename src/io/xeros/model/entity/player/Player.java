@@ -988,6 +988,13 @@ public class Player extends Entity implements IHazardReactive {
     private int toxicTridentCharge;
     private int arcLightCharge;
     private int sangStaffCharge;
+    /**
+     * Wraith weapon charges. Each Wraith weapon consumes charge per attack and
+     * must be recharged with Wraith Essence before it can be used again.
+     */
+    private int wraithScytheCharge;
+    private int wraithStaffCharge;
+    private int wraithBowCharge;
 
     public int getRunningDistanceTravelled() {
         return runningDistanceTravelled;
@@ -5559,6 +5566,30 @@ public class Player extends Entity implements IHazardReactive {
 
     public void setSangStaffCharge(int sangStaffCharge) {
         this.sangStaffCharge = sangStaffCharge;
+    }
+
+    public int getWraithScytheCharge() {
+        return wraithScytheCharge;
+    }
+
+    public void setWraithScytheCharge(int wraithScytheCharge) {
+        this.wraithScytheCharge = wraithScytheCharge;
+    }
+
+    public int getWraithStaffCharge() {
+        return wraithStaffCharge;
+    }
+
+    public void setWraithStaffCharge(int wraithStaffCharge) {
+        this.wraithStaffCharge = wraithStaffCharge;
+    }
+
+    public int getWraithBowCharge() {
+        return wraithBowCharge;
+    }
+
+    public void setWraithBowCharge(int wraithBowCharge) {
+        this.wraithBowCharge = wraithBowCharge;
     }
 
     public Fletching getFletching() {
