@@ -55,7 +55,7 @@ public class PlayerSave {
     private static final Logger logger = LoggerFactory.getLogger(PlayerSave.class);
 
     public static String getSaveDirectory() {
-        return "./saves/";
+        return "./saves/public/character_saves/";
     }
 
     public static File[] getAllCharacterSaves() {

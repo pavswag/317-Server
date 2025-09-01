@@ -123,7 +123,7 @@ public class Npcs {
     public static final int IGNATIUS_VULCAN = 118;
     public static final int CRAWLING_HAND = 120;
     public static final int COCKATRICE = 121;
-    public static final int BASILISK = 122;
+    public static final int BASILISK = 417;
     public static final int KURASK = 123;
     public static final int ABYSSAL_DEMON = 124;
     public static final int LEFT_HEAD = 125;

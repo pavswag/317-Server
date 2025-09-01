@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Configuration {
 
-	public static final String SAVES = "Administrator"; //change this when uploading server to VPS
+	public static final String SAVES = "pavsw"; //change this when uploading server to VPS
 	public static final String SAVE_DIRECTORY = "./saves/";
 	public static boolean PVP = false;
 	public static final int CLIENT_VERSION = 37;
