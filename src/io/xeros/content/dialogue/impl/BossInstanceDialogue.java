@@ -142,5 +142,11 @@ public class BossInstanceDialogue extends DialogueBuilder {
         }
         return name.replaceAll("[^\\p{ASCII}]", "").replace('–', '-');
     }
+
+    private static String safe(String name) {
+        return (name == null || name.trim().isEmpty())
+                ? "Unknown"
+                : name.replace('–', '-');
+    }
 }
 
