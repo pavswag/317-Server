@@ -2,6 +2,7 @@ package io.xeros.content.instances.aoe;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.xeros.model.definitions.NpcDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,10 @@ public class AoeBossTierLoader {
             }
             String json = Files.readString(FILE);
             tiers = GSON.fromJson(json, new TypeToken<List<AoeBossTierDef>>(){}.getType());
+            if (tiers == null) {
+                tiers = Collections.emptyList();
+            }
+            tiers.forEach(AoeBossTierLoader::resolveNpcIds);
             logger.info("Loaded {} AOE boss tiers.", tiers.size());
         } catch (IOException e) {
             logger.error("Error loading AOE boss tiers", e);
@@ -56,5 +61,39 @@ public class AoeBossTierLoader {
             }
         }
         return null;
+    }
+
+    private static void resolveNpcIds(AoeBossTierDef def) {
+        if (def == null) {
+            return;
+        }
+        resolve(def.boss);
+        if (def.minions != null) {
+            for (AoeBossTierDef.Npc n : def.minions) {
+                resolve(n);
+            }
+        }
+    }
+
+    private static void resolve(AoeBossTierDef.Npc n) {
+        if (n == null || n.npcId > 0) {
+            return;
+        }
+        int id = resolveNpcIdByName(n.name);
+        if (id > 0) {
+            n.npcId = id;
+        }
+    }
+
+    private static int resolveNpcIdByName(String name) {
+        if (name == null) {
+            return -1;
+        }
+        for (var entry : NpcDef.getDefinitions().entrySet()) {
+            if (name.equalsIgnoreCase(entry.getValue().getName())) {
+                return entry.getKey();
+            }
+        }
+        return -1;
     }
 }

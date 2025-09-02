@@ -1,42 +1,23 @@
 package io.xeros.content.dialogue.impl;
 
-import io.xeros.Server;
 import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
-import io.xeros.content.instances.BossInstanceManager;
-import io.xeros.content.instances.BossInstanceManager.BossTier;
-import io.xeros.model.definitions.ItemDef;
+import io.xeros.content.instances.aoe.AoeBossTierDef;
+import io.xeros.content.instances.aoe.AoeBossTierLoader;
+import io.xeros.content.instances.aoe.AoeTierController;
 import io.xeros.model.entity.player.Player;
-import io.xeros.model.items.GameItem;
-import io.xeros.util.Misc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Dialogue allowing players to select and enter boss instance tiers.
- *
- * <p>This implementation avoids blank options, colour codes locked/unlocked tiers
- * and supports pagination when more than five tiers exist.</p>
+ * Dialogue for selecting AOE boss tiers. Builds a fresh instance each time to
+ * avoid stale state and guarantees visible option lines.
  */
 public class BossInstanceDialogue extends DialogueBuilder {
 
-    /** NPC used for the dialogue head. */
-    private static final int NPC_ID = io.xeros.model.Npcs.INSTANCE_MASTER;
-
-    /** Maximum number of options shown per page. */
     private static final int OPTIONS_PER_PAGE = 5;
-
-    /** Maximum length of an option label before it is truncated. */
-    private static final int MAX_OPTION_LENGTH = 50;
-
-    /** Current page being viewed. */
     private final int page;
-
-    /** Tiers displayed on the current page mapped by slot. */
-    private final List<BossTier> displayed = new ArrayList<>(OPTIONS_PER_PAGE);
 
     public BossInstanceDialogue(Player player) {
         this(player, 0);
@@ -45,141 +26,65 @@ public class BossInstanceDialogue extends DialogueBuilder {
     private BossInstanceDialogue(Player player, int page) {
         super(player);
         this.page = page;
-        setNpcId(NPC_ID);
-        start();
+        build();
     }
 
-    /**
-     * Builds and sends the tier options for the current page. Any unused slots
-     * are filled with a red "Unavailable" placeholder to prevent blank lines.
-     */
-    public void start() {
+    private void build() {
+        List<AoeBossTierDef> tiers = AoeBossTierLoader.getTiers();
         Player player = getPlayer();
-        BossTier[] tiers = BossTier.values();
-
-        // First page can show four tiers (one slot reserved for "More"),
-        // subsequent pages show three tiers because both navigation options
-        // may be present. Compute the starting index accordingly so tiers
-        // are not skipped.
-        int startIndex;
-        if (page == 0) {
-            startIndex = 0;
-        } else {
-            int firstPageCount = OPTIONS_PER_PAGE - 1; // 4 tiers on page 0
-            int subsequentPageCount = OPTIONS_PER_PAGE - 2; // 3 tiers when back+more are shown
-            startIndex = firstPageCount + (page - 1) * subsequentPageCount;
-        }
-
-        displayed.clear();
-
-        Misc.println("BossInstanceDialogue open page=" + page + " unlocked=" + player.getUnlockedBossTiers());
-
-        List<DialogueOption> opts = new ArrayList<>();
-
-        boolean addBack = page > 0;
-        boolean addMore = startIndex + OPTIONS_PER_PAGE < tiers.length;
-
-        int capacity = OPTIONS_PER_PAGE - (addBack ? 1 : 0) - (addMore ? 1 : 0);
-
-        for (int i = 0; i < capacity && startIndex + i < tiers.length; i++) {
-            BossTier tier = tiers[startIndex + i];
-            displayed.add(tier);
-            String label = buildTierLabel(player, tier);
-            final int slot = opts.size();
-            opts.add(new DialogueOption(label, p -> run(0, slot)));
-        }
-
-        if (addBack) {
-            displayed.add(null);
-            opts.add(new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, page - 1))));
-        }
-        if (addMore) {
-            displayed.add(null);
-            opts.add(new DialogueOption("More", p -> p.start(new BossInstanceDialogue(p, page + 1))));
-        }
-
-        String[] labels = opts.stream().map(DialogueOption::getTitle).toArray(String[]::new);
-        player.getDH().sendOptionDialogue("Choose a Boss Tier", labels);
-        option("Choose a Boss Tier", opts.toArray(new DialogueOption[0]));
-    }
-
-    /**
-     * Builds a safe, colour-coded label for a tier showing progress and key drops.
-     * <p>
-     * The resulting string is logged and truncated if it exceeds {@link #MAX_OPTION_LENGTH}
-     * to prevent invisible dialogue options.
-     * </p>
-     */
-    private String buildTierLabel(Player player, BossTier tier) {
-        if (tier == null) {
-            Misc.println("BossInstanceDialogue warning: null tier label");
-            return "@red@Unavailable";
-        }
-
-        String zone = tier.getZoneName();
-        if (zone == null || zone.trim().isEmpty()) {
-            zone = "Unknown Zone";
-            Misc.println("BossInstanceDialogue warning: missing zone name for " + tier);
-        }
-
-        // Sanitize the zone to avoid invisible or client-breaking characters.
-        zone = zone.replaceAll("[^\\p{ASCII}]", "");
-        zone = zone.replaceAll("[–—•]", "-");
-        StringBuilder label = new StringBuilder(BossInstanceManager.getTierDisplayNameSafe(tier, player));
-
-        // Append up to three key drop names
-        List<GameItem> drops = Server.getDropManager().getNPCdrops(tier.getBossNpcId());
-        if (drops != null && !drops.isEmpty()) {
-            String dropNames = drops.stream()
-                    .limit(3)
-                    .map(drop -> {
-                        ItemDef def = ItemDef.forId(drop.getId());
-                        return def != null ? def.getName() : "?";
-                    })
-                    .collect(Collectors.joining(", "));
-            if (!dropNames.isEmpty()) {
-                label.append(" - ").append(dropNames);
-            }
-        }
-
-        String result = label.toString();
-
-        // Strip any remaining non-ASCII characters after building the label.
-        result = result.replaceAll("[^\\p{ASCII}]", "");
-        result = result.replaceAll("[–—•]", "-");
-        if (result.length() > MAX_OPTION_LENGTH) {
-            Misc.println("BossInstanceDialogue truncating label for " + tier + " from " + result.length() + " chars: " + result);
-            result = result.substring(0, MAX_OPTION_LENGTH - 3) + "...";
-        }
-
-        Misc.println("BossInstanceDialogue option tier=" + tier + " zone=" + zone + " display=" + result);
-        return result;
-    }
-
-    /**
-     * Handles option selection. Slots map to the tiers displayed on the current page.
-     */
-    public void run(int interfaceId, int slot) {
-        Player player = getPlayer();
-        if (slot < 0 || slot >= displayed.size()) {
+        if (tiers.isEmpty()) {
+            player.start(new DialogueBuilder(player).statement("No tiers configured"));
             return;
         }
-
-        BossTier tier = displayed.get(slot);
-        Misc.println("BossInstanceDialogue click slot=" + slot + " tier=" + (tier == null ? "null" : tier.name()));
-        if (tier == null) {
-            return; // placeholder option
+        int totalPages = (int) Math.ceil(tiers.size() / (double) OPTIONS_PER_PAGE);
+        int startIndex = page * OPTIONS_PER_PAGE;
+        List<DialogueOption> options = new ArrayList<>();
+        for (int i = 0; i < OPTIONS_PER_PAGE && startIndex + i < tiers.size(); i++) {
+            AoeBossTierDef def = tiers.get(startIndex + i);
+            final int tierNumber = def.tier;
+            String label = optionLabel(player, def);
+            options.add(new DialogueOption(label, p -> handleSelect(p, tierNumber)));
         }
+        if (page > 0) {
+            options.add(new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, page - 1))));
+        }
+        if (startIndex + OPTIONS_PER_PAGE < tiers.size()) {
+            options.add(new DialogueOption("More", p -> p.start(new BossInstanceDialogue(p, page + 1))));
+        }
+        option("AOE Boss Tiers (Page " + (page + 1) + "/" + totalPages + ")",
+                options.toArray(new DialogueOption[0]));
+    }
 
-        if (player.getUnlockedBossTiers().contains(tier)) {
-            BossInstanceManager.enter(player, tier);
+    private void handleSelect(Player player, int tier) {
+        if (tier <= AoeTierController.getUnlockedTier(player)) {
+            AoeTierController.startTier(player, tier);
             player.getPA().closeAllWindows();
         } else {
-            BossTier prev = Arrays.stream(BossTier.values()).filter(t -> t.getNextTier() == tier).findFirst().orElse(null);
-            int progress = prev != null ? player.getTierKillCounts().getOrDefault(prev, 0) : 0;
-            int required = prev != null ? prev.getRequiredKillCountToUnlockNext() : tier.getKillRequirement();
-            int remaining = Math.max(0, required - progress);
+            int kc = AoeTierController.getKillCount(player, tier - 1);
+            AoeBossTierDef prev = AoeBossTierLoader.getTier(tier - 1);
+            int req = prev != null ? prev.getUnlockKills() : 0;
+            int remaining = Math.max(0, req - kc);
             player.sendMessage("You must kill " + remaining + " more to unlock this tier.");
         }
+    }
+
+    private String optionLabel(Player player, AoeBossTierDef def) {
+        String zone = safeDisplayName(def);
+        boolean unlocked = def.tier <= AoeTierController.getUnlockedTier(player);
+        if (unlocked) {
+            return "T" + def.tier + " - " + zone + " [Unlocked]";
+        }
+        return "T" + def.tier + " - " + zone + " [Locked " + def.unlockKills + "]";
+    }
+
+    public static String safeDisplayName(AoeBossTierDef def) {
+        if (def == null) {
+            return "Unknown";
+        }
+        String name = def.zoneName;
+        if (name == null || name.isBlank()) {
+            return "Tier " + def.tier;
+        }
+        return name.replaceAll("[^\\p{ASCII}]", "");
     }
 }
