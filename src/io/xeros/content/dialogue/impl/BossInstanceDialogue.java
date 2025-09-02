@@ -129,9 +129,11 @@ public class BossInstanceDialogue extends DialogueBuilder {
             int need = Math.max(0, t.getUnlockKills() - AoeTierController.getKillcount(p, tierNum));
             return "T" + tierNum + " - " + zone + " [Locked " + need + "]";
         }
+        return name.replaceAll("[^\\p{ASCII}]", "");
     }
 
     private static String safe(String s) {
         return (s == null || s.trim().isEmpty()) ? "Unknown" : s.replace('–', '-');
     }
 }
+
