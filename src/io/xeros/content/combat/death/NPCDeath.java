@@ -18,6 +18,7 @@ import io.xeros.content.bosspoints.BossPoints;
 import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.instances.BossInstanceOverlayManager;
 import io.xeros.content.instances.BossInstanceUIManager;
+import io.xeros.content.instances.aoe.AoeTierEvents;
 import io.xeros.content.combat.Hitmark;
 import io.xeros.content.event.eventcalendar.EventChallenge;
 import io.xeros.content.events.monsterhunt.MonsterHunt;
@@ -65,6 +66,10 @@ public class NPCDeath {
 
     public static void dropItemsFor(NPC npc, Player player, int npcId) {
         if (npc == null) return;
+
+        if (AoeTierEvents.onNpcDeath(player, npc)) {
+            return;
+        }
 
         if (player.getTargeted() != null && npc.equals(player.getTargeted())) {
             player.setTargeted(null);
