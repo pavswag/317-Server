@@ -14,6 +14,7 @@ import io.xeros.content.bosses.godwars.Godwars;
 import io.xeros.content.bosses.grotesqueguardians.GrotesqueInstance;
 import io.xeros.content.bosses.hespori.Hespori;
 import io.xeros.content.collection_log.CollectionLog;
+import io.xeros.content.instances.aoe.AoeDropInterceptor;
 import io.xeros.content.lootbag.LootingBag;
 import io.xeros.content.perky.PerkSystem;
 import io.xeros.content.seasons.Halloween;
@@ -896,6 +897,10 @@ public class DropManager {
     }
 
     public void onDrop(Player player, GameItem item, int npcId) {
+        if (AoeDropInterceptor.awardInsideAoe(player, item)) {
+            item.changeDrop(-1, item.getAmount());
+            return;
+        }
         if (Plants.isSeed(item.getId()) || ItemDef.forId(item.getId()).getName().toLowerCase().contains("seed")) {
             player.getItems().addItemUnderAnyCircumstance(Items.SEED_PACK, 1);
             item.changeDrop(-1, item.getAmount());
