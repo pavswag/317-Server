@@ -1,0 +1,117 @@
+[
+  {
+    "tier": 1,
+    "name": "Unicow Pen",
+    "endOfRunRolls": 0,
+    "bonusRewards": [],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 0,
+    "reportTitle": "AOE Tier Rewards — T1 Unicow"
+  },
+  {
+    "tier": 2,
+    "name": "Bandos Stronghold",
+    "endOfRunRolls": 1,
+    "bonusRewards": [
+      {"itemId": 995, "min": 50000, "max": 150000}
+    ],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 50,
+    "reportTitle": "AOE Tier Rewards — T2 Bandos"
+  },
+  {
+    "tier": 3,
+    "name": "Zamorak Fortress",
+    "endOfRunRolls": 1,
+    "bonusRewards": [
+      {"itemId": 995, "min": 100000, "max": 200000}
+    ],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 60,
+    "reportTitle": "AOE Tier Rewards — T3 Zamorak"
+  },
+  {
+    "tier": 4,
+    "name": "Saradomin Encampment",
+    "endOfRunRolls": 1,
+    "bonusRewards": [
+      {"itemId": 995, "min": 150000, "max": 250000}
+    ],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 70,
+    "reportTitle": "AOE Tier Rewards — T4 Saradomin"
+  },
+  {
+    "tier": 5,
+    "name": "Armadyl Eyrie",
+    "endOfRunRolls": 1,
+    "bonusRewards": [
+      {"itemId": 995, "min": 200000, "max": 300000}
+    ],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 80,
+    "reportTitle": "AOE Tier Rewards — T5 Armadyl"
+  },
+  {
+    "tier": 6,
+    "name": "Dagannoth Lair",
+    "endOfRunRolls": 1,
+    "bonusRewards": [
+      {"itemId": 995, "min": 250000, "max": 350000}
+    ],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 90,
+    "reportTitle": "AOE Tier Rewards — T6 Dagannoth Kings"
+  },
+  {
+    "tier": 7,
+    "name": "Kalphite Hive",
+    "endOfRunRolls": 1,
+    "bonusRewards": [
+      {"itemId": 995, "min": 300000, "max": 400000}
+    ],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 100,
+    "reportTitle": "AOE Tier Rewards — T7 Kalphite Queen"
+  },
+  {
+    "tier": 8,
+    "name": "King Black Dragon Lair",
+    "endOfRunRolls": 1,
+    "bonusRewards": [
+      {"itemId": 995, "min": 350000, "max": 450000}
+    ],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 110,
+    "reportTitle": "AOE Tier Rewards — T8 King Black Dragon"
+  },
+  {
+    "tier": 9,
+    "name": "Chaos Elemental Plane",
+    "endOfRunRolls": 1,
+    "bonusRewards": [
+      {"itemId": 995, "min": 400000, "max": 500000}
+    ],
+    "bankAllDrops": true,
+    "blacklist": [],
+    "whitelist": [],
+    "fortuneXpPerKill": 120,
+    "reportTitle": "AOE Tier Rewards — T9 Chaos Elemental"
+  }
+]

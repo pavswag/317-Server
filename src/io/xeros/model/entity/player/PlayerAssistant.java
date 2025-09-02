@@ -38,6 +38,7 @@ import io.xeros.content.skills.crafting.Enchantment;
 import io.xeros.content.skills.fletching.Fletching;
 import io.xeros.content.skills.mining.Mineral;
 import io.xeros.content.skills.slayer.SlayerUnlock;
+import io.xeros.content.instances.aoe.AoeTierController;
 import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.skills.slayer.Task;
 import io.xeros.content.skills.smithing.Smelting;
@@ -2314,8 +2315,11 @@ public class PlayerAssistant {
 		startTeleportFinal(x, y, height, teleportType, homeTeleport);
 	}
 
-	private void startTeleportFinal(int x, int y, int height, String teleportType, boolean homeTeleport) {
-		player.isWc = false;
+        private void startTeleportFinal(int x, int y, int height, String teleportType, boolean homeTeleport) {
+                if (AoeTierController.getActiveTier(player) > 0) {
+                        AoeTierController.endTier(player, true);
+                }
+                player.isWc = false;
 		if (player.isOverloading) {
 			player.sendMessage("You cannot teleport while taking overload damage.");
 			return;
