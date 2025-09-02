@@ -31,6 +31,16 @@ public class AoeTierController {
         return player.getAttributes().getInt(kcKey(tier), 0);
     }
 
+    /** Convenience alias used by dialogue helpers. */
+    public static int getKillcount(Player player, int tier) {
+        return getKillCount(player, tier);
+    }
+
+    /** Returns true if the player has unlocked the given tier number. */
+    public static boolean isUnlocked(Player player, int tier) {
+        return getUnlockedTier(player) >= tier;
+    }
+
     public static void setUnlockedTier(Player player, int tier) {
         player.getAttributes().setInt(ATTR_UNLOCKED, tier);
     }
