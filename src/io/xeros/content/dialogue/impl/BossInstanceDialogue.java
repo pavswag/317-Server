@@ -120,6 +120,26 @@ public class BossInstanceDialogue extends DialogueBuilder {
             int remaining = Math.max(0, req - kc);
             player.sendMessage("You must kill " + remaining + " more to unlock this tier.");
         }
+        return name.replaceAll("[^\\p{ASCII}]", "");
+    }
+
+    private String optionLabel(Player player, AoeBossTierDef def) {
+        String zone = safe(def.zoneName);
+        if (def.disabled) {
+            return "T" + def.tier + " - " + zone + " [Disabled: " + def.getDisabledReason() + "]";
+        }
+        boolean unlocked = def.tier <= AoeTierController.getUnlockedTier(player);
+        if (unlocked) {
+            return "T" + def.tier + " - " + zone + " [Unlocked]";
+        }
+        return "T" + def.tier + " - " + zone + " [Locked " + def.unlockKills + "]";
+    }
+
+    private static String safe(String s) {
+        if (s == null || s.isBlank()) {
+            return "Unknown";
+        }
+        return s.replaceAll("[^\\p{ASCII}]", "");
     }
 
     private String optionLabel(Player player, AoeBossTierDef def) {
