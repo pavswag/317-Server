@@ -37,6 +37,10 @@ public class AoeBossTierDef {
     public List<Npc> minions;
     public Rewards rewards;
 
+    // Set by loader when a tier cannot be used.
+    public boolean disabled = false;
+    public String disabledReason;
+
     public int getTier() {
         return tier;
     }
@@ -71,5 +75,13 @@ public class AoeBossTierDef {
 
     public Rewards getRewards() {
         return rewards;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public String getDisabledReason() {
+        return disabledReason;
     }
 }

@@ -14,29 +14,31 @@ import java.util.List;
  */
 public class AoeTierEvents {
 
-    public static void onNpcDeath(Player player, NPC npc) {
+    public static boolean onNpcDeath(Player player, NPC npc) {
         if (player == null || npc == null) {
-            return;
+            return false;
         }
         int tier = AoeTierController.getActiveTier(player);
-        if (tier > 0) {
-            List<GameItem> drops = Server.getDropManager().getDropSample(player, npc.npcId);
-            if (drops != null) {
-                for (GameItem gi : drops) {
-                    if (!AoeDropInterceptor.awardInsideAoe(player, gi)) {
-                        Server.itemHandler.createGroundItem(player, gi.getId(), npc.getX(), npc.getY(), player.heightLevel, gi.getAmount(), player.getIndex(), false);
-                    }
+        if (tier <= 0) {
+            return false;
+        }
+        List<GameItem> drops = Server.getDropManager().getDropSample(player, npc.npcId);
+        if (drops != null) {
+            for (GameItem gi : drops) {
+                if (!AoeDropInterceptor.awardInsideAoe(player, gi)) {
+                    Server.itemHandler.createGroundItem(player, gi.getId(), npc.getX(), npc.getY(), player.heightLevel, gi.getAmount(), player.getIndex(), false);
                 }
             }
-            AoeBossTierDef def = AoeBossTierLoader.getTier(tier);
-            if (def != null && def.boss != null && def.boss.npcId == npc.npcId) {
-                AoeTierController.incrementKill(player, tier);
-                AoeTierRewardsLoader.forTier(tier).ifPresent(r -> {
-                    if (r.getFortuneXpPerKill() > 0) {
-                        player.addDemonHunterXP(r.getFortuneXpPerKill());
-                    }
-                });
-            }
         }
+        AoeBossTierDef def = AoeTierRepo.byTier(tier);
+        if (def != null && def.boss != null && def.boss.npcId == npc.npcId) {
+            AoeTierController.incrementKill(player, tier);
+            AoeTierRewardsLoader.forTier(tier).ifPresent(r -> {
+                if (r.getFortuneXpPerKill() > 0) {
+                    player.addDemonHunterXP(r.getFortuneXpPerKill());
+                }
+            });
+        }
+        return true;
     }
 }
