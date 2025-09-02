@@ -22,6 +22,7 @@ import java.util.List;
 public class BossInstanceDialogue extends DialogueBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(BossInstanceDialogue.class);
+
     private static final int OPTIONS_PER_PAGE = 5;
     private final int page;
 
@@ -72,6 +73,7 @@ public class BossInstanceDialogue extends DialogueBuilder {
             player.sendMessage(def.getDisabledReason());
             return;
         }
+
         if (tier <= AoeTierController.getUnlockedTier(player)) {
             AoeTierController.startTier(player, tier);
             player.getPA().closeAllWindows();

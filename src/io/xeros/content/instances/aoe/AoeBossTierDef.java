@@ -41,6 +41,7 @@ public class AoeBossTierDef {
     public boolean disabled = false;
     public String disabledReason;
 
+
     public int getTier() {
         return tier;
     }

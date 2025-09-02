@@ -58,6 +58,7 @@ public class AoeTierController {
             logger.info("[AOE] Start refused: disabled: {}", def.getDisabledReason());
             return List.of();
         }
+
         if (tier > getUnlockedTier(player)) {
             player.sendMessage("You have not unlocked this tier yet.");
             return List.of();
