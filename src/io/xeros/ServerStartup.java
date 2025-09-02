@@ -60,6 +60,7 @@ import io.xeros.util.discord.DiscordIntegration;
 import io.xeros.util.offlinestorage.ItemCollection;
 import io.xeros.model.world.objects.GlobalObject;
 import io.xeros.content.tools.ToolAugments;
+import io.xeros.content.instances.aoe.AoeBossTierLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,6 +103,7 @@ public class ServerStartup {
         }
         ItemStats.load();
         NpcDef.load();
+        AoeBossTierLoader.loadAllOrWarn();
         // Npc Combat Definition must be above npc load
         NpcCombatDefinition.load();
         Server.npcHandler.init();

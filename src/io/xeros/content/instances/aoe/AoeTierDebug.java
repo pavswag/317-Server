@@ -1,9 +1,12 @@
 package io.xeros.content.instances.aoe;
 
+import io.xeros.Server;
 import io.xeros.content.commands.Command;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Right;
 import io.xeros.model.items.GameItem;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import java.util.Optional;
 
@@ -32,8 +35,12 @@ public class AoeTierDebug extends Command {
                     player.start(new io.xeros.content.dialogue.impl.BossInstanceDialogue(player));
                     break;
                 case "status":
-                    int tier = AoeTierController.getUnlockedTier(player);
-                    player.sendMessage("AOE tier: " + tier);
+                    int size = AoeTierRepo.size();
+                    String sample = AoeTierRepo.get().stream().limit(3)
+                            .map(def -> def.zoneName)
+                            .collect(Collectors.joining(", "));
+                    String path = AoeBossTierLoader.defaultFile().toFile().getAbsolutePath();
+                    player.sendMessage("Repo size=" + size + " sample=" + sample + " file=" + path);
                     break;
                 case "start":
                     if (parts.length >= 3) {
@@ -77,8 +84,11 @@ public class AoeTierDebug extends Command {
                         player.sendMessage("Admin only command.");
                         return;
                     }
-                    AoeBossTierLoader.reload();
-                    player.sendMessage("AOE tier definitions reloaded.");
+                    Arrays.stream(Server.playerHandler.players)
+                            .filter(p -> p != null && AoeTierController.getActiveTier(p) > 0)
+                            .forEach(p -> AoeTierController.endTier(p, false));
+                    AoeBossTierLoader.loadAllOrWarn("reload");
+                    player.sendMessage("AOE tier definitions reloaded. Count=" + AoeTierRepo.size());
                     break;
                 default:
                     player.sendMessage("Unknown subcommand: " + sub);

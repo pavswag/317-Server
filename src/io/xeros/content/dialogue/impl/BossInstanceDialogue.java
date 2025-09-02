@@ -5,16 +5,23 @@ import io.xeros.content.dialogue.DialogueOption;
 import io.xeros.content.instances.aoe.AoeBossTierDef;
 import io.xeros.content.instances.aoe.AoeBossTierLoader;
 import io.xeros.content.instances.aoe.AoeTierController;
+import io.xeros.content.instances.aoe.AoeTierRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.xeros.model.entity.player.Player;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Dialogue for selecting AOE boss tiers. Builds a fresh instance each time to
- * avoid stale state and guarantees visible option lines.
+ * Dialogue for selecting AOE boss tiers. Reads from {@link AoeTierRepo}
+ * each time it opens and paginates over the list.
  */
 public class BossInstanceDialogue extends DialogueBuilder {
+
+    private static final Logger logger = LoggerFactory.getLogger(BossInstanceDialogue.class);
 
     private static final int OPTIONS_PER_PAGE = 5;
     private final int page;
@@ -30,20 +37,24 @@ public class BossInstanceDialogue extends DialogueBuilder {
     }
 
     private void build() {
-        List<AoeBossTierDef> tiers = AoeBossTierLoader.getTiers();
+        List<AoeBossTierDef> tiers = AoeTierRepo.get();
         Player player = getPlayer();
         if (tiers.isEmpty()) {
-            player.start(new DialogueBuilder(player).statement("No tiers configured"));
+            String path = AoeBossTierLoader.defaultFile().toFile().getAbsolutePath();
+            logger.info("[AOE-DLG] Open with empty tier list. Checked: {} exists={}", path, new File(path).exists());
+            player.start(new DialogueBuilder(player).statement(
+                    "No tiers configured (file: " + path + "). Use ::aoe tier reload."));
             return;
         }
         int totalPages = (int) Math.ceil(tiers.size() / (double) OPTIONS_PER_PAGE);
+        logger.info("[AOE-DLG] Open: total={}, page={}/{}", tiers.size(), page + 1, totalPages);
         int startIndex = page * OPTIONS_PER_PAGE;
         List<DialogueOption> options = new ArrayList<>();
         for (int i = 0; i < OPTIONS_PER_PAGE && startIndex + i < tiers.size(); i++) {
             AoeBossTierDef def = tiers.get(startIndex + i);
             final int tierNumber = def.tier;
             String label = optionLabel(player, def);
-            options.add(new DialogueOption(label, p -> handleSelect(p, tierNumber)));
+            options.add(new DialogueOption(label, p -> handleSelect(p, tierNumber, def)));
         }
         if (page > 0) {
             options.add(new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, page - 1))));
@@ -55,21 +66,31 @@ public class BossInstanceDialogue extends DialogueBuilder {
                 options.toArray(new DialogueOption[0]));
     }
 
-    private void handleSelect(Player player, int tier) {
+    private void handleSelect(Player player, int tier, AoeBossTierDef def) {
+        String state = def.disabled ? "Disabled" : (tier <= AoeTierController.getUnlockedTier(player) ? "Unlocked" : "Locked");
+        logger.info("[AOE-DLG] Select tier={} state={}", tier, state);
+        if (def.disabled) {
+            player.sendMessage(def.getDisabledReason());
+            return;
+        }
+
         if (tier <= AoeTierController.getUnlockedTier(player)) {
             AoeTierController.startTier(player, tier);
             player.getPA().closeAllWindows();
         } else {
-            int kc = AoeTierController.getKillCount(player, tier - 1);
-            AoeBossTierDef prev = AoeBossTierLoader.getTier(tier - 1);
-            int req = prev != null ? prev.getUnlockKills() : 0;
+            int prevTier = tier - 1;
+            int kc = AoeTierController.getKillCount(player, prevTier);
+            int req = def.unlockKills;
             int remaining = Math.max(0, req - kc);
             player.sendMessage("You must kill " + remaining + " more to unlock this tier.");
         }
     }
 
     private String optionLabel(Player player, AoeBossTierDef def) {
-        String zone = safeDisplayName(def);
+        String zone = safe(def.zoneName);
+        if (def.disabled) {
+            return "T" + def.tier + " - " + zone + " [Disabled: " + def.getDisabledReason() + "]";
+        }
         boolean unlocked = def.tier <= AoeTierController.getUnlockedTier(player);
         if (unlocked) {
             return "T" + def.tier + " - " + zone + " [Unlocked]";
@@ -77,14 +98,11 @@ public class BossInstanceDialogue extends DialogueBuilder {
         return "T" + def.tier + " - " + zone + " [Locked " + def.unlockKills + "]";
     }
 
-    public static String safeDisplayName(AoeBossTierDef def) {
-        if (def == null) {
+    private static String safe(String s) {
+        if (s == null || s.isBlank()) {
             return "Unknown";
         }
-        String name = def.zoneName;
-        if (name == null || name.isBlank()) {
-            return "Tier " + def.tier;
-        }
-        return name.replaceAll("[^\\p{ASCII}]", "");
+        return s.replaceAll("[^\\p{ASCII}]", "");
     }
 }
+

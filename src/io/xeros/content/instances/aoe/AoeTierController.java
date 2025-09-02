@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class AoeTierController {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AoeTierController.class);
+
     private static final String ATTR_UNLOCKED = "aoe_unlocked_tier";
     private static final String ATTR_ACTIVE = "aoe_active_tier";
     private static final String ATTR_TRACKER = "aoe_reward_tracker";
@@ -36,7 +38,7 @@ public class AoeTierController {
     public static void incrementKill(Player player, int tier) {
         int kc = getKillCount(player, tier) + 1;
         player.getAttributes().setInt(kcKey(tier), kc);
-        AoeBossTierDef def = AoeBossTierLoader.getTier(tier);
+        AoeBossTierDef def = AoeTierRepo.byTier(tier);
         if (def != null && kc >= def.unlockKills && tier >= getUnlockedTier(player)) {
             setUnlockedTier(player, tier + 1);
             player.sendMessage("\uD83D\uDD13 You have unlocked AOE tier " + (tier + 1) + ".");
@@ -46,11 +48,17 @@ public class AoeTierController {
     /** Starts the given tier at the player's current location. */
     public static List<NPC> startTier(Player player, int tier) {
         endTier(player, false);
-        AoeBossTierDef def = AoeBossTierLoader.getTier(tier);
+        AoeBossTierDef def = AoeTierRepo.byTier(tier);
         if (def == null) {
             player.sendMessage("Unknown tier: " + tier);
             return List.of();
         }
+        if (def.disabled) {
+            player.sendMessage("Tier disabled: " + def.getDisabledReason());
+            logger.info("[AOE] Start refused: disabled: {}", def.getDisabledReason());
+            return List.of();
+        }
+
         if (tier > getUnlockedTier(player)) {
             player.sendMessage("You have not unlocked this tier yet.");
             return List.of();

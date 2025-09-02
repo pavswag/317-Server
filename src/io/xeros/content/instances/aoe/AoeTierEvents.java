@@ -28,7 +28,7 @@ public class AoeTierEvents {
                     }
                 }
             }
-            AoeBossTierDef def = AoeBossTierLoader.getTier(tier);
+            AoeBossTierDef def = AoeTierRepo.byTier(tier);
             if (def != null && def.boss != null && def.boss.npcId == npc.npcId) {
                 AoeTierController.incrementKill(player, tier);
                 AoeTierRewardsLoader.forTier(tier).ifPresent(r -> {
