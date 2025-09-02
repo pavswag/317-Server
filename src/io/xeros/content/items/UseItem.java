@@ -49,6 +49,7 @@ import io.xeros.content.skills.slayer.SlayerUnlock;
 import io.xeros.content.skills.smithing.CannonballSmelting;
 import io.xeros.content.trails.MasterClue;
 import io.xeros.content.wogw.Wogw;
+import io.xeros.content.wraith.WraithCharges;
 import io.xeros.model.Animation;
 import io.xeros.model.Items;
 import io.xeros.model.collisionmap.ObjectDef;
@@ -590,7 +591,12 @@ public class UseItem {
                 if (SanguinestiStaff.useItem(c, itemUsed, useWith)) {
                         return;
                 }
-                if (WraithWeaponCharge.useItem(c, itemUsed, useWith)) {
+                if ((itemUsed == WraithCharges.WRAITH_ESSENCE && WraithCharges.isWraithWeapon(useWith))
+                                || (useWith == WraithCharges.WRAITH_ESSENCE && WraithCharges.isWraithWeapon(itemUsed))) {
+                        int weaponId = WraithCharges.isWraithWeapon(itemUsed) ? itemUsed : useWith;
+                        int slot = c.getItems().getInventoryItemSlot(weaponId);
+                        int requested = c.getItems().getItemCount(WraithCharges.WRAITH_ESSENCE);
+                        WraithCharges.addChargesFromEssence(c, slot, WraithCharges.WRAITH_ESSENCE, requested);
                         return;
                 }
                 if (WintertodtActions.useItemOnItem(c, itemUsed, useWith)) {
