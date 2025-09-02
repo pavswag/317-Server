@@ -8,6 +8,7 @@ import io.xeros.content.instances.aoe.AoeTierController;
 import io.xeros.content.instances.aoe.AoeTierRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import io.xeros.model.entity.player.Player;
 
 import java.io.File;
@@ -139,6 +140,25 @@ public class BossInstanceDialogue extends DialogueBuilder {
             return "Unknown";
         }
         return s.replaceAll("[^\\p{ASCII}]", "");
+    }
+
+    private String optionLabel(Player player, AoeBossTierDef def) {
+        String zone = safe(def.zoneName);
+        if (def.disabled) {
+            return "T" + def.tier + " - " + zone + " [Disabled: " + def.getDisabledReason() + "]";
+        }
+        boolean unlocked = def.tier <= AoeTierController.getUnlockedTier(player);
+        if (unlocked) {
+            return "T" + def.tier + " - " + zone + " [Unlocked]";
+        }
+        return "T" + def.tier + " - " + zone + " [Locked " + def.unlockKills + "]";
+    }
+
+    private static String safe(String name) {
+        if (name == null || name.isBlank()) {
+            return "Unknown";
+        }
+        return name.replaceAll("[^\\p{ASCII}]", "");
     }
 }
 

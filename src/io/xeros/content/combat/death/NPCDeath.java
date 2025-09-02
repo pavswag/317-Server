@@ -67,9 +67,7 @@ public class NPCDeath {
     public static void dropItemsFor(NPC npc, Player player, int npcId) {
         if (npc == null) return;
 
-        if (AoeTierEvents.onNpcDeath(player, npc)) {
-            return;
-        }
+        AoeTierEvents.onNpcDeath(player, npc);
 
         if (player.getTargeted() != null && npc.equals(player.getTargeted())) {
             player.setTargeted(null);
