@@ -135,5 +135,12 @@ public class BossInstanceDialogue extends DialogueBuilder {
     private static String safe(String s) {
         return (s == null || s.trim().isEmpty()) ? "Unknown" : s.replace('–', '-');
     }
+
+    private static String safe(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return "Unknown";
+        }
+        return name.replaceAll("[^\\p{ASCII}]", "").replace('–', '-');
+    }
 }
 
