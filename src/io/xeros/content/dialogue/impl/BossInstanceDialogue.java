@@ -1,42 +1,28 @@
 package io.xeros.content.dialogue.impl;
 
-import io.xeros.Server;
 import io.xeros.content.dialogue.DialogueBuilder;
 import io.xeros.content.dialogue.DialogueOption;
-import io.xeros.content.instances.BossInstanceManager;
-import io.xeros.content.instances.BossInstanceManager.BossTier;
-import io.xeros.model.definitions.ItemDef;
+import io.xeros.content.instances.aoe.AoeBossTierDef;
+import io.xeros.content.instances.aoe.AoeBossTierLoader;
+import io.xeros.content.instances.aoe.AoeTierController;
+import io.xeros.content.instances.aoe.AoeTierRepo;
 import io.xeros.model.entity.player.Player;
-import io.xeros.model.items.GameItem;
-import io.xeros.util.Misc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Dialogue allowing players to select and enter boss instance tiers.
- *
- * <p>This implementation avoids blank options, colour codes locked/unlocked tiers
- * and supports pagination when more than five tiers exist.</p>
+ * Dialogue for selecting AOE boss tiers. Reads from {@link AoeTierRepo}
+ * each time it opens and paginates over the list.
  */
 public class BossInstanceDialogue extends DialogueBuilder {
 
-    /** NPC used for the dialogue head. */
-    private static final int NPC_ID = io.xeros.model.Npcs.INSTANCE_MASTER;
-
-    /** Maximum number of options shown per page. */
+    private static final Logger logger = LoggerFactory.getLogger(BossInstanceDialogue.class);
     private static final int OPTIONS_PER_PAGE = 5;
-
-    /** Maximum length of an option label before it is truncated. */
-    private static final int MAX_OPTION_LENGTH = 50;
-
-    /** Current page being viewed. */
     private final int page;
-
-    /** Tiers displayed on the current page mapped by slot. */
-    private final List<BossTier> displayed = new ArrayList<>(OPTIONS_PER_PAGE);
 
     public BossInstanceDialogue(Player player) {
         this(player, 0);
@@ -45,141 +31,109 @@ public class BossInstanceDialogue extends DialogueBuilder {
     private BossInstanceDialogue(Player player, int page) {
         super(player);
         this.page = page;
-        setNpcId(NPC_ID);
-        start();
+        build();
     }
 
-    /**
-     * Builds and sends the tier options for the current page. Any unused slots
-     * are filled with a red "Unavailable" placeholder to prevent blank lines.
-     */
-    public void start() {
+    private void build() {
+        List<AoeBossTierDef> tiers = AoeTierRepo.get();
         Player player = getPlayer();
-        BossTier[] tiers = BossTier.values();
-
-        // First page can show four tiers (one slot reserved for "More"),
-        // subsequent pages show three tiers because both navigation options
-        // may be present. Compute the starting index accordingly so tiers
-        // are not skipped.
-        int startIndex;
-        if (page == 0) {
-            startIndex = 0;
-        } else {
-            int firstPageCount = OPTIONS_PER_PAGE - 1; // 4 tiers on page 0
-            int subsequentPageCount = OPTIONS_PER_PAGE - 2; // 3 tiers when back+more are shown
-            startIndex = firstPageCount + (page - 1) * subsequentPageCount;
-        }
-
-        displayed.clear();
-
-        Misc.println("BossInstanceDialogue open page=" + page + " unlocked=" + player.getUnlockedBossTiers());
-
-        List<DialogueOption> opts = new ArrayList<>();
-
-        boolean addBack = page > 0;
-        boolean addMore = startIndex + OPTIONS_PER_PAGE < tiers.length;
-
-        int capacity = OPTIONS_PER_PAGE - (addBack ? 1 : 0) - (addMore ? 1 : 0);
-
-        for (int i = 0; i < capacity && startIndex + i < tiers.length; i++) {
-            BossTier tier = tiers[startIndex + i];
-            displayed.add(tier);
-            String label = buildTierLabel(player, tier);
-            final int slot = opts.size();
-            opts.add(new DialogueOption(label, p -> run(0, slot)));
-        }
-
-        if (addBack) {
-            displayed.add(null);
-            opts.add(new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, page - 1))));
-        }
-        if (addMore) {
-            displayed.add(null);
-            opts.add(new DialogueOption("More", p -> p.start(new BossInstanceDialogue(p, page + 1))));
-        }
-
-        String[] labels = opts.stream().map(DialogueOption::getTitle).toArray(String[]::new);
-        player.getDH().sendOptionDialogue("Choose a Boss Tier", labels);
-        option("Choose a Boss Tier", opts.toArray(new DialogueOption[0]));
-    }
-
-    /**
-     * Builds a safe, colour-coded label for a tier showing progress and key drops.
-     * <p>
-     * The resulting string is logged and truncated if it exceeds {@link #MAX_OPTION_LENGTH}
-     * to prevent invisible dialogue options.
-     * </p>
-     */
-    private String buildTierLabel(Player player, BossTier tier) {
-        if (tier == null) {
-            Misc.println("BossInstanceDialogue warning: null tier label");
-            return "@red@Unavailable";
-        }
-
-        String zone = tier.getZoneName();
-        if (zone == null || zone.trim().isEmpty()) {
-            zone = "Unknown Zone";
-            Misc.println("BossInstanceDialogue warning: missing zone name for " + tier);
-        }
-
-        // Sanitize the zone to avoid invisible or client-breaking characters.
-        zone = zone.replaceAll("[^\\p{ASCII}]", "");
-        zone = zone.replaceAll("[–—•]", "-");
-        StringBuilder label = new StringBuilder(BossInstanceManager.getTierDisplayNameSafe(tier, player));
-
-        // Append up to three key drop names
-        List<GameItem> drops = Server.getDropManager().getNPCdrops(tier.getBossNpcId());
-        if (drops != null && !drops.isEmpty()) {
-            String dropNames = drops.stream()
-                    .limit(3)
-                    .map(drop -> {
-                        ItemDef def = ItemDef.forId(drop.getId());
-                        return def != null ? def.getName() : "?";
-                    })
-                    .collect(Collectors.joining(", "));
-            if (!dropNames.isEmpty()) {
-                label.append(" - ").append(dropNames);
-            }
-        }
-
-        String result = label.toString();
-
-        // Strip any remaining non-ASCII characters after building the label.
-        result = result.replaceAll("[^\\p{ASCII}]", "");
-        result = result.replaceAll("[–—•]", "-");
-        if (result.length() > MAX_OPTION_LENGTH) {
-            Misc.println("BossInstanceDialogue truncating label for " + tier + " from " + result.length() + " chars: " + result);
-            result = result.substring(0, MAX_OPTION_LENGTH - 3) + "...";
-        }
-
-        Misc.println("BossInstanceDialogue option tier=" + tier + " zone=" + zone + " display=" + result);
-        return result;
-    }
-
-    /**
-     * Handles option selection. Slots map to the tiers displayed on the current page.
-     */
-    public void run(int interfaceId, int slot) {
-        Player player = getPlayer();
-        if (slot < 0 || slot >= displayed.size()) {
+        if (tiers.isEmpty()) {
+            String path = AoeBossTierLoader.defaultFile().toFile().getAbsolutePath();
+            logger.info("[AOE-DLG] open total=0 page=0/0 file={} exists={}", path, new File(path).exists());
+            player.start(new DialogueBuilder(player).statement(
+                    "No tiers configured (file: " + path + "). Use ::aoe tier reload."));
             return;
         }
-
-        BossTier tier = displayed.get(slot);
-        Misc.println("BossInstanceDialogue click slot=" + slot + " tier=" + (tier == null ? "null" : tier.name()));
-        if (tier == null) {
-            return; // placeholder option
+        int totalPages = computeTotalPages(tiers);
+        int startIndex = computeStartIndex(page, tiers);
+        boolean hasBack = page > 0;
+        int slots = OPTIONS_PER_PAGE - (hasBack ? 1 : 0);
+        boolean hasMore = startIndex + slots < tiers.size();
+        if (hasMore) {
+            slots--; // reserve slot for "More"
         }
+        logger.info("[AOE-DLG] open total={} page={}/{}", tiers.size(), page + 1, totalPages);
+        List<DialogueOption> options = new ArrayList<>();
+        for (int i = 0; i < slots && startIndex + i < tiers.size(); i++) {
+            AoeBossTierDef def = tiers.get(startIndex + i);
+            final int idx = startIndex + i;
+            options.add(new DialogueOption(optionLabel(player, def), p -> handleSelect(p, idx, def)));
+        }
+        if (hasBack) {
+            options.add(new DialogueOption("Back", p -> p.start(new BossInstanceDialogue(p, page - 1))));
+        }
+        if (hasMore) {
+            options.add(new DialogueOption("More", p -> p.start(new BossInstanceDialogue(p, page + 1))));
+        }
+        option("AOE Boss Tiers (Page " + (page + 1) + "/" + totalPages + ")",
+                options.toArray(new DialogueOption[0]));
+    }
 
-        if (player.getUnlockedBossTiers().contains(tier)) {
-            BossInstanceManager.enter(player, tier);
-            player.getPA().closeAllWindows();
+    private void handleSelect(Player player, int index, AoeBossTierDef t) {
+        String state = t.isDisabled() ? "Disabled" : (AoeTierController.isUnlocked(player, t.getTier()) ? "Unlocked" : "Locked");
+        logger.info("[AOE-DLG] select idx={} -> tier={} state={}", index, t.getTier(), state);
+        if (t.isDisabled()) {
+            player.sendMessage(safe(t.getDisabledReason()));
+            return;
+        }
+        if (!AoeTierController.isUnlocked(player, t.getTier())) {
+            int need = Math.max(0, t.getUnlockKills() - AoeTierController.getKillcount(player, t.getTier()));
+            player.sendMessage("You must kill " + need + " more to unlock this tier.");
+            return;
+        }
+        AoeTierController.startTier(player, t.getTier());
+        player.getPA().closeAllWindows();
+    }
+
+    private static int computeStartIndex(int page, List<AoeBossTierDef> tiers) {
+        int index = 0;
+        for (int p = 0; p < page && index < tiers.size(); p++) {
+            int slots = OPTIONS_PER_PAGE;
+            if (p > 0) {
+                slots--; // Back
+            }
+            if (index + slots < tiers.size()) {
+                slots--; // More
+            }
+            index += slots;
+        }
+        return index;
+    }
+
+    private static int computeTotalPages(List<AoeBossTierDef> tiers) {
+        int pages = 0;
+        int index = 0;
+        while (index < tiers.size()) {
+            int slots = OPTIONS_PER_PAGE;
+            if (pages > 0) {
+                slots--; // Back
+            }
+            if (index + slots < tiers.size()) {
+                slots--; // More
+            }
+            index += slots;
+            pages++;
+        }
+        return Math.max(pages, 1);
+    }
+
+    private static String optionLabel(Player p, AoeBossTierDef t) {
+        final String zone = safe(t.getZoneName());
+        final int tierNum = t.getTier();
+        if (t.isDisabled()) {
+            return "\u2716 T" + tierNum + " - " + zone + " [Disabled: " + safe(t.getDisabledReason()) + "]";
+        }
+        if (AoeTierController.isUnlocked(p, tierNum)) {
+            return "T" + tierNum + " - " + zone + " [Unlocked]";
         } else {
-            BossTier prev = Arrays.stream(BossTier.values()).filter(t -> t.getNextTier() == tier).findFirst().orElse(null);
-            int progress = prev != null ? player.getTierKillCounts().getOrDefault(prev, 0) : 0;
-            int required = prev != null ? prev.getRequiredKillCountToUnlockNext() : tier.getKillRequirement();
-            int remaining = Math.max(0, required - progress);
-            player.sendMessage("You must kill " + remaining + " more to unlock this tier.");
+            int need = Math.max(0, t.getUnlockKills() - AoeTierController.getKillcount(p, tierNum));
+            return "T" + tierNum + " - " + zone + " [Locked " + need + "]";
         }
+    }
+
+    private static String safe(String s) {
+        return (s == null || s.trim().isEmpty())
+                ? "Unknown"
+                : s.replace('–', '-');
     }
 }
