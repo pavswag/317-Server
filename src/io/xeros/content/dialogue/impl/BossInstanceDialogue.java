@@ -8,7 +8,6 @@ import io.xeros.content.instances.aoe.AoeTierController;
 import io.xeros.content.instances.aoe.AoeTierRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import io.xeros.model.entity.player.Player;
 
 import java.io.File;
@@ -120,6 +119,7 @@ public class BossInstanceDialogue extends DialogueBuilder {
             int remaining = Math.max(0, req - kc);
             player.sendMessage("You must kill " + remaining + " more to unlock this tier.");
         }
+        return name.replaceAll("[^\\p{ASCII}]", "");
     }
 
     private String optionLabel(Player player, AoeBossTierDef def) {
