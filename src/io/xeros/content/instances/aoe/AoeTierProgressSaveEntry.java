@@ -17,6 +17,12 @@ public class AoeTierProgressSaveEntry implements PlayerSaveEntry {
 
     @Override
     public List<String> getKeys(Player player) {
+        // Ensure tier definitions are loaded so we enumerate all kill-count keys
+        // even on first login when the repository may still be empty.
+        if (AoeTierRepo.size() == 0) {
+            AoeBossTierLoader.loadAllOrWarn("player-save");
+        }
+
         List<String> keys = new ArrayList<>();
         keys.add(UNLOCKED_KEY);
         for (AoeBossTierDef def : AoeTierRepo.get()) {
