@@ -16,7 +16,7 @@ import io.xeros.content.combat.weapon.AttackStyle;
 import io.xeros.content.combat.weapon.RangedWeaponType;
 import io.xeros.content.items.Degrade;
 import io.xeros.content.items.PvpWeapons;
-import io.xeros.content.items.WraithWeaponCharge;
+import io.xeros.content.wraith.WraithCharges;
 import io.xeros.content.items.aoeweapons.AOESystem;
 import io.xeros.content.items.aoeweapons.AoeManager;
 import io.xeros.content.items.aoeweapons.AoeWeapons;
@@ -653,8 +653,8 @@ public class AttackEntity {
         Degrade.degrade(attacker, getCombatType(), true);
         attacker.getCombatItems().checkVenomousItems(targetEntity);
         attacker.getCombatItems().checkDemonItems();
-        if (WraithWeaponCharge.isWraithWeapon(attacker.playerEquipment[Player.playerWeapon])) {
-            WraithWeaponCharge.consumeCharge(attacker, attacker.playerEquipment[Player.playerWeapon]);
+        if (WraithCharges.isWraithWeapon(attacker.playerEquipment[Player.playerWeapon])) {
+            WraithCharges.consumeCharge(attacker, attacker.playerEquipment[Player.playerWeapon]);
         }
 
         if (!attacker.usingMagic) {
@@ -1054,17 +1054,17 @@ public class AttackEntity {
         }
 
         int weapon = attacker.playerEquipment[Player.playerWeapon];
-        if (weapon == WraithWeaponCharge.WRAITH_SCYTHE && attacker.getWraithScytheCharge() <= 0) {
+        if (weapon == WraithCharges.WRAITH_SCYTHE && attacker.getWraithScytheCharge() <= 0) {
             attacker.sendMessage("Your Wraith Scythe has no charges and cannot be used. Recharge it with Wraith Essence.");
             attacker.attacking.reset();
             return false;
         }
-        if (weapon == WraithWeaponCharge.WRAITH_STAFF && attacker.getWraithStaffCharge() <= 0) {
+        if (weapon == WraithCharges.WRAITH_STAFF && attacker.getWraithStaffCharge() <= 0) {
             attacker.sendMessage("Your Wraith Staff has no charges and cannot be used. Recharge it with Wraith Essence.");
             attacker.attacking.reset();
             return false;
         }
-        if (weapon == WraithWeaponCharge.WRAITH_BOW && attacker.getWraithBowCharge() <= 0) {
+        if (weapon == WraithCharges.WRAITH_BOW && attacker.getWraithBowCharge() <= 0) {
             attacker.sendMessage("Your Wraith Bow has no charges and cannot be used. Recharge it with Wraith Essence.");
             attacker.attacking.reset();
             return false;
