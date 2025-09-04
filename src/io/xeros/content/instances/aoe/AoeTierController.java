@@ -45,6 +45,11 @@ public class AoeTierController {
         player.getAttributes().setInt(ATTR_UNLOCKED, tier);
     }
 
+    /** Sets the kill count for the given tier. */
+    public static void setKillCount(Player player, int tier, int count) {
+        player.getAttributes().setInt(kcKey(tier), count);
+    }
+
     public static void incrementKill(Player player, int tier) {
         int kc = getKillCount(player, tier) + 1;
         player.getAttributes().setInt(kcKey(tier), kc);

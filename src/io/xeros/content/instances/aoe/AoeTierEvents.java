@@ -26,6 +26,7 @@ public class AoeTierEvents {
                     player.addDemonHunterXP(r.getFortuneXpPerKill());
                 }
             });
+            AoeTierController.endTier(player, true);
         }
     }
 }

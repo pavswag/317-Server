@@ -148,5 +148,11 @@ public class BossInstanceDialogue extends DialogueBuilder {
                 ? "Unknown"
                 : name.replace('–', '-');
     }
+
+    private static String safe(String s) {
+        return (s == null || s.trim().isEmpty())
+                ? "Unknown"
+                : s.replace('–', '-');
+    }
 }
 
