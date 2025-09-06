@@ -23,7 +23,7 @@ import java.util.List;
 public class AoeBossTierLoader {
 
     private static final Logger logger = LoggerFactory.getLogger(AoeBossTierLoader.class);
-    private static final Path FILE = Paths.get("data/aoe/aoe_boss_tiers.json");
+    private static final Path FILE = Paths.get("data/aoe_tiers.json");
     private static final Gson GSON = new Gson();
 
     static {
@@ -119,6 +119,9 @@ public class AoeBossTierLoader {
         boss.npcId = resolveNpcIdByName("Unicow");
         placeholder.boss = boss;
         placeholder.minions = Collections.emptyList();
+        placeholder.templateRegionId = 12889;
+        placeholder.spawnOffsetX = 5;
+        placeholder.spawnOffsetY = 5;
         placeholder.aggroRange = 10;
         placeholder.respawnSeconds = 25;
         placeholder.rewards = new AoeBossTierDef.Rewards();

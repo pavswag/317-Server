@@ -79,7 +79,15 @@ public class AoeTierController {
         }
         player.getAttributes().setInt(ATTR_ACTIVE, tier);
         player.getAttributes().set(ATTR_TRACKER, new AoeRewardTracker());
-        Position centre = new Position(player.absX, player.absY, player.heightLevel);
+
+        int height = AoeInstanceService.allocateHeight("aoe-" + tier);
+        if (!AoeInstanceService.buildDynamicRegion(def, height)) {
+            player.sendMessage("AOE: Map failed to load for this tier. Try again shortly.");
+            return List.of();
+        }
+        int[] spawn = AoeInstanceService.computeSpawn(def, height);
+        AoeInstanceService.teleportIntoInstance(player, spawn[0], spawn[1], height);
+        Position centre = new Position(spawn[0], spawn[1], height);
         return AoeBossSpawner.spawn(player, def, centre);
     }
 
