@@ -38,6 +38,7 @@ import io.xeros.content.combat.core.AttackEntity;
 import io.xeros.content.combat.death.PlayerDeath;
 import io.xeros.content.combat.effects.damageeffect.impl.amuletofthedamned.impl.ToragsEffect;
 import io.xeros.content.combat.formula.MeleeMaxHit;
+import io.xeros.content.instances.aoe.AoeTierController;
 import io.xeros.content.combat.magic.CombatSpellData;
 import io.xeros.content.instances.BossInstanceManager;
 import io.xeros.content.combat.melee.CombatPrayer;
@@ -1854,6 +1855,7 @@ public class Player extends Entity implements IHazardReactive {
         if (destructed)
             return;
         BossInstanceManager.leave(this);
+        AoeTierController.endTier(this, false);
         destructed = true;
         getPA().sendLogout();
 
