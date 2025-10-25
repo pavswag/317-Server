@@ -1,6 +1,7 @@
 package io.xeros.content.instances.aoe;
 
 import io.xeros.content.commands.Command;
+import io.xeros.content.instances.aoe.AoeTierController;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Right;
 import java.util.Optional;
@@ -34,18 +35,7 @@ public class AoeDebug extends Command {
                     return;
                 }
                 int t = Integer.parseInt(parts[1]);
-                AoeBossTierDef def = AoeBossTierLoader.getTier(t);
-                if (def == null) {
-                    player.sendMessage("Unknown tier " + t);
-                    return;
-                }
-                int height = AoeInstanceService.allocateHeight("dbg-" + t);
-                if (!AoeInstanceService.buildDynamicRegion(def, height)) {
-                    player.sendMessage("Map build failed");
-                    return;
-                }
-                int[] pos = AoeInstanceService.computeSpawn(def, height);
-                AoeInstanceService.teleportIntoInstance(player, pos[0], pos[1], height);
+                AoeTierController.startTier(player, t);
                 break;
             case "reload":
                 if (!Right.ADMINISTRATOR.isOrInherits(player)) {

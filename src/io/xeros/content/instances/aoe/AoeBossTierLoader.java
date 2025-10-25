@@ -114,6 +114,7 @@ public class AoeBossTierLoader {
         placeholder.tier = 1;
         placeholder.zoneName = "Unicow Pasture";
         placeholder.unlockKills = 10;
+        placeholder.mapId = "T1";
         AoeBossTierDef.Npc boss = new AoeBossTierDef.Npc();
         boss.name = "Unicow";
         boss.npcId = resolveNpcIdByName("Unicow");

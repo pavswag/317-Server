@@ -28,6 +28,7 @@ public class AoeBossTierDef {
     }
 
     public int tier;
+    public String mapId;
     public String zoneName;
     public int unlockKills;
     public Grid aoeGrid;
@@ -59,6 +60,18 @@ public class AoeBossTierDef {
 
     public String getZoneName() {
         return zoneName;
+    }
+
+    public String getMapId() {
+        return mapId;
+    }
+
+    /** Returns the identifier used to look up the map template for this tier. */
+    public String resolveMapId() {
+        if (mapId != null && !mapId.isBlank()) {
+            return mapId;
+        }
+        return "T" + tier;
     }
 
     public int getUnlockKills() {

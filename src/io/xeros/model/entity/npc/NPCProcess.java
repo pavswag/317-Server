@@ -18,6 +18,7 @@ import io.xeros.content.combat.death.NPCDeath;
 import io.xeros.content.commands.admin.dboss;
 import io.xeros.content.commands.moderator.vboss;
 import io.xeros.content.globalboss.*;
+import io.xeros.content.instances.aoe.AoeNpcSpawner;
 import io.xeros.content.minigames.inferno.AncestralGlyph;
 import io.xeros.content.minigames.inferno.InfernoWaveData;
 import io.xeros.content.minigames.rfd.DisposeTypes;
@@ -668,6 +669,7 @@ public class NPCProcess {
                     npcHandler.resetPlayersInCombat(i);
                 }
             } else if (npc.actionTimer == 0 && npc.applyDead && !npc.needRespawn) {
+                AoeNpcSpawner.onNpcDeath(npc);
                 int killerIndex = npc.killedBy;
                 if (npc.getNpcId() == 5126) {
                     vboss.handleRewards();
