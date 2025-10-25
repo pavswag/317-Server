@@ -123,7 +123,6 @@ public class AoeTierController {
         player.getAttributes().remove(ATTR_TRACKER);
         player.getAttributes().removeInt(ATTR_ACTIVE);
         AoeTierRepo.instanceForPlayer(player).ifPresent(instance -> {
-            AoeTierRepo.dissociatePlayer(player);
             INSTANCE_SERVICE.teardown(instance);
         });
         player.getAttributes().remove(ATTR_INSTANCE);

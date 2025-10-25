@@ -6,11 +6,8 @@ import io.xeros.util.MapBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /**
@@ -63,16 +60,14 @@ public class AoeInstanceService {
         int spawnY = spawn != null ? spawn.getY() : baseY + 4;
         int spawnZ = spawn != null ? z + spawn.getZ() : z;
 
-        Set<Integer> playerPids = Collections.newSetFromMap(new ConcurrentHashMap<>());
-        AoeInstance instance = new AoeInstance(UUID.randomUUID(), tier, baseX, baseY, z, player.getIndex(), reservedHeight, playerPids);
-        playerPids.add(player.getIndex());
+        AoeInstance instance = new AoeInstance(UUID.randomUUID(), tier, baseX, baseY, z, player.getIndex(), reservedHeight);
         AoeTierRepo.registerInstance(player, instance);
 
         player.attacking.reset();
         player.getPA().movePlayer(spawnX, spawnY, spawnZ);
         player.getPA().requestUpdates();
 
-        AoeNpcSpawner.spawnForInstance(instance, map);
+        AoeNpcSpawner.spawnForInstance(player, instance, map);
 
         logger.info("[AOE-MAP] player={} entered instance={} tier={} spawn=({},{}.{})", player.getLoginName(), instance.id(),
                 tier.getTier(), spawnX, spawnY, spawnZ);
@@ -102,9 +97,6 @@ public class AoeInstanceService {
         } finally {
             InstanceHeight.free(instance.reservedHeight());
             AoeTierRepo.clearInstance(instance.id());
-            if (instance.playerPids() != null) {
-                instance.playerPids().clear();
-            }
         }
     }
 }

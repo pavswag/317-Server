@@ -5,15 +5,8 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 3601,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 2
-        }
+      "npcs": [
+        { "id": 3601, "x": 2282, "y": 4770, "z": 0, "radius": 6 }
       ]
     },
     {
@@ -21,39 +14,11 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 2215,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 2216,
-          "box": { "x1": 2284, "y1": 4772, "x2": 2284, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 2217,
-          "box": { "x1": 2280, "y1": 4772, "x2": 2280, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 2218,
-          "box": { "x1": 2282, "y1": 4768, "x2": 2282, "y2": 4768 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        }
+      "npcs": [
+        { "id": 2215, "x": 2282, "y": 4770, "z": 0, "radius": 6 },
+        { "id": 2216, "x": 2284, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 2217, "x": 2280, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 2218, "x": 2282, "y": 4768, "z": 0, "radius": 4 }
       ]
     },
     {
@@ -61,39 +26,11 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 3129,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 3130,
-          "box": { "x1": 2284, "y1": 4772, "x2": 2284, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 3131,
-          "box": { "x1": 2280, "y1": 4772, "x2": 2280, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 3132,
-          "box": { "x1": 2282, "y1": 4768, "x2": 2282, "y2": 4768 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        }
+      "npcs": [
+        { "id": 3129, "x": 2282, "y": 4770, "z": 0, "radius": 6 },
+        { "id": 3130, "x": 2284, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 3131, "x": 2280, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 3132, "x": 2282, "y": 4768, "z": 0, "radius": 4 }
       ]
     },
     {
@@ -101,39 +38,11 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 2205,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 2208,
-          "box": { "x1": 2284, "y1": 4772, "x2": 2284, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 2206,
-          "box": { "x1": 2280, "y1": 4772, "x2": 2280, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 2207,
-          "box": { "x1": 2282, "y1": 4768, "x2": 2282, "y2": 4768 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        }
+      "npcs": [
+        { "id": 2205, "x": 2282, "y": 4770, "z": 0, "radius": 6 },
+        { "id": 2208, "x": 2284, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 2206, "x": 2280, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 2207, "x": 2282, "y": 4768, "z": 0, "radius": 4 }
       ]
     },
     {
@@ -141,39 +50,11 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 3162,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 3165,
-          "box": { "x1": 2284, "y1": 4772, "x2": 2284, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 3164,
-          "box": { "x1": 2280, "y1": 4772, "x2": 2280, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 3163,
-          "box": { "x1": 2282, "y1": 4768, "x2": 2282, "y2": 4768 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        }
+      "npcs": [
+        { "id": 3162, "x": 2282, "y": 4770, "z": 0, "radius": 6 },
+        { "id": 3165, "x": 2284, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 3164, "x": 2280, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 3163, "x": 2282, "y": 4768, "z": 0, "radius": 4 }
       ]
     },
     {
@@ -181,31 +62,10 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 2266,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 2267,
-          "box": { "x1": 2284, "y1": 4772, "x2": 2284, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        },
-        {
-          "npcId": 2265,
-          "box": { "x1": 2280, "y1": 4772, "x2": 2280, "y2": 4772 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 4,
-          "wanderRadius": 3
-        }
+      "npcs": [
+        { "id": 2266, "x": 2282, "y": 4770, "z": 0, "radius": 6 },
+        { "id": 2267, "x": 2284, "y": 4772, "z": 0, "radius": 4 },
+        { "id": 2265, "x": 2280, "y": 4772, "z": 0, "radius": 4 }
       ]
     },
     {
@@ -213,15 +73,8 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 963,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 2
-        }
+      "npcs": [
+        { "id": 963, "x": 2282, "y": 4770, "z": 0, "radius": 6 }
       ]
     },
     {
@@ -229,15 +82,8 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 239,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 2
-        }
+      "npcs": [
+        { "id": 239, "x": 2282, "y": 4770, "z": 0, "radius": 6 }
       ]
     },
     {
@@ -245,15 +91,8 @@
       "source": { "fromX": 2272, "fromY": 4760, "width": 3, "height": 3, "z": 0 },
       "target": { "baseX": 2272, "baseY": 4760, "z": 0 },
       "spawn":  { "x": 2282, "y": 4770, "z": 0 },
-      "groups": [
-        {
-          "npcId": 2054,
-          "box": { "x1": 2282, "y1": 4770, "x2": 2282, "y2": 4770 },
-          "count": 1,
-          "respawnTicks": 50,
-          "agroRadius": 6,
-          "wanderRadius": 2
-        }
+      "npcs": [
+        { "id": 2054, "x": 2282, "y": 4770, "z": 0, "radius": 6 }
       ]
     }
   ]
