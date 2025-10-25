@@ -70,17 +70,28 @@ public class BossInstanceDialogue extends DialogueBuilder {
     }
 
     private void handleSelect(Player player, int index, AoeBossTierDef t) {
-        String state = t.isDisabled() ? "Disabled" : (AoeTierController.isUnlocked(player, t.getTier()) ? "Unlocked" : "Locked");
+        String state;
+        if (t.isDisabled()) {
+            state = "Disabled";
+        } else if (AoeTierController.isUnlocked(player, t.getTier())) {
+            state = "Unlocked";
+        } else {
+            state = "Locked";
+        }
+
         logger.info("[AOE-DLG] select idx={} -> tier={} state={}", index, t.getTier(), state);
+
         if (t.isDisabled()) {
             player.sendMessage(safe(t.getDisabledReason()));
             return;
         }
+
         if (!AoeTierController.isUnlocked(player, t.getTier())) {
             int need = Math.max(0, t.getUnlockKills() - AoeTierController.getKillcount(player, t.getTier()));
             player.sendMessage("You must kill " + need + " more to unlock this tier.");
             return;
         }
+
         AoeTierController.startTier(player, t.getTier());
         player.getPA().closeAllWindows();
     }
@@ -125,46 +136,16 @@ public class BossInstanceDialogue extends DialogueBuilder {
         }
         if (AoeTierController.isUnlocked(p, tierNum)) {
             return "T" + tierNum + " - " + zone + " [Unlocked]";
-        } else {
-            int need = Math.max(0, t.getUnlockKills() - AoeTierController.getKillcount(p, tierNum));
-            return "T" + tierNum + " - " + zone + " [Locked " + need + "]";
         }
-        return name.replaceAll("[^\\p{ASCII}]", "");
+        int need = Math.max(0, t.getUnlockKills() - AoeTierController.getKillcount(p, tierNum));
+        return "T" + tierNum + " - " + zone + " [Locked " + need + "]";
     }
 
-    private static String safe(String s) {
-        return (s == null || s.trim().isEmpty()) ? "Unknown" : s.replace('–', '-');
-    }
-
-    private static String safe(String name) {
-        if (name == null || name.trim().isEmpty()) {
+    private static String safe(String value) {
+        if (value == null || value.trim().isEmpty()) {
             return "Unknown";
         }
-        return name.replaceAll("[^\\p{ASCII}]", "").replace('–', '-');
-    }
-
-    private static String safe(String name) {
-        return (name == null || name.trim().isEmpty())
-                ? "Unknown"
-                : name.replace('–', '-');
-    }
-
-    private static String safe(String s) {
-        return (s == null || s.trim().isEmpty())
-                ? "Unknown"
-                : s.replace('–', '-');
-    }
-
-    private static String safe(String s) {
-        return (s == null || s.trim().isEmpty())
-                ? "Unknown"
-                : s.replace('–', '-');
-    }
-
-    private static String safe(String s) {
-        return (s == null || s.trim().isEmpty())
-                ? "Unknown"
-                : s.replace('–', '-');
+        return value.replaceAll("[^\\p{ASCII}]", "").replace('–', '-');
     }
 }
 
