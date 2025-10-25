@@ -34,7 +34,7 @@ public class AoeDebug extends Command {
                     return;
                 }
                 int t = Integer.parseInt(parts[1]);
-                AoeBossTierDef def = AoeTierRepo.byTier(t);
+                AoeBossTierDef def = AoeBossTierLoader.getTier(t);
                 if (def == null) {
                     player.sendMessage("Unknown tier " + t);
                     return;
