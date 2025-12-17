@@ -9,7 +9,6 @@ import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.items.GameItem;
 import io.xeros.util.Misc;
-import lombok.Getter;
 import org.apache.commons.lang3.Range;
 
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import java.util.Random;
 @SuppressWarnings("serial")
 public class TableGroup extends ArrayList<Table> {
 
-    @Getter
     private final List<Integer> npcIds;
 
     /**

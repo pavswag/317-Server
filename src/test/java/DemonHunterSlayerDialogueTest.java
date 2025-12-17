@@ -8,6 +8,7 @@ import io.xeros.content.skills.slayer.DemonHunterTaskOverlayManager;
 import io.xeros.content.skills.slayer.DemonSlayerMaster;
 import io.xeros.model.entity.player.Player;
 import io.xeros.model.entity.player.Right;
+import io.xeros.model.entity.player.RightGroup;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedConstruction;
@@ -27,7 +28,7 @@ public class DemonHunterSlayerDialogueTest {
     @Test
     void backToMenuDisplaysAndReturns() throws Exception {
         Player player = mock(Player.class);
-        when(player.getRights()).thenReturn(Right.PLAYER);
+        when(player.getRights()).thenReturn(new RightGroup(player, Right.PLAYER));
 
         ArgumentCaptor<DialogueBuilder> captor = ArgumentCaptor.forClass(DialogueBuilder.class);
         DemonHunterSlayerDialogue.showMainMenu(player);
@@ -58,7 +59,7 @@ public class DemonHunterSlayerDialogueTest {
     @Test
     void viewTaskAssignsWhenMissing() throws Exception {
         Player player = mock(Player.class);
-        when(player.getRights()).thenReturn(Right.PLAYER);
+        when(player.getRights()).thenReturn(new RightGroup(player, Right.PLAYER));
         DemonSlayerMaster.DemonSlayerTask task = mock(DemonSlayerMaster.DemonSlayerTask.class);
         when(player.getDemonHunterTask()).thenReturn(Optional.empty(), Optional.of(task));
 
