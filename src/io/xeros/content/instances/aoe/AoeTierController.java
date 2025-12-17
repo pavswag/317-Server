@@ -81,7 +81,7 @@ public class AoeTierController {
         INSTANCE_SERVICE.buildAndEnter(player, def, instance -> {
             player.getAttributes().setInt(ATTR_ACTIVE, tier);
             player.getAttributes().set(ATTR_TRACKER, new AoeRewardTracker());
-            player.getAttributes().set(ATTR_INSTANCE, instance.getId());
+            player.getAttributes().set(ATTR_INSTANCE, instance.id());
             player.sendMessage("AOE Tier " + tier + " — Type ::leaveaoe to exit.");
         }, error -> {
             player.sendMessage("AOE build failed: " + error);
@@ -123,7 +123,6 @@ public class AoeTierController {
         player.getAttributes().remove(ATTR_TRACKER);
         player.getAttributes().removeInt(ATTR_ACTIVE);
         AoeTierRepo.instanceForPlayer(player).ifPresent(instance -> {
-            AoeTierRepo.dissociatePlayer(player);
             INSTANCE_SERVICE.teardown(instance);
         });
         player.getAttributes().remove(ATTR_INSTANCE);

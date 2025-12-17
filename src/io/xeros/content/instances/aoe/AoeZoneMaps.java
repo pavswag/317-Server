@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class AoeZoneMaps {
 
     private static final Logger logger = LoggerFactory.getLogger(AoeZoneMaps.class);
-    private static final Path FILE = Paths.get("data/aoe/AoeZoneMapConfig.json");
+    private static final Path FILE = Path.of("data/aoe/AoeZoneMapConfig.json");
     private static final Map<String, AoeZoneMapDef> MAPS = new ConcurrentHashMap<>();
 
     private AoeZoneMaps() {}
@@ -60,7 +59,7 @@ public final class AoeZoneMaps {
     }
 
     public static Optional<AoeZoneMapDef> forId(String id) {
-        if (id == null || id.trim().isEmpty()) {
+        if (id == null || id.isBlank()) {
             return Optional.empty();
         }
         return Optional.ofNullable(MAPS.get(normalize(id)));

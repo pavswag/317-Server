@@ -1,7 +1,6 @@
 package io.xeros.content.commands.admin;
 
 import io.xeros.content.commands.Command;
-import io.xeros.content.instances.aoe.AoeInstance;
 import io.xeros.content.instances.aoe.AoeNpcSpawner;
 import io.xeros.content.instances.aoe.AoeTierRepo;
 import io.xeros.model.entity.player.Player;
@@ -17,8 +16,8 @@ public class Killallaoe extends Command {
             player.sendMessage("This command is for admins only.");
             return;
         }
-        Optional<AoeInstance> instOpt = AoeTierRepo.instanceForPlayer(player);
-        if (!instOpt.isPresent()) {
+        var instOpt = AoeTierRepo.instanceForPlayer(player);
+        if (instOpt.isEmpty()) {
             player.sendMessage("You are not inside an AOE instance.");
             return;
         }

@@ -12,7 +12,7 @@ public class Leaveaoe extends Command {
 
     @Override
     public void execute(Player player, String commandName, String input) {
-        if (!AoeTierRepo.instanceForPlayer(player).isPresent()) {
+        if (AoeTierRepo.instanceForPlayer(player).isEmpty()) {
             player.sendMessage("You are not inside an AOE instance.");
             return;
         }

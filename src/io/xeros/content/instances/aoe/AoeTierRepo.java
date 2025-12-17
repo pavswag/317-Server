@@ -59,33 +59,9 @@ public class AoeTierRepo {
         if (player == null || instance == null) {
             return;
         }
-        INSTANCES.put(instance.getId(), instance);
-        associatePlayer(player, instance);
-        logger.info("[AOE] Instance registered id={} tier={} player={}", instance.getId(), instance.getTier().getTier(), player.getLoginName());
-    }
-
-    public static void associatePlayer(Player player, AoeInstance instance) {
-        if (player == null || instance == null) {
-            return;
-        }
-        if (instance.getPlayerPids() != null) {
-            instance.getPlayerPids().add(player.getIndex());
-        }
-        PLAYER_TO_INSTANCE.put(player.getIndex(), instance.getId());
-    }
-
-    public static void dissociatePlayer(Player player) {
-        if (player == null) {
-            return;
-        }
-        UUID id = PLAYER_TO_INSTANCE.remove(player.getIndex());
-        if (id == null) {
-            return;
-        }
-        AoeInstance instance = INSTANCES.get(id);
-        if (instance != null && instance.getPlayerPids() != null) {
-            instance.getPlayerPids().remove(player.getIndex());
-        }
+        INSTANCES.put(instance.id(), instance);
+        PLAYER_TO_INSTANCE.put(player.getIndex(), instance.id());
+        logger.info("[AOE] Instance registered id={} tier={} player={}", instance.id(), instance.tier().getTier(), player.getLoginName());
     }
 
     public static Optional<AoeInstance> instanceForPlayer(Player player) {
@@ -110,24 +86,19 @@ public class AoeTierRepo {
         if (player == null) {
             return;
         }
-        dissociatePlayer(player);
+        UUID id = PLAYER_TO_INSTANCE.remove(player.getIndex());
+        if (id != null) {
+            INSTANCES.remove(id);
+            logger.info("[AOE] Cleared instance {} for player {}", id, player.getLoginName());
+        }
     }
 
     public static void clearInstance(UUID id) {
         if (id == null) {
             return;
         }
-        AoeInstance instance = INSTANCES.remove(id);
-        if (instance != null && instance.getPlayerPids() != null) {
-            for (Integer pid : instance.getPlayerPids()) {
-                if (pid != null) {
-                    PLAYER_TO_INSTANCE.remove(pid, id);
-                }
-            }
-            instance.getPlayerPids().clear();
-        } else {
-            PLAYER_TO_INSTANCE.values().removeIf(uuid -> uuid.equals(id));
-        }
+        INSTANCES.remove(id);
+        PLAYER_TO_INSTANCE.values().removeIf(uuid -> uuid.equals(id));
         logger.info("[AOE] Cleared instance {} (no player context)", id);
     }
 }

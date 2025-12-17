@@ -15,7 +15,7 @@ public class Testaoe extends Command {
             player.sendMessage("This command is for admins only.");
             return;
         }
-        if (input == null || input.trim().isEmpty()) {
+        if (input == null || input.isBlank()) {
             player.sendMessage("Usage: ::testaoe <tier>");
             return;
         }
