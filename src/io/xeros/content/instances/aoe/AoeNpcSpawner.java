@@ -383,36 +383,45 @@ public final class AoeNpcSpawner {
     }
 
     private static List<AoeZoneInstance.SpawnPoint> assignSpawnPoints(AoeZoneDefinition def) {
-        List<AoeZoneInstance.SpawnPoint> points = new ArrayList<>();
-        int total = def.getSpawns().stream().mapToInt(AoeZoneDefinition.SpawnTemplate::getCount).sum();
+        List<Integer> npcIds = new ArrayList<>();
+        for (AoeZoneDefinition.SpawnTemplate spawn : def.getSpawns()) {
+            for (int i = 0; i < spawn.getCount(); i++) {
+                npcIds.add(spawn.getNpcId());
+            }
+        }
+
+        if (npcIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         int rows = Math.max(1, def.getRows());
         int cols = Math.max(1, def.getCols());
+        int total = npcIds.size();
+        if (rows <= 0 || cols <= 0) {
+            int side = (int) Math.ceil(Math.sqrt(total));
+            rows = side;
+            cols = side;
+        }
         if (rows * cols < total) {
             rows = (int) Math.ceil((double) total / cols);
+            if (rows * cols < total) {
+                cols = (int) Math.ceil((double) total / rows);
+            }
         }
+
         int startX = def.getCenterX() - ((cols - 1) * def.getSpacing()) / 2;
         int startY = def.getCenterY() - ((rows - 1) * def.getSpacing()) / 2;
 
-        Iterator<AoeZoneDefinition.SpawnTemplate> templateIter = def.getSpawns().iterator();
-        AoeZoneDefinition.SpawnTemplate current = templateIter.hasNext() ? templateIter.next() : null;
-        int remainingFromCurrent = current != null ? current.getCount() : 0;
-
-        for (int i = 0; i < total; i++) {
+        List<AoeZoneInstance.SpawnPoint> points = new ArrayList<>(total);
+        for (int i = 0; i < npcIds.size(); i++) {
             int row = i / cols;
             int col = i % cols;
             int candidateX = startX + col * def.getSpacing();
             int candidateY = startY + row * def.getSpacing();
             Position tile = findValidTile(def, candidateX, candidateY);
-            if (current == null) {
-                break;
-            }
-            points.add(new AoeZoneInstance.SpawnPoint(tile.getX(), tile.getY(), tile.getHeight(), current.getNpcId()));
-            remainingFromCurrent--;
-            if (remainingFromCurrent <= 0 && templateIter.hasNext()) {
-                current = templateIter.next();
-                remainingFromCurrent = current.getCount();
-            }
+            points.add(new AoeZoneInstance.SpawnPoint(tile.getX(), tile.getY(), tile.getHeight(), npcIds.get(i)));
         }
+
         return points;
     }
 
