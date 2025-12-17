@@ -103,11 +103,19 @@ public class AoeZoneInstance {
         return pendingRespawn;
     }
 
+    public void addSpawnPoint(SpawnPoint spawn) {
+        if (spawn != null) {
+            spawnPoints.add(spawn);
+        }
+    }
+
     public void registerSpawn(SpawnPoint spawn, NPC npc) {
-        if (npc == null) {
+        if (npc == null || spawn == null) {
             return;
         }
-        spawnPoints.add(spawn);
+        if (!spawnPoints.contains(spawn)) {
+            spawnPoints.add(spawn);
+        }
         liveNpcs.put(spawn, npc.getIndex());
     }
 }
