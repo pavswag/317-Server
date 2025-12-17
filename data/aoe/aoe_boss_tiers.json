@@ -3,118 +3,291 @@
     "tier": 1,
     "zoneName": "Unicow Pasture",
     "unlockKills": 10,
-    "aoeGrid": {"rows": 2, "cols": 2, "spacing": 3},
+    "aoeGrid": {
+      "rows": 2,
+      "cols": 2,
+      "spacing": 3
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "Unicow", "npcId": 3601},
+    "boss": {
+      "name": "Unicow",
+      "npcId": 3601
+    },
     "minions": [],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T1"
   },
   {
     "tier": 2,
     "zoneName": "Bandos Stronghold",
     "unlockKills": 25,
-    "aoeGrid": {"rows": 2, "cols": 2, "spacing": 3},
+    "aoeGrid": {
+      "rows": 2,
+      "cols": 2,
+      "spacing": 3
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "General Graardor", "npcId": 2215},
+    "boss": {
+      "name": "General Graardor",
+      "npcId": 2215
+    },
     "minions": [
-      {"name": "Sergeant Strongstack", "npcId": 2216, "count": 1},
-      {"name": "Sergeant Steelwill", "npcId": 2217, "count": 1},
-      {"name": "Sergeant Grimspike", "npcId": 2218, "count": 1}
+      {
+        "name": "Sergeant Strongstack",
+        "npcId": 2216,
+        "count": 1
+      },
+      {
+        "name": "Sergeant Steelwill",
+        "npcId": 2217,
+        "count": 1
+      },
+      {
+        "name": "Sergeant Grimspike",
+        "npcId": 2218,
+        "count": 1
+      }
     ],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T2"
   },
   {
     "tier": 3,
     "zoneName": "Zamorak Fortress",
     "unlockKills": 35,
-    "aoeGrid": {"rows": 2, "cols": 2, "spacing": 3},
+    "aoeGrid": {
+      "rows": 2,
+      "cols": 2,
+      "spacing": 3
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "K'ril Tsutsaroth", "npcId": 3129},
+    "boss": {
+      "name": "K'ril Tsutsaroth",
+      "npcId": 3129
+    },
     "minions": [
-      {"name": "Tstanon Karlak", "npcId": 3130, "count": 1},
-      {"name": "Zakl'n Gritch", "npcId": 3131, "count": 1},
-      {"name": "Balfrug Kreeyath", "npcId": 3132, "count": 1}
+      {
+        "name": "Tstanon Karlak",
+        "npcId": 3130,
+        "count": 1
+      },
+      {
+        "name": "Zakl'n Gritch",
+        "npcId": 3131,
+        "count": 1
+      },
+      {
+        "name": "Balfrug Kreeyath",
+        "npcId": 3132,
+        "count": 1
+      }
     ],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T3"
   },
   {
     "tier": 4,
     "zoneName": "Saradomin Encampment",
     "unlockKills": 45,
-    "aoeGrid": {"rows": 2, "cols": 2, "spacing": 3},
+    "aoeGrid": {
+      "rows": 2,
+      "cols": 2,
+      "spacing": 3
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "Commander Zilyana", "npcId": 2205},
+    "boss": {
+      "name": "Commander Zilyana",
+      "npcId": 2205
+    },
     "minions": [
-      {"name": "Bree", "npcId": 2208, "count": 1},
-      {"name": "Starlight", "npcId": 2206, "count": 1},
-      {"name": "Growler", "npcId": 2207, "count": 1}
+      {
+        "name": "Bree",
+        "npcId": 2208,
+        "count": 1
+      },
+      {
+        "name": "Starlight",
+        "npcId": 2206,
+        "count": 1
+      },
+      {
+        "name": "Growler",
+        "npcId": 2207,
+        "count": 1
+      }
     ],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T4"
   },
   {
     "tier": 5,
     "zoneName": "Armadyl Eyrie",
     "unlockKills": 55,
-    "aoeGrid": {"rows": 2, "cols": 2, "spacing": 3},
+    "aoeGrid": {
+      "rows": 2,
+      "cols": 2,
+      "spacing": 3
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "Kree'arra", "npcId": 3162},
+    "boss": {
+      "name": "Kree'arra",
+      "npcId": 3162
+    },
     "minions": [
-      {"name": "Flight Kilisa", "npcId": 3165, "count": 1},
-      {"name": "Flockleader Geerin", "npcId": 3164, "count": 1},
-      {"name": "Wingman Skree", "npcId": 3163, "count": 1}
+      {
+        "name": "Flight Kilisa",
+        "npcId": 3165,
+        "count": 1
+      },
+      {
+        "name": "Flockleader Geerin",
+        "npcId": 3164,
+        "count": 1
+      },
+      {
+        "name": "Wingman Skree",
+        "npcId": 3163,
+        "count": 1
+      }
     ],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T5"
   },
   {
     "tier": 6,
     "zoneName": "Dagannoth Lair",
     "unlockKills": 65,
-    "aoeGrid": {"rows": 1, "cols": 3, "spacing": 4},
+    "aoeGrid": {
+      "rows": 1,
+      "cols": 3,
+      "spacing": 4
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "Dagannoth Prime", "npcId": 2266},
+    "boss": {
+      "name": "Dagannoth Prime",
+      "npcId": 2266
+    },
     "minions": [
-      {"name": "Dagannoth Rex", "npcId": 2267, "count": 1},
-      {"name": "Dagannoth Supreme", "npcId": 2265, "count": 1}
+      {
+        "name": "Dagannoth Rex",
+        "npcId": 2267,
+        "count": 1
+      },
+      {
+        "name": "Dagannoth Supreme",
+        "npcId": 2265,
+        "count": 1
+      }
     ],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T6"
   },
   {
     "tier": 7,
     "zoneName": "Kalphite Hive",
     "unlockKills": 75,
-    "aoeGrid": {"rows": 1, "cols": 1, "spacing": 3},
+    "aoeGrid": {
+      "rows": 1,
+      "cols": 1,
+      "spacing": 3
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "Kalphite Queen", "npcId": 963},
+    "boss": {
+      "name": "Kalphite Queen",
+      "npcId": 963
+    },
     "minions": [],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T7"
   },
   {
     "tier": 8,
     "zoneName": "King Black Dragon Lair",
     "unlockKills": 85,
-    "aoeGrid": {"rows": 1, "cols": 1, "spacing": 3},
+    "aoeGrid": {
+      "rows": 1,
+      "cols": 1,
+      "spacing": 3
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "King Black Dragon", "npcId": 239},
+    "boss": {
+      "name": "King Black Dragon",
+      "npcId": 239
+    },
     "minions": [],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T8"
   },
   {
     "tier": 9,
     "zoneName": "Chaos Elemental Plane",
     "unlockKills": 95,
-    "aoeGrid": {"rows": 1, "cols": 1, "spacing": 3},
+    "aoeGrid": {
+      "rows": 1,
+      "cols": 1,
+      "spacing": 3
+    },
     "aggroRange": 10,
     "respawnSeconds": 25,
-    "boss": {"name": "Chaos Elemental", "npcId": 2054},
+    "boss": {
+      "name": "Chaos Elemental",
+      "npcId": 2054
+    },
     "minions": [],
-    "rewards": {"xpMultOnTask": 1.0, "xpMultOffTask": 0.6, "dropMult": 1.0, "fortuneXp": 50}
+    "rewards": {
+      "xpMultOnTask": 1.0,
+      "xpMultOffTask": 0.6,
+      "dropMult": 1.0,
+      "fortuneXp": 50
+    },
+    "mapId": "T9"
   }
 ]

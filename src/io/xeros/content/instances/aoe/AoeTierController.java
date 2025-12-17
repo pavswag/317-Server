@@ -1,8 +1,6 @@
 package io.xeros.content.instances.aoe;
 
-import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.player.Player;
-import io.xeros.model.entity.player.Position;
 import io.xeros.model.items.GameItem;
 import io.xeros.util.Misc;
 
@@ -17,10 +15,12 @@ import java.util.List;
 public class AoeTierController {
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AoeTierController.class);
+    private static final AoeInstanceService INSTANCE_SERVICE = new AoeInstanceService();
 
     private static final String ATTR_UNLOCKED = "aoe_unlocked_tier";
     private static final String ATTR_ACTIVE = "aoe_active_tier";
     private static final String ATTR_TRACKER = "aoe_reward_tracker";
+    private static final String ATTR_INSTANCE = "aoe_instance";
     private static String kcKey(int tier) { return "aoe_kc_" + tier; }
 
     public static int getUnlockedTier(Player player) {
@@ -61,34 +61,32 @@ public class AoeTierController {
     }
 
     /** Starts the given tier at the player's current location. */
-    public static List<NPC> startTier(Player player, int tier) {
+    public static void startTier(Player player, int tier) {
         endTier(player, false);
         AoeBossTierDef def = AoeTierRepo.byTier(tier);
         if (def == null) {
             player.sendMessage("Unknown tier: " + tier);
-            return List.of();
+            return;
         }
         if (def.disabled) {
             player.sendMessage("Tier disabled: " + def.getDisabledReason());
             logger.info("[AOE] Start refused: disabled: {}", def.getDisabledReason());
-            return List.of();
+            return;
         }
         if (tier > getUnlockedTier(player)) {
             player.sendMessage("You have not unlocked this tier yet.");
-            return List.of();
+            return;
         }
-        player.getAttributes().setInt(ATTR_ACTIVE, tier);
-        player.getAttributes().set(ATTR_TRACKER, new AoeRewardTracker());
-
-        int height = AoeInstanceService.allocateHeight("aoe-" + tier);
-        if (!AoeInstanceService.buildDynamicRegion(def, height)) {
-            player.sendMessage("AOE: Map failed to load for this tier. Try again shortly.");
-            return List.of();
-        }
-        int[] spawn = AoeInstanceService.computeSpawn(def, height);
-        AoeInstanceService.teleportIntoInstance(player, spawn[0], spawn[1], height);
-        Position centre = new Position(spawn[0], spawn[1], height);
-        return AoeBossSpawner.spawn(player, def, centre);
+        player.sendMessage("Preparing AOE tier " + tier + "...");
+        INSTANCE_SERVICE.buildAndEnter(player, def, instance -> {
+            player.getAttributes().setInt(ATTR_ACTIVE, tier);
+            player.getAttributes().set(ATTR_TRACKER, new AoeRewardTracker());
+            player.getAttributes().set(ATTR_INSTANCE, instance.getId());
+            player.sendMessage("AOE Tier " + tier + " — Type ::leaveaoe to exit.");
+        }, error -> {
+            player.sendMessage("AOE build failed: " + error);
+            logger.warn("[AOE] build failed player={} tier={} reason={}", player.getLoginName(), tier, error);
+        });
     }
 
     public static int getActiveTier(Player player) {
@@ -124,5 +122,10 @@ public class AoeTierController {
         if (tracker != null) tracker.clear();
         player.getAttributes().remove(ATTR_TRACKER);
         player.getAttributes().removeInt(ATTR_ACTIVE);
+        AoeTierRepo.instanceForPlayer(player).ifPresent(instance -> {
+            AoeTierRepo.dissociatePlayer(player);
+            INSTANCE_SERVICE.teardown(instance);
+        });
+        player.getAttributes().remove(ATTR_INSTANCE);
     }
 }
