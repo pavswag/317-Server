@@ -3,6 +3,7 @@ package io.xeros.content.instances.aoe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,12 @@ public class AoeTierRepo {
     }
 
     public static void set(List<AoeBossTierDef> tiers, String sourceTag) {
-        List<AoeBossTierDef> copy = tiers == null ? Collections.emptyList() : List.copyOf(tiers);
+        List<AoeBossTierDef> copy;
+        if (tiers == null || tiers.isEmpty()) {
+            copy = Collections.emptyList();
+        } else {
+            copy = Collections.unmodifiableList(new ArrayList<>(tiers));
+        }
         TIERS.set(copy);
         String first = copy.isEmpty() ? "none" : ("T" + copy.get(0).tier + " " + copy.get(0).zoneName);
         logger.info("[AOE] Tiers loaded: {} from {} (first: {})", copy.size(), sourceTag, first);
