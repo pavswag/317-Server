@@ -323,10 +323,10 @@ public final class AoeNpcSpawner {
 
     private static Player nearest(List<Player> players, NPC npc, int radius) {
         Player closest = null;
-        int closestDist = Integer.MAX_VALUE;
+        double closestDist = Double.MAX_VALUE;
         for (Player p : players) {
-            int dist = npc.getDistance(p.getX(), p.getY());
-            if (dist <= radius && dist < closestDist) {
+            double dist = npc.getDistance(p.getX(), p.getY());
+            if (dist <= (double) radius && dist < closestDist) {
                 closest = p;
                 closestDist = dist;
             }
