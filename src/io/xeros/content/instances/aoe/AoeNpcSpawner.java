@@ -53,8 +53,9 @@ public final class AoeNpcSpawner {
         ACTIVE.put(inst.id(), zone);
 
         List<AoeZoneInstance.SpawnPoint> assigned = assignSpawnPoints(def);
+        assigned.forEach(zone::addSpawnPoint);
         for (AoeZoneInstance.SpawnPoint spawn : assigned) {
-            NPC npc = spawnNpc(owner, inst, spawn);
+            NPC npc = spawnNpc(owner, inst, zone, spawn);
             if (npc != null) {
                 zone.registerSpawn(spawn, npc);
                 NPC_INSTANCE.put(npc.getIndex(), inst.id());
@@ -175,7 +176,7 @@ public final class AoeNpcSpawner {
                 .filter(e -> e.getValue() != null && e.getValue().equals(idx))
                 .map(Map.Entry::getKey)
                 .findFirst()
-                .orElse(null);
+                .orElseGet(() -> locateSpawnByPosition(zone, npc));
         if (spawn != null) {
             zone.liveNpcs().remove(spawn);
         }
@@ -206,11 +207,13 @@ public final class AoeNpcSpawner {
                 }
                 AoeInstance inst = AoeTierRepo.instanceById(zone.id()).orElse(null);
                 Player owner = inst != null ? PlayerHandler.players[inst.ownerPid()] : null;
-                NPC spawned = spawnNpc(owner, inst, spawn);
+                NPC spawned = spawnNpc(owner, inst, zone, spawn);
                 if (spawned == null) {
                     if (AOE_DEBUG) {
                         logger.warn("[AOE-MAP] Respawn failed for npc {} at ({},{}.{})", spawn.getNpcId(), spawn.getX(), spawn.getY(), spawn.getZ());
                     }
+                    zone.pendingRespawn().remove(spawn);
+                    container.stop();
                     return;
                 }
                 zone.liveNpcs().put(spawn, spawned.getIndex());
@@ -336,58 +339,89 @@ public final class AoeNpcSpawner {
         return closest;
     }
 
-    private static NPC spawnNpc(Player owner, AoeInstance inst, AoeZoneInstance.SpawnPoint spawn) {
-        if (inst == null || spawn == null) {
+    private static NPC spawnNpc(Player owner, AoeInstance inst, AoeZoneInstance zone, AoeZoneInstance.SpawnPoint spawn) {
+        if (inst == null || spawn == null || zone == null) {
             return null;
         }
-        NPC npc = NPCSpawning.spawnNpc(owner, spawn.getNpcId(), spawn.getX(), spawn.getY(), spawn.getZ(), 1, 0, false, false);
+        Position tile = adjustSpawnTile(zone.definition(), spawn);
+        NPC npc = NPCSpawning.spawnNpc(owner, spawn.getNpcId(), tile.getX(), tile.getY(), tile.getHeight(), 1, 0, false, false);
         if (npc != null) {
             npc.randomWalk = false;
-            npc.makeX = spawn.getX();
-            npc.makeY = spawn.getY();
+            npc.makeX = tile.getX();
+            npc.makeY = tile.getY();
             npc.getBehaviour().setAggressive(true);
             npc.getBehaviour().setRespawn(false);
-            npc.heightLevel = spawn.getZ();
+            npc.heightLevel = tile.getHeight();
             if (AOE_DEBUG) {
-                logger.info("[AOE-MAP] Spawned npc id={} index={} at ({},{}.{})", spawn.getNpcId(), npc.getIndex(), spawn.getX(), spawn.getY(), spawn.getZ());
+                logger.info("[AOE-MAP] Spawned npc id={} index={} at ({},{}.{})", spawn.getNpcId(), npc.getIndex(), tile.getX(), tile.getY(), tile.getHeight());
             }
         } else {
-            logger.warn("[AOE-MAP] Failed to spawn npc id={} at ({},{}.{})", spawn.getNpcId(), spawn.getX(), spawn.getY(), spawn.getZ());
+            logger.warn("[AOE-MAP] Failed to spawn npc id={} at ({},{}.{})", spawn.getNpcId(), tile.getX(), tile.getY(), tile.getHeight());
         }
         return npc;
     }
 
+    private static Position adjustSpawnTile(AoeZoneDefinition def, AoeZoneInstance.SpawnPoint spawn) {
+        if (def == null || spawn == null) {
+            return new Position(spawn != null ? spawn.getX() : 0, spawn != null ? spawn.getY() : 0, spawn != null ? spawn.getZ() : 0);
+        }
+        if (isWalkable(def, spawn.getX(), spawn.getY())) {
+            return spawn.toPosition();
+        }
+        Position fallback = findValidTile(def, spawn.getX(), spawn.getY());
+        return fallback == null ? spawn.toPosition() : fallback;
+    }
+
+    private static AoeZoneInstance.SpawnPoint locateSpawnByPosition(AoeZoneInstance zone, NPC npc) {
+        if (zone == null || npc == null) {
+            return null;
+        }
+        return zone.spawnPoints().stream()
+                .filter(spawn -> spawn.getNpcId() == npc.getNpcId())
+                .min(Comparator.comparingDouble(spawn -> npc.distanceToPoint(spawn.getX(), spawn.getY())))
+                .orElse(null);
+    }
+
     private static List<AoeZoneInstance.SpawnPoint> assignSpawnPoints(AoeZoneDefinition def) {
-        List<AoeZoneInstance.SpawnPoint> points = new ArrayList<>();
-        int total = def.getSpawns().stream().mapToInt(AoeZoneDefinition.SpawnTemplate::getCount).sum();
+        List<Integer> npcIds = new ArrayList<>();
+        for (AoeZoneDefinition.SpawnTemplate spawn : def.getSpawns()) {
+            for (int i = 0; i < spawn.getCount(); i++) {
+                npcIds.add(spawn.getNpcId());
+            }
+        }
+
+        if (npcIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         int rows = Math.max(1, def.getRows());
         int cols = Math.max(1, def.getCols());
+        int total = npcIds.size();
+        if (rows <= 0 || cols <= 0) {
+            int side = (int) Math.ceil(Math.sqrt(total));
+            rows = side;
+            cols = side;
+        }
         if (rows * cols < total) {
             rows = (int) Math.ceil((double) total / cols);
+            if (rows * cols < total) {
+                cols = (int) Math.ceil((double) total / rows);
+            }
         }
+
         int startX = def.getCenterX() - ((cols - 1) * def.getSpacing()) / 2;
         int startY = def.getCenterY() - ((rows - 1) * def.getSpacing()) / 2;
 
-        Iterator<AoeZoneDefinition.SpawnTemplate> templateIter = def.getSpawns().iterator();
-        AoeZoneDefinition.SpawnTemplate current = templateIter.hasNext() ? templateIter.next() : null;
-        int remainingFromCurrent = current != null ? current.getCount() : 0;
-
-        for (int i = 0; i < total; i++) {
+        List<AoeZoneInstance.SpawnPoint> points = new ArrayList<>(total);
+        for (int i = 0; i < npcIds.size(); i++) {
             int row = i / cols;
             int col = i % cols;
             int candidateX = startX + col * def.getSpacing();
             int candidateY = startY + row * def.getSpacing();
             Position tile = findValidTile(def, candidateX, candidateY);
-            if (current == null) {
-                break;
-            }
-            points.add(new AoeZoneInstance.SpawnPoint(tile.getX(), tile.getY(), tile.getHeight(), current.getNpcId()));
-            remainingFromCurrent--;
-            if (remainingFromCurrent <= 0 && templateIter.hasNext()) {
-                current = templateIter.next();
-                remainingFromCurrent = current.getCount();
-            }
+            points.add(new AoeZoneInstance.SpawnPoint(tile.getX(), tile.getY(), tile.getHeight(), npcIds.get(i)));
         }
+
         return points;
     }
 
