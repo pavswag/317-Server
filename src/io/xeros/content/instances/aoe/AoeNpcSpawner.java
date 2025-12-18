@@ -66,7 +66,7 @@ public final class AoeNpcSpawner {
         }
 
         List<AoeZoneInstance.SpawnPoint> assigned = assignSpawnPoints(def, inst.id());
-        assigned.forEach(zone::addSpawnPoint);
+        assigned.forEach(zone::ensureSpawnPoint);
         int attempt = 0;
         int successCount = 0;
         for (AoeZoneInstance.SpawnPoint spawn : assigned) {
@@ -318,6 +318,11 @@ public final class AoeNpcSpawner {
         if (zone == null) return false;
         Player owner = zone.getOwnerPid() >= 0 && zone.getOwnerPid() < PlayerHandler.players.length ? PlayerHandler.players[zone.getOwnerPid()] : null;
         boolean ownerInside = owner != null && isInside(zone, owner.getPosition());
+        if (AOE_DEBUG && (owner == null || !ownerInside)) {
+            logger.info("[AOE-MAP][{}] ownerContext owner={} inside={} playersInZone={} lastSeen={} now={} diff={} timeout={}", zone.id(),
+                    owner != null ? owner.getLoginName() : "null", ownerInside, players != null ? players.size() : 0,
+                    zone.getLastSeenTick(), now, now - zone.getLastSeenTick(), TIMEOUT_TICKS);
+        }
         if (ownerInside || (players != null && !players.isEmpty())) {
             return false;
         }
@@ -332,7 +337,7 @@ public final class AoeNpcSpawner {
         if (ticker != null) {
             ticker.stop();
         }
-        AoeTierRepo.instanceById(zone.id()).ifPresent(inst -> new AoeInstanceService().teardown(inst));
+        AoeTierRepo.instanceById(zone.id()).ifPresent(inst -> new AoeInstanceService().teardown(inst, reason));
     }
 
     private static List<Player> playersInZone(AoeZoneInstance zone) {

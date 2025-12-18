@@ -135,16 +135,15 @@ public class AoeZoneInstance {
         return spawnRecords;
     }
 
-    public void addSpawnPoint(SpawnPoint spawn) {
+    /**
+     * Adds the spawn point to tracking (idempotent) and seeds a SpawnRecord.
+     */
+    public void ensureSpawnPoint(SpawnPoint spawn) {
         if (spawn != null) {
-            spawnPoints.add(spawn);
+            if (!spawnPoints.contains(spawn)) {
+                spawnPoints.add(spawn);
+            }
             spawnRecords.putIfAbsent(spawn, new SpawnRecord(spawn.getNpcId()));
-        }
-    }
-
-    public void addSpawnPoint(SpawnPoint spawn) {
-        if (spawn != null) {
-            spawnPoints.add(spawn);
         }
     }
 

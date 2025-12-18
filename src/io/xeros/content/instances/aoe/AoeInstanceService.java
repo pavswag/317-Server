@@ -86,18 +86,22 @@ public class AoeInstanceService {
     }
 
     public void teardown(AoeInstance instance) {
+        teardown(instance, "unspecified");
+    }
+
+    public void teardown(AoeInstance instance, String reason) {
         if (instance == null) {
             return;
         }
         try {
+            logger.info("[AOE-MAP] teardown id={} reason={} stack={}", instance.id(), reason, java.util.Arrays.toString(Thread.currentThread().getStackTrace()));
             AoeNpcSpawner.despawnForInstance(instance);
             MapBuilder.destroy(instance.baseX(), instance.baseY(), instance.z());
         } catch (Exception e) {
             logger.error("[AOE-MAP] teardown error id={}", instance.id(), e);
         } finally {
             InstanceHeight.free(instance.reservedHeight());
-            AoeTierRepo.clearInstance(instance.id());
+            AoeTierRepo.clearInstance(instance.id(), reason);
         }
     }
 }
-
