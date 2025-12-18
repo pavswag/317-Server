@@ -406,36 +406,40 @@ public final class AoeNpcSpawner {
     }
 
     private static List<AoeZoneInstance.SpawnPoint> assignSpawnPoints(AoeZoneDefinition def, UUID instanceId) {
+        // Build the base list of NPC ids from templates.
         List<Integer> npcIds = new ArrayList<>();
         for (AoeZoneDefinition.SpawnTemplate spawn : def.getSpawns()) {
             for (int i = 0; i < spawn.getCount(); i++) {
                 npcIds.add(spawn.getNpcId());
             }
         }
-
         if (npcIds.isEmpty()) {
             return Collections.emptyList();
         }
 
         int rows = Math.max(1, def.getRows());
         int cols = Math.max(1, def.getCols());
-        int total = npcIds.size();
         if (rows <= 0 || cols <= 0) {
-            int side = (int) Math.ceil(Math.sqrt(total));
+            int side = (int) Math.ceil(Math.sqrt(npcIds.size()));
             rows = side;
             cols = side;
         }
-        if (rows * cols < total) {
-            rows = (int) Math.ceil((double) total / cols);
-            if (rows * cols < total) {
-                cols = (int) Math.ceil((double) total / rows);
+
+        // If the grid is larger than the configured counts, repeat the npcIds pattern
+        // so rows/cols/spacing changes actually produce more spawns.
+        int desiredTotal = rows * cols;
+        if (desiredTotal > npcIds.size()) {
+            List<Integer> expanded = new ArrayList<>(desiredTotal);
+            for (int i = 0; i < desiredTotal; i++) {
+                expanded.add(npcIds.get(i % npcIds.size()));
             }
+            npcIds = expanded;
         }
 
         int startX = def.getCenterX() - ((cols - 1) * def.getSpacing()) / 2;
         int startY = def.getCenterY() - ((rows - 1) * def.getSpacing()) / 2;
 
-        List<AoeZoneInstance.SpawnPoint> points = new ArrayList<>(total);
+        List<AoeZoneInstance.SpawnPoint> points = new ArrayList<>(npcIds.size());
         Set<String> reserved = new HashSet<>();
         for (int i = 0; i < npcIds.size(); i++) {
             int row = i / cols;
