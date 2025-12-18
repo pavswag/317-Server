@@ -14,7 +14,13 @@
       "name": "Unicow",
       "npcId": 3601
     },
-    "minions": [],
+    "minions": [
+      {
+        "name": "Unicow",
+        "npcId": 3601,
+        "count": 3
+      }
+    ],
     "rewards": {
       "xpMultOnTask": 1.0,
       "xpMultOffTask": 0.6,
