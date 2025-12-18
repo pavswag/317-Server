@@ -26,7 +26,7 @@ public class AoeTierEvents {
                     player.addDemonHunterXP(r.getFortuneXpPerKill());
                 }
             });
-            AoeTierController.endTier(player, true);
+            // Do NOT end the instance on boss death; respawn logic will handle.
         }
     }
 }

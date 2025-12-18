@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -83,23 +84,31 @@ public class AoeTierRepo {
     }
 
     public static void clearInstance(Player player) {
+        clearInstance(player, "player_context");
+    }
+
+    public static void clearInstance(Player player, String reason) {
         if (player == null) {
             return;
         }
         UUID id = PLAYER_TO_INSTANCE.remove(player.getIndex());
         if (id != null) {
             INSTANCES.remove(id);
-            logger.info("[AOE] Cleared instance {} for player {}", id, player.getLoginName());
+            logger.info("[AOE] Cleared instance {} for player {} reason={} stack={}", id, player.getLoginName(), reason,
+                    Arrays.toString(Thread.currentThread().getStackTrace()));
         }
     }
 
     public static void clearInstance(UUID id) {
+        clearInstance(id, "no_player_context");
+    }
+
+    public static void clearInstance(UUID id, String reason) {
         if (id == null) {
             return;
         }
         INSTANCES.remove(id);
         PLAYER_TO_INSTANCE.values().removeIf(uuid -> uuid.equals(id));
-        logger.info("[AOE] Cleared instance {} (no player context)", id);
+        logger.info("[AOE] Cleared instance {} reason={} stack={}", id, reason, Arrays.toString(Thread.currentThread().getStackTrace()));
     }
 }
-
