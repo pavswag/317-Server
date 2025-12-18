@@ -237,12 +237,6 @@ public final class AoeNpcSpawner {
                     zone.touchHeartbeat(true);
                 }
 
-                if (shouldTimeout(zone, now, players)) {
-                    endInstance(zone, "timeout_or_empty");
-                    c.stop();
-                    return;
-                }
-
                 maybeRespawn(zone, players.isEmpty() ? null : players.get(0));
                 if (players.isEmpty()) {
                     leashAll(zone);
@@ -312,22 +306,6 @@ public final class AoeNpcSpawner {
                 }
             }
         }
-    }
-
-    private static boolean shouldTimeout(AoeZoneInstance zone, long now, List<Player> players) {
-        if (zone == null) return false;
-        Player owner = zone.getOwnerPid() >= 0 && zone.getOwnerPid() < PlayerHandler.players.length ? PlayerHandler.players[zone.getOwnerPid()] : null;
-        boolean ownerInside = owner != null && isInside(zone, owner.getPosition());
-        if (AOE_DEBUG && (owner == null || !ownerInside)) {
-            logger.info("[AOE-MAP][{}] ownerContext owner={} inside={} playersInZone={} lastSeen={} now={} diff={} timeout={}", zone.id(),
-                    owner != null ? owner.getLoginName() : "null", ownerInside, players != null ? players.size() : 0,
-                    zone.getLastSeenTick(), now, now - zone.getLastSeenTick(), TIMEOUT_TICKS);
-        }
-        if (ownerInside || (players != null && !players.isEmpty())) {
-            return false;
-        }
-        long lastSeen = zone.getLastSeenTick();
-        return now - lastSeen > TIMEOUT_TICKS;
     }
 
     private static void endInstance(AoeZoneInstance zone, String reason) {
