@@ -206,7 +206,8 @@ public final class AoeNpcSpawner {
         }
         long respawnAt = Server.getTickCount() + Math.max(1, zone.definition().getRespawnDelayTicks());
         zone.markDead(spawn, respawnAt);
-        System.out.println("[AOE-RESPAWN] death zone=" + zone.id() + " npcId=" + npc.getNpcId() + " idx=" + idx + " respawnAt=" + respawnAt);
+        System.out.println("[AOE-RESPAWN] death zone=" + zone.id() + " npcId=" + npc.getNpcId() + " idx=" + idx
+                + " now=" + Server.getTickCount() + " delay=" + zone.definition().getRespawnDelayTicks() + " respawnAt=" + respawnAt);
         if (AOE_DEBUG) {
             logger.info("[AOE-MAP][{}] DEATH npcId={} idx={} respawnAtTick={}", zone.id(), npc.getNpcId(), idx, respawnAt);
         }
@@ -238,7 +239,7 @@ public final class AoeNpcSpawner {
                     zone.touchHeartbeat(true);
                 }
 
-                maybeRespawn(zone, players.isEmpty() ? null : players.get(0));
+                maybeRespawn(zone, players.isEmpty() ? null : players.get(0), now);
                 if (players.isEmpty()) {
                     leashAll(zone);
                     return;
@@ -283,9 +284,8 @@ public final class AoeNpcSpawner {
         TICKERS.put(zone.id(), container);
     }
 
-    private static void maybeRespawn(AoeZoneInstance zone, Player ownerContext) {
+    private static void maybeRespawn(AoeZoneInstance zone, Player ownerContext, long now) {
         if (zone == null) return;
-        long now = Server.getTickCount();
         AoeInstance inst = AoeTierRepo.instanceById(zone.id()).orElse(null);
         Player owner = inst != null ? PlayerHandler.players[inst.ownerPid()] : ownerContext;
         if (owner == null && zone.getOwnerName() != null) {
@@ -297,15 +297,20 @@ public final class AoeNpcSpawner {
                 }
             }
         }
-        if (inst == null && (AOE_DEBUG || true)) {
-            System.out.println("[AOE-RESPAWN] instance missing for zone=" + zone.id());
+        int pending = (int) zone.spawnRecords().values().stream()
+                .filter(r -> r != null && r.getNpcIndex() < 0 && r.getRespawnAtTick() > 0).count();
+        if (now % 50 == 0) {
+            System.out.println("[AOE-RESPAWN] tick zone=" + zone.id() + " now=" + now + " pending=" + pending
+                    + " instMissing=" + (inst == null));
         }
         for (Map.Entry<AoeZoneInstance.SpawnPoint, AoeZoneInstance.SpawnRecord> entry : zone.spawnRecords().entrySet()) {
             AoeZoneInstance.SpawnRecord record = entry.getValue();
             if (record == null) continue;
             if (record.getNpcIndex() >= 0) continue;
             if (record.getRespawnAtTick() <= 0 || now < record.getRespawnAtTick()) continue;
-            System.out.println("[AOE-RESPAWN] attempt zone=" + zone.id() + " npcId=" + entry.getKey().getNpcId() + " at " + entry.getKey().getX() + "," + entry.getKey().getY() + " tick=" + now);
+            System.out.println("[AOE-RESPAWN] attempt zone=" + zone.id() + " npcId=" + entry.getKey().getNpcId()
+                    + " at " + entry.getKey().getX() + "," + entry.getKey().getY() + "," + entry.getKey().getZ()
+                    + " now=" + now + " due=" + record.getRespawnAtTick());
             NPC spawned = spawnNpc(owner, inst, zone, entry.getKey(), -1, "respawn");
             if (spawned != null) {
                 record.setNpcIndex(spawned.getIndex());
@@ -543,7 +548,7 @@ public final class AoeNpcSpawner {
     }
 
     private static NPC spawnNpc(Player owner, AoeInstance inst, AoeZoneInstance zone, AoeZoneInstance.SpawnPoint spawn, int attempt, String phase) {
-        if (inst == null || spawn == null || zone == null) {
+        if (spawn == null || zone == null) {
             return null;
         }
         AoeZoneDefinition def = zone.definition();
@@ -554,9 +559,10 @@ public final class AoeNpcSpawner {
         boolean walkable = withinBounds && !clipped && !occupied;
         Position tile = adjustSpawnTile(def, spawn, zone.id());
 
+        Object logId = inst != null ? inst.id() : zone.id();
         if (AOE_DEBUG) {
             logger.info("[AOE-MAP][{}] SPAWN_ATTEMPT phase={} idx={} npcId={} intended=({},{}.{}) withinBounds={} walkable={} occupied={} final=({},{}.{}) moved={}",
-                    inst.id(), phase, attempt, spawn.getNpcId(), spawn.getX(), spawn.getY(), spawn.getZ(), withinBounds, walkable, occupied,
+                    logId, phase, attempt, spawn.getNpcId(), spawn.getX(), spawn.getY(), spawn.getZ(), withinBounds, walkable, occupied,
                     tile.getX(), tile.getY(), tile.getHeight(), !(tile.getX() == spawn.getX() && tile.getY() == spawn.getY() && tile.getHeight() == spawn.getZ()));
         }
 
@@ -569,10 +575,10 @@ public final class AoeNpcSpawner {
             npc.getBehaviour().setRespawn(false);
             npc.heightLevel = tile.getHeight();
             if (AOE_DEBUG) {
-                logger.info("[AOE-MAP][{}] SPAWN_OK phase={} idx={} npcId={} index={} tile=({},{}.{})", inst.id(), phase, attempt, spawn.getNpcId(), npc.getIndex(), tile.getX(), tile.getY(), tile.getHeight());
+                logger.info("[AOE-MAP][{}] SPAWN_OK phase={} idx={} npcId={} index={} tile=({},{}.{})", logId, phase, attempt, spawn.getNpcId(), npc.getIndex(), tile.getX(), tile.getY(), tile.getHeight());
             }
         } else {
-            logger.warn("[AOE-MAP][{}] SPAWN_FAIL phase={} idx={} npcId={} tile=({},{}.{}) reason=spawn_null", inst.id(), phase, attempt, spawn.getNpcId(), tile.getX(), tile.getY(), tile.getHeight());
+            logger.warn("[AOE-MAP][{}] SPAWN_FAIL phase={} idx={} npcId={} tile=({},{}.{}) reason=spawn_null", logId, phase, attempt, spawn.getNpcId(), tile.getX(), tile.getY(), tile.getHeight());
         }
         return npc;
     }
