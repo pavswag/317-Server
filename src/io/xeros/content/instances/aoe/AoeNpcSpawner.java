@@ -262,8 +262,8 @@ public final class AoeNpcSpawner {
                     if (npc == null || npc.isDeadOrDying()) {
                         continue;
                     }
-                    Position spawn = entry.getKey().toPosition();
-                    enforceBounds(zone, npc, spawn);
+            Position spawn = entry.getKey().toPosition();
+            enforceBounds(zone, npc, spawn);
 
                     Player currentTarget = npc.getPlayerAttackingIndex() > 0 ? PlayerHandler.players[npc.getPlayerAttackingIndex()] : null;
                     if (currentTarget != null && (!isInside(zone, currentTarget.getPosition()) || currentTarget.isDead)) {

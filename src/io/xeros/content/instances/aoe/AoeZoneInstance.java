@@ -142,6 +142,12 @@ public class AoeZoneInstance {
         }
     }
 
+    public void addSpawnPoint(SpawnPoint spawn) {
+        if (spawn != null) {
+            spawnPoints.add(spawn);
+        }
+    }
+
     public void registerSpawn(SpawnPoint spawn, NPC npc) {
         if (spawn == null) return;
         if (!spawnPoints.contains(spawn)) {
