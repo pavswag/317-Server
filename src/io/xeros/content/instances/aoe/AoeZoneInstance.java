@@ -3,15 +3,14 @@ package io.xeros.content.instances.aoe;
 import io.xeros.model.entity.npc.NPC;
 import io.xeros.model.entity.player.Boundary;
 import io.xeros.model.entity.player.Position;
+import io.xeros.Server;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Runtime state for an active AOE zone. Tracks which npc index belongs to which spawn point
@@ -66,17 +65,54 @@ public class AoeZoneInstance {
         }
     }
 
+    public static class SpawnRecord {
+        private final int npcId;
+        private volatile int npcIndex = -1;
+        private volatile long respawnAtTick = 0;
+
+        public SpawnRecord(int npcId) {
+            this.npcId = npcId;
+        }
+
+        public int getNpcId() {
+            return npcId;
+        }
+
+        public int getNpcIndex() {
+            return npcIndex;
+        }
+
+        public void setNpcIndex(int npcIndex) {
+            this.npcIndex = npcIndex;
+        }
+
+        public long getRespawnAtTick() {
+            return respawnAtTick;
+        }
+
+        public void setRespawnAtTick(long respawnAtTick) {
+            this.respawnAtTick = respawnAtTick;
+        }
+    }
+
     private final UUID id;
     private final AoeZoneDefinition definition;
     private final Boundary bounds;
     private final List<SpawnPoint> spawnPoints = new CopyOnWriteArrayList<>();
-    private final Map<SpawnPoint, Integer> liveNpcs = new ConcurrentHashMap<>();
-    private final Set<SpawnPoint> pendingRespawn = new CopyOnWriteArraySet<>();
+    private final Map<SpawnPoint, SpawnRecord> spawnRecords = new ConcurrentHashMap<>();
+    private final int ownerPid;
+    private final String ownerName;
+    private volatile long lastSeenTick;
+    private volatile boolean hasPlayerContext;
 
-    public AoeZoneInstance(UUID id, AoeZoneDefinition definition, Boundary bounds) {
+    public AoeZoneInstance(UUID id, AoeZoneDefinition definition, Boundary bounds, int ownerPid, String ownerName) {
         this.id = id;
         this.definition = definition;
         this.bounds = bounds;
+        this.ownerPid = ownerPid;
+        this.ownerName = ownerName;
+        this.lastSeenTick = Server.getTickCount();
+        this.hasPlayerContext = false;
     }
 
     public UUID id() {
@@ -95,12 +131,15 @@ public class AoeZoneInstance {
         return spawnPoints;
     }
 
-    public Map<SpawnPoint, Integer> liveNpcs() {
-        return liveNpcs;
+    public Map<SpawnPoint, SpawnRecord> spawnRecords() {
+        return spawnRecords;
     }
 
-    public Set<SpawnPoint> pendingRespawn() {
-        return pendingRespawn;
+    public void addSpawnPoint(SpawnPoint spawn) {
+        if (spawn != null) {
+            spawnPoints.add(spawn);
+            spawnRecords.putIfAbsent(spawn, new SpawnRecord(spawn.getNpcId()));
+        }
     }
 
     public void addSpawnPoint(SpawnPoint spawn) {
@@ -110,12 +149,53 @@ public class AoeZoneInstance {
     }
 
     public void registerSpawn(SpawnPoint spawn, NPC npc) {
-        if (npc == null || spawn == null) {
-            return;
-        }
+        if (spawn == null) return;
         if (!spawnPoints.contains(spawn)) {
             spawnPoints.add(spawn);
         }
-        liveNpcs.put(spawn, npc.getIndex());
+        spawnRecords.putIfAbsent(spawn, new SpawnRecord(spawn.getNpcId()));
+        SpawnRecord record = spawnRecords.get(spawn);
+        if (npc != null) {
+            record.setNpcIndex(npc.getIndex());
+            record.setRespawnAtTick(0);
+        }
+    }
+
+    public void markDead(SpawnPoint spawn, long respawnAtTick) {
+        if (spawn == null) return;
+        SpawnRecord record = spawnRecords.get(spawn);
+        if (record != null) {
+            record.setNpcIndex(-1);
+            record.setRespawnAtTick(respawnAtTick);
+        }
+    }
+
+    public SpawnPoint findByNpcIndex(int index) {
+        return spawnRecords.entrySet().stream()
+                .filter(e -> e.getValue() != null && e.getValue().getNpcIndex() == index)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public long getLastSeenTick() {
+        return lastSeenTick;
+    }
+
+    public void touchHeartbeat(boolean hasPlayer) {
+        this.lastSeenTick = Server.getTickCount();
+        this.hasPlayerContext = hasPlayer;
+    }
+
+    public int getOwnerPid() {
+        return ownerPid;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public boolean hasPlayerContext() {
+        return hasPlayerContext;
     }
 }
