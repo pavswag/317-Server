@@ -23,7 +23,9 @@ import java.util.List;
 public class AoeBossTierLoader {
 
     private static final Logger logger = LoggerFactory.getLogger(AoeBossTierLoader.class);
-    private static final Path FILE = Paths.get("data/aoe_tiers.json");
+    private static final Path NEW_FILE = Paths.get("data/aoe/aoe_boss_tiers.json");
+    private static final Path LEGACY_FILE = Paths.get("data/aoe_tiers.json");
+    private static final Path FILE = NEW_FILE;
     private static final Gson GSON = new Gson();
 
     static {
@@ -61,14 +63,20 @@ public class AoeBossTierLoader {
     }
 
     public static void loadAllOrWarn(String sourceTag) {
-        File file = FILE.toFile();
-        if (!file.exists()) {
-            logger.warn("[AOE] Tier file not found at {}. Creating placeholder.", file.getAbsolutePath());
-            createPlaceholder(file);
+        File primary = FILE.toFile();
+        File legacy = LEGACY_FILE.toFile();
+        File chosen = primary.exists() ? primary : legacy;
+        if (!chosen.exists()) {
+            logger.warn("[AOE] Tier file not found at {}. Creating placeholder.", chosen.getAbsolutePath());
+            createPlaceholder(chosen);
         }
-        List<AoeBossTierDef> tiers = load(file);
+        List<AoeBossTierDef> tiers = load(chosen);
+        if (tiers.isEmpty() && chosen != primary && primary.exists()) {
+            logger.warn("[AOE] Legacy tier file empty; attempting primary path {}", primary.getAbsolutePath());
+            tiers = load(primary);
+        }
         if (tiers.isEmpty()) {
-            logger.warn("[AOE] No tiers found. Checked: {}", file.getAbsolutePath());
+            logger.warn("[AOE] No tiers found. Checked: {} and {}", primary.getAbsolutePath(), legacy.getAbsolutePath());
         }
         AoeTierRepo.set(tiers, sourceTag);
     }
