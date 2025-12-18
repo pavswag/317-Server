@@ -206,6 +206,7 @@ public final class AoeNpcSpawner {
         }
         long respawnAt = Server.getTickCount() + Math.max(1, zone.definition().getRespawnDelayTicks());
         zone.markDead(spawn, respawnAt);
+        System.out.println("[AOE-RESPAWN] death zone=" + zone.id() + " npcId=" + npc.getNpcId() + " idx=" + idx + " respawnAt=" + respawnAt);
         if (AOE_DEBUG) {
             logger.info("[AOE-MAP][{}] DEATH npcId={} idx={} respawnAtTick={}", zone.id(), npc.getNpcId(), idx, respawnAt);
         }
@@ -287,11 +288,24 @@ public final class AoeNpcSpawner {
         long now = Server.getTickCount();
         AoeInstance inst = AoeTierRepo.instanceById(zone.id()).orElse(null);
         Player owner = inst != null ? PlayerHandler.players[inst.ownerPid()] : ownerContext;
+        if (owner == null && zone.getOwnerName() != null) {
+            // Fallback: look up by username if the pid slot has rotated.
+            for (Player p : PlayerHandler.getPlayers()) {
+                if (p != null && zone.getOwnerName().equalsIgnoreCase(p.getLoginName())) {
+                    owner = p;
+                    break;
+                }
+            }
+        }
+        if (inst == null && (AOE_DEBUG || true)) {
+            System.out.println("[AOE-RESPAWN] instance missing for zone=" + zone.id());
+        }
         for (Map.Entry<AoeZoneInstance.SpawnPoint, AoeZoneInstance.SpawnRecord> entry : zone.spawnRecords().entrySet()) {
             AoeZoneInstance.SpawnRecord record = entry.getValue();
             if (record == null) continue;
             if (record.getNpcIndex() >= 0) continue;
             if (record.getRespawnAtTick() <= 0 || now < record.getRespawnAtTick()) continue;
+            System.out.println("[AOE-RESPAWN] attempt zone=" + zone.id() + " npcId=" + entry.getKey().getNpcId() + " at " + entry.getKey().getX() + "," + entry.getKey().getY() + " tick=" + now);
             NPC spawned = spawnNpc(owner, inst, zone, entry.getKey(), -1, "respawn");
             if (spawned != null) {
                 record.setNpcIndex(spawned.getIndex());
