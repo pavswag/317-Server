@@ -1,0 +1,3 @@
+[ItemOnItemLog] [2025-09-01T17:21:09.1152786] Used GameItem{name=Wraith Essence, id=26879, amount=5,000} on GameItem{name=Wraith Scythe, id=33431, amount=5,000} at Position{x=3211, y=3217, z=0}
+[ItemOnItemLog] [2025-09-01T17:44:05.3491519] Used GameItem{name=Wraith Essence, id=26879, amount=1} on GameItem{name=Wraith Scythe, id=33431, amount=1} at Position{x=3213, y=3220, z=0}
+[ItemOnItemLog] [2025-09-01T17:44:14.9720609] Used GameItem{name=Wraith Essence, id=26879, amount=500} on GameItem{name=Wraith Scythe, id=33431, amount=500} at Position{x=3213, y=3220, z=0}

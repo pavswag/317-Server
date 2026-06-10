@@ -1,0 +1,13 @@
+[ItemDroppedLog] [2025-08-02T20:07:28.6195945] Dropped GameItem{name=Casket, id=2714, amount=197} at Position{x=3217, y=3234, z=0}
+[ItemDroppedLog] [2025-08-05T15:41:24.5641071] Dropped GameItem{name=Guthix page 4, id=3838, amount=1} at Position{x=3211, y=3222, z=0}
+[ItemDroppedLog] [2025-08-05T15:41:24.5841123] Dropped GameItem{name=Black sq shield, id=1179, amount=1} at Position{x=3211, y=3222, z=0}
+[ItemDroppedLog] [2025-08-05T15:41:25.1422368] Dropped GameItem{name=Black mace, id=1426, amount=1} at Position{x=3211, y=3222, z=0}
+[ItemDroppedLog] [2025-08-05T15:41:25.1432395] Dropped GameItem{name=Black kiteshield, id=1195, amount=1} at Position{x=3211, y=3222, z=0}
+[ItemDroppedLog] [2025-08-05T15:41:25.7443993] Dropped GameItem{name=Wizard robe (g), id=7390, amount=1} at Position{x=3211, y=3222, z=0}
+[ItemDroppedLog] [2025-08-05T15:41:29.3458253] Dropped GameItem{name=Black warhammer, id=1341, amount=1} at Position{x=3211, y=3222, z=0}
+[ItemDroppedLog] [2025-08-05T18:58:46.0991018] Dropped GameItem{name=Raids Rare Key, id=3464, amount=497} at Position{x=1255, y=3572, z=0}
+[ItemDroppedLog] [2025-08-05T19:08:04.1840093] Dropped GameItem{name=Common Raids Key, id=3456, amount=496} at Position{x=1255, y=3571, z=0}
+[ItemDroppedLog] [2025-08-05T19:08:05.3883138] Dropped GameItem{name=Steel key purple, id=3459, amount=1} at Position{x=1255, y=3571, z=0}
+[ItemDroppedLog] [2025-08-05T19:08:30.7244608] Dropped GameItem{name=Steel key purple, id=3459, amount=1} at Position{x=1255, y=3571, z=0}
+[ItemDroppedLog] [2025-08-05T19:08:31.9337331] Dropped GameItem{name=Common Raids Key, id=3456, amount=496} at Position{x=1255, y=3571, z=0}
+[ItemDroppedLog] [2025-08-05T19:14:16.3216498] Dropped GameItem{name=Steel key purple, id=3459, amount=1} at Position{x=1255, y=3572, z=0}

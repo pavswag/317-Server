@@ -1,0 +1,6 @@
+[ClickButtonLog] [2025-12-17T20:08:33.7772412] Clicked: 9157, real id: 2461,new: false
+[ClickButtonLog] [2025-12-17T20:08:37.9948623] Clicked: 95011, real id: 24331,new: false
+[ClickButtonLog] [2025-12-17T20:08:39.7992138] Clicked: 9157, real id: 2461,new: false
+[ClickButtonLog] [2025-12-17T20:08:43.4077893] Clicked: 9190, real id: 2494,new: false
+[ClickButtonLog] [2025-12-17T20:08:45.8140398] Clicked: 9157, real id: 2461,new: false
+[ClickButtonLog] [2025-12-17T20:08:50.6386743] Clicked: 9190, real id: 2494,new: false

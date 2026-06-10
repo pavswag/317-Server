@@ -8,14 +8,14 @@
         "stackable": false
       }
     ],
-    "amountToKill": 250,
+    "amountToKill": 3,
     "claimedReward": false,
     "amountKilled": 0,
-    "taskDifficulty": "HARD",
+    "taskDifficulty": "EASY",
     "taskType": "SKILLING",
     "weekly": false,
-    "localDateTime": "2025-08-09T17:58:24.1359263",
-    "desc": "Fletch @whi@bows"
+    "localDateTime": "2026-03-31T12:55:11.6881394",
+    "desc": "Craft @whi@Amulet of fury"
   },
   {
     "items": [
@@ -26,14 +26,14 @@
         "stackable": false
       }
     ],
-    "amountToKill": 10,
+    "amountToKill": 150,
     "claimedReward": false,
     "amountKilled": 0,
-    "taskDifficulty": "EASY",
+    "taskDifficulty": "ELITE",
     "taskType": "COMBAT",
-    "weekly": false,
-    "localDateTime": "2025-08-09T17:58:24.1389253",
-    "desc": "Commander Zilyana"
+    "weekly": true,
+    "localDateTime": "2026-04-01T11:55:11.693142",
+    "desc": "Vet\u0027ion"
   },
   {
     "items": [
@@ -47,10 +47,10 @@
     "amountToKill": 300,
     "claimedReward": false,
     "amountKilled": 0,
-    "taskDifficulty": "EASY",
+    "taskDifficulty": "ELITE",
     "taskType": "COMBAT",
-    "weekly": true,
-    "localDateTime": "2025-08-10T16:58:24.1389253",
-    "desc": "Kree\u0027arra"
+    "weekly": false,
+    "localDateTime": "2026-03-31T12:55:11.6941427",
+    "desc": "Barrows"
   }
 ]

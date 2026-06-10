@@ -1,0 +1,1413 @@
+# Turmoil Instance And Minigame Lifecycle Map
+
+This document maps how Turmoil creates, runs, rewards, and cleans up instances and minigames. It is meant for future content work, not core rewrites.
+
+Rules for future work:
+- Prefer existing instance, party, room, chest, and manager patterns.
+- Use `src/io/xeros/content/instances/InstancedArea.java` subclasses for new isolated areas unless an older content family already has its own lifecycle.
+- Do not rewrite `src/io/xeros/model/entity/player/Player.java`, `src/io/xeros/model/entity/player/PlayerHandler.java`, `src/io/xeros/model/entity/npc/NPCProcess.java`, `src/io/xeros/content/combat/death/PlayerDeath.java`, or `src/io/xeros/content/combat/death/NPCDeath.java` for one boss or minigame.
+- Use data/config loaders where they exist, especially for AOE tiers and rewards.
+- Use repo-relative paths only when documenting or planning content changes.
+
+Context docs used:
+- docs/TURMOIL_CONTENT_GUIDE.md
+- docs/TURMOIL_CONTENT_INDEX.md
+- docs/TURMOIL_PROGRESSION_AUDIT.md
+- docs/TURMOIL_SERVER_METHOD_FLOW_MAP.md
+- docs/TURMOIL_COMBAT_AND_REWARD_PIPELINE_DEEP_DIVE.md
+- docs/TURMOIL_AOE_SYSTEM_DEEP_DIVE.md
+- docs/TURMOIL_DATA_CONFIG_LOADER_MAP.md
+- docs/TURMOIL_CORE_SYSTEMS_RISK_MAP.md
+
+## 1. Generic InstancedArea Lifecycle
+
+- Main files:
+  - src/io/xeros/content/instances/InstancedArea.java
+  - src/io/xeros/content/instances/InstanceConfiguration.java
+  - src/io/xeros/content/instances/InstanceConfigurationBuilder.java
+  - src/io/xeros/content/instances/InstanceHeight.java
+  - src/io/xeros/model/entity/player/Player.java
+  - src/io/xeros/model/entity/player/PlayerHandler.java
+  - src/io/xeros/model/entity/npc/NPCProcess.java
+  - src/io/xeros/content/combat/death/PlayerDeath.java
+- How the instance/minigame starts:
+  - A content class constructs an `InstancedArea` subclass with an `InstanceConfiguration`.
+  - The constructor reserves a private height with `InstanceHeight.getFreeAndReserve()` unless a height is supplied directly.
+  - Existing examples call a local start method such as `enter(Player)`, `begin(Player)`, `start(List<Player>)`, or `countdown()`.
+- How players join:
+  - `InstancedArea.add(Player)` adds the player to the instance list and calls `player.setInstance(this)`.
+  - The content class usually moves the player with `player.getPA().movePlayer(...)` before or after `add(Player)`.
+  - Party content adds each player in a loop.
+- How NPCs spawn:
+  - Content classes spawn NPCs with `NPCSpawning.spawnNpc(...)`, `NPCSpawning.spawn(...)`, or custom NPC constructors.
+  - `InstancedArea.add(NPC)` stores the NPC and calls `npc.setInstance(this)`.
+  - `NPCProcess` calls `npc.getInstance().tick(npc)` while the NPC is alive in an instance.
+- How objects/buttons are handled:
+  - `src/io/xeros/model/entity/player/packets/ClickObject.java` checks `c.getInstance().handleClickObject(c, worldObject, option)` before most global object handling.
+  - `InstancedArea.handleClickObject(Player, WorldObject, int)` defaults to `false`.
+  - Content subclasses override `handleClickObject` when doors, exits, chests, gates, or room transitions are instance-specific.
+  - Button/interface behavior usually stays in the minigame container or room classes rather than in `InstancedArea`.
+- How rewards are given:
+  - Rewards are usually given by the concrete content class, a room class, or normal `NPCDeath` and `DropManager` flow.
+  - `InstancedArea` itself does not define reward logic.
+- How players leave:
+  - `InstancedArea.remove(Player)` removes the player, clears `player.setInstance(null)`, reloads item handling, and disposes the instance if it is empty and configured with `isCloseOnPlayersEmpty()`.
+  - `Player.checkInstanceCoords()` removes players who leave the instance boundaries or remain in a disposed instance.
+  - `PlayerDeath.handleAreaBasedDeath(Player)` calls `player.getInstance().handleDeath(c)` first, then removes the player if the instance did not handle death.
+- How cleanup works:
+  - `InstancedArea.dispose()` guards against double disposal, calls `onDispose()`, frees the reserved height, unregisters NPCs, and removes players.
+  - `killNpcs()` unregisters tracked NPCs.
+  - `InstanceHeight.free(int)` releases reserved height levels.
+- What player state is changed:
+  - `Player.setInstance(...)`
+  - Player position through `PlayerAssistant.movePlayer(...)`
+  - Content-specific fields such as wave ids, raid fields, party membership, or AOE attributes may also change.
+- What save data is used:
+  - Generic `InstancedArea` membership is runtime-only.
+  - Save data is content-specific; examples include AOE save entries, raid counts, Pest Control points, and Fight Cave wave fields.
+- Existing examples to copy:
+  - src/io/xeros/content/bosses/obor/OborInstance.java
+  - src/io/xeros/content/bosses/mimic/MimicInstance.java
+  - src/io/xeros/content/bosses/bryophyta/Bryophyta.java
+  - src/io/xeros/content/minigames/tob/instance/TobInstance.java
+  - src/io/xeros/content/minigames/TOA/instance/TombsOfAmascutInstance.java
+- Safe extension points:
+  - New `InstancedArea` subclass.
+  - New `InstanceConfiguration` usage through `InstanceConfigurationBuilder`.
+  - Override `handleClickObject`, `handleDeath`, `handleInterfaceUpdating`, or `tick` only for local content behavior.
+- Dangerous areas to avoid:
+  - Rewriting `InstancedArea.dispose()`, `InstancedArea.remove(Player)`, `InstanceHeight.getFree()`, `Player.checkInstanceCoords()`, or the global death flow.
+  - Adding one-off boss mechanics to `NPCProcess` or `PlayerDeath` when the instance class can own the behavior.
+
+## 2. Instance Creation
+
+- Main files:
+  - src/io/xeros/content/instances/InstancedArea.java
+  - src/io/xeros/content/instances/InstanceConfiguration.java
+  - src/io/xeros/content/instances/InstanceConfigurationBuilder.java
+  - src/io/xeros/content/instances/BossInstance.java
+  - src/io/xeros/content/instances/BossInstanceManager.java
+- How the instance/minigame starts:
+  - Simple bosses create a new instance class directly, for example `new OborInstance().begin(p)` or `new MimicInstance().enter(player)`.
+  - `BossInstance.start(Player)` dispatches to the enum starter for paid boss instances.
+  - `BossInstanceManager.enter(Player, BossTier)` creates the tiered boss instance area.
+- How players join:
+  - Solo bosses call `add(player)`.
+  - Party minigames call `start(List<Player>)` and loop through members.
+  - AOE creates a copied map first, then moves and registers the player.
+- How NPCs spawn:
+  - Spawn after height allocation and player assignment.
+  - Newer instance classes call `add(npc)` so the NPC is tracked and cleaned up.
+- How objects/buttons are handled:
+  - Creation is usually triggered by command, object click, NPC click, or dialogue selection.
+  - `BossInstanceDialogue` starts AOE tiers from dialogue options.
+- How rewards are given:
+  - Creation does not grant rewards; rewards happen on NPC death, chest click, room completion, or instance end.
+- How players leave:
+  - Creation paths usually rely on `InstancedArea.remove(Player)`, local exit objects, or death handling.
+- How cleanup works:
+  - `InstanceConfiguration.CLOSE_ON_EMPTY` and `InstanceConfiguration.CLOSE_ON_EMPTY_RESPAWN` control empty-instance disposal and NPC respawn behavior.
+- What player state is changed:
+  - Instance reference, position, interface timers, activity-specific attributes, and sometimes paid entry resources or keys.
+- What save data is used:
+  - Entry itself is usually runtime-only.
+  - Some entry costs consume inventory items, such as keys for Obor and Bryophyta.
+- Existing examples to copy:
+  - src/io/xeros/content/bosses/obor/OborInstance.java
+  - src/io/xeros/content/bosses/bryophyta/Bryophyta.java
+  - src/io/xeros/content/instances/BossInstance.java
+  - src/io/xeros/content/dialogue/impl/BossInstanceDialogue.java
+- Safe extension points:
+  - Add a new enum entry in the appropriate manager only when matching the existing registration pattern.
+  - Add a new local instance class with its own start method.
+- Dangerous areas to avoid:
+  - Changing global height allocation.
+  - Starting an instance before validating entry requirements.
+  - Spawning NPCs without setting their instance.
+
+## 3. Player Entering An Instance
+
+- Main files:
+  - src/io/xeros/content/instances/InstancedArea.java
+  - src/io/xeros/model/entity/player/Player.java
+  - src/io/xeros/content/bosses/obor/OborInstance.java
+  - src/io/xeros/content/bosses/mimic/MimicInstance.java
+  - src/io/xeros/content/minigames/tob/instance/TobInstance.java
+- How the instance/minigame starts:
+  - Local entry methods perform validation, allocate the instance, then call `add(player)`.
+- How players join:
+  - `add(Player)` sets `player.setInstance(this)`.
+  - Most content then moves the player to a resolved instance position using `getHeight()` or `resolve(Position)`.
+- How NPCs spawn:
+  - Solo boss examples spawn NPCs during or immediately after entry.
+  - Party room content often initializes the first room before moving players.
+- How objects/buttons are handled:
+  - Entry objects are handled before the player has an instance.
+  - Once inside, instance object clicks go through `InstancedArea.handleClickObject`.
+- How rewards are given:
+  - No direct reward on entry, except consumable entry costs and setup messages.
+- How players leave:
+  - Exit objects, death, logout, boundary checks, or instance end.
+- How cleanup works:
+  - If a player leaves and the instance becomes empty, close-on-empty instances dispose automatically.
+- What player state is changed:
+  - `player.setInstance(this)`
+  - Position.
+  - Sometimes temporary flags such as room state, timers, or minigame-specific attributes.
+- What save data is used:
+  - Not usually saved at entry.
+- Existing examples to copy:
+  - `OborInstance.enter(Player)`
+  - `MimicInstance.enter(Player)`
+  - `TobInstance.start(List<Player>)`
+- Safe extension points:
+  - Validate before `add(Player)`.
+  - Move players to positions with the instance height.
+  - Close interfaces after movement when the existing pattern does.
+- Dangerous areas to avoid:
+  - Reusing a single instance object across unrelated solo fights.
+  - Moving a player into a height without assigning `player.setInstance`.
+
+## 4. Player Leaving An Instance
+
+- Main files:
+  - src/io/xeros/content/instances/InstancedArea.java
+  - src/io/xeros/model/entity/player/Player.java
+  - src/io/xeros/content/combat/death/PlayerDeath.java
+  - src/io/xeros/content/instances/BossInstanceManager.java
+  - src/io/xeros/content/minigames/raids/Raids.java
+- How the instance/minigame starts:
+  - Leaving is triggered by local exits, death, logout, boundary checks, activity completion, or manual leave commands.
+- How players join:
+  - Not applicable after leaving.
+- How NPCs spawn:
+  - Not applicable, except systems may despawn or kill NPCs on leave.
+- How objects/buttons are handled:
+  - Exit objects are handled by the instance class or legacy minigame class.
+  - CoX handles reward crystal and exit objects in `Raids.handleObjectClick(Player, int, int, int)`.
+- How rewards are given:
+  - Some systems grant rewards before removing the player, such as TOB/TOA treasure room chests or CoX reward crystal.
+  - Other systems give direct completion rewards before leaving, such as Fight Cave and Inferno.
+- How players leave:
+  - `InstancedArea.remove(Player)` clears the instance.
+  - `BossInstanceManager.leave(Player)` handles tiered boss instance cleanup and rewards.
+  - Legacy systems such as `Raids.leaveGame(Player)` and `FightCave.leaveGame()` own their own leave logic.
+- How cleanup works:
+  - Close-on-empty instances dispose.
+  - Legacy systems kill spawns and clear runtime lists manually.
+- What player state is changed:
+  - Instance reference cleared.
+  - Position moved to exit or home area.
+  - Combat resources may be restored.
+  - Activity flags and timers may be cleared.
+- What save data is used:
+  - Usually not saved directly on leave, except completion counters or reward state changed by the content.
+- Existing examples to copy:
+  - `InstancedArea.remove(Player)`
+  - `BossInstanceManager.leave(Player)`
+  - `Raids.leaveGame(Player)`
+  - `FightCave.leaveGame()`
+- Safe extension points:
+  - Put local leave behavior in the instance class.
+  - Grant required completion rewards before calling removal if the existing content pattern does that.
+- Dangerous areas to avoid:
+  - Clearing player save fields on ordinary leave.
+  - Disposing while iterating live player lists without copying when the local code does not already support it.
+
+## 5. Instance NPC Spawning
+
+- Main files:
+  - src/io/xeros/content/instances/InstancedArea.java
+  - src/io/xeros/model/entity/npc/NPCSpawning.java
+  - src/io/xeros/content/bosses/obor/OborInstance.java
+  - src/io/xeros/content/bosses/mimic/MimicInstance.java
+  - src/io/xeros/content/minigames/tob/TobRoom.java
+  - src/io/xeros/content/minigames/TOA/TombsOfAmascutRoom.java
+  - src/io/xeros/content/instances/aoe/AoeNpcSpawner.java
+- How the instance/minigame starts:
+  - The content start method calls the relevant spawn method after height allocation.
+- How players join:
+  - Players should be added before NPCs start attacking when mechanics need owner or target context.
+- How NPCs spawn:
+  - Direct constructor examples create custom NPC objects and call `add(npc)`.
+  - Room systems call `room.spawn(this)`.
+  - AOE calls `AoeNpcSpawner.spawnForInstance(...)`.
+  - God Wars instances clone existing global-room NPCs into the instance.
+- How objects/buttons are handled:
+  - Object state can be tied to NPC spawn state, such as room gates and chests.
+- How rewards are given:
+  - Normal NPC drops go through `NPCDeath` and `DropManager` unless a minigame intercepts reward flow.
+- How players leave:
+  - Instance cleanup unregisters tracked NPCs.
+- How cleanup works:
+  - `InstancedArea.dispose()` unregisters tracked NPCs.
+  - AOE uses `AoeNpcSpawner.despawnForInstance(AoeInstance)`.
+  - Legacy systems use local `killAllSpawns()` methods.
+- What player state is changed:
+  - Usually none directly during NPC spawning, except tracking fields for owner, room, or activity.
+- What save data is used:
+  - NPC spawn state is usually runtime-only.
+- Existing examples to copy:
+  - `OborInstance.enter(Player)`
+  - `MimicInstance.enter(Player)`
+  - `TobRoom.spawn(InstancedArea)`
+  - `AoeNpcSpawner.spawnForInstance(...)`
+- Safe extension points:
+  - Add spawned NPCs to the instance.
+  - Mark temporary NPCs as non-respawning when the instance owns their lifecycle.
+- Dangerous areas to avoid:
+  - Global NPC loops unless extending an existing clone-style system like God Wars.
+  - Spawning NPCs on height 0 for private content.
+
+## 6. Instance Object Handling
+
+- Main files:
+  - src/io/xeros/model/entity/player/packets/ClickObject.java
+  - src/io/xeros/content/instances/InstancedArea.java
+  - src/io/xeros/content/minigames/tob/instance/TobInstance.java
+  - src/io/xeros/content/minigames/TOA/instance/TombsOfAmascutInstance.java
+  - src/io/xeros/content/bosses/obor/OborInstance.java
+  - src/io/xeros/content/bosses/grotesqueguardians/GrotesqueInstance.java
+- How the instance/minigame starts:
+  - Some starts are triggered by object clicks before entering an instance.
+  - Inside an instance, `ClickObject` delegates to `handleClickObject`.
+- How players join:
+  - Players must already have `player.getInstance()` set for the instance object hook to fire.
+- How NPCs spawn:
+  - Object actions can start fights, unlock NPC aggression, or advance rooms.
+- How objects/buttons are handled:
+  - `ClickObject` calls `c.getInstance().handleClickObject(c, worldObject, option)` early.
+  - TOB and TOA room gates and chests are handled by their instance and room classes.
+  - Obor handles exit and rock objects locally.
+- How rewards are given:
+  - Chests or reward objects can grant rewards when clicked.
+  - TOB/TOA treasure rooms validate assigned chests before granting rewards.
+- How players leave:
+  - Exit objects usually move players out and remove or dispose the instance.
+- How cleanup works:
+  - Global objects with instance references are cleaned by content-specific logic or disappear with region state.
+- What player state is changed:
+  - Room position, interface/dialogue state, claimed chest state, and sometimes instance membership.
+- What save data is used:
+  - Usually runtime-only for object state.
+- Existing examples to copy:
+  - `OborInstance.handleClickObject(Player, WorldObject, int)`
+  - `GrotesqueInstance.handleClickObject(Player, WorldObject, int)`
+  - `TobInstance.handleClickObject(Player, WorldObject, int)`
+- Safe extension points:
+  - Override `handleClickObject` in the instance class.
+  - Delegate room-specific actions to room classes.
+- Dangerous areas to avoid:
+  - Adding instance-specific object cases to the global `ClickObject` file when the player is already inside an `InstancedArea`.
+
+## 7. Instance Death Handling
+
+- Main files:
+  - src/io/xeros/content/combat/death/PlayerDeath.java
+  - src/io/xeros/content/instances/InstancedArea.java
+  - src/io/xeros/content/minigames/tob/instance/TobInstance.java
+  - src/io/xeros/content/minigames/TOA/instance/TombsOfAmascutInstance.java
+  - src/io/xeros/content/minigames/inferno/Inferno.java
+  - src/io/xeros/content/minigames/fight_cave/FightCave.java
+- How the instance/minigame starts:
+  - Death handling is active once the player is inside an instance or minigame boundary.
+- How players join:
+  - The active instance is read from `player.getInstance()`.
+- How NPCs spawn:
+  - Not usually spawned during player death.
+- How objects/buttons are handled:
+  - Not usually relevant during death.
+- How rewards are given:
+  - Most death handling does not give rewards.
+  - Some systems end the run and may preserve or deny rewards depending on current room state.
+- How players leave:
+  - `PlayerDeath.handleAreaBasedDeath(Player)` calls `player.getInstance().handleDeath(c)`.
+  - If the instance returns `true`, the instance handled death.
+  - If not, the player is removed from the instance.
+- How cleanup works:
+  - Instance-specific `handleDeath` can move the player, mark them dead, or remove them.
+  - Fight Cave and Inferno kill spawns and reset wave state.
+- What player state is changed:
+  - Position, death attributes, wave fields, room state, and instance reference.
+  - TOB uses `TobInstance.TOB_DEAD_ATTR_KEY`.
+  - TOA uses `TombsOfAmascutInstance.TOMBS_OF_AMASCUT_DEAD_ATTR_KEY`.
+- What save data is used:
+  - Fight Cave wave fields are saved by `PlayerSave`.
+  - Most instance death markers are runtime-only.
+- Existing examples to copy:
+  - `TobInstance.handleDeath(Player)`
+  - `TombsOfAmascutInstance.handleDeath(Player)`
+  - `FightCave.handleDeath()`
+  - `Inferno.handleDeath()`
+- Safe extension points:
+  - Override `handleDeath(Player)` in the instance.
+  - Return `true` only after the content fully handles death.
+- Dangerous areas to avoid:
+  - Editing global death code for one new instance.
+  - Forgetting to clear temporary death attributes when players advance rooms.
+
+## 8. Instance Cleanup
+
+- Main files:
+  - src/io/xeros/content/instances/InstancedArea.java
+  - src/io/xeros/content/instances/InstanceHeight.java
+  - src/io/xeros/content/instances/aoe/AoeInstanceService.java
+  - src/io/xeros/content/minigames/raids/Raids.java
+  - src/io/xeros/content/minigames/fight_cave/FightCave.java
+  - src/io/xeros/content/minigames/inferno/Inferno.java
+- How the instance/minigame starts:
+  - Cleanup is tied to the creation style.
+  - `InstancedArea` cleanup is centralized in `dispose()`.
+  - Legacy systems use local cleanup methods.
+- How players join:
+  - Player lists determine whether close-on-empty instances are disposed.
+- How NPCs spawn:
+  - Tracked NPCs are unregistered during `dispose()`.
+  - Legacy systems use `killAllSpawns()`.
+- How objects/buttons are handled:
+  - Some cleanup removes instance-specific objects, such as Inferno wall objects and CoX crystals.
+- How rewards are given:
+  - Cleanup can happen after rewards are granted.
+  - Tiered boss instances call performance reward logic through `BossInstanceManager.leave(Player)`.
+- How players leave:
+  - Empty close-on-empty instances dispose.
+  - Manual leave methods move players out before or during cleanup.
+- How cleanup works:
+  - `InstancedArea.dispose()` calls `onDispose()`, frees height, unregisters NPCs, and removes players.
+  - AOE calls `AoeInstanceService.teardown(AoeInstance, String)`, destroys copied map chunks, frees height, and clears repo maps.
+  - Raids and Fight Cave kill spawns manually.
+- What player state is changed:
+  - Instance references cleared.
+  - Temporary attributes cleared by the owning system.
+- What save data is used:
+  - Cleanup is mostly runtime-only.
+- Existing examples to copy:
+  - `InstancedArea.dispose()`
+  - `AoeInstanceService.teardown(AoeInstance, String)`
+  - `Raids.killAllSpawns()`
+  - `Inferno.killAllSpawns()`
+- Safe extension points:
+  - Put cleanup in `onDispose()` or a local leave/end method.
+  - Use close-on-empty configs where appropriate.
+- Dangerous areas to avoid:
+  - Manually freeing heights that were not reserved by the instance.
+  - Clearing global NPCs or objects without filtering by height, instance, or owner.
+
+## 9. Party And Group Instances
+
+- Main files:
+  - src/io/xeros/content/party/PlayerParty.java
+  - src/io/xeros/content/minigames/tob/party/TobParty.java
+  - src/io/xeros/content/minigames/TOA/party/TombsOfAmascutParty.java
+  - src/io/xeros/content/minigames/arbograve/party/ArbograveParty.java
+  - src/io/xeros/content/minigames/raids/CoxParty.java
+  - src/io/xeros/content/bosses/nightmare/party/NightmareParty.java
+- How the instance/minigame starts:
+  - Party leader uses an object or NPC flow that calls `openStartActivityDialogue(...)`.
+  - The callback creates the instance and starts it with the selected party list.
+- How players join:
+  - Party classes validate membership with `canJoin`.
+  - Instance start methods loop through `List<Player>`.
+- How NPCs spawn:
+  - Rooms or the instance spawn NPCs after party members are added or the first room is initialized.
+- How objects/buttons are handled:
+  - Party interfaces refresh on join/leave.
+  - Activity start dialogue controls party launch.
+- How rewards are given:
+  - Group rewards are handled by each activity, usually through chests, contribution rolls, or per-player reward lists.
+- How players leave:
+  - Instance removal does not always remove players from their party.
+  - TOB and TOA include `removeButLeaveInParty(Player)` for death or wipe behavior.
+- How cleanup works:
+  - Close-on-empty instances dispose after all players leave.
+  - Legacy CoX tracks raid membership in its own lists.
+- What player state is changed:
+  - Party membership, instance reference, room position, room/death attributes, timers, and reward lists.
+- What save data is used:
+  - Party membership and instance membership are runtime-only.
+  - Completion counters and currency are saved by their own systems.
+- Existing examples to copy:
+  - `TobContainer.startTob()`
+  - `TombsOfAmascutContainer.startTombsOfAmascut()`
+  - `ArbograveContainer.startArbo()`
+  - `NightmareActionHandler.clickNpc(Player, int, int)`
+- Safe extension points:
+  - Use party start dialogue patterns for group content.
+  - Keep party validation in party classes.
+- Dangerous areas to avoid:
+  - Mixing party membership removal with instance leave unless the existing system requires it.
+  - Bypassing party validation for multi-player rewards.
+
+## 10. Solo Boss Instances
+
+- Main files:
+  - src/io/xeros/content/bosses/obor/OborInstance.java
+  - src/io/xeros/content/bosses/mimic/MimicInstance.java
+  - src/io/xeros/content/bosses/bryophyta/Bryophyta.java
+  - src/io/xeros/content/bosses/grotesqueguardians/GrotesqueInstance.java
+  - src/io/xeros/content/instances/BossInstance.java
+  - src/io/xeros/content/instances/impl/LegacySoloPlayerInstance.java
+- How the instance/minigame starts:
+  - A direct start method validates requirements, consumes entry items if needed, and creates the instance.
+  - `BossInstance` enum entries start some existing solo bosses.
+- How players join:
+  - Solo instances call `add(player)` and move the player to a private height.
+- How NPCs spawn:
+  - The instance class creates and adds boss NPCs.
+  - Boss-specific NPC classes can own combat behavior.
+- How objects/buttons are handled:
+  - Local exits and mechanics are handled through `handleClickObject`.
+- How rewards are given:
+  - Most solo bosses use normal `NPCDeath` and `DropManager`.
+  - Entry keys are consumed before the fight in Obor and Bryophyta examples.
+- How players leave:
+  - Exit objects, death, logout, or close-on-empty cleanup.
+- How cleanup works:
+  - `InstancedArea.dispose()` cleans NPCs and height.
+  - `onDispose()` should only contain local cleanup when needed.
+- What player state is changed:
+  - Instance reference, position, consumed key/items, and combat state.
+- What save data is used:
+  - Usually none for the instance itself.
+- Existing examples to copy:
+  - `OborInstance` for a small solo boss with key entry and object interactions.
+  - `MimicInstance` for a compact custom NPC spawn pattern.
+  - `Bryophyta` for key-entry boss with respawn config.
+- Safe extension points:
+  - New boss-specific `InstancedArea` subclass.
+  - New local NPC subclass for mechanics.
+- Dangerous areas to avoid:
+  - `LegacySoloPlayerInstance` is marked with a local comment warning not to use it; copy only when extending an older system that already uses it.
+  - Avoid adding isolated boss mechanics to `NPCHandler` or `NPCProcess`.
+
+## 11. AOE Tier Instances
+
+- Main files:
+  - data/aoe/aoe_boss_tiers.json
+  - data/aoe/aoe_tier_rewards.json
+  - data/aoe/AoeZoneMapConfig.json
+  - src/io/xeros/content/dialogue/impl/BossInstanceDialogue.java
+  - src/io/xeros/content/instances/aoe/AoeTierController.java
+  - src/io/xeros/content/instances/aoe/AoeInstanceService.java
+  - src/io/xeros/content/instances/aoe/AoeNpcSpawner.java
+  - src/io/xeros/content/instances/aoe/AoeTierEvents.java
+  - src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java
+  - src/io/xeros/content/instances/aoe/AoeDropInterceptor.java
+- How the instance/minigame starts:
+  - `BossInstanceDialogue` lists AOE tiers from `AoeTierRepo`.
+  - Selecting an unlocked tier calls `AoeTierController.startTier(Player, int)`.
+  - `AoeTierController.startTier` calls `AoeInstanceService.buildAndEnter(...)`.
+- How players join:
+  - AOE is owner-based. `AoeInstanceService` builds the copied map, moves the player into the generated zone, and registers the instance in `AoeTierRepo`.
+- How NPCs spawn:
+  - `AoeNpcSpawner.spawnForInstance(...)` spawns tier boss/minion NPCs, registers them to the `AoeZoneInstance`, and starts the zone ticker.
+- How objects/buttons are handled:
+  - Tier selection is dialogue-based.
+  - AOE object handling is driven by copied map state and the AOE service, not a generic `InstancedArea` subclass.
+- How rewards are given:
+  - `AoeDropInterceptor.awardInsideAoe(Player, GameItem)` intercepts drops while active.
+  - `AoeTierEvents.onNpcDeath(Player, NPC)` increments tier kills and can award Fortune/Demon Hunter XP through `player.addDemonHunterXP(...)` when configured.
+  - `AoeTierController.endTier(Player, boolean)` applies end-of-run bonus item rewards from `aoe_tier_rewards.json`.
+- How players leave:
+  - `AoeTierController.endTier(Player, boolean)` ends the tier and tears down the instance.
+  - The AOE ticker can also teardown on invalid or empty conditions.
+- How cleanup works:
+  - `AoeInstanceService.teardown(AoeInstance, String)` despawns AOE NPCs, destroys copied map chunks, frees the reserved height, and clears instance repo state.
+- What player state is changed:
+  - Attributes `aoe_unlocked_tier`, `aoe_active_tier`, `aoe_reward_tracker`, `aoe_instance`, and per-tier `aoe_kc_#`.
+- What save data is used:
+  - `AoeTierProgressSaveEntry` saves `aoe_unlocked_tier` and loaded tier kill counts.
+- Existing examples to copy:
+  - `AoeTierController.startTier(Player, int)`
+  - `AoeTierController.endTier(Player, boolean)`
+  - `AoeDropInterceptor.awardInsideAoe(Player, GameItem)`
+  - `AoeNpcSpawner.spawnForInstance(...)`
+- Safe extension points:
+  - JSON-only changes in `data/aoe/aoe_boss_tiers.json`, `data/aoe/aoe_tier_rewards.json`, and `data/aoe/AoeZoneMapConfig.json` when using supported fields.
+  - Add reward support in the loader/controller only when JSON fields are not already supported.
+- Dangerous areas to avoid:
+  - Rewriting map-copy lifecycle in `AoeInstanceService`.
+  - Replacing the AOE save entry with ad hoc `PlayerSave.java` keys.
+  - Spawning AOE NPCs outside `AoeNpcSpawner`.
+
+## 12. Boss Instance Dialogue Flow
+
+- Main files:
+  - src/io/xeros/content/dialogue/impl/BossInstanceDialogue.java
+  - src/io/xeros/content/dialogue/DialogueBuilder.java
+  - src/io/xeros/content/instances/aoe/AoeTierController.java
+  - src/io/xeros/content/instances/aoe/AoeTierRepo.java
+- How the instance/minigame starts:
+  - The dialogue builds paged options from loaded AOE tier definitions.
+  - Choosing an unlocked tier calls `AoeTierController.startTier(player, tier)`.
+- How players join:
+  - Players join after the dialogue callback starts the AOE tier.
+- How NPCs spawn:
+  - NPCs spawn later through `AoeInstanceService` and `AoeNpcSpawner`.
+- How objects/buttons are handled:
+  - Dialogue option callbacks handle page navigation and selection.
+- How rewards are given:
+  - The dialogue does not reward players directly.
+- How players leave:
+  - Not handled by the dialogue; AOE ending is handled by `AoeTierController.endTier`.
+- How cleanup works:
+  - Not handled by the dialogue.
+- What player state is changed:
+  - Only indirectly through `AoeTierController.startTier`.
+- What save data is used:
+  - Unlock checks read AOE tier attributes saved by `AoeTierProgressSaveEntry`.
+- Existing examples to copy:
+  - `BossInstanceDialogue.handleSelect(Player, int, AoeBossTierDef)`
+- Safe extension points:
+  - Add new tier display behavior through `DialogueBuilder` if the AOE tier data already supports it.
+- Dangerous areas to avoid:
+  - Adding legacy `dialogueAction` flows for AOE tier selection.
+  - Placing reward logic in the dialogue.
+
+## 13. Raids Instance Flow
+
+- Main files:
+  - src/io/xeros/content/minigames/raids/Raids.java
+  - src/io/xeros/content/minigames/raids/RaidConstants.java
+  - src/io/xeros/content/minigames/raids/CoxParty.java
+  - src/io/xeros/content/minigames/raids/RaidMonsters.java
+  - src/io/xeros/content/minigames/raids/chest/RaidsChestCommon.java
+  - src/io/xeros/content/minigames/raids/chest/RaidsChestRare.java
+- How the instance/minigame starts:
+  - `Raids.startRaid(List<Player>, boolean)` starts the raid.
+  - It increments `RaidConstants.currentRaidHeight` by 4 and assigns the raid height.
+- How players join:
+  - Players are moved to the raid start location and `player.setRaidsInstance(this)` is set.
+  - `RaidConstants.checkLogin(Player)` can reattach players who recently left an active raid.
+- How NPCs spawn:
+  - `spawnRaidsNpc(...)` spawns room NPCs, scales stats by group size, and calls `npc.setRaidsInstance(this)`.
+  - `spawnNpcs(currentRoom)` handles room spawns.
+- How objects/buttons are handled:
+  - `Raids.handleObjectClick(Player, int, int, int)` handles doors, room transitions, chest-room searching, exit crystals, and reward crystals.
+- How rewards are given:
+  - `Raids.handleMobDeath(Player, int)` adds points on room kills.
+  - On Olm death, the raid creates reward lists with `rollRegular()` and `rollUnique()`, updates collection log for unique rewards, increments CoX achievements, and sets `player.setLootCox(true)`.
+  - Object `30028` grants raid reward items from `player.getRaidRewards()`.
+  - Completion can call `Pass.addExperience(player, 1)` and `BossPoints.addManualPoints(player, "chambers of xeric")`.
+- How players leave:
+  - `Raids.leaveGame(Player)` moves the player out, clears `player.setRaidsInstance(null)`, removes the player from the raid list, restores resources, and checks instances.
+  - Logout calls `Raids.logout(Player)`.
+- How cleanup works:
+  - `RaidConstants.checkInstances()` removes empty raids and calls `killAllSpawns()`.
+  - `Raids.killAllSpawns()` removes raid NPCs on the raid height.
+- What player state is changed:
+  - `player.setRaidsInstance(...)`
+  - `player.raidCount`
+  - `player.getRaidRewards()`
+  - `player.setLootCox(...)`
+  - raid damage attribute `cox_damage`
+  - `player.daily2xRaidLoot`
+- What save data is used:
+  - `PlayerSave` saves `raidCount` and `daily2xRaidLoot`.
+  - Raid membership is runtime-only.
+- Existing examples to copy:
+  - `Raids.startRaid(List<Player>, boolean)`
+  - `Raids.handleMobDeath(Player, int)`
+  - `Raids.handleObjectClick(Player, int, int, int)`
+- Safe extension points:
+  - Add raid rewards through existing chest reward lists when balancing CoX.
+  - Add task or achievement hooks near existing raid completion hooks.
+- Dangerous areas to avoid:
+  - Converting CoX to `InstancedArea` casually.
+  - Editing global raid height rotation without a full regression pass.
+  - Granting reward items before `player.getLootCox()` validation.
+
+## 14. TOB Instance Flow
+
+- Main files:
+  - src/io/xeros/content/minigames/tob/TobContainer.java
+  - src/io/xeros/content/minigames/tob/instance/TobInstance.java
+  - src/io/xeros/content/minigames/tob/TobRoom.java
+  - src/io/xeros/content/minigames/tob/rooms/RoomSevenTreasure.java
+  - src/io/xeros/content/minigames/tob/party/TobParty.java
+  - src/io/xeros/content/minigames/tob/chest/TheatreOfBloodChest.java
+- How the instance/minigame starts:
+  - `TobContainer.handleClickObject(WorldObject, int)` detects the TOB entry object and calls `startTob()`.
+  - `startTob()` requires `TobParty.TYPE` and calls `openStartActivityDialogue(...)`.
+  - The callback creates `new TobInstance(list.size()).start(list)`.
+- How players join:
+  - `TobInstance.start(List<Player>)` initializes the first room, calls `add(plr)`, moves each player to the first room spawn, and starts timers.
+- How NPCs spawn:
+  - `initialiseNextRoom(Player)` gets the current `TobRoom`, calls `tobRoom.spawn(this)`, and scales NPC health by party size.
+- How objects/buttons are handled:
+  - `TobInstance.handleClickObject(Player, WorldObject, int)` handles boss gates, final gates, next-room objects, and food chests.
+  - Room classes handle room-specific object behavior.
+- How rewards are given:
+  - `RoomSevenTreasure.spawn(InstancedArea)` generates per-player chest rewards.
+  - `RoomSevenTreasure.openChest(Player, TobInstance)` grants rewards through `TheatreOfBloodChest.rewardItems(...)` and gives battlepass experience.
+- How players leave:
+  - `TobInstance.remove(Player)` opens the chest if the player is in the treasure room, then calls `super.remove(player)` and removes the boss timer.
+  - `removeButLeaveInParty(Player)` removes instance membership without removing party membership.
+- How cleanup works:
+  - The instance uses `InstanceConfiguration.CLOSE_ON_EMPTY`.
+  - `onDispose()` is empty, so base cleanup owns NPC and height cleanup.
+- What player state is changed:
+  - Instance reference.
+  - Boss timer.
+  - Room position.
+  - `TobInstance.TOB_DEAD_ATTR_KEY` during death handling.
+  - Chest reward maps inside the instance.
+- What save data is used:
+  - Treasure/chest state is runtime-only.
+  - Completion rewards can affect saved inventory, collection log, battlepass, or other reward systems.
+- Existing examples to copy:
+  - `TobContainer.startTob()`
+  - `TobInstance.start(List<Player>)`
+  - `TobInstance.initialiseNextRoom(Player)`
+  - `RoomSevenTreasure.openChest(Player, TobInstance)`
+- Safe extension points:
+  - Add room behavior through `TobRoom` subclasses.
+  - Add rewards through the TOB chest reward system.
+- Dangerous areas to avoid:
+  - Changing `TobInstance.TOB_DEAD_ATTR_KEY` semantics.
+  - Bypassing room-complete checks on gates.
+  - Editing global object handling for TOB room behavior.
+
+## 15. TOA Instance Flow
+
+- Main files:
+  - src/io/xeros/content/minigames/TOA/TombsOfAmascutContainer.java
+  - src/io/xeros/content/minigames/TOA/instance/TombsOfAmascutInstance.java
+  - src/io/xeros/content/minigames/TOA/TombsOfAmascutRoom.java
+  - src/io/xeros/content/minigames/TOA/rooms/RoomSevenLoot.java
+  - src/io/xeros/content/minigames/TOA/party/TombsOfAmascutParty.java
+  - src/io/xeros/content/minigames/TOA/chest/TombsOfAmascutChest.java
+- How the instance/minigame starts:
+  - `TombsOfAmascutContainer.handleClickObject(WorldObject, int)` detects the entry object and calls `startTombsOfAmascut()`.
+  - `startTombsOfAmascut()` requires `TombsOfAmascutParty.TYPE` and opens activity start dialogue.
+  - The callback creates `new TombsOfAmascutInstance(list.size()).start(list)`.
+- How players join:
+  - `TombsOfAmascutInstance.start(List<Player>)` initializes the first room, adds each player, moves them to the first room spawn, and starts timers.
+- How NPCs spawn:
+  - `initialiseNextRoom(Player)` gets a `TombsOfAmascutRoom`, calls `spawn(this)`, and scales NPC health by party size.
+- How objects/buttons are handled:
+  - `handleClickObject(Player, WorldObject, int)` handles gates, room transitions, and food chests.
+  - Room classes own room-specific object behavior.
+- How rewards are given:
+  - `RoomSevenLoot.spawn(InstancedArea)` creates assigned reward chests.
+  - `RoomSevenLoot.openChest(Player, TombsOfAmascutInstance)` grants rewards through `TombsOfAmascutChest.rewardItems(...)`.
+- How players leave:
+  - `TombsOfAmascutInstance.remove(Player)` opens the chest if the player is in the treasure room, then removes instance membership and timer state.
+  - `removeButLeaveInParty(Player)` exists for wipe/death handling.
+- How cleanup works:
+  - Uses `InstanceConfiguration.CLOSE_ON_EMPTY`.
+  - `onDispose()` is empty.
+- What player state is changed:
+  - Instance reference.
+  - Boss timer.
+  - Room position.
+  - `TombsOfAmascutInstance.TOMBS_OF_AMASCUT_DEAD_ATTR_KEY` during death handling.
+  - Runtime chest reward maps.
+- What save data is used:
+  - Chest state is runtime-only.
+  - Rewards persist through inventory, bank, collection log, or related reward systems.
+- Existing examples to copy:
+  - `TombsOfAmascutContainer.startTombsOfAmascut()`
+  - `TombsOfAmascutInstance.start(List<Player>)`
+  - `RoomSevenLoot.openChest(Player, TombsOfAmascutInstance)`
+- Safe extension points:
+  - Add room content through `TombsOfAmascutRoom` subclasses.
+  - Add reward items through `TombsOfAmascutChest`.
+- Dangerous areas to avoid:
+  - Copying debug print style from existing TOA room movement code into new content.
+  - Bypassing assigned chest validation.
+
+## 16. Nightmare Party And Instance Flow
+
+- Main files:
+  - src/io/xeros/content/bosses/nightmare/NightmareInstance.java
+  - src/io/xeros/content/bosses/nightmare/NightmareActionHandler.java
+  - src/io/xeros/content/bosses/nightmare/NightmareInstanceManager.java
+  - src/io/xeros/content/bosses/nightmare/Nightmare.java
+  - src/io/xeros/content/bosses/nightmare/party/NightmareParty.java
+  - src/io/xeros/content/bosses/nightmare/NightmareInterface.java
+- How the instance/minigame starts:
+  - Party start path uses `NightmareActionHandler.clickNpc(Player, int, int)` and `openStartActivityDialogue(...)`.
+  - The callback creates `new NightmareInstance(false)`, calls `countdown()`, and adds each party member.
+  - Public path uses `NightmareInstanceManager.join(Player)`.
+- How players join:
+  - `NightmareInstance.add(Player)` sends a fade, moves the player to the resolved Nightmare spawn, and calls `super.add(player)`.
+  - Public instance manager creates a shared `NightmareInstance(true)` when needed.
+- How NPCs spawn:
+  - `countdown()` creates `new Nightmare(this)`.
+  - `startFight()` calls `nightmare.startFight()`.
+- How objects/buttons are handled:
+  - Nightmare uses NPC interaction and interface updates more than object clicks.
+  - `handleInterfaceUpdating(Player)` draws `NightmareInterface`.
+- How rewards are given:
+  - Rewards are handled by Nightmare boss/death logic, not by the instance base class.
+- How players leave:
+  - Players leave through instance removal, fight end, death, or empty-instance disposal.
+- How cleanup works:
+  - `NightmareInstance.end()` disposes the instance and clears public status when needed.
+  - `onDispose()` is empty.
+- What player state is changed:
+  - Instance reference.
+  - Position.
+  - Nightmare interface state.
+- What save data is used:
+  - Instance membership is runtime-only.
+- Existing examples to copy:
+  - `NightmareActionHandler.clickNpc(Player, int, int)` for party activity start.
+  - `NightmareInstanceManager.join(Player)` for public shared boss access.
+  - `NightmareInstance.countdown()` for delayed fight start.
+- Safe extension points:
+  - Add Nightmare-specific mechanics in Nightmare classes.
+  - Keep public singleton behavior inside `NightmareInstanceManager`.
+- Dangerous areas to avoid:
+  - Copying public-instance singleton behavior for ordinary solo bosses.
+  - Editing global NPC click flow when `NightmareActionHandler` owns the content.
+
+## 17. God Wars Instances
+
+- Main files:
+  - src/io/xeros/content/bosses/godwars/impl/ArmadylInstance.java
+  - src/io/xeros/content/bosses/godwars/impl/BandosInstance.java
+  - src/io/xeros/content/bosses/godwars/impl/SaradominInstance.java
+  - src/io/xeros/content/bosses/godwars/impl/ZamorakInstance.java
+  - src/io/xeros/content/instances/impl/LegacySoloPlayerInstance.java
+  - src/io/xeros/model/entity/npc/NPCHandler.java
+- How the instance/minigame starts:
+  - Static `enter(Player, InstanceType)` methods create or receive the instance and clone NPCs from the corresponding God Wars room.
+- How players join:
+  - The instance calls `add(player)` and moves the player into the copied boss room height.
+- How NPCs spawn:
+  - Each implementation loops through `NPCHandler.npcs`, filters source room NPCs with no existing instance, and spawns cloned NPCs on the instance height.
+  - The clone is added to the instance.
+- How objects/buttons are handled:
+  - God Wars entry and room objects are handled outside these implementation files.
+- How rewards are given:
+  - Rewards use normal NPC death and drop flow.
+- How players leave:
+  - Base close-on-empty instance behavior handles cleanup.
+- How cleanup works:
+  - Uses `InstanceConfiguration.CLOSE_ON_EMPTY_RESPAWN`.
+  - Base instance cleanup unregisters cloned NPCs.
+- What player state is changed:
+  - Instance reference and position.
+- What save data is used:
+  - Not found in repo for God Wars instance membership. Searched: `GodwarsInstance`, `ArmadylInstance`, `BandosInstance`, `SaradominInstance`, `ZamorakInstance`, `PlayerSave`.
+- Existing examples to copy:
+  - Copy only within God Wars style content: `BandosInstance.enter(...)`, `ArmadylInstance.enter(...)`.
+- Safe extension points:
+  - Clone the existing pattern only for God Wars variants.
+- Dangerous areas to avoid:
+  - Using source-room NPC cloning as the default pattern for new bosses.
+  - Copying `LegacySoloPlayerInstance` unless maintaining legacy content.
+
+## 18. Barrows And Instance-Like Flow
+
+- Main files:
+  - src/io/xeros/content/minigames/barrows/brothers/Brother.java
+  - src/io/xeros/content/minigames/barrows/brothers/Ahrim.java
+  - src/io/xeros/content/minigames/barrows/brothers/Dharok.java
+  - src/io/xeros/content/minigames/barrows/brothers/Guthan.java
+  - src/io/xeros/content/minigames/barrows/brothers/Karil.java
+  - src/io/xeros/content/minigames/barrows/brothers/Torag.java
+  - src/io/xeros/content/minigames/barrows/brothers/Verac.java
+  - src/io/xeros/content/minigames/barrows/RewardItem.java
+  - src/io/xeros/content/minigames/barrows/RewardLevel.java
+  - src/io/xeros/content/minigames/barrows/RewardList.java
+  - src/io/xeros/content/minigames/barrows/RoomLocation.java
+  - src/io/xeros/model/entity/player/save/PlayerSave.java
+- How the instance/minigame starts:
+  - Active modern Barrows controller not found in repo.
+  - `Brother` classes define spawn/reward data and mound/stair/coffin behavior.
+- How players join:
+  - Not found in repo as an `InstancedArea` lifecycle.
+- How NPCs spawn:
+  - `Brother.spawnBrother()` creates brother NPC encounters.
+  - Individual brother classes define NPC id, spawn positions, stats, and rewards.
+- How objects/buttons are handled:
+  - `Brother` subclasses define coffin ids, stairs ids, and mound boundaries.
+  - Dialogue ids for hidden tunnel are present in dialogue handling.
+- How rewards are given:
+  - Reward data classes exist, but active reward chest/controller flow was not found.
+- How players leave:
+  - `Brother.moveUpStairs(Player)` handles stairs-style movement for brother areas.
+- How cleanup works:
+  - Not found in repo as an instance cleanup flow.
+- What player state is changed:
+  - `player.spawnedbarrows` exists.
+  - Barrows brother defeat state is present in brother objects.
+- What save data is used:
+  - `PlayerSave` saves `spawnedbarrows`.
+- Existing examples to copy:
+  - Use brother subclass reward/stat definitions only when working on Barrows-specific content.
+- Safe extension points:
+  - Add or adjust brother rewards through the existing brother reward lists if owner-approved.
+- Dangerous areas to avoid:
+  - Treating Barrows like an `InstancedArea`.
+  - Inventing a new Barrows controller without first locating runtime object/dialogue hooks.
+- Not found in repo:
+  - Active `Barrows` controller or complete reward chest lifecycle.
+  - Searched terms: `class Barrows`, `getBarrows`, `RewardList`, `spawnedbarrows`, `Brother`, `BARROWS`.
+
+## 19. Fight Cave Wave Flow
+
+- Main files:
+  - src/io/xeros/content/minigames/fight_cave/FightCave.java
+  - src/io/xeros/content/minigames/fight_cave/Wave.java
+  - src/io/xeros/model/entity/npc/NPCHandler.java
+  - src/io/xeros/model/entity/player/save/PlayerSave.java
+- How the instance/minigame starts:
+  - `FightCave.create(int)` moves the player to `player.getIndex() * 4`, sets wave type and wave id, and calls `spawn()`.
+- How players join:
+  - Fight Cave is not an `InstancedArea`; it uses per-player height.
+- How NPCs spawn:
+  - `FightCave.spawn()` reads `Wave.getWaveForType(player)`, schedules a delay, and spawns wave NPCs with `NPCSpawning.spawnNpcOld(...)`.
+- How objects/buttons are handled:
+  - Leave objects are handled in `ClickObject`.
+  - Dialogue displays completion counts through `DialogueHandler`.
+- How rewards are given:
+  - `FightCave.stop()` calls `reward()`.
+  - `reward()` grants Fight Cave achievements, capes, Tokkul, optional battlepass progress, diary/event progress, and random rewards depending on wave type.
+- How players leave:
+  - `FightCave.leaveGame()` starts a leave timer, kills spawns, moves the player out, and resets wave fields.
+  - `FightCave.handleDeath()` moves the player out, resets fields, and kills spawns.
+- How cleanup works:
+  - `killAllSpawns()` unregisters Fight Cave NPCs spawned for the player.
+- What player state is changed:
+  - `player.waveId`
+  - `player.fightCavesWaveType`
+  - `player.waveInfo`
+  - `player.infernoLeaveTimer`
+- What save data is used:
+  - `PlayerSave` saves `wave-id`, `wave-type`, and `wave-info`.
+- Existing examples to copy:
+  - `FightCave.spawn()`
+  - `FightCave.reward()`
+  - `NPCHandler.killedTzhaar(Player)`
+- Safe extension points:
+  - Add wave/reward behavior in Fight Cave classes only for Fight Cave content.
+- Dangerous areas to avoid:
+  - Copying this per-player-height model for new content when `InstancedArea` would be cleaner.
+  - Editing `NPCHandler.killedTzhaar(Player)` for unrelated NPCs.
+
+## 20. Inferno Wave Flow
+
+- Main files:
+  - src/io/xeros/content/minigames/inferno/Inferno.java
+  - src/io/xeros/content/minigames/inferno/Tzkalzuk.java
+  - src/io/xeros/content/minigames/inferno/InfernoWaveData.java
+  - src/io/xeros/content/minigames/inferno/Tzkalzuk.java
+  - src/io/xeros/model/entity/npc/NPCHandler.java
+- How the instance/minigame starts:
+  - `Inferno.startInferno(Player, int)` creates `new Inferno(player, Boundary.INFERNO).create(wave)`.
+  - `Inferno.create(int)` moves the player to the instance height, calls `add(player)`, sets wave state, creates walls, and calls `spawn()`.
+- How players join:
+  - Inferno extends `Tzkalzuk`, which extends `LegacySoloPlayerInstance`.
+  - It uses a reserved instance height and `add(player)`.
+- How NPCs spawn:
+  - `Inferno.spawn()` handles waves.
+  - Regular waves spawn through `NPCSpawning.spawnNpcOld(...)` and assign `spawn.setInstance(player.getInstance())`.
+  - Wave 66 and 67 spawn Jad encounters.
+  - Wave 68 starts TzKal-Zuk through `initiateTzkalzuk(...)`.
+- How objects/buttons are handled:
+  - Leave object handling exists in `ClickObject`.
+  - Wall objects are created and removed by Inferno wall classes.
+- How rewards are given:
+  - `Inferno.end(DisposeTypes.COMPLETE)` grants Tokkul, Infernal cape, global message, battlepass experience, Task Master progress, and Inferno achievements.
+  - `Inferno.stop()` handles non-Zuk completion flow.
+- How players leave:
+  - `leaveGame()` kills spawns, removes wall objects, moves the player out, resets wave fields, and disposes the instance.
+  - `handleDeath()` handles death reset and movement.
+- How cleanup works:
+  - `onDispose()` calls `end(DisposeTypes.INCOMPLETE)`.
+  - `killAllSpawns()` removes Inferno NPCs and wall objects.
+- What player state is changed:
+  - Inferno wave type/id fields through getters/setters.
+  - Wall attributes.
+  - Instance reference.
+  - Combat resource state.
+- What save data is used:
+  - Fight Cave/Inferno wave data uses `PlayerSave` wave fields.
+  - Best-time save data exists elsewhere in the player save file, but this doc did not inspect all Inferno timing keys.
+- Existing examples to copy:
+  - `Inferno.spawn()`
+  - `Inferno.end(DisposeTypes)`
+  - `NPCHandler.killedInferno(Player)`
+- Safe extension points:
+  - Add Inferno-specific wave/reward behavior in Inferno classes.
+- Dangerous areas to avoid:
+  - Copying Zuk/wall lifecycle for ordinary wave minigames.
+  - Editing global NPC death handlers for unrelated wave counters.
+
+## 21. Pest Control Group Flow
+
+- Main files:
+  - src/io/xeros/content/minigames/pest_control/PestControl.java
+  - src/io/xeros/content/minigames/pest_control/PestControlRewards.java
+  - src/io/xeros/model/entity/player/packets/ClickingButtons.java
+  - src/io/xeros/model/entity/player/save/PlayerSave.java
+- How the instance/minigame starts:
+  - `PestControl.addToLobby(Player)` creates a lobby if needed.
+  - `createNewLobby()` starts the lobby countdown.
+  - `createNewGame()` moves lobby members into the game and calls `spawnAllNpcs()`.
+- How players join:
+  - Players enter through lander object handling that calls `PestControl.addToLobby(Player)`.
+  - Combat level must be at least 40.
+- How NPCs spawn:
+  - `spawnAllNpcs()` spawns portal NPCs and sets HP based on member count.
+- How objects/buttons are handled:
+  - Lander objects add/remove players from lobby.
+  - `PestControlRewards.click(int)` handles reward interface buttons.
+  - `ClickingButtons` delegates Pest Control reward button ids.
+- How rewards are given:
+  - `handleGameOutcome(boolean)` grants points on win if `player.pestControlDamage > MINIMUM_DAMAGE`.
+  - It updates achievements and diaries, adds `player.pcPoints`, gives coins, and refreshes the player.
+  - `PestControlRewards` spends `player.pcPoints` through shop/reward buttons.
+- How players leave:
+  - `removeFromLobby(Player)` removes lobby members.
+  - End of game moves players out.
+  - Player destruct/logout removes them from Pest lists.
+- How cleanup works:
+  - `finalizeLobby()` and `finalizeGame()` reset static state and clear lists.
+  - `killAllNpcs()` removes active portal NPCs.
+- What player state is changed:
+  - `player.pcPoints`
+  - `player.pestControlDamage`
+  - Position and interface state.
+- What save data is used:
+  - `PlayerSave` saves `pcPoints`.
+- Existing examples to copy:
+  - `PestControl.addToLobby(Player)`
+  - `PestControl.handleGameOutcome(boolean)`
+  - `PestControlRewards.click(int)`
+- Safe extension points:
+  - Add reward-shop behavior through `PestControlRewards` when changing Pest rewards.
+- Dangerous areas to avoid:
+  - Copying the static global-lobby model for ordinary instanced group content.
+  - Granting rewards without the minimum damage check.
+
+## 22. Arbograve Flow
+
+- Main files:
+  - src/io/xeros/content/minigames/arbograve/ArbograveContainer.java
+  - src/io/xeros/content/minigames/arbograve/instance/ArbograveInstance.java
+  - src/io/xeros/content/minigames/arbograve/ArbograveRoom.java
+  - src/io/xeros/content/minigames/arbograve/ArbograveConstants.java
+  - src/io/xeros/content/minigames/arbograve/party/ArbograveParty.java
+- How the instance/minigame starts:
+  - `ArbograveContainer.handleClickObject(WorldObject)` checks the entrance object and calls `startArbo()`.
+  - `startArbo()` requires `ArbograveParty.TYPE` and opens activity start dialogue.
+  - The callback creates `new ArbograveInstance(list.size()).start(list)`.
+- How players join:
+  - `ArbograveInstance.start(List<Player>)` initializes the first room, sets `plr.getArboContainer().lives = size + 5`, adds players, moves them to room spawns, and starts timers.
+- How NPCs spawn:
+  - `initialiseNextRoom(Player)` gets the current `ArbograveRoom`, calls `spawn(this)`, and scales NPC health.
+- How objects/buttons are handled:
+  - `ArbograveInstance.handleClickObject(Player, WorldObject, int)` handles boss gates and object `21299`.
+  - Object `21299` opens shop `79` when the current room is complete.
+  - Room classes can handle room-specific objects.
+- How rewards are given:
+  - Dedicated Arbograve reward chest flow not found in repo.
+  - Shop `79` is used as a room-complete interaction in the inspected instance.
+- How players leave:
+  - Uses base instance removal and room/death movement.
+  - `removeButLeaveInParty(Player)` exists for leaving the instance without party removal.
+- How cleanup works:
+  - Uses `InstanceConfiguration.CLOSE_ON_EMPTY`.
+  - `onDispose()` currently logs disposal.
+- What player state is changed:
+  - Instance reference.
+  - Room position.
+  - `plr.getArboContainer().lives`.
+  - Boss timer.
+- What save data is used:
+  - Not found in repo for Arbograve instance save data. Searched: `Arbograve`, `ArboContainer`, `lives`, `PlayerSave`.
+- Existing examples to copy:
+  - `ArbograveContainer.startArbo()`
+  - `ArbograveInstance.start(List<Player>)`
+  - `ArbograveRoom.spawn(InstancedArea)`
+- Safe extension points:
+  - Add room behavior through `ArbograveRoom` subclasses.
+  - Add rewards in a dedicated Arbograve reward handler if owner-approved.
+- Dangerous areas to avoid:
+  - Treating shop `79` as a general reward chest pattern.
+  - Adding rewards directly to unrelated global object handling.
+- Not found in repo:
+  - Dedicated Arbograve reward chest class.
+  - Searched terms: `arbograve reward`, `ArbograveChest`, `ArbograveRewards`, `Room reward`, `chestRewards`.
+
+## 23. World Event Instances Or Event-Controlled Areas
+
+- Main files:
+  - src/io/xeros/content/worldevent/WorldEvent.java
+  - src/io/xeros/content/worldevent/WorldEventContainer.java
+  - src/io/xeros/content/worldevent/WorldEventState.java
+  - src/io/xeros/content/worldevent/impl/HesporiWorldEvent.java
+  - src/io/xeros/content/worldevent/impl/TournamentWorldEvent.java
+  - src/io/xeros/content/worldevent/impl/WildernessBossWorldEvent.java
+  - src/io/xeros/content/worldevent/impl/WGWorldEvent.java
+- How the instance/minigame starts:
+  - `WorldEventContainer.initialise()` loads `WorldEventState` and schedules events.
+  - `WorldEventContainer.next()` calls `worldEvent.init()`.
+  - `WorldEventContainer.startEvent(WorldEvent)` can force a specific event.
+- How players join:
+  - Players join through each event's teleport command or activity-specific lobby.
+  - `getTeleportCommand()` points to the command class for each event.
+- How NPCs spawn:
+  - `HesporiWorldEvent.init()` calls `HesporiSpawner.spawnNPC()`.
+  - `WildernessBossWorldEvent.init()` calls `MonsterHunt.spawnNPC()`.
+  - Tournament-style events open activity lobbies instead of spawning a boss directly.
+- How objects/buttons are handled:
+  - Handled by the specific event/activity, not by `WorldEvent` itself.
+- How rewards are given:
+  - Event implementation or underlying activity handles rewards.
+  - `WorldEventContainer.next()` also gives a miscellaneous crystal gift to online players when a new event starts.
+- How players leave:
+  - Event-specific.
+  - `cancelCurrent()` calls `dispose()` on the active event.
+- How cleanup works:
+  - Each event implements `dispose()`.
+  - `WorldEventState.save()` stores event index and countdown.
+- What player state is changed:
+  - Event-specific participation, position, or reward state.
+- What save data is used:
+  - `WorldEventState` persists event rotation data in `world_event_state.json`.
+  - Player participation save data was not found in the world event files.
+- Existing examples to copy:
+  - `HesporiWorldEvent`
+  - `WildernessBossWorldEvent`
+  - `TournamentWorldEvent`
+- Safe extension points:
+  - Add a new `WorldEvent` implementation and register it in `WorldEventContainer.WORLD_EVENT_LIST` if owner-approved.
+  - Keep spawn/cleanup in the event implementation.
+- Dangerous areas to avoid:
+  - Rewriting scheduler behavior for one event.
+  - Adding permanent world state without a matching save strategy.
+  - Assuming `WGWorldEvent` is active; it exists, but the inspected `WORLD_EVENT_LIST` includes Tournament, Hespori, and Wilderness boss events.
+
+## 24. Activity And Global Boss Areas
+
+- Main files:
+  - src/io/xeros/content/activityboss/ActivityType.java
+  - src/io/xeros/content/activityboss/GlobalBossType.java
+  - src/io/xeros/content/activityboss/GlobalBossActivityManager.java
+  - src/io/xeros/content/activityboss/GlobalBossContributionTracker.java
+  - src/io/xeros/content/activityboss/GlobalBossDropHandler.java
+  - src/io/xeros/content/activityboss/GlobalBossLootTable.java
+  - src/io/xeros/content/activityboss/GlobalBossSpawnZoneManager.java
+  - src/io/xeros/content/activityboss/Groot.java
+- How the instance/minigame starts:
+  - Activity boss progress is recorded with `GlobalBossActivityManager.record(ActivityType, int)`.
+  - When a threshold is reached, `spawn(GlobalBossType)` spawns the global boss.
+  - Groot uses separate legacy logic through `Groot.handlePointIncrease(NPC, Player)` and `Groot.spawnGroot()`.
+- How players join:
+  - These are shared world areas, not `InstancedArea` instances.
+  - Players join by teleporting or walking to the active boss area.
+- How NPCs spawn:
+  - `GlobalBossActivityManager.spawn(GlobalBossType)` uses `NPCSpawning.spawnNpc(...)`, sets health and attack type, and stores active spawn data.
+  - `Groot.spawnGroot()` spawns NPC `4923` and configures shared boss state.
+- How objects/buttons are handled:
+  - Not instance-object driven in the inspected files.
+- How rewards are given:
+  - `GlobalBossActivityManager.onBossDeath(NPC, Player)` calls `GlobalBossDropHandler.rewardParticipants(NPC)`.
+  - `GlobalBossDropHandler` reads contributors from `GlobalBossContributionTracker` and grants `GlobalBossLootTable.rollRewardFor(Player)`.
+  - `Groot.handleDeath(NPC)` uses damage thresholds, drop manager, battlepass experience, pet rolls, and anti-alt tracking.
+- How players leave:
+  - Players simply leave the area; no instance membership is cleared.
+- How cleanup works:
+  - Activity boss death removes active boss state and records cooldown.
+  - Groot death clears spawned/alive flags and participant state.
+- What player state is changed:
+  - Damage contribution state is read from NPC damage maps.
+  - `Player.addBossContribution(...)` stores recent contribution summaries.
+  - Groot can update battlepass and death tracker state.
+- What save data is used:
+  - `Player` keeps recent boss contributions in memory.
+  - Persistent save for global boss cooldowns or totals was not found in repo. Searched: `GlobalBossActivityManager`, `activeBosses`, `lastKillTimes`, `totals`, `PlayerSave`.
+- Existing examples to copy:
+  - `GlobalBossActivityManager.record(ActivityType, int)`
+  - `GlobalBossActivityManager.onBossDeath(NPC, Player)`
+  - `GlobalBossDropHandler.rewardParticipants(NPC)`
+- Safe extension points:
+  - Add new activity trigger through `ActivityType`, `GlobalBossType`, and manager record calls if owner-approved.
+  - Add loot through `GlobalBossLootTable` with economy caution.
+- Dangerous areas to avoid:
+  - Copying `Groot` for ordinary global bosses; it is a custom legacy flow.
+  - Granting global boss rewards without contribution checks.
+
+## 25. Minigame Reward Chests
+
+- Main files:
+  - src/io/xeros/content/minigames/tob/rooms/RoomSevenTreasure.java
+  - src/io/xeros/content/minigames/tob/chest/TheatreOfBloodChest.java
+  - src/io/xeros/content/minigames/TOA/rooms/RoomSevenLoot.java
+  - src/io/xeros/content/minigames/TOA/chest/TombsOfAmascutChest.java
+  - src/io/xeros/content/minigames/raids/Raids.java
+  - src/io/xeros/content/minigames/raids/chest/RaidsChestCommon.java
+  - src/io/xeros/content/minigames/raids/chest/RaidsChestRare.java
+- How the instance/minigame starts:
+  - Reward chests are created at the end of the activity, not at initial entry.
+- How players join:
+  - Players must already be in the activity and eligible for reward.
+- How NPCs spawn:
+  - Not applicable to chest reward logic.
+- How objects/buttons are handled:
+  - TOB/TOA room classes handle chest object clicks and validate assigned chests.
+  - CoX handles reward crystal object `30028` in `Raids.handleObjectClick(...)`.
+- How rewards are given:
+  - TOB uses `TheatreOfBloodChest.rewardItems(...)`.
+  - TOA uses `TombsOfAmascutChest.rewardItems(...)`.
+  - CoX grants `player.getRaidRewards()` through reward crystal flow.
+- How players leave:
+  - TOB/TOA exit objects require claimed rewards in the treasure room.
+  - CoX reward crystal claim clears raid reward state.
+- How cleanup works:
+  - Chest state is stored in the instance runtime maps and disappears with instance cleanup.
+- What player state is changed:
+  - Chest claimed sets.
+  - Reward item lists.
+  - Collection log and battlepass where wired.
+- What save data is used:
+  - Chest claim state is runtime-only.
+  - Granted rewards persist through inventory/bank/player systems.
+- Existing examples to copy:
+  - `RoomSevenTreasure.handleClickObject(...)`
+  - `RoomSevenLoot.handleClickObject(...)`
+  - `Raids.handleObjectClick(Player, int, int, int)`
+- Safe extension points:
+  - Build new chest logic around assigned-player validation and duplicate-claim guards.
+- Dangerous areas to avoid:
+  - Granting chest rewards on room spawn.
+  - Allowing one player to open another player's assigned chest.
+  - Reusing CoX reward crystal logic for unrelated `InstancedArea` content without adapting validation.
+
+## 26. Instance Anti-Abuse Checks
+
+- Main files:
+  - src/io/xeros/content/minigames/pest_control/PestControl.java
+  - src/io/xeros/content/minigames/arbograve/party/ArbograveParty.java
+  - src/io/xeros/content/minigames/tob/party/TobParty.java
+  - src/io/xeros/content/minigames/raids/Raids.java
+  - src/io/xeros/content/activityboss/Groot.java
+  - src/io/xeros/content/instances/aoe/AoeNpcSpawner.java
+  - src/io/xeros/content/instances/aoe/AoeInstanceService.java
+- How the instance/minigame starts:
+  - Anti-abuse checks happen before lobby entry, party launch, reward claim, or boss reward distribution.
+- How players join:
+  - Pest Control requires combat level 40.
+  - Arbograve party prevents same connected address from joining.
+  - TOB party contains same-IP checks in comments; active validation should be inspected before changing.
+- How NPCs spawn:
+  - AOE tracks NPC-instance ownership and enforces bounds/leashing through its ticker.
+  - Groot tracks active targets and damage.
+- How objects/buttons are handled:
+  - Reward objects check claim state and room completion in TOB/TOA/CoX.
+- How rewards are given:
+  - Pest Control requires minimum damage.
+  - Groot requires damage participation and uses anti-alt UUID tracking.
+  - Global bosses reward contributors from NPC damage maps.
+  - CoX uses raid participation and loot flags.
+- How players leave:
+  - Leave timers exist in Fight Cave and CoX.
+  - Close-on-empty removes abandoned private instances.
+- How cleanup works:
+  - Runtime participant, target, contribution, and instance maps are cleared by each activity.
+- What player state is changed:
+  - Damage counters, loot eligibility flags, party state, reward-claim state, and instance references.
+- What save data is used:
+  - Abuse checks are mostly runtime-only.
+  - Rewarded currencies and counters persist through their normal save paths.
+- Existing examples to copy:
+  - `PestControl.handleGameOutcome(boolean)`
+  - `RoomSevenTreasure.openChest(Player, TobInstance)`
+  - `GlobalBossDropHandler.rewardParticipants(NPC)`
+  - `AoeNpcSpawner.spawnForInstance(...)`
+- Safe extension points:
+  - Add eligibility checks at reward claim points.
+  - Use existing damage/contribution maps where the boss is shared.
+- Dangerous areas to avoid:
+  - Adding rewards without participation checks in shared content.
+  - Adding IP restrictions broadly without owner review.
+  - Clearing runtime maps before rewards are granted.
+
+## 27. Instance Save Data
+
+- Main files:
+  - src/io/xeros/model/entity/player/save/PlayerSave.java
+  - src/io/xeros/model/entity/player/save/PlayerSaveEntry.java
+  - src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java
+  - src/io/xeros/model/entity/player/Player.java
+  - src/io/xeros/content/worldevent/WorldEventState.java
+- How the instance/minigame starts:
+  - Save data is loaded before content starts through the player save system.
+- How players join:
+  - Join methods read runtime and saved fields to validate progress, such as AOE tier unlocks.
+- How NPCs spawn:
+  - NPC spawning is not usually saved.
+- How objects/buttons are handled:
+  - Saved progress may unlock dialogue options, reward shops, or content access.
+- How rewards are given:
+  - Reward systems update saved currencies, counters, inventory, bank, collection logs, and progression fields.
+- How players leave:
+  - Leave itself is usually runtime-only.
+- How cleanup works:
+  - Cleanup does not usually write save data directly.
+- What player state is changed:
+  - AOE attributes: `aoe_unlocked_tier`, `aoe_kc_#`.
+  - Tiered boss fields: `unlockedBossTiers`, `tierKillCounts`, `bestInstanceScores`, `bestInstanceTimes`.
+  - CoX fields: `raidCount`, `daily2xRaidLoot`.
+  - Fight Cave fields: `waveId`, `fightCavesWaveType`, `waveInfo`.
+  - Pest Control field: `pcPoints`.
+  - Barrows field: `spawnedbarrows`.
+  - Global boss contribution history: `bossContributions`.
+- What save data is used:
+  - `AoeTierProgressSaveEntry` saves AOE tier unlocks and kill counts.
+  - `PlayerSave` saves raid count, Fight Cave wave data, Pest Control points, Barrows spawn flag, and tiered boss unlock/kill maps.
+  - `WorldEventState` saves world event rotation and countdown.
+- Existing examples to copy:
+  - `AoeTierProgressSaveEntry`
+  - `PlayerSaveEntry`
+  - Existing `PlayerSave` keys only when modifying old save keys.
+- Safe extension points:
+  - Prefer a new `PlayerSaveEntry` for new persistent data.
+  - Use existing fields only when extending the same content.
+- Dangerous areas to avoid:
+  - Expanding `PlayerSave.java` casually for new systems.
+  - Changing existing save key names.
+  - Saving runtime-only instance membership.
+
+## A. Best Simple Instance Pattern To Copy For A New Solo Boss
+
+- Best pattern:
+  - src/io/xeros/content/bosses/obor/OborInstance.java
+- Why:
+  - Small `InstancedArea` subclass.
+  - Clear entry validation and key consumption.
+  - Local NPC spawn.
+  - Local object handling for exits and mechanics.
+  - Uses `InstanceConfiguration.CLOSE_ON_EMPTY`.
+- Secondary examples:
+  - src/io/xeros/content/bosses/mimic/MimicInstance.java
+  - src/io/xeros/content/bosses/bryophyta/Bryophyta.java
+- Avoid:
+  - src/io/xeros/content/instances/impl/LegacySoloPlayerInstance.java for new ordinary bosses.
+  - God Wars clone-style instances unless the new content is God Wars-like.
+
+## B. Best Group Instance Pattern To Copy
+
+- Best pattern:
+  - src/io/xeros/content/minigames/tob/TobContainer.java
+  - src/io/xeros/content/minigames/tob/instance/TobInstance.java
+  - src/io/xeros/content/minigames/tob/TobRoom.java
+  - src/io/xeros/content/minigames/tob/rooms/RoomSevenTreasure.java
+- Why:
+  - Clean party start dialogue.
+  - Room abstraction.
+  - Instance-owned object handling.
+  - Assigned reward chests and duplicate-claim protection.
+- Secondary pattern:
+  - src/io/xeros/content/minigames/TOA/instance/TombsOfAmascutInstance.java
+- Avoid:
+  - Copying Pest Control's static global group lifecycle for private group content.
+  - Copying CoX height rotation unless changing CoX itself.
+
+## C. Best Wave Minigame Pattern To Copy
+
+- Best pattern for modern instance-based wave content:
+  - src/io/xeros/content/minigames/inferno/Inferno.java
+- Why:
+  - Uses an instance reference for spawned NPCs.
+  - Owns spawn, completion, death, and cleanup paths.
+- Best pattern for older Fight Cave variants:
+  - src/io/xeros/content/minigames/fight_cave/FightCave.java
+  - src/io/xeros/content/minigames/fight_cave/Wave.java
+- Avoid:
+  - Reusing `NPCHandler.killedTzhaar(Player)` or `NPCHandler.killedInferno(Player)` for unrelated content.
+  - Saving ordinary new wave state in legacy wave fields.
+
+## D. Best Chest Reward Pattern To Copy
+
+- Best pattern:
+  - src/io/xeros/content/minigames/tob/rooms/RoomSevenTreasure.java
+  - src/io/xeros/content/minigames/tob/chest/TheatreOfBloodChest.java
+- Why:
+  - Creates per-player reward chests.
+  - Validates assigned chest ownership.
+  - Prevents duplicate claims.
+  - Keeps rewards in chest-specific classes.
+- Secondary pattern:
+  - src/io/xeros/content/minigames/TOA/rooms/RoomSevenLoot.java
+  - src/io/xeros/content/minigames/TOA/chest/TombsOfAmascutChest.java
+- Avoid:
+  - Granting rewards on chest spawn.
+  - Sharing a single unvalidated chest object across players.
+
+## E. Best AOE Instance Extension Point
+
+- JSON-only extension points:
+  - data/aoe/aoe_boss_tiers.json
+  - data/aoe/aoe_tier_rewards.json
+  - data/aoe/AoeZoneMapConfig.json
+- Java extension points when JSON does not support the needed behavior:
+  - src/io/xeros/content/instances/aoe/AoeTierRewardsLoader.java
+  - src/io/xeros/content/instances/aoe/AoeTierController.java
+  - src/io/xeros/content/instances/aoe/AoeDropInterceptor.java
+  - src/io/xeros/content/instances/aoe/AoeTierEvents.java
+- Avoid:
+  - src/io/xeros/content/instances/aoe/AoeInstanceService.java map-copy lifecycle unless the patch is specifically about instance construction or teardown.
+  - src/io/xeros/content/instances/aoe/AoeNpcSpawner.java ticker behavior unless the patch is specifically about AOE NPC lifecycle.
+
+## F. Systems That Should Not Be Copied For Ordinary Content
+
+- src/io/xeros/content/instances/impl/LegacySoloPlayerInstance.java
+  - Local comment warns against general use.
+- src/io/xeros/content/bosses/godwars/impl/
+  - Clone-style source-room NPC copying is specialized to God Wars.
+- src/io/xeros/content/minigames/raids/Raids.java
+  - Legacy height rotation and custom raid state should not be copied for new instances.
+- src/io/xeros/content/minigames/pest_control/PestControl.java
+  - Static global lobby/game state is for Pest Control only.
+- src/io/xeros/content/activityboss/Groot.java
+  - Custom global boss flow predates the cleaner activity boss manager.
+- src/io/xeros/content/minigames/barrows/
+  - Active full lifecycle was not found; do not use it as a modern instance template.
+- src/io/xeros/model/entity/player/save/PlayerSave.java
+  - Do not expand for new content when `PlayerSaveEntry` can be used.
+
+## G. Local Test Checklist For Instance And Minigame PRs
+
+- Search first:
+  - Search for an existing matching boss, minigame, party, room, reward chest, or AOE tier pattern.
+- Entry:
+  - Verify entry requirements are checked before moving players.
+  - Verify player is assigned to the instance before relying on instance object/death hooks.
+- Height and map:
+  - Verify spawned NPCs and objects use the instance height or resolved position.
+  - Verify height is freed on cleanup.
+- NPC lifecycle:
+  - Verify every temporary NPC is tracked by the instance or by the minigame's cleanup list.
+  - Verify NPCs do not respawn globally after the instance ends.
+- Object handling:
+  - Verify instance-specific objects are handled in the instance or room class.
+  - Verify global object handling is unchanged unless the object is an entry object.
+- Death and leave:
+  - Test death inside the instance.
+  - Test manual exit.
+  - Test logout or disconnect if the system has a logout path.
+  - Test walking out of bounds when possible.
+- Rewards:
+  - Verify reward eligibility checks.
+  - Verify duplicate chest or reward claims are blocked.
+  - Verify collection log, achievements, battlepass, Task Master, boss points, and currency hooks only fire where intended.
+- Save data:
+  - Use `PlayerSaveEntry` for new persistent data.
+  - Do not rename old save keys.
+  - Verify saved progress loads after relog.
+- Cleanup:
+  - Verify empty instances dispose.
+  - Verify NPCs are removed.
+  - Verify copied AOE maps are destroyed and reserved heights are freed.
+- Economy safety:
+  - Test reward quantities at starter, midgame, and endgame rates.
+  - Avoid adding rare items, high-value currency, or upgrade materials casually.
+- Live-server safety:
+  - Do not use spawn-item, drop-test, or forced global boss tools on a live economy unless the owner explicitly approves.

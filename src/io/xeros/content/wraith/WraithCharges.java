@@ -127,7 +127,7 @@ public class WraithCharges {
 
         int remainingCharges = cap - current;
         int essenceNeeded = (int) Math.ceil(remainingCharges / (double) perEss);
-        int invEss = p.getItems().getItemCount(essenceItemId);
+        int invEss = p.getItems().getItemCount(essenceItemId, true);
         int willConsume = Math.min(requestedEss, Math.min(invEss, essenceNeeded));
         if (willConsume <= 0) {
             p.sendMessage("You need more Wraith Essence to charge that.");
@@ -139,7 +139,7 @@ public class WraithCharges {
 
         // remove essence
         p.getItems().deleteItem(essenceItemId, willConsume);
-        int invAfter = p.getItems().getItemCount(essenceItemId);
+        int invAfter = p.getItems().getItemCount(essenceItemId, true);
         if (invBefore - invAfter != willConsume) {
             // rollback
             p.getItems().addItem(essenceItemId, invBefore - invAfter); // attempt to restore

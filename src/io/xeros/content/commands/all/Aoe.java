@@ -72,7 +72,7 @@ public class Aoe extends Command {
                     player.sendMessage("Admin only command.");
                     return;
                 }
-                AoeBossTierLoader.reload();
+                //AoeBossTierLoader.reload();
                 player.sendMessage("AOE tier definitions reloaded.");
                 break;
             default:

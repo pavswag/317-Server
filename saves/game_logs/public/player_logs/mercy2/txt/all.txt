@@ -1,0 +1,47 @@
+[ConnectionLog] [2025-08-03T11:04:09.4813475] Logged in
+[ReceivedPacketLog] [2025-08-03T11:04:11.2860137] Opcode '210':  'data type: 210, data length: 4'.
+[ReceivedPacketLog] [2025-08-03T11:04:11.2860137] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-08-03T11:04:11.2920155] Opcode '121':  'data type: 121, data length: 0'.
+[ReceivedPacketLog] [2025-08-03T11:04:12.4892877] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:12.4902872] Clicked: 9157, real id: 2461,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:12.4912876] Opcode '185':  'actionbutton: 9157, DialogueID: 0, real id: 2461'.
+[ReceivedPacketLog] [2025-08-03T11:04:13.6921003] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-08-03T11:04:14.2932387] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-08-03T11:04:15.4965115] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:15.4965115] Clicked: 95011, real id: 24331,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:15.4965115] Opcode '185':  'actionbutton: 95011, DialogueID: -1, real id: 24331'.
+[ReceivedPacketLog] [2025-08-03T11:04:16.0996473] Opcode '98':  'data type: 98, data length: 9'.
+[ReceivedPacketLog] [2025-08-03T11:04:16.0996473] Opcode '155':  'data type: 155, data length: 2'.
+[ReceivedPacketLog] [2025-08-03T11:04:16.0996473] Opcode '98':  'data type: 98, data length: 9'.
+[ReceivedPacketLog] [2025-08-03T11:04:16.0996473] Opcode '155':  'data type: 155, data length: 2'.
+[ReceivedPacketLog] [2025-08-03T11:04:16.6987812] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-08-03T11:04:17.3119228] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:17.3119228] Clicked: 9157, real id: 2461,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:17.3119228] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-08-03T11:04:17.3119228] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:17.3119228] Clicked: 9157, real id: 2461,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:17.3119228] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-08-03T11:04:17.9120576] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-08-03T11:04:18.5151942] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:18.5151942] Clicked: 9193, real id: 2497,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:18.5151942] Opcode '185':  'actionbutton: 9193, DialogueID: -1, real id: 2497'.
+[ReceivedPacketLog] [2025-08-03T11:04:18.5171957] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:18.5171957] Clicked: 9194, real id: 2498,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:18.5171957] Opcode '185':  'actionbutton: 9194, DialogueID: -1, real id: 2498'.
+[ReceivedPacketLog] [2025-08-03T11:04:19.114847] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-08-03T11:04:20.3241221] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:20.3241221] Clicked: 9157, real id: 2461,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:20.3241221] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-08-03T11:04:20.3901497] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:20.3901497] Clicked: 9157, real id: 2461,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:20.3901497] Opcode '185':  'actionbutton: 9157, DialogueID: -1, real id: 2461'.
+[ReceivedPacketLog] [2025-08-03T11:04:20.9252878] Opcode '40':  'data type: 40, data length: 2'.
+[ReceivedPacketLog] [2025-08-03T11:04:22.7343725] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:22.7343725] Clicked: 9154, real id: 2458,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:22.7343725] Opcode '185':  'actionbutton: 9154, DialogueID: -1, real id: 2458'.
+[ReceivedPacketLog] [2025-08-03T11:04:22.736369] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:22.736369] Clicked: 9154, real id: 2458,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:22.736369] Opcode '185':  'actionbutton: 9154, DialogueID: -1, real id: 2458'.
+[ReceivedPacketLog] [2025-08-03T11:04:22.736369] Opcode '185':  'data type: 185, data length: 2'.
+[ClickButtonLog] [2025-08-03T11:04:22.736369] Clicked: 9154, real id: 2458,new: false
+[ReceivedPacketLog] [2025-08-03T11:04:22.7373709] Opcode '185':  'actionbutton: 9154, DialogueID: -1, real id: 2458'.

@@ -1,0 +1,832 @@
+# Turmoil IDs And Registration Map
+
+This map documents where Turmoil defines, loads, registers, and uses common IDs. Future content tasks should use this before adding item IDs, NPC IDs, object IDs, interface IDs, button IDs, save keys, command names, or other identifiers.
+
+Core rule: do not invent IDs. Search first, copy the closest existing pattern, and prefer existing constants, enums, loaders, and registration APIs.
+
+## 1. Item ID Usage
+
+- Where IDs are defined:
+  - `src/io/xeros/model/Items.java` contains generated or maintained item ID constants.
+  - `src/io/xeros/content/combat/common/ItemIdentifiers.java` contains another large constants set used by combat/content systems.
+  - `src/io/xeros/model/definitions/ItemDef.java` loads item definitions through `ItemDef.load()` and reads item data by `ItemDef.forId(int itemId)`.
+  - `src/io/xeros/model/definitions/ItemStats.java` loads equipment/stat data and reads item stats by `ItemStats.forId(int itemId)`.
+  - `src/io/xeros/model/definitions/ItemDefinitionLoader.java` loads additional item data.
+  - External/not found in repo. Searched terms: `item_definitions.yaml`, `item_stats.json`, `itemdata`, `ItemDef.load`, `ItemStats.load`.
+- Where IDs are used:
+  - `src/io/xeros/model/items/GameItem.java`
+  - `src/io/xeros/model/items/ImmutableItem.java`
+  - `src/io/xeros/model/items/ContainerUpdate.java`
+  - `src/io/xeros/model/entity/npc/drops/DropManager.java`
+  - `src/io/xeros/model/shops/ShopAssistant.java`
+  - `src/io/xeros/content/upgrade/UpgradeMaterials.java`
+  - `src/io/xeros/content/items/aoeweapons/AoeWeapons.java`
+  - `src/io/xeros/content/items/UseItem.java`
+  - `src/io/xeros/model/entity/player/packets/ItemOnItem.java`
+  - `src/io/xeros/model/entity/player/packets/ItemOnObject.java`
+- How new IDs are usually added:
+  - Add or verify the real item in cache/definition data first.
+  - Use an existing constant from `src/io/xeros/model/Items.java` or `src/io/xeros/content/combat/common/ItemIdentifiers.java` when one exists.
+  - Add content recipes, rewards, and checks using verified IDs only.
+  - For AOE JSON rewards, use verified item IDs in `data/aoe/aoe_tier_rewards.json`.
+- How conflicts can happen:
+  - A number can exist in Java constants but not in loaded item definitions.
+  - A custom item ID can collide with a cache item or another custom item.
+  - Reward code can use an untradeable, cosmetic, noted, or placeholder variant by mistake.
+  - A shop, upgrade, or drop can reference an item with missing stats or missing name data.
+- How to search before adding:
+  - `rg -n "ITEM_NAME|item id|new GameItem\\(<id>|ImmutableItem\\(<id>|case <id>|== <id>" src data docs`
+  - `rg -n "<id>" src data docs`
+  - `rg -n "ItemDef.forId|ItemStats.forId|Items\\.|ItemIdentifiers\\." src/io/xeros`
+- Safe patterns to copy:
+  - Use `GameItem` or `ImmutableItem` reward patterns from `src/io/xeros/content/collection_log/CollectionRewards.java`.
+  - Use upgrade material patterns from `src/io/xeros/content/upgrade/UpgradeMaterials.java`.
+  - Use AOE weapon constants and behavior from `src/io/xeros/content/items/aoeweapons/AoeWeapons.java`.
+- Dangerous patterns to avoid:
+  - Do not add arbitrary item numbers to rewards without confirming definitions.
+  - Do not add cache-level item IDs in Java only.
+  - Do not replace constants classes with new hand-maintained ID lists.
+  - Do not assume a visual item, noted item, and wieldable item share behavior.
+
+## 2. NPC ID Usage
+
+- Where IDs are defined:
+  - `src/io/xeros/model/Npcs.java` contains NPC ID constants.
+  - `src/io/xeros/model/definitions/NpcDef.java` loads definitions through `NpcDef.load()` and reads definitions by `NpcDef.forId(int npcId)`.
+  - `src/io/xeros/model/definitions/NpcStats.java` loads NPC stats.
+  - `src/io/xeros/model/entity/npc/stats/NpcCombatDefinition.java` loads combat definitions.
+  - `src/io/xeros/model/entity/npc/NpcSpawnLoader.java` loads regular NPC spawns.
+  - `src/io/xeros/model/entity/npc/NpcSpawnLoaderOSRS.java` loads OSRS NPC spawns.
+  - External/not found in repo. Searched terms: `npc_definitions.json`, `npc_stats.json`, `npc_combat_defs.json`, `npc_spawns.json`, `osrsspawns`.
+- Where IDs are used:
+  - `src/io/xeros/model/entity/npc/NPC.java`
+  - `src/io/xeros/model/entity/npc/NPCAction.java`
+  - `src/io/xeros/model/entity/player/packets/npcoptions/NpcOptionOne.java`
+  - `src/io/xeros/model/entity/player/packets/npcoptions/NpcOptionTwo.java`
+  - `src/io/xeros/model/entity/player/packets/npcoptions/NpcOptionThree.java`
+  - `src/io/xeros/model/entity/player/packets/npcoptions/NpcOptionFour.java`
+  - `src/io/xeros/model/entity/player/packets/npcoptions/NpcOptions.java`
+  - `src/io/xeros/content/combat/npc/NPCAutoAttackBuilder.java`
+  - `src/io/xeros/model/entity/npc/drops/DropManager.java`
+  - `src/io/xeros/content/bosspoints/BossPoints.java`
+- How new IDs are usually added:
+  - Add or verify the NPC in the external definition/cache data first.
+  - Use `src/io/xeros/model/Npcs.java` constants when available.
+  - Register isolated NPC interactions through `NPCAction.register(int npcId, int option, NPCAction action)` where practical.
+  - Add boss combat mechanics in a boss class or NPC auto-attack setup rather than central NPC loops.
+- How conflicts can happen:
+  - The same NPC ID can be used by a spawned NPC, a boss mechanic, a shop NPC, and a collection log entry with different assumptions.
+  - Boss points match NPC definition names in `src/io/xeros/content/bosspoints/BossPoints.java`; renaming NPC definitions can break points.
+  - Slayer task names must match NPC names through `Task.matches(String input)` and `Task.getPrimaryName()`.
+  - Reusing an NPC ID for a new custom boss can collide with spawns, combat definitions, or drops.
+- How to search before adding:
+  - `rg -n "<npc id>|Npcs\\.|NpcDef.forId|NPCAction.register|spawnNpc|new NPC" src data docs`
+  - `rg -n "npc name|boss name" src data docs`
+  - `rg -n "case <npc id>|getNpcId\\(\\) == <npc id>|npcType == <npc id>" src/io/xeros`
+- Safe patterns to copy:
+  - Copy isolated boss/content structures from `src/io/xeros/content/bosses/`.
+  - Copy NPC interaction registration from `src/io/xeros/model/entity/npc/actions/CustomActions.java`.
+  - Copy Demon Hunter NPC action registration from `src/io/xeros/content/skills/slayer/DemonHunterSlayerDialogue.java`.
+- Dangerous patterns to avoid:
+  - Do not hardcode isolated boss mechanics in `src/io/xeros/model/entity/npc/NPCHandler.java`.
+  - Do not modify central NPC process logic for one NPC.
+  - Do not add NPC IDs to packet switches before checking `NPCAction`.
+  - Do not reuse an ID because the NPC is visually similar.
+
+## 3. Object ID Usage
+
+- Where IDs are defined:
+  - `src/io/xeros/model/ObjectId.java` contains object ID constants.
+  - `src/io/xeros/model/collisionmap/ObjectDef.java` loads map object definitions through `ObjectDef.loadConfig()` and reads them by `ObjectDef.get(int id)`.
+  - `src/io/xeros/model/world/objects/GlobalObjects.java` loads global object spawns.
+  - `src/io/xeros/model/collisionmap/doors/DoorDefinition.java` loads door definitions.
+  - `src/io/xeros/objects/Doors.java` and `src/io/xeros/objects/DoubleDoors.java` load legacy door data.
+  - External/not found in repo. Searched terms: `loc.dat`, `loc.idx`, `global_objects.cfg`, `door_definitions.json`, `doors.txt`, `doubledoors.txt`.
+- Where IDs are used:
+  - `src/io/xeros/objects/ObjectAction.java`
+  - `src/io/xeros/model/entity/player/packets/ClickObject.java`
+  - `src/io/xeros/model/entity/player/packets/objectoptions/ObjectOptionOne.java`
+  - `src/io/xeros/model/entity/player/packets/objectoptions/ObjectOptionTwo.java`
+  - `src/io/xeros/model/entity/player/packets/objectoptions/ObjectOptionThree.java`
+  - `src/io/xeros/model/entity/player/packets/objectoptions/ObjectOptionFour.java`
+  - `src/io/xeros/model/entity/player/packets/ItemOnObject.java`
+- How new IDs are usually added:
+  - Use real cache object IDs from `src/io/xeros/model/ObjectId.java` or external map data.
+  - Register isolated interactions with `ObjectAction.register(int objectId, int option, ObjectAction action)` or `ObjectAction.register(int objectId, String optionName, ObjectAction action)` where practical.
+  - For older flows, add a narrow case to the correct object option packet handler.
+- How conflicts can happen:
+  - One object ID can appear at many world coordinates with different intended behavior.
+  - The same object can have first-click, second-click, third-click, and fourth-click behavior.
+  - Coordinate-specific actions can override or conflict with global object ID actions.
+  - Door and map-object definitions are loaded externally and may not be visible in repo data.
+- How to search before adding:
+  - `rg -n "<object id>|ObjectId\\.|ObjectAction.register|case <object id>" src data docs`
+  - `rg -n "object name|option name" src/io/xeros`
+  - `rg -n "ObjectOptionOne|ObjectOptionTwo|ObjectOptionThree|ObjectOptionFour|ItemOnObject" src/io/xeros`
+- Safe patterns to copy:
+  - Copy packet option patterns from `src/io/xeros/model/entity/player/packets/objectoptions/ObjectOptionOne.java`.
+  - Copy item-on-object patterns from `src/io/xeros/model/entity/player/packets/ItemOnObject.java`.
+  - Prefer `src/io/xeros/objects/ObjectAction.java` for contained new interactions.
+- Dangerous patterns to avoid:
+  - Do not make one object ID do new behavior everywhere unless that is intended.
+  - Do not ignore object coordinates when an object is reused in multiple places.
+  - Do not edit door loaders for non-door content.
+
+## 4. Interface ID Usage
+
+- Where IDs are defined:
+  - Interface IDs are usually Java constants in the owning feature class.
+  - `src/io/xeros/content/achievement/inter/AchieveV2.java` uses `showInterface(54760)` and related achievement interface IDs.
+  - `src/io/xeros/content/achievement/AchievementHandler.java` defines `BUTTON_INDEX`, `START_BUTTON_ID`, and `BUTTON_SEPARATION`.
+  - `src/io/xeros/content/teleportv2/inter/TeleportInterface.java` defines teleport button arrays and opens interface `31000`.
+  - `src/io/xeros/content/dailyrewards/DailyRewards.java` defines daily rewards interface constants.
+  - `src/io/xeros/content/event/eventcalendar/EventCalendar.java` defines `INTERFACE_ID`, `RULES_BUTTON_ID`, `MONTH_BUTTON_ID`, `BACK_BUTTON_ID`, and `FORWARD_BUTTON_ID`.
+  - `src/io/xeros/content/item/lootable/LootableInterface.java` defines `INTERFACE_ID` and button ranges.
+  - `src/io/xeros/content/wildwarning/WildWarning.java` defines `INTERFACE_ID`, `ACCEPT_BUTTON`, and `DECLINE_BUTTON`.
+- Where IDs are used:
+  - `src/io/xeros/model/entity/player/packets/ClickingButtons.java`
+  - `src/io/xeros/model/entity/player/packets/ClickingButtonsNew.java`
+  - `src/io/xeros/model/entity/player/packets/action/InterfaceAction.java`
+  - Feature classes with `handleButton`, `handleButtons`, `clickButton`, or interface-specific handlers.
+- How new IDs are usually added:
+  - Add constants in the owning feature interface class.
+  - Route the button to that feature's `handleButton` method.
+  - Keep interface ID, child IDs, and button ranges grouped together.
+- How conflicts can happen:
+  - `ClickingButtons.java` reads both `actionButtonId` and `realButtonId`; handlers may use one or the other.
+  - Some interfaces use contiguous button ranges; inserting an overlapping range can trigger the wrong handler.
+  - Reusing an interface ID can close or refresh another feature's interface.
+- How to search before adding:
+  - `rg -n "<interface id>|<button id>|showInterface\\(<id>|sendFrame|handleButton|clickButton" src/io/xeros`
+  - `rg -n "BUTTON|INTERFACE_ID|START_BUTTON|BUTTON_INDEX|handleButtons" src/io/xeros/content`
+  - Search both `actionButtonId` and `realButtonId` if editing `src/io/xeros/model/entity/player/packets/ClickingButtons.java`.
+- Safe patterns to copy:
+  - Copy feature-owned constants from `src/io/xeros/content/event/eventcalendar/EventCalendar.java`.
+  - Copy button arrays from `src/io/xeros/content/teleportv2/inter/TeleportInterface.java`.
+  - Copy range-based buttons from `src/io/xeros/content/item/lootable/LootableInterface.java`.
+- Dangerous patterns to avoid:
+  - Do not place unrelated interface IDs in central packet handlers when the owning class can handle them.
+  - Do not reuse old interface IDs without searching both packet handlers.
+  - Do not assume `actionButtonId` and `realButtonId` are interchangeable.
+
+## 5. Button And Action ID Usage
+
+- Where IDs are defined:
+  - General button packet handling is in `src/io/xeros/model/entity/player/packets/ClickingButtons.java`.
+  - Newer button packet handling is in `src/io/xeros/model/entity/player/packets/ClickingButtonsNew.java`.
+  - Interface action handling is in `src/io/xeros/model/entity/player/packets/action/InterfaceAction.java`.
+  - Dialogue action button mappings are in `src/io/xeros/content/dialogue/DialogueConstants.java`.
+  - Dialogue action enum values are in `src/io/xeros/content/dialogue/DialogueAction.java`.
+- Where IDs are used:
+  - `src/io/xeros/model/entity/player/packets/ClickingButtons.java` routes packet 185.
+  - `src/io/xeros/model/entity/player/packets/ClickingButtonsNew.java` routes packet 184.
+  - `src/io/xeros/model/entity/player/packets/action/InterfaceAction.java` reads `id` and `action`.
+  - Feature handlers such as `TeleportInterface.handleButton(Player, int)` and `LeaderboardInterface.handleButtons(Player, int)` consume IDs.
+- How new IDs are usually added:
+  - Add feature-owned constants and a feature-owned handler.
+  - Add one small call from a central button packet only if no dispatcher already reaches the feature.
+  - For dialogue make-x actions, extend `DialogueAction` and `DialogueConstants.BUTTONS` only when using the shared dialogue action system.
+- How conflicts can happen:
+  - A central handler can return early before another handler sees the same button.
+  - Duplicate IDs in independent interfaces can be harmless until both are routed through a global handler.
+  - Dialogue buttons can overlap with other action IDs if added to the wrong packet path.
+- How to search before adding:
+  - `rg -n "<button id>|CLICKING_BUTTONS_NEW|actionButtonId|realButtonId|DialogueConstants.BUTTONS" src/io/xeros`
+  - `rg -n "handleButton\\(|handleButtons\\(|clickButton\\(|buttonId" src/io/xeros/content`
+- Safe patterns to copy:
+  - Copy handler-first flow from `src/io/xeros/content/dailyrewards/DailyRewards.java`.
+  - Copy central packet delegation from `src/io/xeros/model/entity/player/packets/ClickingButtonsNew.java`.
+  - Copy dialogue action mapping from `src/io/xeros/content/dialogue/DialogueConstants.java`.
+- Dangerous patterns to avoid:
+  - Do not add broad button ranges without checking overlap.
+  - Do not put economy rewards directly in central button packets.
+  - Do not bypass the owning feature's handler.
+
+## 6. Shop ID Usage
+
+- Where IDs are defined:
+  - `src/io/xeros/model/definitions/ShopDef.java` loads shop definitions by shop ID and exposes `ShopDef.get(int shopId)`.
+  - `src/io/xeros/model/world/ShopHandler.java` stores loaded shops and defines `MaxShops = 620` and `MaxShopItems = 800`.
+  - `src/io/xeros/model/shops/ShopAssistant.java` opens shops through `openShop(int ShopID)` and contains special-case shop behavior.
+  - External/not found in repo. Searched terms: `shops`, `ShopDef`, `shop id`, `openShop`.
+- Where IDs are used:
+  - `src/io/xeros/model/world/ShopHandler.java`
+  - `src/io/xeros/model/shops/ShopAssistant.java`
+  - NPC options in `src/io/xeros/model/entity/player/packets/npcoptions/`
+  - Commands and dialogues that call `openShop(int ShopID)`.
+- How new IDs are usually added:
+  - Add stock through the external shop definition loader when possible.
+  - Use an unused shop ID below `ShopHandler.MaxShops`.
+  - Add special currency behavior in `ShopAssistant` only when stock alone is not enough.
+- How conflicts can happen:
+  - `ShopDef.load()` rejects duplicate shop IDs with `Preconditions.checkState(!definitions.containsKey(shop.id), ...)`.
+  - `ShopHandler.addShop(int id, String name, List<ShopItem> items)` requires a positive ID.
+  - A shop ID can be opened by an NPC, command, dialogue, and object at once.
+  - `ShopAssistant` has many shop-specific cases for currencies and purchase rules.
+- How to search before adding:
+  - `rg -n "openShop\\(<id>|case <id>|ShopID == <id>|shopId == <id>|ShopDef.get\\(<id>" src data docs`
+  - `rg -n "ShopAssistant|ShopHandler|ShopDef|addShop" src/io/xeros`
+- Safe patterns to copy:
+  - Copy simple stock handling through `src/io/xeros/model/definitions/ShopDef.java`.
+  - Copy NPC shop opening from `src/io/xeros/model/entity/player/packets/npcoptions/NpcOptions.java`.
+- Dangerous patterns to avoid:
+  - Do not edit `ShopAssistant` for a normal coin shop if shop data can handle it.
+  - Do not reuse shop IDs that have special purchase behavior.
+  - Do not assume a shop ID is unused because it is not in Java; stock data is external.
+
+## 7. Achievement ID Usage
+
+- Where IDs are defined:
+  - `src/io/xeros/content/achievement/Achievements.java` defines `Achievements.Achievement` enum entries.
+  - Each achievement has `formattedName`, `identification`, `AchievementTier`, `AchievementType`, `description`, `amount`, `points`, and reward items.
+  - `src/io/xeros/content/achievement/AchievementTier.java` defines tier IDs: `TIER_1(0)`, `TIER_2(1)`, `TIER_3(2)`, `TIER_4(3)`, and `STARTER(4)`.
+  - `src/io/xeros/content/achievement/AchievementType.java` defines progress trigger types.
+  - `src/io/xeros/content/achievement/AchievementHandler.java` defines `MAXIMUM_TIER_ACHIEVEMENTS = 100`.
+- Where IDs are used:
+  - `src/io/xeros/content/achievement/Achievements.java`
+  - `src/io/xeros/content/achievement/AchievementHandler.java`
+  - `src/io/xeros/content/achievement/inter/AchieveV2.java`
+  - Progress hooks that call `Achievements.increase(Player player, AchievementType type, int amount)`.
+  - Legacy achievement save handling in `src/io/xeros/model/entity/player/save/PlayerSave.java`.
+- How new IDs are usually added:
+  - Add a new `Achievements.Achievement` enum entry.
+  - Pick an unused `identification` within the same `AchievementTier`.
+  - Use an existing `AchievementType` if the content already has a progress hook.
+  - Add a new `AchievementType` only if a new hook is truly needed.
+- How conflicts can happen:
+  - The static duplicate guard in `Achievements.java` rejects duplicate `identification` values within the same tier.
+  - `AchievementHandler` arrays are tier/id indexed and expect IDs under `MAXIMUM_TIER_ACHIEVEMENTS`.
+  - Renaming existing enum entries can affect save parsing and display expectations.
+  - Adding an achievement without a matching progress hook leaves it impossible to complete.
+- How to search before adding:
+  - `rg -n "AchievementType\\.|Achievements\\.increase|new GameItem|STARTER|TIER_1|TIER_2|TIER_3|TIER_4" src/io/xeros/content/achievement src/io/xeros`
+  - `rg -n "identification|MAXIMUM_TIER_ACHIEVEMENTS|Achievement\\(" src/io/xeros/content/achievement`
+- Safe patterns to copy:
+  - Copy existing enum entries in `src/io/xeros/content/achievement/Achievements.java`.
+  - Copy hook calls already using the same `AchievementType`.
+- Dangerous patterns to avoid:
+  - Do not exceed the tier array limit.
+  - Do not reuse an `identification` in the same tier.
+  - Do not add new save fields for achievement progress.
+
+## 8. Task Master Task IDs
+
+- Where IDs are defined:
+  - `src/io/xeros/content/taskmaster/Tasks.java` defines Task Master tasks as enum entries.
+  - `src/io/xeros/content/taskmaster/TaskDifficulty.java` defines difficulty categories.
+  - `src/io/xeros/content/taskmaster/TaskType.java` defines task activity categories.
+  - `src/io/xeros/content/taskmaster/TaskMasterKills.java` stores generated task state using description, difficulty, type, amount, weekly flag, and reward items.
+- Where IDs are used:
+  - `src/io/xeros/content/taskmaster/TaskMaster.java` randomly selects tasks from `Tasks.values()`.
+  - `src/io/xeros/content/taskmaster/TaskMaster.java` creates `TaskMasterKills` in `generateTasks(Player player, boolean resetScroll)`.
+  - `src/io/xeros/content/taskmaster/TaskMaster.java` progresses tasks in `trackActivity(Player player, TaskMasterKills kills)`.
+  - Runtime task state is saved outside source by `TaskMaster.saveAllMoneyMaking(Player player)`.
+- How new IDs are usually added:
+  - Add a new enum entry to `Tasks.java`.
+  - Use an existing `TaskType` and `TaskDifficulty` unless a new progress category is necessary.
+  - Make `desc` unique and clear, because generated tasks store and display it.
+- How conflicts can happen:
+  - There are no numeric Task Master IDs; the enum entry name and description act as identifiers.
+  - Duplicate descriptions can confuse players and future matching logic.
+  - A new `TaskType` without a progress hook will not advance.
+  - Changing existing enum names/descriptions can confuse runtime task state.
+- How to search before adding:
+  - `rg -n "enum Tasks|TaskType\\.|TaskDifficulty\\.|trackActivity|finishTask|generateTasks" src/io/xeros/content/taskmaster src/io/xeros`
+  - `rg -n "taskMasterKillsList|TaskMasterKills" src/io/xeros`
+- Safe patterns to copy:
+  - Copy nearby entries in `src/io/xeros/content/taskmaster/Tasks.java` with the same `TaskType`.
+  - Copy progress logic in `src/io/xeros/content/taskmaster/TaskMaster.java`.
+- Dangerous patterns to avoid:
+  - Do not add a task type before adding or confirming a progress hook.
+  - Do not rename existing enum entries casually.
+  - Do not rely on numeric IDs for Task Master tasks.
+
+## 9. Collection Log Category IDs
+
+- Where IDs are defined:
+  - `src/io/xeros/content/collection_log/CollectionLog.java` defines `PETS_ID = 5`.
+  - `src/io/xeros/content/collection_log/CollectionLog.java` defines `CollectionTabType` values: `BOSSES`, `WILDERNESS`, `RAIDS`, `MINIGAMES`, and `OTHER`.
+  - `src/io/xeros/content/collection_log/CollectionRewards.java` defines hardcoded collection reward behavior.
+  - External/not found in repo. Searched terms: `collection_npcs.json`, `collectionNPCS`, `CollectionTabType`, `PETS_ID`.
+- Where IDs are used:
+  - `src/io/xeros/content/collection_log/CollectionLog.java`
+  - `src/io/xeros/content/collection_log/CollectionRewards.java`
+  - Drop reward hooks that call `CollectionLog.handleDrop(Player player, int npcId, int dropId, int dropAmount)`.
+  - AOE and upgrade special categories are referenced in collection log logic.
+- Known special IDs and categories in code:
+  - `PETS_ID = 5`
+  - Special collection IDs include clue categories, pet category, rare upgrade categories, AOE weapons, raid/boss special IDs, and NPC IDs.
+  - Tab buttons include `90076`, `90182`, `90184`, `90186`, and `90188` in `CollectionLog.handleActionButtons`.
+- How new IDs are usually added:
+  - Add NPC IDs or special category IDs through the collection log configuration source when available.
+  - Add reward behavior in `CollectionRewards.java` only when a category needs claim rewards.
+  - Use the existing `CollectionTabType` instead of creating a new category unless the interface supports it.
+- How conflicts can happen:
+  - Collection IDs can mean NPC IDs or special synthetic IDs depending on tab and logic.
+  - Adding a special ID that matches a real NPC ID can route drops/rewards incorrectly.
+  - Collection reward checks are hardcoded and can become inconsistent with category membership.
+- How to search before adding:
+  - `rg -n "PETS_ID|CollectionTabType|handleDrop|CollectionRewards|collectionNPCS|90076|90182|90184|90186|90188" src/io/xeros/content/collection_log src/io/xeros`
+  - `rg -n "<npc id>|<special id>" src data docs`
+- Safe patterns to copy:
+  - Copy existing category handling in `src/io/xeros/content/collection_log/CollectionLog.java`.
+  - Copy reward claims in `src/io/xeros/content/collection_log/CollectionRewards.java`.
+- Dangerous patterns to avoid:
+  - Do not invent special category numbers without checking all existing special IDs.
+  - Do not add collection rewards without confirming the collection can be completed.
+  - Do not rewrite the collection save format.
+
+## 10. AOE Tier IDs
+
+- Where IDs are defined:
+  - `data/aoe/aoe_boss_tiers.json` defines tier records.
+  - `data/aoe/aoe_tier_rewards.json` defines reward records keyed by tier.
+  - `data/aoe/AoeZoneMapConfig.json` defines AOE map/template data.
+  - `src/io/xeros/content/instances/aoe/AoeBossTierDef.java` defines supported boss tier fields.
+  - `src/io/xeros/content/instances/aoe/AoeTierRewardsDef.java` defines supported reward fields.
+  - `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java` defines save keys `aoe_unlocked_tier` and `aoe_kc_<tier>`.
+- Where IDs are used:
+  - `src/io/xeros/content/instances/aoe/AoeBossTierLoader.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierRewardsLoader.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierRepo.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierController.java`
+  - `src/io/xeros/content/instances/aoe/AoeInstanceService.java`
+  - `src/io/xeros/content/instances/aoe/AoeDropInterceptor.java`
+- How new IDs are usually added:
+  - Add the tier number to `data/aoe/aoe_boss_tiers.json`.
+  - Add a matching tier record to `data/aoe/aoe_tier_rewards.json`.
+  - Add or reuse a matching map ID in `data/aoe/AoeZoneMapConfig.json`.
+  - Keep tier numbers increasing and unique.
+- How conflicts can happen:
+  - A tier in boss data without a matching reward entry can run with missing reward configuration.
+  - A reward tier without a boss tier can be unreachable.
+  - `AoeBossTierDef.resolveMapId()` returns explicit `mapId` or `"T" + tier`; map IDs must stay aligned.
+  - Changing old tier numbers changes `aoe_kc_<tier>` save meaning.
+- How to search before adding:
+  - `rg -n "\"tier\"\\s*:\\s*<tier>|\"mapId\"|aoe_kc_|aoe_unlocked_tier|byTier\\(" data/aoe src/io/xeros/content/instances/aoe`
+  - `rg -n "AoeTierRewardsDef|AoeBossTierDef|AoeTierRepo" src/io/xeros/content/instances/aoe`
+- Safe patterns to copy:
+  - Copy existing tier objects from `data/aoe/aoe_boss_tiers.json`.
+  - Copy existing reward objects from `data/aoe/aoe_tier_rewards.json`.
+  - Copy tier progression save behavior from `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`.
+- Dangerous patterns to avoid:
+  - Do not renumber existing tiers.
+  - Do not change existing AOE save keys.
+  - Do not add reward fields not supported by `AoeTierRewardsDef.java`.
+
+## 11. Boss Point IDs And Config Names
+
+- Where IDs are defined:
+  - `src/io/xeros/content/bosspoints/BossPoints.java` loads boss point entries.
+  - Boss point entries use names, point amounts, and a manual flag.
+  - Player point fields are `bossPoints` and `bossPointsRefund`.
+  - External/not found in repo. Searched terms: `boss_points.yaml`, `BossPointEntry`, `BossPoints.getPointsOnDeath`, `BossPoints.addManualPoints`.
+- Where IDs are used:
+  - `src/io/xeros/content/bosspoints/BossPoints.java`
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/content/item/lootable/impl/TheatreOfBloodChest.java`
+  - `src/io/xeros/content/minigames/raids/Raids.java`
+  - `src/io/xeros/content/item/lootable/impl/TombsOfAmascutChest.java`
+  - `src/io/xeros/model/shops/ShopAssistant.java`
+- How new IDs are usually added:
+  - Add the boss name and point amount to the boss points config source.
+  - Use `manual = false` for NPC death points that should match NPC definition names.
+  - Use `BossPoints.addManualPoints(Player player, String name)` for chest, raid, or minigame completions.
+- How conflicts can happen:
+  - Non-manual points use `entry.name.equalsIgnoreCase(npc.getDefinition().getName())`.
+  - Manual points use exact manual strings in Java calls.
+  - Renaming an NPC definition or manual string can stop point rewards.
+  - Overrewarding boss points affects shop economy.
+- How to search before adding:
+  - `rg -n "BossPoints|getPointsOnDeath|addManualPoints|bossPoints|bossPointsRefund|Boss point" src data docs`
+  - `rg -n "openShop\\(121\\)|case 121" src/io/xeros`
+- Safe patterns to copy:
+  - Copy manual raid hooks from `src/io/xeros/content/minigames/raids/Raids.java`.
+  - Copy chest completion hooks from `src/io/xeros/content/item/lootable/impl/TheatreOfBloodChest.java`.
+- Dangerous patterns to avoid:
+  - Do not hardcode ordinary boss point rewards directly in `NPCDeath`.
+  - Do not add duplicate names with different point values.
+  - Do not reward boss points for fast repeatable actions without economy review.
+
+## 12. Slayer Task IDs And Names
+
+- Where IDs are defined:
+  - `src/io/xeros/content/skills/slayer/SlayerMaster.java` loads slayer master data.
+  - `src/io/xeros/content/skills/slayer/Task.java` defines task fields: `names`, `level`, `experience`, `minimum`, `maximum`, `locations`, and `teleport`.
+  - External/not found in repo. Searched terms: `slayer_masters.json`, `Task.getPrimaryName`, `Task.matches`, `SlayerMaster.MASTERS`.
+- Where IDs are used:
+  - `src/io/xeros/content/skills/slayer/Slayer.java`
+  - `src/io/xeros/content/skills/slayer/SlayerMaster.java`
+  - `src/io/xeros/content/skills/slayer/Task.java`
+  - NPC death flow calls Slayer task progress through `Slayer.killTaskMonster(NPC npc)`.
+- How new IDs are usually added:
+  - Add a task object to the external slayer master data source.
+  - Use the NPC's definition name in `names`, with alternate names only when the task should count multiple NPC names.
+  - Add teleport/location values that match existing JSON shape.
+- How conflicts can happen:
+  - `SlayerMaster.get(String name)` matches `task.getPrimaryName().equals(name)`.
+  - `Task.matches(String input)` checks exact string equality against `names`.
+  - If task names do not match NPC names, kills may not reduce the task.
+  - Master IDs are NPC IDs, so they can conflict with NPC interaction behavior.
+- How to search before adding:
+  - `rg -n "SlayerMaster|Task.matches|getPrimaryName|killTaskMonster|createNewTask|slayer-task|slayer-master" src/io/xeros`
+  - `rg -n "npc name|task name|master id" src data docs`
+- Safe patterns to copy:
+  - Copy existing slayer task data shape from the external slayer master source.
+  - Copy progression behavior from `src/io/xeros/content/skills/slayer/Slayer.java`.
+- Dangerous patterns to avoid:
+  - Do not add a task name that differs from the NPC definition name unless there is a verified alias pattern.
+  - Do not change existing task names without save/progression review.
+  - Do not treat Slayer tasks as numeric enum IDs.
+
+## 13. Donator Rank And Right IDs
+
+- Where IDs are defined:
+  - `src/io/xeros/model/entity/player/Right.java` defines player rights and donator ranks.
+  - Important sets include `DONATORS`, `IRONMEN`, `STAFF`, `DISPLAY_GROUPS`, `DONATOR_SET`, `IRONMAN_SET`, and `PRIORITY`.
+  - `Right.getValue()` returns the numeric value.
+  - `Right.get(int value)` resolves saved numeric values.
+  - `Right.isOrInherits(Player player)` checks inheritance.
+- Where IDs are used:
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/content/commands/CommandManager.java`
+  - Donator shops, perks, vaults, zones, and command packages.
+- Known right values in code:
+  - `PLAYER(0)`
+  - `HELPER(1)`
+  - `MODERATOR(1, HELPER)`
+  - `ADMINISTRATOR(2)`
+  - `STAFF_MANAGER(3)`
+  - `DONATOR(5)`
+  - `SUPER_DONATOR(7)`
+  - `GILDED_DONATOR(8)`
+  - `GREAT_DONATOR(9)`
+  - `HC_IRONMAN(10)`
+  - `HITBOX(12)`
+  - `IRONMAN(13)`
+  - `ULTIMATE_IRONMAN(14)`
+  - `YOUTUBER(15)`
+  - `GAME_DEVELOPER(16)`
+  - `EXTREME_DONATOR(17)`
+  - `MAJOR_DONATOR(18)`
+  - `MEMBERSHIP(21)`
+  - `OSRS(23)`
+  - `ROGUE(25)`
+  - `ROGUE_IRONMAN(26)`
+  - `ROGUE_HARDCORE_IRONMAN(27)`
+  - `GROUP_IRONMAN(28)`
+  - `EVENT_MAN(29)`
+  - `COMMUNITY_MANAGER(30)`
+  - `OSRS_IRONMAN(31)`
+  - `SUPREME_DONATOR(32)`
+  - `PLATINUM_DONATOR(33)`
+  - `APEX_DONATOR(34)`
+  - `ALMIGHTY_DONATOR(35)`
+  - `GUIDE_GURU(36)`
+  - `WILDYMAN(93)`
+  - `HARDCORE_WILDYMAN(94)`
+- How new IDs are usually added:
+  - Owner review should decide whether a new right is needed.
+  - Add the enum entry, value, display settings, inheritance, and set membership consistently.
+  - Update commands, shops, zones, and save behavior only if the new right needs access checks.
+- How conflicts can happen:
+  - Numeric values are not strictly unique.
+  - Rights can inherit other rights.
+  - Display priority can affect player icons and rank display.
+  - Save keys `character-rights` and `character-rights-secondary` depend on numeric values.
+- How to search before adding:
+  - `rg -n "Right\\.|DONATORS|DONATOR_SET|isOrInherits|getRights|character-rights|character-rights-secondary" src/io/xeros`
+  - `rg -n "DONATOR|SUPER_DONATOR|ALMIGHTY_DONATOR|Right.get\\(" src/io/xeros`
+- Safe patterns to copy:
+  - Copy existing donator rank structure in `src/io/xeros/model/entity/player/Right.java`.
+  - Copy access checks that use `Right.isOrInherits(Player player)`.
+- Dangerous patterns to avoid:
+  - Do not add a rank by numeric value only.
+  - Do not change existing numeric values.
+  - Do not ignore secondary rights.
+  - Do not edit rights without owner review.
+
+## 14. World Event IDs And Types
+
+- Where IDs are defined:
+  - `src/io/xeros/content/worldevent/WorldEventContainer.java` defines the active event list in `WORLD_EVENT_LIST`.
+  - `src/io/xeros/content/worldevent/WorldEvent.java` defines the event interface/base contract.
+  - `src/io/xeros/content/worldevent/WorldEventState.java` stores `worldEventIndex` and `ticksUntilNextEvent`.
+  - Runtime state currently appears at `world_event_state.json`.
+- Where IDs are used:
+  - `src/io/xeros/content/worldevent/WorldEventContainer.java`
+  - `src/io/xeros/content/worldevent/WorldEventState.java`
+  - Event implementations in `src/io/xeros/content/worldevent/impl/`
+- How new IDs are usually added:
+  - Add a new `WorldEvent` implementation.
+  - Add it to `WORLD_EVENT_LIST`.
+  - Ensure `getEventName()` is unique because `startEvent(WorldEvent event)` matches by event name.
+- How conflicts can happen:
+  - `worldEventIndex` is an index into `WORLD_EVENT_LIST`.
+  - Reordering the list can change the meaning of saved runtime state.
+  - Duplicate event names can cause the wrong event to start or status text to collide.
+- How to search before adding:
+  - `rg -n "WORLD_EVENT_LIST|worldEventIndex|getEventName|startEvent|WorldEventState|ticksUntilNextEvent" src/io/xeros/content/worldevent docs`
+  - `rg -n "new .*WorldEvent|extends .*WorldEvent|implements WorldEvent" src/io/xeros/content/worldevent`
+- Safe patterns to copy:
+  - Copy event implementation style from `src/io/xeros/content/worldevent/impl/HesporiWorldEvent.java`.
+  - Copy event list registration from `src/io/xeros/content/worldevent/WorldEventContainer.java`.
+- Dangerous patterns to avoid:
+  - Do not reorder `WORLD_EVENT_LIST` without owner review.
+  - Do not reuse event names.
+  - Do not edit runtime state files as part of content registration.
+
+## 15. Activity Boss Types
+
+- Where IDs are defined:
+  - `src/io/xeros/content/activityboss/ActivityType.java` defines tracked activity enum values.
+  - `src/io/xeros/content/activityboss/GlobalBossType.java` maps activity types to boss NPC IDs, thresholds, spawn positions, and combat types.
+  - `src/io/xeros/content/activityboss/GlobalBossActivityManager.java` records activity and spawns bosses.
+- Known activity types:
+  - `UPGRADE_ITEM`
+  - `CLUE_CASKET`
+  - `FOE_BURN`
+  - `KILLSTREAK_10`
+  - `VOTE_CLAIM`
+- Known global boss registrations:
+  - `AHRIM` uses NPC ID `1672` and `ActivityType.CLUE_CASKET`.
+  - `DHAROK` uses NPC ID `1673` and `ActivityType.UPGRADE_ITEM`.
+  - `KARIL` uses NPC ID `1675` and `ActivityType.VOTE_CLAIM`.
+  - `GUTHAN` uses NPC ID `1674` and `ActivityType.FOE_BURN`.
+  - `VERAC` uses NPC ID `1677` and `ActivityType.KILLSTREAK_10`.
+- Where IDs are used:
+  - `src/io/xeros/content/activityboss/GlobalBossActivityManager.java`
+  - `src/io/xeros/content/activityboss/GlobalBossContributionTracker.java`
+  - `src/io/xeros/content/activityboss/GlobalBossSpawnZoneManager.java`
+  - Progress hooks that call `GlobalBossActivityManager.record(ActivityType type, int amount)`.
+- How new IDs are usually added:
+  - Add an `ActivityType` only when a new tracked global activity is needed.
+  - Add one matching `GlobalBossType` entry.
+  - Add a progress hook that calls `GlobalBossActivityManager.record`.
+- How conflicts can happen:
+  - `GlobalBossType.forActivity(ActivityType type)` returns the first matching enum entry.
+  - Duplicate activity types can make later entries unreachable.
+  - Boss NPC IDs still require valid NPC definitions, combat definitions, and drops.
+  - Threshold values can spawn bosses too often if linked to high-frequency actions.
+- How to search before adding:
+  - `rg -n "ActivityType\\.|GlobalBossType|forActivity|forNpcId|GlobalBossActivityManager.record|record\\(" src/io/xeros`
+  - `rg -n "GlobalBossContributionTracker|GlobalBossSpawnZoneManager" src/io/xeros/content/activityboss`
+- Safe patterns to copy:
+  - Copy enum mapping from `src/io/xeros/content/activityboss/GlobalBossType.java`.
+  - Copy activity recording from existing calls to `GlobalBossActivityManager.record`.
+- Dangerous patterns to avoid:
+  - Do not duplicate an existing `ActivityType` in `GlobalBossType`.
+  - Do not use unverified NPC IDs.
+  - Do not set thresholds without reward/economy review.
+
+## 16. Command Names
+
+- Where IDs are defined:
+  - `src/io/xeros/content/commands/Command.java` defaults `getCommand()` to the lowercased class simple name.
+  - `src/io/xeros/content/commands/CommandManager.java` loads command subclasses from command packages.
+  - Command packages include `admin`, `owner`, `moderator`, `helper`, `donator`, and `all`.
+  - Registered commands are stored in `CommandManager.COMMAND_MAP`.
+- Where IDs are used:
+  - `src/io/xeros/content/commands/CommandManager.java`
+  - Command implementations under `src/io/xeros/content/commands/`
+  - `CommandManager.executeCommand(Player player, String playerCommand)`
+- How new IDs are usually added:
+  - Add a new subclass of `Command` in the correct package.
+  - Let the class name define the command name, or override `getCommand()` if a different name is needed.
+  - Implement `execute(Player player, String commandName, String input)` and `hasPrivilege(Player player)`.
+- How conflicts can happen:
+  - `COMMAND_MAP.putIfAbsent(c.getCommand(), c)` keeps the first command name loaded and skips later duplicates.
+  - Case normalizes to lowercase by default.
+  - Inline special cases in `CommandManager.executeCommand` can intercept commands before map lookup.
+- How to search before adding:
+  - `rg -n "class <CommandName>|getCommand\\(\\)|COMMAND_MAP|executeCommand|putIfAbsent|playerCommand" src/io/xeros/content/commands`
+  - `rg -n "\"command name\"|::command|case \"command\"" src/io/xeros`
+- Safe patterns to copy:
+  - Copy simple public commands from `src/io/xeros/content/commands/all/`.
+  - Copy rank-gated commands from `src/io/xeros/content/commands/admin/` or `src/io/xeros/content/commands/donator/`.
+- Dangerous patterns to avoid:
+  - Do not add new inline commands to `CommandManager` unless modifying an existing legacy special case.
+  - Do not create duplicate command names.
+  - Do not bypass `hasPrivilege(Player player)`.
+
+## 17. Dialogue Action IDs
+
+- Where IDs are defined:
+  - Modern dialogue flows use `src/io/xeros/content/dialogue/DialogueBuilder.java`.
+  - Modern dialogue button mappings are in `src/io/xeros/content/dialogue/DialogueConstants.java`.
+  - Modern dialogue actions are in `src/io/xeros/content/dialogue/DialogueAction.java`.
+  - Legacy numeric dialogue actions are in `src/io/xeros/model/entity/player/DialogueHandler.java`.
+  - Dialogue option packet handlers are under `src/io/xeros/model/entity/player/packets/dialogueoptions/`.
+- Where IDs are used:
+  - `src/io/xeros/content/dialogue/DialogueBuilder.java`
+  - `src/io/xeros/model/entity/player/DialogueHandler.java`
+  - `src/io/xeros/model/entity/player/packets/ClickingButtons.java`
+  - `src/io/xeros/model/entity/player/packets/dialogueoptions/`
+- How new IDs are usually added:
+  - Use `DialogueBuilder` and option callbacks for new content.
+  - Add a `DialogueAction` only when using shared make-x dialogue action buttons.
+  - Add legacy `dialogueAction` numbers only when working inside an existing legacy dialogue flow.
+- How conflicts can happen:
+  - Legacy `c.dialogueAction` and `c.nextChat` are global numeric state on the player.
+  - Reusing a dialogue action number can trigger unrelated old options.
+  - Modern dialogue button mappings in `DialogueConstants.BUTTONS` can overlap with make-x interfaces.
+- How to search before adding:
+  - `rg -n "DialogueBuilder|dialogueAction|nextChat|DialogueAction|DialogueConstants|sendDialogues|sendOption" src/io/xeros`
+  - `rg -n "<dialogue id>|dialogueAction = <id>|case <id>" src/io/xeros/model/entity/player/DialogueHandler.java src/io/xeros/model/entity/player/packets/dialogueoptions`
+- Safe patterns to copy:
+  - Copy builder-style dialogues from `src/io/xeros/content/skills/slayer/DemonHunterSlayerDialogue.java`.
+  - Copy builder statements/options from features using `new DialogueBuilder(player)`.
+- Dangerous patterns to avoid:
+  - Do not add new legacy `dialogueAction` flows unless required.
+  - Do not reuse old dialogue action numbers.
+  - Do not add dialogue rewards directly to packet option handlers when a content class can own them.
+
+## 18. Player Save Keys
+
+- Where IDs are defined:
+  - Modular save keys are defined by `src/io/xeros/model/entity/player/save/PlayerSaveEntry.java` implementations.
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java` loads `PlayerSaveEntry` implementations through reflection and still contains legacy save-token handling.
+  - Existing modular entries include:
+    - `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`
+    - `src/io/xeros/content/dailyrewards/DailyRewardsPlayerSaveEntry.java`
+    - `src/io/xeros/content/donationrewards/DonationRewardsPlayerSaveEntry.java`
+    - `src/io/xeros/content/combat/stats/BossTimersPlayerSaveEntry.java`
+    - `src/io/xeros/model/entity/player/save/impl/AutocastPlayerSaveEntry.java`
+    - `src/io/xeros/model/entity/player/save/impl/TrouverParchmentPlayerSaveEntry.java`
+    - `src/io/xeros/model/entity/player/save/impl/StyleWarningPlayerSaveEntry.java`
+    - `src/io/xeros/model/entity/player/save/impl/Skill200mPlayerSaveEntry.java`
+    - `src/io/xeros/content/questing/QuestingPlayerSaveEntry.java`
+    - `src/io/xeros/content/privatemessaging/FriendsListPlayerSaveEntry.java`
+    - `src/io/xeros/model/entity/player/save/impl/AttackStyleSaveEntry.java`
+    - `src/io/xeros/model/entity/player/save/impl/IronmanRevertTypeSaveEntry.java`
+    - `src/io/xeros/content/itemskeptondeath/perdu/LostPropertySave.java`
+    - `src/io/xeros/content/wildwarning/WildWarning.java`
+    - `src/io/xeros/content/combat/pvp/WildAntiFarm.java`
+    - `src/io/xeros/content/compromised/CompromisedPlayerSave.java`
+    - `src/io/xeros/content/CollectionBox.java`
+- Where IDs are used:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSaveEntry.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - Feature classes that encode/decode their own state.
+- Known modular save keys:
+  - `aoe_unlocked_tier`
+  - `aoe_kc_<tier>`
+  - `daily_rewards_claim_date`
+  - `daily_rewards_identifier`
+  - `daily_rewards_streak`
+  - `donation_reward_amount`
+  - `donation_reward_reset_week`
+  - `boss_kill_times`
+  - `autocast`
+  - `autocast_defensive`
+  - `autocast_id`
+  - `trouver_items`
+  - `style_warning_toggle`
+  - `200mtime`
+  - `friends-list`
+  - `weapon_mode_3`
+  - `ironman_revert_type`
+  - `collection_box`
+  - `recent_killed`
+  - `compromised_account_type`
+  - `lost_property`
+  - `wild_warning`
+- Important legacy save keys in `PlayerSave.java`:
+  - `character-password`
+  - `character-rights`
+  - `character-rights-secondary`
+  - `mode`
+  - `expmode`
+  - `raidPoints`
+  - `raidCount`
+  - `tobCompletions`
+  - `arboCompletions`
+  - `exchangeP`
+  - `totalEarnedExchangeP`
+  - `bossPoints`
+  - `bossPointsRefund`
+  - `slayer-task`
+  - `slayer-master`
+  - `slayerPoints`
+- How new IDs are usually added:
+  - Add a new `PlayerSaveEntry` implementation for new persistent content.
+  - Use unique, lowercase, system-prefixed keys.
+  - Implement `getKeys(Player player)`, `decode(Player player, String key, String value)`, and encode behavior following existing entries.
+- How conflicts can happen:
+  - A `PlayerSaveEntry` key can collide with another modular key or a legacy `PlayerSave.java` token.
+  - Dynamic keys such as `aoe_kc_<tier>` can collide with future broad prefixes if not scoped.
+  - Renaming keys breaks existing player saves.
+- How to search before adding:
+  - `rg -n "implements PlayerSaveEntry|getKeys\\(|decode\\(|encode\\(|addEntry|character-rights|bossPoints|slayer-task|aoe_kc_|aoe_unlocked_tier" src/io/xeros`
+  - `rg -n "\"new_save_key\"|new_save_key" src data docs saves`
+- Safe patterns to copy:
+  - Copy dynamic keyed saves from `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`.
+  - Copy simple scalar saves from `src/io/xeros/content/dailyrewards/DailyRewardsPlayerSaveEntry.java`.
+  - Copy attribute-backed saves from `src/io/xeros/model/entity/player/save/impl/StyleWarningPlayerSaveEntry.java`.
+- Dangerous patterns to avoid:
+  - Do not expand `PlayerSave.java` for new content unless modifying old save keys.
+  - Do not rename existing save keys.
+  - Do not store high-frequency runtime-only state in player saves.
+
+## 19. Player Attribute Keys
+
+- Where IDs are defined:
+  - `src/io/xeros/model/Attributes.java` provides string-keyed typed maps.
+  - `src/io/xeros/model/AttributesSerializable.java` supports serializable attributes.
+  - Feature classes define their own attribute key constants or string literals.
+- Where IDs are used:
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/content/instances/aoe/`
+  - `src/io/xeros/content/wildwarning/WildWarning.java`
+  - `src/io/xeros/model/entity/player/save/impl/AttackStyleSaveEntry.java`
+  - `src/io/xeros/model/entity/player/save/impl/StyleWarningPlayerSaveEntry.java`
+  - `src/io/xeros/content/compromised/CompromisedPlayerSave.java`
+- Known attribute/save-related keys:
+  - `aoe_unlocked_tier`
+  - `aoe_active_tier`
+  - `aoe_reward_tracker`
+  - `aoe_instance`
+  - `aoe_kc_<tier>`
+  - `weapon_style_load_index`
+  - `wild_warning_count`
+  - `wild_warning_accept`
+  - `compromised_account_type`
+  - `changed_pass_compromised`
+- How new IDs are usually added:
+  - Define a private or public constant in the owning feature class.
+  - Use a system prefix such as `aoe_`, `wild_warning_`, or feature-specific names.
+  - Use the matching typed accessor from `Attributes`, such as `setBoolean` with `getBoolean`.
+- How conflicts can happen:
+  - Attribute keys are plain strings and can collide silently.
+  - `Attributes` stores values by type-specific maps, so using mismatched setters/getters makes data appear missing.
+  - Attribute state may be runtime-only unless paired with a `PlayerSaveEntry`.
+- How to search before adding:
+  - `rg -n "getAttributes\\(\\)|setBoolean|setInt|setLong|setString|getBoolean|getInt|getLong|getString|Attributes\\." src/io/xeros`
+  - `rg -n "\"feature_prefix_|attribute_key\"" src/io/xeros docs`
+- Safe patterns to copy:
+  - Copy AOE attribute/save pairing from `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`.
+  - Copy warning toggle handling from `src/io/xeros/content/wildwarning/WildWarning.java`.
+  - Copy attack style attribute handling from `src/io/xeros/model/entity/player/save/impl/AttackStyleSaveEntry.java`.
+- Dangerous patterns to avoid:
+  - Do not use generic keys such as `active`, `stage`, or `points`.
+  - Do not expect attributes to persist unless saved.
+  - Do not mix typed accessors for the same key.
+
+## A. ID Types That Are Safe To Extend
+
+- Command names are safe when added as new `Command` subclasses under `src/io/xeros/content/commands/`.
+- Task Master enum entries are safe when using existing `TaskType` hooks in `src/io/xeros/content/taskmaster/Tasks.java`.
+- Achievement entries are safe when using unused `identification` values within a tier and existing `AchievementType` hooks.
+- AOE tier reward data is safe when using fields already supported by `src/io/xeros/content/instances/aoe/AoeTierRewardsDef.java`.
+- Player save keys are safe when added through a new `PlayerSaveEntry` with a unique feature prefix.
+- Player attribute keys are safe when scoped to one owning feature and paired with typed accessors.
+- Dialogue flows are safe when using `src/io/xeros/content/dialogue/DialogueBuilder.java`.
+
+## B. ID Types That Require Owner Review
+
+- Donator ranks and rights in `src/io/xeros/model/entity/player/Right.java`.
+- Existing item IDs, NPC IDs, and object IDs that require cache or definition changes.
+- Shop IDs with special currency behavior in `src/io/xeros/model/shops/ShopAssistant.java`.
+- Boss point config names and values that affect economy balance.
+- World event list ordering in `src/io/xeros/content/worldevent/WorldEventContainer.java`.
+- Activity boss thresholds and boss registrations in `src/io/xeros/content/activityboss/GlobalBossType.java`.
+- Legacy save keys in `src/io/xeros/model/entity/player/save/PlayerSave.java`.
+- Collection log special category IDs in `src/io/xeros/content/collection_log/CollectionLog.java`.
+
+## C. ID Types That Appear Externally Defined
+
+- Item definition IDs: External/not found in repo. Searched terms: `item_definitions.yaml`, `item_stats.json`, `itemdata`.
+- NPC definition IDs: External/not found in repo. Searched terms: `npc_definitions.json`, `npc_stats.json`, `npc_combat_defs.json`.
+- NPC spawn IDs: External/not found in repo. Searched terms: `npc_spawns.json`, `osrsspawns`.
+- Object definition IDs: External/not found in repo. Searched terms: `loc.dat`, `loc.idx`.
+- Global object and door data: External/not found in repo. Searched terms: `global_objects.cfg`, `door_definitions.json`, `doors.txt`, `doubledoors.txt`.
+- Shop stock and shop IDs: External/not found in repo. Searched terms: `shops`, `ShopDef`, `NamedShopItem`.
+- Boss point config names: External/not found in repo. Searched terms: `boss_points.yaml`, `BossPointEntry`.
+- Slayer master and task data: External/not found in repo. Searched terms: `slayer_masters.json`, `SlayerMaster.MASTERS`, `Task.getPrimaryName`.
+- Collection log NPC/category config: External/not found in repo. Searched terms: `collection_npcs.json`, `collectionNPCS`.
+
+## D. Search Checklist Before Adding Any New ID
+
+- Search the numeric ID directly: `rg -n "<id>" src data docs`
+- Search the display name directly: `rg -n "display name|npc name|item name|shop name|event name" src data docs`
+- Search constants: `rg -n "Items\\.|ItemIdentifiers\\.|Npcs\\.|ObjectId\\." src/io/xeros`
+- Search packet handlers: `rg -n "case <id>|== <id>|handleButton|openShop|NPCAction.register|ObjectAction.register" src/io/xeros`
+- Search save keys: `rg -n "save_key|implements PlayerSaveEntry|getKeys\\(|decode\\(" src/io/xeros`
+- Search attributes: `rg -n "attribute_key|getAttributes\\(\\)|setBoolean|setInt|setLong|setString" src/io/xeros`
+- Search economy hooks: `rg -n "BossPoints|ShopAssistant|FireOfExchange|UpgradeMaterials|WraithCharges|VotePanel|Achievement" src/io/xeros`
+- Search docs context: `rg -n "system name|content name|id type" docs`
+
+## E. Best Practices For Future Codex Tasks
+
+- Prefer loader-backed changes when the loader already supports the content.
+- Prefer constants from `src/io/xeros/model/Items.java`, `src/io/xeros/content/combat/common/ItemIdentifiers.java`, `src/io/xeros/model/Npcs.java`, and `src/io/xeros/model/ObjectId.java` over raw numbers.
+- Keep IDs owned by the feature that uses them.
+- Use command subclasses instead of editing `src/io/xeros/content/commands/CommandManager.java`.
+- Use `DialogueBuilder` instead of adding new legacy `dialogueAction` IDs.
+- Use `NPCAction.register` or `ObjectAction.register` for isolated interactions when practical.
+- Use `PlayerSaveEntry` for new persistent data.
+- Use unique, feature-prefixed save and attribute keys.
+- Do not renumber AOE tiers, achievement tier IDs, right values, or world event list positions casually.
+- Explain every new ID, where it was searched, where it is registered, and how it is tested before implementation is considered complete.

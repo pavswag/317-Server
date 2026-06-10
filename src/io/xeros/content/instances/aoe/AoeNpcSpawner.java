@@ -40,7 +40,8 @@ public final class AoeNpcSpawner {
     private static final Map<UUID, CycleEventContainer> TICKERS = new ConcurrentHashMap<>();
     private static final CopyOnWriteArraySet<UUID> FORCE_AGGRO = new CopyOnWriteArraySet<>();
 
-    private AoeNpcSpawner() {}
+    private AoeNpcSpawner() {
+    }
 
     public static void spawnForInstance(Player owner, AoeInstance inst, AoeZoneMapDef map) {
         if (owner == null || inst == null || map == null) {
@@ -258,8 +259,8 @@ public final class AoeNpcSpawner {
                     if (npc == null || npc.isDeadOrDying()) {
                         continue;
                     }
-            Position spawn = entry.getKey().toPosition();
-            enforceBounds(zone, npc, spawn);
+                    Position spawn = entry.getKey().toPosition();
+                    enforceBounds(zone, npc, spawn);
 
                     Player currentTarget = npc.getPlayerAttackingIndex() > 0 ? PlayerHandler.players[npc.getPlayerAttackingIndex()] : null;
                     if (currentTarget != null && (!isInside(zone, currentTarget.getPosition()) || currentTarget.isDead)) {
@@ -605,3 +606,4 @@ public final class AoeNpcSpawner {
     private static String key(int x, int y, int z) {
         return x + ":" + y + ":" + z;
     }
+}

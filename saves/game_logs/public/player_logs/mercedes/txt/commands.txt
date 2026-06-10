@@ -1,0 +1,20 @@
+[CommandLog] [2025-09-01T17:20:54.646836] mercedes typed command getid wraith essen at X: 3212 Y:3218
+[CommandLog] [2025-09-01T17:21:00.0854931] mercedes typed command item 26879 5000 at X: 3212 Y:3218
+[CommandLog] [2025-09-01T17:22:52.7421018] mercedes typed command aoe start 1 at X: 3212 Y:3218
+[CommandLog] [2025-09-01T17:22:57.5522301] mercedes typed command aoe start at X: 3212 Y:3218
+[CommandLog] [2025-09-01T17:22:59.9697713] mercedes typed command aoe 1 at X: 3212 Y:3218
+[CommandLog] [2025-09-01T17:23:02.3799218] mercedes typed command aoe at X: 3212 Y:3218
+[CommandLog] [2025-09-01T17:23:14.4229003] mercedes typed command aoe tier set 1 at X: 3212 Y:3218
+[CommandLog] [2025-09-01T17:23:27.6616926] mercedes typed command aoe tier start 1 at X: 3211 Y:3222
+[CommandLog] [2025-09-01T17:23:30.6828754] mercedes typed command aoe tier start 2 at X: 3211 Y:3222
+[CommandLog] [2025-09-01T17:23:36.0935755] mercedes typed command aoe tier start unicow at X: 3211 Y:3222
+[CommandLog] [2025-09-01T17:23:53.553095] mercedes typed command aoe tier start bandos stronghold at X: 3211 Y:3222
+[CommandLog] [2025-09-01T17:23:59.5758895] mercedes typed command aoe tier start bandos_stronghold at X: 3211 Y:3222
+[CommandLog] [2025-09-01T17:37:15.4619089] mercedes typed command bank at X: 3208 Y:3219
+[CommandLog] [2025-09-01T17:37:25.6944525] mercedes typed command close at X: 3208 Y:3219
+[CommandLog] [2025-09-01T17:37:31.1073094] mercedes typed command item 2775 500 at X: 3211 Y:3221
+[CommandLog] [2025-09-01T17:43:29.8538422] mercedes typed command empty at X: 3213 Y:3220
+[CommandLog] [2025-09-01T17:43:33.4608413] mercedes typed command wraithcharges at X: 3213 Y:3220
+[CommandLog] [2025-09-01T17:43:50.3124227] mercedes typed command getid wraith ess at X: 3213 Y:3220
+[CommandLog] [2025-09-01T17:43:53.9228169] mercedes typed command item 26879 at X: 3213 Y:3220
+[CommandLog] [2025-09-01T17:44:12.566802] mercedes typed command item 26879 500 at X: 3213 Y:3220

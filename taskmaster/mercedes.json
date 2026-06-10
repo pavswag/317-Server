@@ -1,0 +1,56 @@
+[
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 50,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "MEDIUM",
+    "taskType": "COMBAT",
+    "weekly": false,
+    "localDateTime": "2025-08-20T18:34:18.6246798",
+    "desc": "Barrelchest"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 10,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "EASY",
+    "taskType": "SKILLING",
+    "weekly": false,
+    "localDateTime": "2025-08-20T18:34:18.6306804",
+    "desc": "Cook @whi@Fish"
+  },
+  {
+    "items": [
+      {
+        "id": 995,
+        "amount": 25000,
+        "slot": 0,
+        "stackable": false
+      }
+    ],
+    "amountToKill": 25,
+    "claimedReward": false,
+    "amountKilled": 0,
+    "taskDifficulty": "EASY",
+    "taskType": "COMBAT",
+    "weekly": true,
+    "localDateTime": "2025-08-21T17:34:18.6316816",
+    "desc": "Inferno"
+  }
+]

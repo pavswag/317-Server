@@ -1,0 +1,485 @@
+[CommandLog] [2025-08-02T16:15:49.7369358] mercy typed command max at X: 3210 Y:3216
+[CommandLog] [2025-08-02T16:15:54.5722017] mercy typed command item 33173 at X: 3211 Y:3215
+[CommandLog] [2025-08-02T16:15:59.9846293] mercy typed command item 773 at X: 3211 Y:3215
+[CommandLog] [2025-08-02T16:16:01.7879917] mercy typed command bossinstance at X: 3211 Y:3215
+[CommandLog] [2025-08-02T16:31:55.4600244] mercy typed command bossinstance at X: 3209 Y:3215
+[CommandLog] [2025-08-02T16:32:06.8861181] mercy typed command bossinstance at X: 3212 Y:3217
+[CommandLog] [2025-08-02T16:32:11.0974418] mercy typed command bossinstance at X: 3211 Y:3215
+[CommandLog] [2025-08-02T19:34:05.2886182] mercy typed command bossinstance at X: 3214 Y:3217
+[CommandLog] [2025-08-02T19:38:42.5540691] mercy typed command bossinstance at X: 3211 Y:3216
+[CommandLog] [2025-08-02T19:56:11.7726618] mercy typed command bossinstance at X: 3209 Y:3217
+[CommandLog] [2025-08-02T20:00:13.3499433] mercy typed command bossinstance at X: 3208 Y:3219
+[CommandLog] [2025-08-02T20:07:11.1160011] mercy typed command empty at X: 3210 Y:3218
+[CommandLog] [2025-08-02T20:07:14.1245238] mercy typed command item 2714 200 at X: 3210 Y:3218
+[CommandLog] [2025-08-05T11:35:04.3991988] mercy typed command empty at X: 3212 Y:3215
+[CommandLog] [2025-08-05T11:35:05.597754] mercy typed command instance at X: 3212 Y:3215
+[CommandLog] [2025-08-05T11:35:44.7740961] mercy typed command bossinstance at X: 3212 Y:3215
+[CommandLog] [2025-08-05T11:35:53.1903289] mercy typed command bossinstance at X: 3212 Y:3212
+[CommandLog] [2025-08-05T11:51:37.1488504] mercy typed command bossinstance at X: 3209 Y:3217
+[CommandLog] [2025-08-05T15:34:15.8408615] mercy typed command bossinstance at X: 3209 Y:3213
+[CommandLog] [2025-08-05T15:35:25.0655186] mercy typed command bossinstance at X: 3211 Y:3219
+[CommandLog] [2025-08-05T15:37:21.9424498] mercy typed command bossinstance at X: 3210 Y:3222
+[CommandLog] [2025-08-05T15:46:48.3608598] mercy typed command bank at X: 3209 Y:3217
+[CommandLog] [2025-08-05T15:46:54.3778094] mercy typed command close at X: 3206 Y:3216
+[CommandLog] [2025-08-05T15:49:16.3472684] mercy typed command empty at X: 3206 Y:3216
+[CommandLog] [2025-08-05T15:49:18.1491384] mercy typed command getid casket at X: 3206 Y:3216
+[CommandLog] [2025-08-05T15:49:20.5536002] mercy typed command item 12551 at X: 3206 Y:3216
+[CommandLog] [2025-08-05T15:49:38.6070475] mercy typed command item 19841 20 at X: 3206 Y:3216
+[CommandLog] [2025-08-05T15:49:51.8465791] mercy typed command item 19841 5 at X: 3206 Y:3216
+[CommandLog] [2025-08-05T15:50:31.0247451] mercy typed command item 19841 5 at X: 3208 Y:3218
+[CommandLog] [2025-08-05T15:50:59.3026293] mercy typed command bossinstance at X: 3213 Y:3222
+[CommandLog] [2025-08-05T15:51:22.1681873] mercy typed command newhunleff at X: 3213 Y:3222
+[CommandLog] [2025-08-05T15:51:24.5711397] mercy typed command newhunllef at X: 3213 Y:3222
+[CommandLog] [2025-08-05T15:51:29.3862993] mercy typed command pos at X: 2270 Y:4758
+[CommandLog] [2025-08-05T15:51:31.7929786] mercy typed command tele 2282 4772 at X: 2270 Y:4758
+[CommandLog] [2025-08-05T15:51:33.5971876] mercy typed command tele 2294 4783 at X: 2282 Y:4772
+[CommandLog] [2025-08-05T15:51:35.405279] mercy typed command tele 2295 4785 at X: 2294 Y:4783
+[CommandLog] [2025-08-05T15:51:37.2088277] mercy typed command pos at X: 2295 Y:4785
+[CommandLog] [2025-08-05T15:52:07.2981193] mercy typed command tele 2288 4775 at X: 2295 Y:4785
+[CommandLog] [2025-08-05T15:52:08.5013659] mercy typed command tele 2282 4770 at X: 2288 Y:4775
+[CommandLog] [2025-08-05T15:52:15.1181975] mercy typed command pos at X: 2282 Y:4770
+[CommandLog] [2025-08-05T18:45:56.1344085] mercy typed command empty at X: 3206 Y:3216
+[CommandLog] [2025-08-05T18:45:57.9418182] mercy typed command bossinstance at X: 3206 Y:3216
+[CommandLog] [2025-08-05T18:46:41.5407957] mercy typed command npc 8_916 at X: 3210 Y:3218
+[CommandLog] [2025-08-05T18:46:45.7517725] mercy typed command npc 8916 at X: 3209 Y:3219
+[CommandLog] [2025-08-05T18:46:53.5871284] mercy typed command kill mercy at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:47:00.2105787] mercy typed command npc 8916 at X: 3220 Y:3218
+[CommandLog] [2025-08-05T18:47:04.4481154] mercy typed command npc 8910 at X: 3222 Y:3218
+[CommandLog] [2025-08-05T18:47:10.4769966] mercy typed command convertscrolls at X: 3223 Y:3216
+[CommandLog] [2025-08-05T18:47:20.115288] mercy typed command getid 5$ at X: 3221 Y:3215
+[CommandLog] [2025-08-05T18:47:22.5298549] mercy typed command getid 5$  at X: 3221 Y:3215
+[CommandLog] [2025-08-05T18:47:24.9379577] mercy typed command getid scroll at X: 3221 Y:3215
+[CommandLog] [2025-08-05T18:47:26.7549483] mercy typed command item 607 at X: 3221 Y:3215
+[CommandLog] [2025-08-05T18:47:30.9659024] mercy typed command item 606 at X: 3221 Y:3215
+[CommandLog] [2025-08-05T18:47:48.4715988] mercy typed command item 6769 500 at X: 3221 Y:3215
+[CommandLog] [2025-08-05T18:47:51.482081] mercy typed command item 6769 5 at X: 3221 Y:3215
+[CommandLog] [2025-08-05T18:47:58.0998223] mercy typed command convertscrolls at X: 3223 Y:3218
+[CommandLog] [2025-08-05T18:48:04.7424009] mercy typed command convertscrolls at X: 3223 Y:3218
+[CommandLog] [2025-08-05T18:48:19.8622854] mercy typed command convertscrolls at X: 3223 Y:3218
+[CommandLog] [2025-08-05T18:48:32.5152874] mercy typed command item 6769 10 at X: 3223 Y:3218
+[CommandLog] [2025-08-05T18:48:35.5290309] mercy typed command convertscrolls at X: 3223 Y:3218
+[CommandLog] [2025-08-05T18:53:13.1338462] mercy typed command reload items at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:53:16.1413116] mercy typed command item 6769 500 at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:53:18.5490272] mercy typed command convertscrolls at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:54:28.3764739] mercy typed command dialoguecontinuation continue at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:54:30.1834192] mercy typed command dialoguecontinuation option_one at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:54:39.8254056] mercy typed command convertscrolls at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:55:35.2144713] mercy typed command empty at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:55:37.0194005] mercy typed command raids at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:55:38.828972] mercy typed command bank at X: 3212 Y:3218
+[CommandLog] [2025-08-05T18:56:32.3981213] mercy typed command getid key at X: 1254 Y:3569
+[CommandLog] [2025-08-05T18:58:38.238852] mercy typed command item 3464 500 at X: 1255 Y:3571
+[CommandLog] [2025-08-05T18:58:50.8825488] mercy typed command item 3459 at X: 1255 Y:3572
+[CommandLog] [2025-08-05T18:58:58.109495] mercy typed command item 3456 500 at X: 1255 Y:3570
+[CommandLog] [2025-08-05T19:04:14.8007202] mercy typed command convertscrolls at X: 1255 Y:3572
+[CommandLog] [2025-08-05T19:07:56.3548691] mercy typed command item 3468 at X: 1255 Y:3571
+[CommandLog] [2025-08-05T19:08:27.7086561] mercy typed command item 25432 at X: 1255 Y:3571
+[CommandLog] [2025-08-05T19:17:00.6163411] mercy typed command empty at X: 1254 Y:3571
+[CommandLog] [2025-08-05T19:17:04.2258918] mercy typed command item 12161 200 at X: 1254 Y:3571
+[CommandLog] [2025-08-05T19:46:56.9900632] mercy typed command item 3456 50 at X: 1254 Y:3571
+[CommandLog] [2025-08-05T19:47:09.0248898] mercy typed command empty at X: 1255 Y:3572
+[CommandLog] [2025-08-05T19:47:11.4349582] mercy typed command item 3458 at X: 1255 Y:3572
+[CommandLog] [2025-08-05T19:47:16.8444934] mercy typed command item 3459 50 at X: 1255 Y:3572
+[CommandLog] [2025-08-05T19:47:19.8574269] mercy typed command item 3459 10 at X: 1255 Y:3572
+[CommandLog] [2025-08-05T19:47:24.070206] mercy typed command empty at X: 1255 Y:3571
+[CommandLog] [2025-08-05T19:47:31.8905093] mercy typed command item 3464 50 at X: 1255 Y:3571
+[CommandLog] [2025-08-05T19:47:42.7116908] mercy typed command empty at X: 1255 Y:3572
+[CommandLog] [2025-08-05T19:47:48.7218556] mercy typed command item 3464 5000 at X: 1255 Y:3571
+[CommandLog] [2025-08-05T20:05:04.9323007] mercy typed command bosses at X: 1254 Y:3571
+[CommandLog] [2025-08-05T20:05:19.9805803] mercy typed command empty at X: 1255 Y:3566
+[CommandLog] [2025-08-05T20:05:22.3844037] mercy typed command item 19841 50 at X: 1255 Y:3566
+[CommandLog] [2025-08-05T20:05:30.2078485] mercy typed command bosses at X: 1256 Y:3564
+[CommandLog] [2025-08-05T20:05:34.4195507] mercy typed command empty at X: 1256 Y:3564
+[CommandLog] [2025-08-05T20:06:40.0215081] mercy typed command bossdebug at X: 1256 Y:3564
+[CommandLog] [2025-08-05T20:06:44.2311587] mercy typed command forceboss at X: 1256 Y:3564
+[CommandLog] [2025-08-05T20:06:46.6393249] mercy typed command forceboss at X: 1257 Y:3562
+[CommandLog] [2025-08-05T20:07:06.4999535] mercy typed command forceboss clues at X: 1257 Y:3562
+[CommandLog] [2025-08-05T20:07:12.5175004] mercy typed command forceboss blood reaper at X: 1257 Y:3562
+[CommandLog] [2025-08-05T20:07:20.3392068] mercy typed command forceboss ashen beast at X: 1257 Y:3562
+[CommandLog] [2025-08-05T20:07:23.3439044] mercy typed command forceboss 5 at X: 1257 Y:3562
+[CommandLog] [2025-08-05T20:07:48.0298429] mercy typed command tele 3228 3216 at X: 3212 Y:3218
+[CommandLog] [2025-08-05T20:07:51.0371442] mercy typed command item 20784 20 at X: 3228 Y:3216
+[CommandLog] [2025-08-05T20:08:05.4877484] mercy typed command bosses at X: 3238 Y:3219
+[CommandLog] [2025-08-05T20:08:38.0892518] mercy typed command train at X: 3238 Y:3217
+[CommandLog] [2025-08-05T20:08:51.9269733] mercy typed command bosses at X: 2681 Y:3715
+[CommandLog] [2025-08-05T20:09:43.1068487] mercy typed command forceboss corrupted_hydra at X: 2676 Y:3711
+[CommandLog] [2025-08-05T20:09:56.9610127] mercy typed command pos at X: 1309 Y:3611
+[CommandLog] [2025-08-05T20:10:26.4837906] mercy typed command npc 9022 at X: 1312 Y:3611
+[CommandLog] [2025-08-05T20:11:03.203367] mercy typed command tele 3245 3945 at X: 3211 Y:3214
+[CommandLog] [2025-08-05T20:12:52.1461046] mercy typed command npc 8633 at X: 3212 Y:3218
+[CommandLog] [2025-08-05T20:12:58.1600831] mercy typed command godmode at X: 3212 Y:3218
+[CommandLog] [2025-08-05T20:12:59.9672417] mercy typed command item 773 at X: 3212 Y:3218
+[CommandLog] [2025-08-05T20:14:31.4331572] mercy typed command bossinstances at X: 3213 Y:3218
+[CommandLog] [2025-08-05T20:14:33.8380384] mercy typed command bossinstance at X: 3213 Y:3218
+[CommandLog] [2025-08-05T20:26:57.1469443] mercy typed command bossinstance at X: 1256 Y:3564
+[CommandLog] [2025-08-05T20:27:02.5618921] mercy typed command bossinstance at X: 2283 Y:4771
+[CommandLog] [2025-08-05T20:27:10.3839093] mercy typed command bossinstance at X: 3212 Y:3218
+[CommandLog] [2025-08-05T20:27:18.8187073] mercy typed command tele 2274 4759 at X: 2284 Y:4767
+[CommandLog] [2025-08-05T20:27:19.4268448] mercy typed command tele 2282 4766 at X: 2274 Y:4759
+[CommandLog] [2025-08-05T20:27:20.0274912] mercy typed command tele 2291 4777 at X: 2282 Y:4766
+[CommandLog] [2025-08-05T20:27:20.0284914] mercy typed command tele 2291 4777 at X: 2282 Y:4766
+[CommandLog] [2025-08-05T20:27:21.2307643] mercy typed command tele 2282 4773 at X: 2291 Y:4777
+[CommandLog] [2025-08-06T08:25:35.301622] mercy typed command dhtask at X: 1257 Y:3562
+[CommandLog] [2025-08-06T08:26:03.5810119] mercy typed command dhtask at X: 1255 Y:3557
+[CommandLog] [2025-08-06T08:29:54.1690593] mercy typed command dhtask at X: 1256 Y:3564
+[CommandLog] [2025-08-06T08:31:08.8155897] mercy typed command dhmarks at X: 1253 Y:3562
+[CommandLog] [2025-08-06T08:31:11.227671] mercy typed command dhcontract at X: 1253 Y:3562
+[CommandLog] [2025-08-06T08:31:16.0380606] mercy typed command dhtask at X: 1253 Y:3562
+[CommandLog] [2025-08-06T08:37:13.493038] mercy typed command globalboss at X: 1251 Y:3561
+[CommandLog] [2025-08-06T08:37:15.3020173] mercy typed command bosses at X: 1251 Y:3561
+[CommandLog] [2025-08-06T08:37:19.5113745] mercy typed command home at X: 1251 Y:3561
+[CommandLog] [2025-08-06T08:37:23.7226572] mercy typed command forceboss verac at X: 3212 Y:3218
+[CommandLog] [2025-08-06T08:37:33.36234] mercy typed command tele 3231 9799 at X: 3229 Y:9797
+[CommandLog] [2025-08-06T08:37:34.5662538] mercy typed command tele 3235 9799 at X: 3231 Y:9799
+[CommandLog] [2025-08-06T08:37:47.2004527] mercy typed command tele 3228 9798 at X: 3230 Y:9798
+[CommandLog] [2025-08-06T08:38:08.277997] mercy typed command tele 3229 9798 at X: 3228 Y:9798
+[CommandLog] [2025-08-06T08:38:08.8827216] mercy typed command tele 3230 9798 at X: 3229 Y:9798
+[CommandLog] [2025-08-06T08:38:10.0871105] mercy typed command tele 3229 9798 at X: 3230 Y:9798
+[CommandLog] [2025-08-06T08:39:03.6485491] mercy typed command item 773 at X: 3229 Y:9798
+[CommandLog] [2025-08-06T08:39:14.4917915] mercy typed command volcano at X: 3229 Y:9798
+[CommandLog] [2025-08-06T08:39:35.5533637] mercy typed command item 1271 at X: 3365 Y:3927
+[CommandLog] [2025-08-06T08:41:20.2713143] mercy typed command home at X: 3361 Y:3930
+[CommandLog] [2025-08-06T08:41:29.2953476] mercy typed command bossinstance at X: 3211 Y:3220
+[CommandLog] [2025-08-06T08:44:00.9773937] mercy typed command teleport at X: 2279 Y:4772
+[CommandLog] [2025-08-06T08:44:53.9257576] mercy typed command dhcontract at X: 2907 Y:3617
+[CommandLog] [2025-08-06T09:37:03.5831475] mercy typed command bossinstance at X: 2283 Y:4768
+[CommandLog] [2025-08-06T10:10:22.7834693] mercy typed command item 2775 200 at X: 3211 Y:3217
+[CommandLog] [2025-08-06T10:29:18.2670222] mercy typed command empty at X: 3211 Y:3217
+[CommandLog] [2025-08-06T10:29:20.6684382] mercy typed command getid casket at X: 3211 Y:3217
+[CommandLog] [2025-08-06T10:29:28.4907019] mercy typed command item 10243 at X: 3211 Y:3217
+[CommandLog] [2025-08-06T10:29:42.9616308] mercy typed command item 19841 20 at X: 3210 Y:3217
+[CommandLog] [2025-08-06T10:30:35.9333936] mercy typed command empty at X: 3213 Y:3214
+[CommandLog] [2025-08-06T10:30:44.9754161] mercy typed command item 19841 500 at X: 3213 Y:3214
+[CommandLog] [2025-08-06T10:31:24.6772537] mercy typed command empty at X: 3213 Y:3214
+[CommandLog] [2025-08-06T10:31:26.4819222] mercy typed command bossinstance at X: 3213 Y:3214
+[CommandLog] [2025-08-06T10:31:45.7869031] mercy typed command tele 2273 4762 at X: 2282 Y:4773
+[CommandLog] [2025-08-06T10:31:47.6023435] mercy typed command pos at X: 2273 Y:4762
+[CommandLog] [2025-08-06T10:31:48.8034554] mercy typed command tele 2284 4773 at X: 2273 Y:4762
+[CommandLog] [2025-08-06T10:31:49.4053621] mercy typed command tele 2296 4784 at X: 2284 Y:4773
+[CommandLog] [2025-08-06T10:31:50.6116346] mercy typed command tele 2285 4774 at X: 2296 Y:4784
+[CommandLog] [2025-08-06T10:31:50.6116346] mercy typed command tele 2289 4779 at X: 2296 Y:4784
+[CommandLog] [2025-08-06T10:31:51.8119197] mercy typed command tele 2292 4781 at X: 2289 Y:4779
+[CommandLog] [2025-08-06T10:31:53.6189484] mercy typed command pos at X: 2292 Y:4781
+[CommandLog] [2025-08-06T10:32:57.9921165] mercy typed command pos at X: 2282 Y:4774
+[CommandLog] [2025-08-06T10:33:04.6188921] mercy typed command bossinstance at X: 3212 Y:3218
+[CommandLog] [2025-08-06T10:38:25.4656853] mercy typed command bosses at X: 3211 Y:3220
+[CommandLog] [2025-08-06T10:43:20.2891221] mercy typed command tele 3092 3505 at X: 3211 Y:3213
+[CommandLog] [2025-08-06T10:43:34.1382787] mercy typed command npc 12345 at X: 3091 Y:3504
+[CommandLog] [2025-08-06T10:50:16.6269963] mercy typed command empty at X: 3212 Y:3211
+[CommandLog] [2025-08-06T10:50:17.2266504] mercy typed command slayer at X: 3212 Y:3211
+[CommandLog] [2025-08-06T10:50:20.2335622] mercy typed command tele 3097 3503 at X: 3100 Y:3507
+[CommandLog] [2025-08-06T10:50:20.835706] mercy typed command tele 3093 3499 at X: 3097 Y:3503
+[CommandLog] [2025-08-06T10:50:22.0391855] mercy typed command tele 3092 3503 at X: 3093 Y:3499
+[CommandLog] [2025-08-06T10:50:29.8645895] mercy typed command pnpc 9019 at X: 3090 Y:3505
+[CommandLog] [2025-08-06T10:50:31.6657914] mercy typed command e 811 at X: 3090 Y:3505
+[CommandLog] [2025-08-06T21:01:20.7487571] mercy typed command empty at X: 3212 Y:3214
+[CommandLog] [2025-08-06T21:01:22.5521826] mercy typed command bossinstance at X: 3212 Y:3214
+[CommandLog] [2025-08-08T09:03:05.9526429] mercy typed command bossinstance at X: 3211 Y:3216
+[CommandLog] [2025-08-08T09:07:49.4321988] mercy typed command dhtask at X: 3211 Y:3217
+[CommandLog] [2025-08-08T09:09:53.4163793] mercy typed command teleport at X: 3215 Y:3218
+[CommandLog] [2025-08-08T12:38:21.0499008] mercy typed command bossinstance at X: 3211 Y:3217
+[CommandLog] [2025-08-08T12:51:59.174187] mercy typed command dhtask at X: 3212 Y:3214
+[CommandLog] [2025-08-08T12:52:02.1828669] mercy typed command teleport at X: 3209 Y:3213
+[CommandLog] [2025-08-08T12:52:41.9209289] mercy typed command teleport at X: 3209 Y:3213
+[CommandLog] [2025-08-08T12:53:13.212146] mercy typed command godwars at X: 3211 Y:3216
+[CommandLog] [2025-08-08T12:53:15.0159601] mercy typed command teleport at X: 3211 Y:3216
+[CommandLog] [2025-08-08T12:53:39.7092656] mercy typed command tele 2871 5327 at X: 2879 Y:5313
+[CommandLog] [2025-08-08T12:53:39.7132572] mercy typed command tele 2870 5328 at X: 2879 Y:5313
+[CommandLog] [2025-08-08T12:53:39.7142576] mercy typed command tele 2871 5328 at X: 2879 Y:5313
+[CommandLog] [2025-08-08T12:53:40.2993872] mercy typed command tele 2863 5343 at X: 2871 Y:5328
+[CommandLog] [2025-08-08T12:53:40.2993872] mercy typed command tele 2863 5343 at X: 2871 Y:5328
+[CommandLog] [2025-08-08T12:53:40.2993872] mercy typed command tele 2863 5343 at X: 2871 Y:5328
+[CommandLog] [2025-08-08T12:53:41.5005802] mercy typed command tele 2869 5354 at X: 2863 Y:5343
+[CommandLog] [2025-08-08T12:54:00.1535275] mercy typed command teleport at X: 3212 Y:3222
+[CommandLog] [2025-08-08T12:54:06.7888338] mercy typed command hpray at X: 2881 Y:5310
+[CommandLog] [2025-08-08T12:54:07.9849172] mercy typed command tele 2872 5318 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T12:54:07.9859125] mercy typed command tele 2872 5318 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T12:54:07.9859125] mercy typed command tele 2871 5323 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T12:54:08.5866272] mercy typed command tele 2861 5336 at X: 2871 Y:5323
+[CommandLog] [2025-08-08T12:54:08.5866272] mercy typed command tele 2861 5336 at X: 2871 Y:5323
+[CommandLog] [2025-08-08T12:54:08.5866272] mercy typed command tele 2861 5336 at X: 2871 Y:5323
+[CommandLog] [2025-08-08T12:54:08.5866272] mercy typed command tele 2861 5336 at X: 2871 Y:5323
+[CommandLog] [2025-08-08T12:54:09.1883326] mercy typed command tele 2851 5349 at X: 2861 Y:5336
+[CommandLog] [2025-08-08T12:54:10.3920625] mercy typed command tele 2862 5359 at X: 2851 Y:5349
+[CommandLog] [2025-08-08T12:54:10.9961998] mercy typed command tele 2873 5357 at X: 2862 Y:5359
+[CommandLog] [2025-08-08T12:57:56.1082984] mercy typed command train at X: 3212 Y:3217
+[CommandLog] [2025-08-08T12:58:37.0468418] mercy typed command teleport at X: 2680 Y:3717
+[CommandLog] [2025-08-08T12:58:42.4590539] mercy typed command tele 2878 5323 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T12:58:42.4590539] mercy typed command tele 2878 5323 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T12:58:43.0679104] mercy typed command tele 2870 5336 at X: 2878 Y:5323
+[CommandLog] [2025-08-08T12:58:43.6620684] mercy typed command tele 2861 5349 at X: 2870 Y:5336
+[CommandLog] [2025-08-08T12:58:43.6620684] mercy typed command tele 2859 5348 at X: 2870 Y:5336
+[CommandLog] [2025-08-08T12:58:43.6630691] mercy typed command tele 2861 5348 at X: 2870 Y:5336
+[CommandLog] [2025-08-08T12:58:44.8714764] mercy typed command tele 2869 5358 at X: 2861 Y:5348
+[CommandLog] [2025-08-08T12:59:08.9553406] mercy typed command debugboss at X: 2871 Y:5357
+[CommandLog] [2025-08-08T12:59:22.2143343] mercy typed command debugadaptive at X: 2871 Y:5357
+[CommandLog] [2025-08-08T12:59:25.8223671] mercy typed command debugadaptive at X: 2871 Y:5359
+[CommandLog] [2025-08-08T12:59:31.8678096] mercy typed command debugadaptive at X: 2871 Y:5359
+[CommandLog] [2025-08-08T12:59:34.8702193] mercy typed command debugadaptive at X: 2871 Y:5359
+[CommandLog] [2025-08-08T12:59:37.8830823] mercy typed command debugadaptive at X: 2871 Y:5359
+[CommandLog] [2025-08-08T13:00:10.9941322] mercy typed command debugadaptive at X: 2871 Y:5359
+[CommandLog] [2025-08-08T13:00:13.4012206] mercy typed command debugadaptive at X: 2871 Y:5359
+[CommandLog] [2025-08-08T13:00:20.034879] mercy typed command debugadaptive at X: 2871 Y:5359
+[CommandLog] [2025-08-08T13:01:20.2505247] mercy typed command solak at X: 3212 Y:3218
+[CommandLog] [2025-08-08T13:01:21.4558361] mercy typed command teleport at X: 3212 Y:3218
+[CommandLog] [2025-08-08T13:01:46.1556053] mercy typed command debugadaptive at X: 2160 Y:3430
+[CommandLog] [2025-08-08T13:09:25.3178769] mercy typed command teleport at X: 2160 Y:3430
+[CommandLog] [2025-08-08T13:10:30.3180071] mercy typed command teleport at X: 2988 Y:4385
+[CommandLog] [2025-08-08T13:11:58.2168262] mercy typed command item 33205 at X: 1687 Y:4268
+[CommandLog] [2025-08-08T13:12:19.275946] mercy typed command item 33205 at X: 1688 Y:4269
+[CommandLog] [2025-08-08T13:12:21.0805067] mercy typed command item 33204 at X: 1688 Y:4269
+[CommandLog] [2025-08-08T13:12:21.6827406] mercy typed command item 33203 at X: 1688 Y:4269
+[CommandLog] [2025-08-08T13:23:17.014114] mercy typed command debugadaptive at X: 3169 Y:4442
+[CommandLog] [2025-08-08T13:23:48.3829639] mercy typed command teleport at X: 3210 Y:3219
+[CommandLog] [2025-08-08T13:25:10.9857077] mercy typed command dhtask at X: 2311 Y:6368
+[CommandLog] [2025-08-08T13:25:14.5946603] mercy typed command teleport at X: 3214 Y:3220
+[CommandLog] [2025-08-08T13:25:24.2206813] mercy typed command empty at X: 3214 Y:3220
+[CommandLog] [2025-08-08T13:42:12.2108715] mercy typed command teleport at X: 3315 Y:3842
+[CommandLog] [2025-08-08T13:42:20.0359579] mercy typed command item 33205 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T13:42:21.8332983] mercy typed command tele 2868 5322 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T13:42:21.8353012] mercy typed command tele 2870 5320 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T13:42:21.8353012] mercy typed command tele 2870 5321 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T13:42:22.4374365] mercy typed command tele 2860 5334 at X: 2870 Y:5321
+[CommandLog] [2025-08-08T13:42:22.4384351] mercy typed command tele 2860 5334 at X: 2870 Y:5321
+[CommandLog] [2025-08-08T13:42:22.4384351] mercy typed command tele 2861 5333 at X: 2870 Y:5321
+[CommandLog] [2025-08-08T13:42:23.0411418] mercy typed command tele 2852 5345 at X: 2861 Y:5333
+[CommandLog] [2025-08-08T13:42:23.0411418] mercy typed command tele 2852 5345 at X: 2861 Y:5333
+[CommandLog] [2025-08-08T13:42:24.8452923] mercy typed command tele 2866 5354 at X: 2852 Y:5345
+[CommandLog] [2025-08-08T13:42:25.4564307] mercy typed command tele 2880 5363 at X: 2866 Y:5354
+[CommandLog] [2025-08-08T13:42:26.0631851] mercy typed command tele 2869 5363 at X: 2880 Y:5363
+[CommandLog] [2025-08-08T13:42:54.3356228] mercy typed command tele 2885 5354 at X: 2869 Y:5356
+[CommandLog] [2025-08-08T13:42:54.3356228] mercy typed command tele 2884 5355 at X: 2869 Y:5356
+[CommandLog] [2025-08-08T13:42:54.3356228] mercy typed command tele 2884 5355 at X: 2869 Y:5356
+[CommandLog] [2025-08-08T13:42:54.937764] mercy typed command tele 2899 5354 at X: 2884 Y:5355
+[CommandLog] [2025-08-08T13:42:54.937764] mercy typed command tele 2899 5354 at X: 2884 Y:5355
+[CommandLog] [2025-08-08T13:42:55.5389189] mercy typed command tele 2914 5353 at X: 2899 Y:5354
+[CommandLog] [2025-08-08T13:42:55.5399171] mercy typed command tele 2914 5353 at X: 2899 Y:5354
+[CommandLog] [2025-08-08T13:42:55.5409161] mercy typed command tele 2914 5353 at X: 2899 Y:5354
+[CommandLog] [2025-08-08T13:42:56.1477131] mercy typed command tele 2929 5352 at X: 2914 Y:5353
+[CommandLog] [2025-08-08T13:42:56.1477131] mercy typed command tele 2929 5352 at X: 2914 Y:5353
+[CommandLog] [2025-08-08T13:42:56.1477131] mercy typed command tele 2929 5352 at X: 2914 Y:5353
+[CommandLog] [2025-08-08T13:42:56.7473827] mercy typed command tele 2944 5351 at X: 2929 Y:5352
+[CommandLog] [2025-08-08T13:42:56.7473827] mercy typed command tele 2944 5351 at X: 2929 Y:5352
+[CommandLog] [2025-08-08T13:42:56.7473827] mercy typed command tele 2944 5351 at X: 2929 Y:5352
+[CommandLog] [2025-08-08T13:42:57.3495195] mercy typed command tele 2959 5350 at X: 2944 Y:5351
+[CommandLog] [2025-08-08T13:42:57.3505199] mercy typed command tele 2949 5342 at X: 2944 Y:5351
+[CommandLog] [2025-08-08T13:42:57.9506633] mercy typed command tele 2953 5331 at X: 2949 Y:5342
+[CommandLog] [2025-08-08T13:42:57.9506633] mercy typed command tele 2950 5324 at X: 2949 Y:5342
+[CommandLog] [2025-08-08T13:42:57.9518131] mercy typed command tele 2950 5325 at X: 2949 Y:5342
+[CommandLog] [2025-08-08T13:42:58.5513793] mercy typed command tele 2946 5315 at X: 2950 Y:5325
+[CommandLog] [2025-08-08T13:42:58.552369] mercy typed command tele 2945 5315 at X: 2950 Y:5325
+[CommandLog] [2025-08-08T13:42:58.552369] mercy typed command tele 2937 5324 at X: 2950 Y:5325
+[CommandLog] [2025-08-08T13:43:00.9625784] mercy typed command tele 2931 5320 at X: 2935 Y:5324
+[CommandLog] [2025-08-08T13:43:09.3922639] mercy typed command teleport at X: 3212 Y:3218
+[CommandLog] [2025-08-08T13:43:14.8165267] mercy typed command tele 2897 5313 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T13:43:14.8175258] mercy typed command tele 2897 5315 at X: 2881 Y:5310
+[CommandLog] [2025-08-08T13:43:15.4178968] mercy typed command tele 2913 5321 at X: 2897 Y:5315
+[CommandLog] [2025-08-08T13:43:15.4178968] mercy typed command tele 2913 5321 at X: 2897 Y:5315
+[CommandLog] [2025-08-08T13:43:16.0199159] mercy typed command tele 2923 5322 at X: 2913 Y:5321
+[CommandLog] [2025-08-08T13:43:31.0584925] mercy typed command tele 2909 5326 at X: 2922 Y:5321
+[CommandLog] [2025-08-08T13:43:31.6574704] mercy typed command tele 2912 5330 at X: 2909 Y:5326
+[CommandLog] [2025-08-08T13:43:31.6574704] mercy typed command tele 2900 5336 at X: 2909 Y:5326
+[CommandLog] [2025-08-08T13:43:31.6584687] mercy typed command tele 2900 5336 at X: 2909 Y:5326
+[CommandLog] [2025-08-08T13:43:31.6584687] mercy typed command tele 2900 5336 at X: 2909 Y:5326
+[CommandLog] [2025-08-08T13:43:32.2616166] mercy typed command tele 2891 5346 at X: 2900 Y:5336
+[CommandLog] [2025-08-08T13:43:32.2616166] mercy typed command tele 2891 5346 at X: 2900 Y:5336
+[CommandLog] [2025-08-08T13:43:32.2616166] mercy typed command tele 2891 5346 at X: 2900 Y:5336
+[CommandLog] [2025-08-08T13:43:32.8619168] mercy typed command tele 2881 5355 at X: 2891 Y:5346
+[CommandLog] [2025-08-08T13:43:32.8619168] mercy typed command tele 2881 5355 at X: 2891 Y:5346
+[CommandLog] [2025-08-08T13:43:34.0693636] mercy typed command tele 2876 5340 at X: 2881 Y:5355
+[CommandLog] [2025-08-08T13:43:34.0693636] mercy typed command tele 2875 5340 at X: 2881 Y:5355
+[CommandLog] [2025-08-08T13:43:35.2729994] mercy typed command tele 2872 5354 at X: 2875 Y:5340
+[CommandLog] [2025-08-08T13:44:08.9676025] mercy typed command teleport at X: 2872 Y:5362
+[CommandLog] [2025-08-08T13:49:04.0089475] mercy typed command npc 9_021 at X: 3212 Y:3218
+[CommandLog] [2025-08-08T13:49:07.0201709] mercy typed command npc 9021 at X: 3208 Y:3215
+[CommandLog] [2025-08-08T13:49:12.4509887] mercy typed command tele 3194 3221 at X: 3208 Y:3215
+[CommandLog] [2025-08-08T13:49:13.0666404] mercy typed command tele 3180 3227 at X: 3194 Y:3221
+[CommandLog] [2025-08-08T13:49:13.0666404] mercy typed command tele 3180 3227 at X: 3194 Y:3221
+[CommandLog] [2025-08-08T13:49:13.0666404] mercy typed command tele 3180 3227 at X: 3194 Y:3221
+[CommandLog] [2025-08-08T13:49:13.6677762] mercy typed command tele 3166 3232 at X: 3180 Y:3227
+[CommandLog] [2025-08-08T13:49:15.4737637] mercy typed command npc 89 at X: 3166 Y:3232
+[CommandLog] [2025-08-08T13:49:19.6993142] mercy typed command npc 389 at X: 3159 Y:3231
+[CommandLog] [2025-08-08T13:49:24.5245716] mercy typed command npc 390 at X: 3155 Y:3234
+[CommandLog] [2025-08-08T13:49:25.128733] mercy typed command npc 391 at X: 3155 Y:3234
+[CommandLog] [2025-08-08T18:38:21.6318695] mercy typed command npc 390 at X: 3212 Y:3218
+[CommandLog] [2025-08-08T19:11:39.1951538] mercy typed command bossinstance at X: 3211 Y:3216
+[CommandLog] [2025-08-08T19:12:59.5318468] mercy typed command bossinstance at X: 3212 Y:3218
+[CommandLog] [2025-08-08T19:16:12.4731973] mercy typed command bossinstance at X: 3317 Y:3833
+[CommandLog] [2025-08-08T19:16:34.160914] mercy typed command debughazard at X: 2282 Y:4771
+[CommandLog] [2025-08-08T19:16:52.8468709] mercy typed command item 33169 at X: 2280 Y:4771
+[CommandLog] [2025-08-08T19:16:55.8520635] mercy typed command item 33173 at X: 2280 Y:4771
+[CommandLog] [2025-08-08T19:17:50.6935455] mercy typed command item 33173 at X: 3212 Y:3218
+[CommandLog] [2025-08-08T19:17:53.1033026] mercy typed command bossinstance at X: 3212 Y:3218
+[CommandLog] [2025-08-08T19:18:38.557979] mercy typed command bossinstance at X: 3212 Y:3218
+[CommandLog] [2025-08-08T19:26:53.5235801] mercy typed command bossinstance at X: 3212 Y:3216
+[CommandLog] [2025-08-08T19:28:08.8516273] mercy typed command bossinstance at X: 3212 Y:3218
+[CommandLog] [2025-08-09T09:52:34.0869787] mercy typed command npc 390 at X: 3211 Y:3217
+[CommandLog] [2025-08-09T09:55:31.003168] mercy typed command bossinstance at X: 3214 Y:3214
+[CommandLog] [2025-08-09T16:13:26.8386343] mercy typed command npc 390 at X: 3210 Y:3216
+[CommandLog] [2025-08-09T16:13:57.5917353] mercy typed command bossinstance at X: 3211 Y:3215
+[CommandLog] [2025-08-09T16:14:13.2778209] mercy typed command item 33110 at X: 2280 Y:4770
+[CommandLog] [2025-08-09T16:15:15.297945] mercy typed command item 33110 at X: 3212 Y:3217
+[CommandLog] [2025-08-09T16:15:18.3084905] mercy typed command bossinstance at X: 3212 Y:3217
+[CommandLog] [2025-08-09T16:16:04.0635066] mercy typed command debughazards at X: 2282 Y:4772
+[CommandLog] [2025-08-09T16:17:04.8972158] mercy typed command debughazards at X: 3212 Y:3214
+[CommandLog] [2025-08-09T16:17:08.502945] mercy typed command bossinstances at X: 3212 Y:3213
+[CommandLog] [2025-08-09T16:17:11.5073776] mercy typed command bossinstance at X: 3211 Y:3213
+[CommandLog] [2025-08-09T16:35:53.3045718] mercy typed command npc 390 at X: 3212 Y:3216
+[CommandLog] [2025-08-09T16:39:29.6633187] mercy typed command dhtask at X: 2286 Y:4774
+[CommandLog] [2025-08-09T16:39:31.4662716] mercy typed command teleport at X: 2286 Y:4774
+[CommandLog] [2025-08-09T16:40:29.226164] mercy typed command teleport at X: 2286 Y:4774
+[CommandLog] [2025-08-09T16:41:31.8065652] mercy typed command godmode at X: 3347 Y:3746
+[CommandLog] [2025-08-09T16:42:46.4133412] mercy typed command dhtask at X: 3214 Y:3217
+[CommandLog] [2025-08-09T16:42:48.2195373] mercy typed command teleport at X: 3214 Y:3217
+[CommandLog] [2025-08-09T16:43:26.7504997] mercy typed command tele 3313 3844 at X: 3326 Y:3836
+[CommandLog] [2025-08-09T16:43:26.7514992] mercy typed command tele 3312 3843 at X: 3326 Y:3836
+[CommandLog] [2025-08-09T16:45:22.3371604] mercy typed command train at X: 3212 Y:3218
+[CommandLog] [2025-08-09T16:48:19.9744659] mercy typed command bossinstance at X: 3212 Y:3218
+[CommandLog] [2025-08-09T16:53:05.3172107] mercy typed command bossinstance at X: 3212 Y:3218
+[CommandLog] [2025-08-09T16:53:07.1216354] mercy typed command bossinstance at X: 3212 Y:3215
+[CommandLog] [2025-08-09T16:53:16.7396652] mercy typed command heal at X: 2282 Y:4770
+[CommandLog] [2025-08-09T16:53:17.944006] mercy typed command hpray at X: 2282 Y:4770
+[CommandLog] [2025-08-09T16:53:20.3550543] mercy typed command hpray at X: 2282 Y:4770
+[CommandLog] [2025-08-09T16:54:17.5773836] mercy typed command npc 390 at X: 3211 Y:3215
+[CommandLog] [2025-08-09T16:58:30.5829534] mercy typed command npc 390 at X: 3212 Y:3218
+[CommandLog] [2025-08-09T16:59:14.5406111] mercy typed command npc 6599 at X: 3230 Y:3226
+[CommandLog] [2025-08-09T16:59:16.3471479] mercy typed command pos at X: 3230 Y:3226
+[CommandLog] [2025-08-09T17:00:31.7216832] mercy typed command npc 8679 at X: 3224 Y:3221
+[CommandLog] [2025-08-09T17:00:50.0339432] mercy typed command npc 2577 at X: 3222 Y:3221
+[CommandLog] [2025-08-09T17:01:14.7115229] mercy typed command npc 2578 at X: 3220 Y:3220
+[CommandLog] [2025-08-09T17:01:17.7180341] mercy typed command npc 2579 at X: 3219 Y:3219
+[CommandLog] [2025-08-09T17:01:21.9260229] mercy typed command npc 2570 at X: 3220 Y:3218
+[CommandLog] [2025-08-09T17:01:26.7369123] mercy typed command npc 2571 at X: 3222 Y:3219
+[CommandLog] [2025-08-09T17:02:08.3398349] mercy typed command npc 2268 at X: 3222 Y:3219
+[CommandLog] [2025-08-09T17:02:22.7829531] mercy typed command npc 8781 at X: 3223 Y:3219
+[CommandLog] [2025-08-09T17:21:28.3497879] mercy typed command tele 3228 3223 at X: 3216 Y:3219
+[CommandLog] [2025-08-09T17:21:39.1805288] mercy typed command npc 2572 at X: 3228 Y:3224
+[CommandLog] [2025-08-09T17:21:47.0059653] mercy typed command npc 2571 at X: 3229 Y:3223
+[CommandLog] [2025-08-09T19:51:30.8710059] mercy typed command npc 390 at X: 3229 Y:3224
+[CommandLog] [2025-08-09T19:52:22.0189989] mercy typed command tele 3212 3222 at X: 3223 Y:3223
+[CommandLog] [2025-08-09T19:57:52.7000957] mercy typed command godmode at X: 2282 Y:4770
+[CommandLog] [2025-08-09T19:57:55.1055982] mercy typed command godmode at X: 2282 Y:4770
+[CommandLog] [2025-08-09T19:57:59.3196046] mercy typed command hpray at X: 2282 Y:4770
+[CommandLog] [2025-08-09T19:58:01.7168387] mercy typed command hpray at X: 2282 Y:4770
+[CommandLog] [2025-08-09T20:00:50.9660145] mercy typed command empty at X: 3212 Y:3218
+[CommandLog] [2025-08-09T20:05:44.1976548] mercy typed command npc 2075 at X: 3212 Y:3218
+[CommandLog] [2025-08-09T20:05:50.817689] mercy typed command npc 2075 at X: 3209 Y:3218
+[CommandLog] [2025-08-09T20:05:58.0348696] mercy typed command npc 104 at X: 3206 Y:3218
+[CommandLog] [2025-08-09T20:06:05.2472765] mercy typed command teleport at X: 3209 Y:3218
+[CommandLog] [2025-08-09T20:06:14.8754376] mercy typed command tele 2697 9480 at X: 2711 Y:9479
+[CommandLog] [2025-08-09T20:06:15.475799] mercy typed command tele 2682 9480 at X: 2697 Y:9480
+[CommandLog] [2025-08-09T20:06:15.475799] mercy typed command tele 2682 9480 at X: 2697 Y:9480
+[CommandLog] [2025-08-09T20:06:15.475799] mercy typed command tele 2684 9477 at X: 2697 Y:9480
+[CommandLog] [2025-08-09T20:06:16.0799629] mercy typed command tele 2674 9471 at X: 2684 Y:9477
+[CommandLog] [2025-08-09T20:06:16.0799629] mercy typed command tele 2674 9471 at X: 2684 Y:9477
+[CommandLog] [2025-08-09T20:06:16.0799629] mercy typed command tele 2676 9467 at X: 2684 Y:9477
+[CommandLog] [2025-08-09T20:06:16.6891205] mercy typed command tele 2668 9456 at X: 2676 Y:9467
+[CommandLog] [2025-08-09T20:06:16.6891205] mercy typed command tele 2669 9472 at X: 2676 Y:9467
+[CommandLog] [2025-08-09T20:06:16.6891205] mercy typed command tele 2666 9479 at X: 2676 Y:9467
+[CommandLog] [2025-08-09T20:06:17.2917728] mercy typed command tele 2655 9491 at X: 2666 Y:9479
+[CommandLog] [2025-08-09T20:06:17.2917728] mercy typed command tele 2656 9491 at X: 2666 Y:9479
+[CommandLog] [2025-08-09T20:06:17.9009453] mercy typed command tele 2650 9505 at X: 2656 Y:9491
+[CommandLog] [2025-08-09T20:06:18.5020793] mercy typed command tele 2654 9502 at X: 2650 Y:9505
+[CommandLog] [2025-08-09T20:06:19.7056143] mercy typed command tele 2656 9494 at X: 2654 Y:9502
+[CommandLog] [2025-08-09T20:07:16.9356058] mercy typed command npc 105 at X: 2660 Y:9496
+[CommandLog] [2025-08-09T20:07:29.6272538] mercy typed command npc 135 at X: 2663 Y:9495
+[CommandLog] [2025-08-09T20:07:32.6380056] mercy typed command npc 135 at X: 2666 Y:9492
+[CommandLog] [2025-08-10T17:03:14.1256157] mercy typed command kill mercy at X: 2282 Y:4770
+[CommandLog] [2025-12-17T16:11:24.8480106] mercy typed command aoespawns at X: 2281 Y:4767
+[CommandLog] [2025-12-17T16:11:43.4981209] mercy typed command aoedebug at X: 2280 Y:4766
+[CommandLog] [2025-12-17T16:11:46.5068942] mercy typed command aoedebug at X: 2282 Y:4764
+[CommandLog] [2025-12-17T16:12:14.2002188] mercy typed command aoe test at X: 2281 Y:4765
+[CommandLog] [2025-12-17T16:12:17.2053209] mercy typed command aoe test 1 at X: 2281 Y:4765
+[CommandLog] [2025-12-17T16:12:19.6120376] mercy typed command aoe 1 at X: 2281 Y:4765
+[CommandLog] [2025-12-17T16:12:21.4195141] mercy typed command aoe 2 at X: 2281 Y:4765
+[CommandLog] [2025-12-17T16:12:24.4324682] mercy typed command aoe tier_1 at X: 2281 Y:4765
+[CommandLog] [2025-12-17T18:57:35.5141335] mercy typed command hpray at X: 2285 Y:4769
+[CommandLog] [2025-12-17T18:57:37.3224545] mercy typed command teleport at X: 3212 Y:3218
+[CommandLog] [2025-12-17T18:57:55.385626] mercy typed command tele 2874 5324 at X: 2881 Y:5310
+[CommandLog] [2025-12-17T18:57:55.3866289] mercy typed command tele 2873 5324 at X: 2881 Y:5310
+[CommandLog] [2025-12-17T18:57:55.9902825] mercy typed command tele 2865 5338 at X: 2873 Y:5324
+[CommandLog] [2025-12-17T18:57:55.9902825] mercy typed command tele 2865 5338 at X: 2873 Y:5324
+[CommandLog] [2025-12-17T18:57:56.595931] mercy typed command tele 2857 5352 at X: 2865 Y:5338
+[CommandLog] [2025-12-17T18:57:57.1920684] mercy typed command tele 2864 5364 at X: 2857 Y:5352
+[CommandLog] [2025-12-17T18:57:58.9972902] mercy typed command tele 2870 5359 at X: 2864 Y:5362
+[CommandLog] [2026-03-26T22:55:21.8496509] mercy typed command teleport at X: 3215 Y:3226
+[CommandLog] [2026-03-26T22:56:03.3952192] mercy typed command spawn at X: 3220 Y:3216
+[CommandLog] [2026-03-26T22:58:21.8465052] mercy typed command tele 3218 3223 at X: 3229 Y:3217
+[CommandLog] [2026-03-26T22:58:22.4475075] mercy typed command tele 3207 3222 at X: 3218 Y:3223
+[CommandLog] [2026-03-26T22:58:23.6504926] mercy typed command tele 3195 3217 at X: 3207 Y:3222
+[CommandLog] [2026-03-26T22:58:23.6504926] mercy typed command tele 3195 3217 at X: 3207 Y:3222
+[CommandLog] [2026-03-26T22:58:24.2515627] mercy typed command tele 3184 3216 at X: 3195 Y:3217
+[CommandLog] [2026-03-26T22:58:24.2525633] mercy typed command tele 3183 3217 at X: 3195 Y:3217
+[CommandLog] [2026-03-26T22:58:24.2525633] mercy typed command tele 3183 3217 at X: 3195 Y:3217
+[CommandLog] [2026-03-26T22:58:24.8527669] mercy typed command tele 3171 3217 at X: 3183 Y:3217
+[CommandLog] [2026-03-26T22:58:24.8537667] mercy typed command tele 3171 3217 at X: 3183 Y:3217
+[CommandLog] [2026-03-26T22:58:24.8537667] mercy typed command tele 3171 3217 at X: 3183 Y:3217
+[CommandLog] [2026-03-26T22:58:25.4549391] mercy typed command tele 3159 3217 at X: 3171 Y:3217
+[CommandLog] [2026-03-26T22:58:25.4549391] mercy typed command tele 3159 3217 at X: 3171 Y:3217
+[CommandLog] [2026-03-26T22:58:25.4549391] mercy typed command tele 3159 3217 at X: 3171 Y:3217
+[CommandLog] [2026-03-26T22:58:26.0590855] mercy typed command tele 3148 3218 at X: 3159 Y:3217
+[CommandLog] [2026-03-26T22:58:26.66423] mercy typed command tele 3137 3220 at X: 3148 Y:3218
+[CommandLog] [2026-03-26T22:58:26.66423] mercy typed command tele 3137 3220 at X: 3148 Y:3218
+[CommandLog] [2026-03-26T22:58:26.66423] mercy typed command tele 3137 3220 at X: 3148 Y:3218
+[CommandLog] [2026-03-26T22:58:27.2663565] mercy typed command tele 3126 3222 at X: 3137 Y:3220
+[CommandLog] [2026-03-26T22:58:27.267357] mercy typed command tele 3126 3221 at X: 3137 Y:3220
+[CommandLog] [2026-03-26T22:58:27.267357] mercy typed command tele 3126 3220 at X: 3137 Y:3220
+[CommandLog] [2026-03-26T22:58:27.8687626] mercy typed command tele 3115 3220 at X: 3126 Y:3220
+[CommandLog] [2026-03-26T22:58:27.8687626] mercy typed command tele 3115 3220 at X: 3126 Y:3220
+[CommandLog] [2026-03-26T22:58:27.8687626] mercy typed command tele 3115 3220 at X: 3126 Y:3220
+[CommandLog] [2026-03-26T22:58:29.0750317] mercy typed command tele 3105 3231 at X: 3115 Y:3220
+[CommandLog] [2026-03-26T22:58:29.0760331] mercy typed command tele 3105 3231 at X: 3115 Y:3220
+[CommandLog] [2026-03-26T22:58:29.0760331] mercy typed command tele 3105 3231 at X: 3115 Y:3220
+[CommandLog] [2026-03-26T22:58:29.6881701] mercy typed command tele 3095 3242 at X: 3105 Y:3231
+[CommandLog] [2026-03-26T22:58:29.6881701] mercy typed command tele 3096 3244 at X: 3105 Y:3231
+[CommandLog] [2026-03-26T22:58:29.6881701] mercy typed command tele 3097 3245 at X: 3105 Y:3231
+[CommandLog] [2026-03-26T22:58:30.2903035] mercy typed command tele 3089 3259 at X: 3097 Y:3245
+[CommandLog] [2026-03-26T22:58:30.2903035] mercy typed command tele 3089 3260 at X: 3097 Y:3245
+[CommandLog] [2026-03-26T22:58:30.2903035] mercy typed command tele 3089 3260 at X: 3097 Y:3245
+[CommandLog] [2026-03-26T22:58:31.4956403] mercy typed command tele 3077 3260 at X: 3089 Y:3260
+[CommandLog] [2026-03-26T22:58:31.4956403] mercy typed command tele 3075 3262 at X: 3089 Y:3260
+[CommandLog] [2026-03-26T22:58:31.4966413] mercy typed command tele 3074 3263 at X: 3089 Y:3260
+[CommandLog] [2026-03-26T22:58:32.0977781] mercy typed command tele 3059 3266 at X: 3074 Y:3263
+[CommandLog] [2026-03-26T22:58:32.0987763] mercy typed command tele 3063 3271 at X: 3074 Y:3263
+[CommandLog] [2026-03-26T22:58:32.0987763] mercy typed command tele 3064 3273 at X: 3074 Y:3263
+[CommandLog] [2026-03-26T22:58:32.698449] mercy typed command tele 3055 3284 at X: 3064 Y:3273
+[CommandLog] [2026-03-26T22:58:32.698449] mercy typed command tele 3055 3284 at X: 3064 Y:3273
+[CommandLog] [2026-03-26T22:58:32.698449] mercy typed command tele 3055 3285 at X: 3064 Y:3273
+[CommandLog] [2026-03-26T22:58:33.9017422] mercy typed command tele 3047 3298 at X: 3055 Y:3285
+[CommandLog] [2026-03-26T22:58:33.9027414] mercy typed command tele 3047 3298 at X: 3055 Y:3285
+[CommandLog] [2026-03-26T22:58:33.9027414] mercy typed command tele 3047 3298 at X: 3055 Y:3285
+[CommandLog] [2026-03-26T22:58:34.5028767] mercy typed command tele 3039 3311 at X: 3047 Y:3298
+[CommandLog] [2026-03-26T22:58:34.5038783] mercy typed command tele 3037 3310 at X: 3047 Y:3298
+[CommandLog] [2026-03-26T22:58:34.5038783] mercy typed command tele 3036 3308 at X: 3047 Y:3298
+[CommandLog] [2026-03-26T22:58:35.1035154] mercy typed command tele 3028 3322 at X: 3036 Y:3308
+[CommandLog] [2026-03-26T22:58:35.1035154] mercy typed command tele 3028 3322 at X: 3036 Y:3308
+[CommandLog] [2026-03-26T22:58:35.1035154] mercy typed command tele 3028 3322 at X: 3036 Y:3308
+[CommandLog] [2026-03-26T22:58:36.3095426] mercy typed command tele 3020 3336 at X: 3028 Y:3322
+[CommandLog] [2026-03-26T22:58:36.3095426] mercy typed command tele 3020 3336 at X: 3028 Y:3322
+[CommandLog] [2026-03-26T22:58:36.91268] mercy typed command tele 3012 3350 at X: 3020 Y:3336
+[CommandLog] [2026-03-26T22:58:37.5138164] mercy typed command tele 3007 3366 at X: 3012 Y:3350
+[CommandLog] [2026-03-26T22:58:37.5138164] mercy typed command tele 3006 3363 at X: 3012 Y:3350
+[CommandLog] [2026-03-26T22:58:38.7191902] mercy typed command tele 2994 3375 at X: 3006 Y:3363
+[CommandLog] [2026-03-26T22:58:39.3223281] mercy typed command tele 2982 3387 at X: 2994 Y:3375
+[CommandLog] [2026-03-26T22:58:39.3223281] mercy typed command tele 2981 3385 at X: 2994 Y:3375
+[CommandLog] [2026-03-26T22:58:39.9234542] mercy typed command tele 2968 3395 at X: 2981 Y:3385
+[CommandLog] [2026-03-26T22:58:39.9234542] mercy typed command tele 2968 3395 at X: 2981 Y:3385
+[CommandLog] [2026-03-26T22:58:39.9234542] mercy typed command tele 2968 3396 at X: 2981 Y:3385
+[CommandLog] [2026-03-26T22:58:40.5255017] mercy typed command tele 2955 3407 at X: 2968 Y:3396
+[CommandLog] [2026-03-26T22:58:41.7316295] mercy typed command tele 2951 3393 at X: 2955 Y:3407
+[CommandLog] [2026-03-26T22:58:41.7316295] mercy typed command tele 2951 3393 at X: 2955 Y:3407
+[CommandLog] [2026-03-26T22:58:42.3337672] mercy typed command tele 2947 3379 at X: 2951 Y:3393
+[CommandLog] [2026-03-26T22:58:42.3337672] mercy typed command tele 2947 3379 at X: 2951 Y:3393
+[CommandLog] [2026-03-26T22:58:42.3337672] mercy typed command tele 2947 3379 at X: 2951 Y:3393
+[CommandLog] [2026-03-26T22:58:42.9379176] mercy typed command tele 2944 3367 at X: 2947 Y:3379
+[CommandLog] [2026-03-26T22:58:42.9379176] mercy typed command tele 2944 3367 at X: 2947 Y:3379
+[CommandLog] [2026-03-26T22:58:42.9379176] mercy typed command tele 2949 3365 at X: 2947 Y:3379
+[CommandLog] [2026-03-26T22:58:49.5592654] mercy typed command tele 2951 3369 at X: 2949 Y:3365
+[CommandLog] [2026-03-26T22:58:49.5592654] mercy typed command tele 2951 3369 at X: 2949 Y:3365
+[CommandLog] [2026-03-26T22:58:49.5592654] mercy typed command tele 2951 3370 at X: 2949 Y:3365
+[CommandLog] [2026-03-26T22:58:50.1601968] mercy typed command tele 2952 3375 at X: 2951 Y:3370
+[CommandLog] [2026-03-26T22:58:50.7609241] mercy typed command tele 2953 3379 at X: 2952 Y:3375
+[CommandLog] [2026-03-26T23:00:25.8659661] mercy typed command dboss at X: 2962 Y:3380
+[CommandLog] [2026-03-26T23:00:26.4683889] mercy typed command db at X: 2962 Y:3380
+[CommandLog] [2026-03-26T23:01:19.4207012] mercy typed command item 773 at X: 3738 Y:3971
+[CommandLog] [2026-03-26T23:01:32.0571291] mercy typed command teleport at X: 3736 Y:3975

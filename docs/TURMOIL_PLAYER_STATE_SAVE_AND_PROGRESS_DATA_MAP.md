@@ -1,0 +1,1259 @@
+# Turmoil Player State Save And Progress Data Map
+
+This map documents how Turmoil stores player progression, runtime state, save fields, save entries, attributes, cooldowns, points, charges, tasks, achievements, and account unlocks.
+
+Rules for future content:
+- Do not rewrite `PlayerSave.java`, `Player.java`, or core login/logout flows for isolated content.
+- Prefer a new `PlayerSaveEntry` for new persistent content.
+- Keep new runtime-only state in `Player` fields or attributes only when it does not need to survive logout.
+- Use existing manager, enum, and JSON patterns before adding new legacy save keys.
+- If a system is external to the repo, do not invent data paths or fields. Verify the runtime data before changing rewards.
+
+## 1. Legacy PlayerSave.java Fields
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/entity/player/PlayerHandler.java`
+  - `src/io/xeros/model/entity/player/PlayerSaveExecutor.java`
+- Save keys or save entry names:
+  - Legacy character files live under `saves/public/character_saves/` at runtime.
+  - Main legacy sections include `[ACCOUNT]`, `[CHARACTER]`, `[EQUIPMENT]`, `[COSMETICS]`, `[COSMETICS-BOOLEANS]`, `[LOOK]`, `[SKILLS]`, `[ITEMS]`, `[BANK]`, `[LOOTBAG]`, `[RUNEPOUCH]`, `[HERBSACK]`, `[GEMBAG]`, `[DEATHSTORAGE]`, `[TRADINGPOST]`, `[COLLOGCLAIMS]`, `[DEGRADEABLES]`, `[ACHIEVEMENTS-TIER-n]`, `[PRESETS]`, `[KILLSTREAKS]`, `[TITLES]`, `[NPC-TRACKER]`, and `[EOF]`.
+  - Important `[CHARACTER]` keys include `character-rights`, `character-rights-secondary`, `character-hp`, `character-posx`, `character-posy`, `character-height`, `mode`, `expmode`, `migration-version`, `startPack`, `bossPoints`, `votePoints`, `foundry`, `prestige-points`, `achievement-points`, `slayer-task`, `slayer-task-amount`, `slayerPoints`, `division-tier`, `division-xp`, `division-member`, `division-season`, `wraith-scythe-charge`, `wraith-staff-charge`, `wraith-bow-charge`, `exchangeP`, and `totalEarnedExchangeP`.
+- Runtime fields:
+  - Almost all legacy tokens hydrate fields directly on `Player`, nested managers on `Player`, or arrays owned by `Player`.
+- Load method:
+  - `PlayerSave.loadGame(Player p, String playerName, String playerPass, boolean passedCaptcha)`.
+  - The parser uses read modes based on section headers and a large token switch.
+- Save method:
+  - `PlayerSave.saveGame(Player p)` queues async saving through `PlayerSaveExecutor`.
+  - `PlayerSave.saveGameInstant(Player p)` writes the character file immediately.
+  - `PlayerSave.saveAll()` queues saves for all online players.
+- Login method, if any:
+  - `Player.finishLogin()` runs post-load initialization.
+  - `PlayerSave.login(Player)` runs after several `Player.finishLogin()` manager hooks.
+- How default values are handled:
+  - Missing save keys leave constructor and field defaults from `Player.java`.
+  - Missing character files return `PlayerSave.LoginType.NEW_PLAYER`.
+  - `Player` initializes equipment arrays, skills, appearance, mode, experience mode, and many counters before loading.
+- How old saves are protected:
+  - `PlayerSave.loadGame` returns an error if `[EOF]` is missing.
+  - Missing optional fields are tolerated.
+  - Old values such as `mode = NONE`, `expmode = NONE`, `slayer-recipe`, `slayer-helmet`, `superior-slayer`, `pages`, and `removedTask*` have compatibility handling.
+  - Legacy friends and ignores sections are still parsed.
+- Safe extension points:
+  - Add new persistent content through `src/io/xeros/model/entity/player/save/PlayerSaveEntry.java`.
+  - Add content-owned JSON save files when the system already follows that pattern, such as Task Master or collection logs.
+- Dangerous areas to avoid:
+  - Do not add ordinary new content by expanding the large token switch in `PlayerSave.java`.
+  - Do not rename or remove legacy keys without migration.
+  - Do not add save writes that can break `[EOF]` or section ordering.
+
+## 2. PlayerSaveEntry System
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSaveEntry.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/save/impl/`
+  - `src/io/xeros/ServerStartup.java`
+- Save keys or save entry names:
+  - `weapon_mode_3`
+  - `autocast`
+  - `autocast_defensive`
+  - `autocast_id`
+  - `ironman_revert_type`
+  - `200mtime`
+  - `style_warning_toggle`
+  - `trouver_items`
+  - `daily_rewards_claim_date`
+  - `daily_rewards_identifier`
+  - `daily_rewards_streak`
+  - `aoe_unlocked_tier`
+  - `aoe_kc_#`
+  - `donation_reward_amount`
+  - `donation_reward_reset_week`
+  - `friends-list`
+  - `boss_kill_times`
+  - `lost_property`
+  - `collection_box`
+  - `wild_warning`
+  - `set_first_bank_pin`
+  - `bank_pin_2021_message`
+  - `compromised_account_type`
+  - `recent_killed`
+- Runtime fields:
+  - Save entries usually write to `Player` fields, content-owned managers, or `Player.getAttributes()`.
+- Load method:
+  - `PlayerSave.loadPlayerSaveEntries()` discovers implementations through `ClassGraphHandler<PlayerSaveEntry>`.
+  - During `PlayerSave.loadGame`, each token is first offered to loaded save entries with `PlayerSaveEntry.decode(Player player, String key, String value)`.
+- Save method:
+  - `PlayerSave.saveGameInstant` calls `PlayerSaveEntry.getKeys(Player player)` and `PlayerSaveEntry.encode(Player player, String key)` before writing equipment sections.
+- Login method, if any:
+  - `PlayerSave.login(Player player)` calls `PlayerSaveEntry.login(Player player)` for every registered entry.
+- How default values are handled:
+  - Entries can return `null` from `encode` to skip writing.
+  - Entries can leave decode no-op for unknown keys.
+  - Missing save entry keys leave runtime defaults in place.
+- How old saves are protected:
+  - Entries are additive and do not require modifying the legacy switch.
+  - Entries can implement migration in `login`, as `TrouverParchmentPlayerSaveEntry` does for `trouver_items`.
+- Safe extension points:
+  - Copy small entries from `src/io/xeros/model/entity/player/save/impl/AttackStyleSaveEntry.java`, `src/io/xeros/content/dailyrewards/DailyRewardsPlayerSaveEntry.java`, or `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`.
+- Dangerous areas to avoid:
+  - Do not create keys that collide with legacy tokens or other save entries.
+  - Do not perform heavy disk IO inside `decode`, `encode`, or `login`.
+  - Do not encode unstable runtime-only attributes unless the content owns their lifecycle.
+
+## 3. Player Runtime Fields In Player.java
+
+- Main files:
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+- Save keys or save entry names:
+  - Runtime fields are saved only if `PlayerSave.java`, a `PlayerSaveEntry`, or a content-owned save file writes them.
+- Runtime fields:
+  - Core arrays: `playerAppearance`, `playerEquipment`, `playerEquipmentCosmetic`, `cosmeticOverrides`, `playerEquipmentN`, `playerLevel`, `playerXP`, `prestigeLevel`, `skillLock`, `playerItems`, `playerItemsN`.
+  - Account/progression fields: `mode`, `expMode`, `modeRevertType`, `modeSelection`, `lastVote`, `lastVotePanelPoint`.
+  - Points: `pkp`, `bossPoints`, `bossPointsRefund`, `achievementPoints`, `raidPoints`, `votePoints`, `bloodPoints`, `pcPoints`, `donatorPoints`, `loyaltyPoints`, `voteKeyPoints`, `exchangePoints`, `foundryPoints`, `totalEarnedExchangePoints`, `prestigePoints`, `instanceCurrency`.
+  - Instance fields: `unlockedInstances`, `unlockedBossTiers`, `tierKillCounts`, `bestInstanceScores`, `bestInstanceTimes`, `instancePerformanceTracker`.
+  - Battlepass fields: `tier`, `xp`, `member`, `currentSeason`, `seasonPassPlaytime`.
+  - Demon Hunter fields: `demonHunterTask`, `demonHunterTaskProgress`, `demonHunterXP`, `demonTaskStreak`, `demonHunterTierUnlocked`, `demonHunterMilestones`, `demonMarks`, `demonContract`.
+  - Fire of Exchange fields: `currentExchangeItem`, `currentExchangeItemAmount`, `burnHistory`, `recentlyDissolvedItems`, `recentlyDissolvedPrices`.
+- Load method:
+  - Fields are set by `PlayerSave.loadGame`, content JSON loaders, or manager login methods.
+- Save method:
+  - Fields are saved by `PlayerSave.saveGameInstant`, `PlayerSaveEntry` implementations, or content-owned save files.
+- Login method, if any:
+  - `Player.finishLogin()` normalizes many fields and calls manager login hooks.
+- How default values are handled:
+  - Constructor and field initializers in `Player.java` establish defaults before a save file is loaded.
+- How old saves are protected:
+  - Missing old fields leave defaults intact.
+  - Login normalization fixes some invalid combinations, such as ironman rights on standard mode accounts.
+- Safe extension points:
+  - Add runtime fields only when a manager cannot own the state.
+  - Prefer content manager state plus `PlayerSaveEntry` for persistence.
+- Dangerous areas to avoid:
+  - Do not assume every `Player` field is persisted.
+  - Do not add a field to `Player.java` and assume logout will save it.
+
+## 4. Player Attributes
+
+- Main files:
+  - `src/io/xeros/model/Attributes.java`
+  - `src/io/xeros/model/AttributesSerializable.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - Attribute keys are ad hoc strings unless a save entry persists them.
+  - Persisted attribute-backed keys include `weapon_style_load_index`, `aoe_unlocked_tier`, `aoe_kc_#`, `trouver_items`, `compromised_account_type`, `set_first_bank_pin`, `bank_pin_2021_message`, and `recent_killed`.
+- Runtime fields:
+  - `Player.getAttributes()` stores typed maps for object, int, double, boolean, long, string, list, and hashset values.
+  - Common runtime keys include AOE keys such as `aoe_active_tier`, `aoe_reward_tracker`, `aoe_instance`, and `aoe_reward_bank`.
+- Load method:
+  - Generic attributes are not automatically loaded by `PlayerSave.java`.
+  - Individual systems load selected keys through `PlayerSaveEntry`.
+- Save method:
+  - Generic attributes are not automatically saved.
+  - `AttributesSerializable` can save its own JSON file on mutation, but this is separate from the regular player attribute map.
+- Login method, if any:
+  - Attribute-backed save entries may use `PlayerSaveEntry.login`.
+- How default values are handled:
+  - `Attributes.getInt(key)` defaults to `-1`.
+  - `Attributes.getBoolean(key)` defaults to `false`.
+  - Other type-specific getters return their configured default behavior in `Attributes.java`.
+- How old saves are protected:
+  - Missing persisted attribute keys leave the attribute absent.
+  - Entries can migrate old attribute data on login.
+- Safe extension points:
+  - Use attributes for temporary state, controller state, active instance state, and one-session flags.
+  - Persist only content-owned attribute keys through a dedicated save entry.
+- Dangerous areas to avoid:
+  - Do not use attributes for durable progression unless a save entry or separate JSON file persists them.
+  - Do not reuse vague attribute keys that could collide across systems.
+
+## 5. Inventory And Bank Saving
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/items/bank/Bank.java`
+  - `src/io/xeros/model/items/bank/BankItem.java`
+- Save keys or save entry names:
+  - `[ITEMS]` uses `character-item`.
+  - `[BANK]` uses `bank-tab`.
+  - `[EQUIPMENT]` uses `character-equip`.
+  - `[COSMETICS]` uses `character-cosmetic`.
+  - `[COSMETICS-BOOLEANS]` uses `character-cosmetic-boolean`.
+  - `[LOOTBAG]` uses `bag-item`.
+  - `[RUNEPOUCH]` uses `pouch-item`.
+  - `[HERBSACK]` uses `sack-item`.
+  - `[GEMBAG]` uses `bag-item`.
+  - `[DEATHSTORAGE]` uses `death-storage`.
+  - `[TRADINGPOST]` uses `trading-post`.
+  - `[DEGRADEABLES]` uses `item` and `claim-state`.
+- Runtime fields:
+  - `playerItems`, `playerItemsN`, `playerEquipment`, `playerEquipmentN`, `playerEquipmentCosmetic`, `cosmeticOverrides`.
+  - Bank data is stored in `Player` bank structures.
+- Load method:
+  - `PlayerSave.loadGame` read modes load each item section into the matching arrays or item containers.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes inventory, equipment, bank, and storage sections.
+- Login method, if any:
+  - `Player.finishLogin()` corrects invalid equipment through `getItems().wearItemCorrectEquipmentSlot()` and updates equipment after loading.
+- How default values are handled:
+  - Equipment slots default to `-1`.
+  - Item arrays default to empty values.
+- How old saves are protected:
+  - Item sections are read independently, so missing optional storage sections leave those containers empty.
+- Safe extension points:
+  - Use normal inventory, bank, and item container APIs for content rewards.
+  - Use existing storage systems for special containers rather than adding new save sections.
+- Dangerous areas to avoid:
+  - Do not manually write item containers outside `PlayerSave.saveGameInstant`.
+  - Do not change item section formats without a migration plan.
+
+## 6. Skill And XP Saving
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/Skill.java`
+  - `src/io/xeros/content/prestige/PrestigeSkills.java`
+- Save keys or save entry names:
+  - `[SKILLS]` uses `character-skill = index level xp skillLock prestigeLevel`.
+  - `200mtime` is handled by `src/io/xeros/model/entity/player/save/impl/Skill200mPlayerSaveEntry.java`.
+- Runtime fields:
+  - `playerLevel[]`, `playerXP[]`, `skillLock[]`, `prestigeLevel[]`.
+- Load method:
+  - `PlayerSave.loadGame` read mode 5 parses `character-skill`.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes each skill line.
+  - `Skill200mPlayerSaveEntry.encode` writes timestamps for skills that reached 200m XP tracking.
+- Login method, if any:
+  - `Player.finishLogin()` refreshes skills with `getPA().refreshSkill(i)`.
+  - `Skill200mPlayerSaveEntry.login` initializes missing max XP timestamps.
+- How default values are handled:
+  - Hitpoints starts at level 10 and XP 1300.
+  - Other skills start at level 1 unless overwritten by save data.
+- How old saves are protected:
+  - Missing skill rows leave defaults.
+  - The `character-skill` format includes prestige level at the end, so older missing prestige data depends on parser defaults.
+- Safe extension points:
+  - Award XP through existing skill APIs such as `getPA().addSkillXPMultiplied`.
+  - Use `Skill` IDs instead of hardcoding indexes where possible.
+- Dangerous areas to avoid:
+  - Do not reorder `Skill` IDs without a full save migration.
+  - Do not change the `character-skill` row layout casually.
+
+## 7. Rights And Rank Saving
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/rights/Right.java`
+  - `src/io/xeros/model/rights/Rights.java`
+- Save keys or save entry names:
+  - `character-rights`
+  - `character-rights-secondary`
+  - `donA`
+  - `donB`
+  - `donD`
+  - `donW`
+  - `donP`
+  - `hideDonor`
+- Runtime fields:
+  - `rights`, secondary rights, donor amount fields, donor point fields, donor visibility flags.
+- Load method:
+  - `PlayerSave.loadGame` parses rights and donor amount keys.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes rights and donor amount keys.
+- Login method, if any:
+  - `Player.finishLogin()` normalizes ironman rights and calls rank-related updates.
+  - `Player.updateRank()` updates donor ranks from donation totals and rights.
+- How default values are handled:
+  - Standard users default to regular rights unless save data grants other rights.
+- How old saves are protected:
+  - Login removes ironman rights if account mode is standard.
+- Safe extension points:
+  - Use existing rights and rank checks in commands/content.
+  - Use donor reward systems for donor progression.
+- Dangerous areas to avoid:
+  - Do not invent new raw right IDs without checking `Right.java`.
+  - Do not persist rank state in multiple conflicting fields.
+
+## 8. Game Mode Saving
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/entity/player/mode/Mode.java`
+  - `src/io/xeros/model/entity/player/mode/ExpMode.java`
+  - `src/io/xeros/model/entity/player/save/impl/IronmanRevertTypeSaveEntry.java`
+- Save keys or save entry names:
+  - `mode`
+  - `expmode`
+  - `revert-option`
+  - `revert-delay`
+  - `ironman_revert_type`
+- Runtime fields:
+  - `mode`, `expMode`, `modeRevertType`, `modeSelection`.
+- Load method:
+  - `PlayerSave.loadGame` parses mode fields.
+  - `IronmanRevertTypeSaveEntry.decode` parses `ironman_revert_type`.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes legacy mode fields.
+  - `IronmanRevertTypeSaveEntry.encode` writes the ironman revert type.
+- Login method, if any:
+  - `Player.finishLogin()` normalizes invalid ironman rights and standard account combinations.
+- How default values are handled:
+  - `mode` defaults to regular mode.
+  - `expMode` defaults to `TwentyFiveTimes`.
+  - Saved `NONE` values are mapped to regular mode and default XP mode.
+- How old saves are protected:
+  - Legacy `NONE` values are explicitly supported.
+- Safe extension points:
+  - Use existing `Mode` and `ExpMode` enums.
+- Dangerous areas to avoid:
+  - Do not change serialized mode names without migration.
+  - Do not add account modes only in UI without save/load support.
+
+## 9. Tutorial And Starter Saving
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - `startPack`
+  - `lastLoginDate`
+  - New-player state is also determined by missing character file returning `PlayerSave.LoginType.NEW_PLAYER`.
+- Runtime fields:
+  - `completedTutorial`
+  - Starter and login-related flags on `Player`.
+- Load method:
+  - `PlayerSave.loadGame` parses `startPack` into tutorial completion state.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes starter and login-related fields.
+- Login method, if any:
+  - `RS2LoginProtocol.loadPlayer` handles `NEW_PLAYER` validation and registration flow.
+  - `Player.finishLogin()` handles post-load initialization.
+- How default values are handled:
+  - New accounts start from `Player` defaults and new-player login handling.
+- How old saves are protected:
+  - Existing saves keep their `startPack` value.
+- Safe extension points:
+  - Add starter rewards through existing starter/tutorial content rather than direct save edits.
+- Dangerous areas to avoid:
+  - Do not reset `startPack` or tutorial state for existing accounts without an explicit migration.
+
+## 10. Points And Currency Saving
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/content/bosspoints/BossPoints.java`
+  - `src/io/xeros/content/fireofexchange/FireOfExchange.java`
+  - `src/io/xeros/content/vote_panel/VotePanelManager.java`
+- Save keys or save entry names:
+  - `raidPoints`
+  - `pkp`
+  - `bossPoints`
+  - `bossPointsRefund`
+  - `tPoint`
+  - `wgPoint`
+  - `LoyP`
+  - `votePoints`
+  - `dayv`
+  - `bloodPoints`
+  - `donP`
+  - `spins`
+  - `cosC`
+  - `arboPoints`
+  - `afk`
+  - `bloodyp`
+  - `seasonal`
+  - `foundry`
+  - `pc-points`
+  - `aoe-points`
+  - `prestige-points`
+  - `achievement-points`
+  - `slayerPoints`
+  - `mage-arena-points`
+  - `shayzien-assault-points`
+  - `exchangeP`
+  - `totalEarnedExchangeP`
+- Runtime fields:
+  - Matching point and currency fields on `Player`, including `bossPoints`, `votePoints`, `foundryPoints`, `exchangePoints`, `instanceCurrency`, `prestigePoints`, and `achievementPoints`.
+- Load method:
+  - `PlayerSave.loadGame` parses currency keys.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes currency keys.
+- Login method, if any:
+  - `Player.finishLogin()` calls `BossPoints.doRefund(this)` and vote refund logic.
+- How default values are handled:
+  - Missing point keys default to zero or field initializer values.
+- How old saves are protected:
+  - Existing keys are kept in place and should not be renamed.
+- Safe extension points:
+  - Award currency through the owning manager where one exists.
+  - Use conservative reward amounts and the existing reward economy audit before adding new sources.
+- Dangerous areas to avoid:
+  - Do not create duplicate currencies for the same purpose.
+  - Do not reward high-impact currencies from low-effort loops without economy review.
+
+## 11. Slayer Task Saving
+
+- Main files:
+  - `src/io/xeros/content/skills/slayer/Slayer.java`
+  - `src/io/xeros/content/skills/slayer/Task.java`
+  - `src/io/xeros/content/skills/slayer/SlayerUnlock.java`
+  - `src/io/xeros/content/skills/slayer/TaskExtension.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - `slayer-task`
+  - `slayer-task-amount`
+  - `last-task`
+  - `slayerPartner`
+  - `slayerParty`
+  - `slayer-master`
+  - `konar-slayer-location`
+  - `consecutive-tasks`
+  - `slayerPoints`
+  - `removed-slayer-tasks`
+  - `slayer-unlocks`
+  - `extended-slayer-tasks`
+  - `bigger-boss-tasks`
+  - `cerberus-route`
+  - `slayer-tasks-completed`
+  - Compatibility keys: `slayer-recipe`, `slayer-helmet`, `superior-slayer`, `removedTask*`.
+- Runtime fields:
+  - `Player.slayer`
+  - `Player.slayerPartner`
+  - `Player.slayerParty`
+  - `Player.slayerTasksCompleted`
+  - Slayer manager fields: `task`, `master`, `consecutiveTasks`, `points`, `taskAmount`, `biggerBossTasks`, `learnedCerberusRoute`, `removed`, `extensions`, `unlocks`.
+- Load method:
+  - `PlayerSave.loadGame` parses Slayer keys into `Player` and `Slayer`.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes Slayer task, unlock, extension, block, point, and streak data.
+- Login method, if any:
+  - Slayer is available after `Player.finishLogin`; task progress is updated by combat/death hooks.
+- How default values are handled:
+  - Missing Slayer task keys leave no active task or default Slayer manager values.
+- How old saves are protected:
+  - Old `slayer-recipe` and `slayer-helmet` keys map to `SlayerUnlock.MALEVOLENT_MASQUERADE`.
+  - Old `superior-slayer` maps to `SlayerUnlock.BIGGER_AND_BADDER`.
+  - Old `removedTask*` values can refund Slayer points.
+- Safe extension points:
+  - Add tasks and rewards through Slayer task enums/managers.
+  - Use existing Slayer kill hooks for progress.
+- Dangerous areas to avoid:
+  - Do not change serialized task names without migration.
+  - Do not alter old compatibility keys unless intentionally cleaning saves.
+
+## 12. Demon Hunter Saving
+
+- Main files:
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/content/skills/slayer/DemonHunterTaskManager.java`
+  - `src/io/xeros/content/skills/slayer/DemonSlayerMaster.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+- Save keys or save entry names:
+  - Demon Hunter skill level and XP are saved through `[SKILLS]` with `character-skill`.
+  - Not found in repo for custom task state. Searched terms: `demonHunter`, `demon_hunter`, `DemonHunter`, `demonMarks`, `demon_marks`, `demonTask`, `demon_task`, `demonContract`, `demon_contract`, `demonHunterXP` in `src/io/xeros/model/entity/player/save`, `src/io/xeros/content`, and `src/io/xeros/model/entity/player/Player.java`.
+- Runtime fields:
+  - `demonHunterTask`
+  - `demonHunterTaskProgress`
+  - `demonHunterXP`
+  - `demonTaskStreak`
+  - `demonHunterTierUnlocked`
+  - `demonHunterMilestones`
+  - `demonMarks`
+  - `demonContract`
+- Load method:
+  - Skill XP loads through `PlayerSave.loadGame` read mode 5.
+  - Not found in repo for loading custom Demon Hunter task fields.
+- Save method:
+  - Skill XP saves through `PlayerSave.saveGameInstant`.
+  - Not found in repo for saving custom Demon Hunter task fields.
+- Login method, if any:
+  - Demon Hunter task assignment and kill handling are runtime manager operations.
+- How default values are handled:
+  - `Player` defaults to no task, zero progress, zero marks, empty milestone set, and no contract.
+- How old saves are protected:
+  - Skill XP is protected by generic skill saving.
+  - Custom Demon Hunter state appears runtime-only in the inspected repo.
+- Safe extension points:
+  - If persistent Demon Hunter progression is needed, add a dedicated `PlayerSaveEntry`.
+  - Keep task definitions in the existing Demon Hunter manager/classes.
+- Dangerous areas to avoid:
+  - Do not assume Demon Marks, active contracts, streaks, or milestones survive logout.
+  - Do not add Demon Hunter fields directly to the legacy save switch without migration review.
+
+## 13. Achievement Saving
+
+- Main files:
+  - `src/io/xeros/content/achievement/AchievementHandler.java`
+  - `src/io/xeros/content/achievement/Achievements.java`
+  - `src/io/xeros/content/achievement/AchievementType.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - `achievement-points`
+  - `firstAchievementLoginJune2021`
+  - `achieveFix`
+  - `[ACHIEVEMENTS-TIER-n]` entries use achievement names as keys.
+- Runtime fields:
+  - `Player.achievementPoints`
+  - `Player.hasAchieveFix`
+  - `AchievementHandler.amountRemaining[][]`
+  - `AchievementHandler.completed[][]`
+  - `AchievementHandler.claimed[][]`
+  - `AchievementHandler.points`
+  - `AchievementHandler.firstAchievementLoginJune2021`
+- Load method:
+  - `PlayerSave.loadGame` reads tier sections and calls `AchievementHandler.readFromSave(String name, String[] data, AchievementTier tier)`.
+- Save method:
+  - `PlayerSave.saveGameInstant` calls `AchievementHandler.print(BufferedWriter writer, int tier)`.
+- Login method, if any:
+  - `Player.finishLogin()` calls `getAchievements().onLogin()`.
+- How default values are handled:
+  - Missing achievement entries leave handler defaults.
+  - `readFromSave` defaults claimed status for old two-field save rows.
+- How old saves are protected:
+  - `readFromSave` treats missing claimed data as already claimed when the achievement is complete.
+  - `onLogin()` fixes old kill-count achievement state if `hasAchieveFix` is false.
+- Safe extension points:
+  - Add achievements through `Achievements.java` and matching progress hooks.
+  - Copy existing `AchievementHandler.progress` patterns.
+- Dangerous areas to avoid:
+  - Do not rename achievement save names without a migration.
+  - Do not reorder tier/achievement indexes unless save compatibility is confirmed.
+
+## 14. Task Master Saving
+
+- Main files:
+  - `src/io/xeros/content/taskmaster/TaskMaster.java`
+  - `src/io/xeros/content/taskmaster/Tasks.java`
+  - `src/io/xeros/content/taskmaster/TaskMasterKills.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - Task Master uses external per-player JSON under `taskmaster/`.
+  - JSON fields on `TaskMasterKills` include `items`, `amountToKill`, `claimedReward`, `amountKilled`, `taskDifficulty`, `taskType`, `weekly`, `localDateTime`, and `desc`.
+- Runtime fields:
+  - `TaskMaster.taskMasterKillsList`
+  - `TaskMaster.moneyMakingTime`
+  - `TaskMaster.earn`
+- Load method:
+  - `TaskMaster.loadAllMoneyMaking(Player player)` reads the player's Task Master JSON.
+- Save method:
+  - `TaskMaster.saveAllMoneyMaking(Player player)` writes the player's Task Master JSON.
+- Login method, if any:
+  - `Player.finishLogin()` calls `getTaskMaster().loadAllMoneyMaking(this)`.
+- How default values are handled:
+  - If no JSON exists, generated tasks can be created by Task Master flow.
+- How old saves are protected:
+  - Task Master is separate from the legacy character file, reducing risk to core saves.
+- Safe extension points:
+  - Add task definitions through `Tasks.java` and reuse `TaskMaster.trackActivity`.
+- Dangerous areas to avoid:
+  - Do not change `TaskMasterKills` JSON field names without migration.
+  - Do not write Task Master state from unrelated systems outside its manager.
+
+## 15. Collection Log Saving
+
+- Main files:
+  - `src/io/xeros/content/collection_log/CollectionLog.java`
+  - `src/io/xeros/content/collection_log/CollectionRewards.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/net/login/RS2LoginProtocol.java`
+- Save keys or save entry names:
+  - Collection contents are saved as JSON in the runtime collection log save directory.
+  - `[COLLOGCLAIMS]` uses `collect-log` for claimed collection reward IDs.
+- Runtime fields:
+  - `CollectionLog.collections`
+  - `CollectionLog.saveName`
+  - `CollectionLog.groupIronman`
+  - `Player.getClaimedLog()`
+- Load method:
+  - `RS2LoginProtocol.loadPlayer` calls `player.getCollectionLog().loadForPlayer(player)` after `PlayerSave.loadGame`.
+  - Group ironman accounts also call group collection log loading and combine logic.
+  - `PlayerSave.loadGame` loads claimed reward IDs from `[COLLOGCLAIMS]`.
+- Save method:
+  - `CollectionLog.saveToJSON()` writes collection log JSON.
+  - `PlayerSave.saveGameInstant` writes claimed reward IDs.
+- Login method, if any:
+  - Collection log loading is part of login protocol after character load.
+- How default values are handled:
+  - Missing collection log JSON leaves an empty collection map.
+  - Missing claimed reward section leaves no claimed reward IDs.
+- How old saves are protected:
+  - Group ironman collection log combine logic can merge individual logs into group logs.
+- Safe extension points:
+  - Add collection entries through collection log config/reward systems and drop hooks.
+  - Use `CollectionRewards` for reward claim behavior.
+- Dangerous areas to avoid:
+  - Do not store normal collection log drops in `PlayerSave.java`.
+  - Do not rename collection category or item identifiers without checking existing JSON saves.
+
+## 16. Battlepass Saving
+
+- Main files:
+  - `src/io/xeros/content/battlepass/Pass.java`
+  - `src/io/xeros/content/battlepass/Rewards.java`
+  - `src/io/xeros/content/battlepass/RewardList.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+- Save keys or save entry names:
+  - `division-tier`
+  - `division-xp`
+  - `division-member`
+  - `division-season`
+  - External/not found in repo: season pass info and reward data loaded through `Rewards.INFO_FILE_PATH`, `Rewards.DEFAULT_REWARDS_FILE_PATH`, and `Rewards.REWARDS_FILE_PATH`. Searched terms: `seasonpass`, `defaultRewards.txt`, `memberRewards.txt`, `Rewards.INFO_FILE_PATH`.
+- Runtime fields:
+  - `Player.tier`
+  - `Player.xp`
+  - `Player.member`
+  - `Player.currentSeason`
+  - `Player.seasonPassPlaytime`
+  - Global season state in `Rewards`.
+- Load method:
+  - `PlayerSave.loadGame` parses division keys.
+  - `Rewards.init()` loads global battlepass information and rewards at server startup.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes player battlepass keys.
+  - `Rewards.saveDivision()` writes global division data.
+- Login method, if any:
+  - `Pass.handleLogin(Player player)` resets tier, XP, and membership when the current season changes.
+- How default values are handled:
+  - `Pass.handleLogin` ensures tier is at least 1.
+  - Season mismatch resets player season progress.
+- How old saves are protected:
+  - Player save keys remain small and additive.
+  - Season reset happens through `Pass.handleLogin`.
+- Safe extension points:
+  - Add battlepass XP through `Pass.addExperience`.
+  - Add rewards through battlepass reward data or `RewardList` patterns.
+- Dangerous areas to avoid:
+  - Do not bypass `Pass.handleLogin` season checks.
+  - Do not casually alter external season reward formats without runtime validation.
+
+## 17. Daily Rewards Saving
+
+- Main files:
+  - `src/io/xeros/content/dailyrewards/DailyRewards.java`
+  - `src/io/xeros/content/dailyrewards/DailyRewardsPlayerSaveEntry.java`
+  - `src/io/xeros/content/dailyrewards/DailyRewardsRecords.java`
+  - `src/io/xeros/content/dailyrewards/DailyRewardContainer.java`
+- Save keys or save entry names:
+  - `daily_rewards_claim_date`
+  - `daily_rewards_identifier`
+  - `daily_rewards_streak`
+  - External/not found in repo: daily reward schedule files are loaded from a runtime daily rewards directory. Searched terms: `daily_rewards`, `DailyRewardContainer`, `DAILY_REWARDS_DIRECTORY`.
+- Runtime fields:
+  - `DailyRewards.lastClaimed`
+  - `DailyRewards.lastRewardIdentifier`
+  - `DailyRewards.streak`
+  - `DailyRewards.notify`
+  - Global anti-alt records in `DailyRewardsRecords`.
+- Load method:
+  - `DailyRewardsPlayerSaveEntry.decode` loads the three player fields.
+  - `DailyRewardsRecords.load()` loads global claim records.
+- Save method:
+  - `DailyRewardsPlayerSaveEntry.encode` writes player fields.
+  - `DailyRewardsRecords` saves global records when claims are added.
+- Login method, if any:
+  - `Player.finishLogin()` calls `getDailyRewards().onLogin()`.
+- How default values are handled:
+  - Missing save keys leave default date, identifier, and streak values in `DailyRewards`.
+- How old saves are protected:
+  - The save entry is additive and isolated from legacy parsing.
+- Safe extension points:
+  - Add daily reward behavior through `DailyRewards` and runtime reward schedule data.
+- Dangerous areas to avoid:
+  - Do not add daily reward keys to `PlayerSave.java`.
+  - Do not reward high-value economy items daily without economy review.
+
+## 18. Vote Panel And Player Vote Saving
+
+- Main files:
+  - `src/io/xeros/content/vote_panel/VotePanelManager.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - Player keys: `votePoints`, `dayv`, `lastVote`, `lastVotePanelPoint`, `receivedVoteStreakRefund`, `dropBoostStart`.
+  - Global vote panel JSON is stored in the runtime save directory as `vote_panel.json`.
+- Runtime fields:
+  - `Player.votePoints`
+  - `Player.voteKeyPoints`
+  - `Player.lastVote`
+  - `Player.lastVotePanelPoint`
+  - `VotePanelManager.wrapper`
+  - `VoteUser.voteCount`, `VoteUser.firstVoteTimestamp`, `VoteUser.dayStreak`, `VoteUser.bluePoints`, `VoteUser.redPoints`, `VoteUser.prizeSlot`.
+- Load method:
+  - `PlayerSave.loadGame` loads player vote keys.
+  - `VotePanelManager.init()` loads global vote panel JSON.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes player vote keys.
+  - `VotePanelManager.saveToJSON()` writes global vote panel state.
+- Login method, if any:
+  - `Player.finishLogin()` includes vote streak refund logic and may call vote panel save.
+- How default values are handled:
+  - Missing player vote keys default to zero or unset timestamps.
+  - Missing global vote panel JSON creates default global state.
+- How old saves are protected:
+  - `receivedVoteStreakRefund` guards one-time refund behavior.
+- Safe extension points:
+  - Add vote rewards through vote panel reward paths and existing vote point fields.
+- Dangerous areas to avoid:
+  - Do not modify global vote panel JSON shape without migration.
+  - Do not duplicate player vote points in another save key.
+
+## 19. AOE Tier Progress Saving
+
+- Main files:
+  - `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierController.java`
+  - `src/io/xeros/content/instances/aoe/AoeBossTierLoader.java`
+  - `src/io/xeros/content/instances/aoe/AoeInstanceService.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+- Save keys or save entry names:
+  - `aoe_unlocked_tier`
+  - `aoe_kc_#`
+  - `aoe-points`
+- Runtime fields:
+  - Attributes: `aoe_unlocked_tier`, `aoe_kc_#`, `aoe_active_tier`, `aoe_reward_tracker`, `aoe_instance`, `aoe_reward_bank`.
+  - `Player.instanceCurrency` for `aoe-points`.
+- Load method:
+  - `AoeTierProgressSaveEntry.decode` loads unlocked tier and dynamic kill counts.
+  - `PlayerSave.loadGame` loads `aoe-points`.
+  - `AoeTierProgressSaveEntry.getKeys` loads tier definitions through `AoeBossTierLoader.loadAllOrWarn("player-save")` if needed.
+- Save method:
+  - `AoeTierProgressSaveEntry.encode` writes unlocked tier and kill counts.
+  - `PlayerSave.saveGameInstant` writes `aoe-points`.
+- Login method, if any:
+  - Save entry login is no-op.
+- How default values are handled:
+  - Missing unlocked tier and kill counts use `AoeTierController` defaults.
+  - Missing `aoe-points` leaves `Player.instanceCurrency` default.
+- How old saves are protected:
+  - Dynamic kill count keys are generated from loaded tier definitions, so unknown tiers are not invented at save time.
+- Safe extension points:
+  - Add tier progression through AOE tier data and `AoeTierController`.
+  - Add persistent AOE fields through the existing AOE save entry pattern.
+- Dangerous areas to avoid:
+  - Do not persist active instance attributes as progression.
+  - Do not change tier IDs without considering `aoe_kc_#` save keys.
+
+## 20. Wraith Charge Saving
+
+- Main files:
+  - `src/io/xeros/content/wraith/WraithCharges.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+- Save keys or save entry names:
+  - `wraith-scythe-charge`
+  - `wraith-staff-charge`
+  - `wraith-bow-charge`
+- Runtime fields:
+  - Wraith charge fields accessed through `Player` getters and setters for scythe, staff, and bow.
+- Load method:
+  - `PlayerSave.loadGame` parses Wraith charge keys.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes Wraith charge keys.
+- Login method, if any:
+  - Not found in repo for a Wraith-specific login method. Searched terms: `WraithCharges`, `wraith-scythe-charge`, `wraith-staff-charge`, `wraith-bow-charge`, `onLogin`.
+- How default values are handled:
+  - Missing charge keys default to zero charges.
+  - `WraithCharges.setCurrentCharges` clamps charges between zero and cap.
+- How old saves are protected:
+  - Existing keys are direct and should not be renamed.
+- Safe extension points:
+  - Use `WraithCharges.addChargesFromEssence` and `WraithCharges.setCurrentCharges`.
+  - Add new Wraith persistence through a save entry if expanding beyond the three existing weapons.
+- Dangerous areas to avoid:
+  - Do not add new ad hoc Wraith legacy keys without a migration plan.
+  - Do not bypass charge clamping.
+
+## 21. Fire Of Exchange And Fortune-Related Saving
+
+- Main files:
+  - `src/io/xeros/content/fireofexchange/FireOfExchange.java`
+  - `src/io/xeros/content/fireofexchange/FireOfExchangeBurnPrice.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/Skill.java`
+- Save keys or save entry names:
+  - `foundry`
+  - `exchangeP`
+  - `totalEarnedExchangeP`
+  - `spins`
+  - `[DISSOLVER]` uses `disolve-item`.
+  - Fortune XP is saved in `[SKILLS]` with `character-skill` for `Skill.FORTUNE`.
+  - Not found in repo for persistent `burnHistory`. Searched terms: `burnHistory`, `getBurnHistory`, `currentExchangeItem`, `DISSOLVER`.
+- Runtime fields:
+  - `Player.foundryPoints`
+  - `Player.exchangePoints`
+  - `Player.totalEarnedExchangePoints`
+  - `Player.FortuneSpins`
+  - `Player.currentExchangeItem`
+  - `Player.currentExchangeItemAmount`
+  - `Player.burnHistory`
+  - `Player.recentlyDissolvedItems`
+  - `Player.recentlyDissolvedPrices`
+- Load method:
+  - `PlayerSave.loadGame` loads points, spins, skills, and dissolved item history sections.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes points, spins, skills, and `[DISSOLVER]`.
+- Login method, if any:
+  - Not found in repo for a Fire of Exchange-specific login method. Searched terms: `FireOfExchange`, `exchangeItemForPoints`, `onLogin`.
+- How default values are handled:
+  - Missing points default to zero.
+  - Runtime burn history starts empty.
+- How old saves are protected:
+  - Existing `disolve-item` spelling is part of the save format and should be preserved.
+- Safe extension points:
+  - Use `FireOfExchange.exchangeItemForPoints(Player c)` for burn behavior.
+  - Add burn values through `FireOfExchangeBurnPrice`.
+  - Award Fortune XP through skill XP APIs.
+- Dangerous areas to avoid:
+  - Do not rename `disolve-item`.
+  - Do not persist runtime burn history without a clear format and migration.
+  - Do not treat foundry points, exchange points, and Fortune XP as the same economy resource.
+
+## 22. Prestige Saving
+
+- Main files:
+  - `src/io/xeros/content/prestige/PrestigeSkills.java`
+  - `src/io/xeros/content/prestige/PrestigePerks.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - `prestige-points`
+  - `[SKILLS]` `character-skill` includes `prestigeLevel`.
+  - `[PRESTIGE]` uses `prestige-perk`.
+- Runtime fields:
+  - `Player.prestigePoints`
+  - `Player.prestigeLevel[]`
+  - `Player.prestigePerks`
+- Load method:
+  - `PlayerSave.loadGame` parses skill prestige levels, prestige points, and prestige perks.
+  - Prestige perks load through `PrestigePerks.handleLoading`.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes `prestige-points`, skill prestige levels, and `[PRESTIGE]`.
+- Login method, if any:
+  - Not found in repo for a prestige-specific login method. Searched terms: `PrestigeSkills`, `PrestigePerks`, `onLogin`, `prestige-points`.
+- How default values are handled:
+  - Missing prestige levels and points default to zero.
+  - `PrestigeSkills` excludes Demon Hunter and Fortune from prestige.
+- How old saves are protected:
+  - Prestige levels ride on the skill save row.
+- Safe extension points:
+  - Add perks through `PrestigePerks`.
+  - Keep prestige logic separate from core skill saving.
+- Dangerous areas to avoid:
+  - Do not alter `character-skill` row structure for prestige changes.
+  - Do not allow prestige on excluded skills unless the broader system is reviewed.
+
+## 23. Donator Progression Saving
+
+- Main files:
+  - `src/io/xeros/content/donationrewards/DonationRewardsPlayerSaveEntry.java`
+  - `src/io/xeros/content/donationrewards/DonationRewards.java`
+  - `src/io/xeros/content/donationrewards/DonationReward.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - `donation_reward_amount`
+  - `donation_reward_reset_week`
+  - `donA`
+  - `donB`
+  - `donD`
+  - `donW`
+  - `donP`
+  - `storetrans`
+  - `donator_vault_tiles`
+  - `hideDonor`
+  - `safeBoxSlots`
+  - `donobosskc`
+  - `donobosstime`
+  - `donobosskcx`
+  - `donobosstimex`
+  - `donobosskcy`
+  - `donobosstimey`
+  - External/not found in repo: donation reward JSON loaded by `DonationReward.FILE`. Searched terms: `donation_rewards.json`, `DonationReward.FILE`, `donationrewards`.
+- Runtime fields:
+  - `DonationRewards.sundayReset`
+  - `DonationRewards.amountDonatedThisWeek`
+  - Donor amount, donor points, donor boss, donor vault, and donor visibility fields on `Player`.
+- Load method:
+  - `DonationRewardsPlayerSaveEntry.decode` loads weekly donation reward state.
+  - `PlayerSave.loadGame` loads legacy donor amount and donor feature keys.
+  - `DonationReward.load()` loads external donation rewards at startup.
+- Save method:
+  - `DonationRewardsPlayerSaveEntry.encode` writes weekly donation reward state.
+  - `PlayerSave.saveGameInstant` writes legacy donor fields.
+- Login method, if any:
+  - `Player.finishLogin()` calls rank update logic.
+  - `Player.updateRank()` derives donor ranks from donation totals and rights.
+- How default values are handled:
+  - Missing weekly donation reward keys leave default donation reward state.
+  - Missing donor amount keys default to zero.
+- How old saves are protected:
+  - Donation reward entry is additive and legacy donor keys remain unchanged.
+- Safe extension points:
+  - Use donation reward managers for donor rewards.
+  - Use existing rank thresholds and rights checks.
+- Dangerous areas to avoid:
+  - Do not alter donor rank thresholds without owner review.
+  - Do not invent donor reward save keys when `DonationRewardsPlayerSaveEntry` can be extended.
+
+## 24. Quest And Diary Saving
+
+- Main files:
+  - `src/io/xeros/content/questing/QuestingPlayerSaveEntry.java`
+  - `src/io/xeros/content/questing/Questing.java`
+  - `src/io/xeros/content/achievement_diary/`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+- Save keys or save entry names:
+  - Quest save entry keys are dynamic quest names.
+  - Quest save values are quest stages.
+  - Diary keys include `d1Complete`, `d2Complete`, `d3Complete`, `d4Complete`, `d5Complete`, `d6Complete`, `d7Complete`, `d8Complete`, `d9Complete`, `d10Complete`, `d11Complete`.
+  - Claimed diary keys include `VarrockClaimedDiaries`, `ArdougneClaimedDiaries`, `DesertClaimedDiaries`, `FaladorClaimedDiaries`, `FremennikClaimedDiaries`, `KandarinClaimedDiaries`, `KaramjaClaimedDiaries`, `LumbridgeClaimedDiaries`, `MorytaniaClaimedDiaries`, `WesternClaimedDiaries`, and `WildernessClaimedDiaries`.
+  - Diary progress keys include `diaries` and `partialDiaries`.
+- Runtime fields:
+  - Quest progress lives in `Player.getQuesting()`.
+  - Diary completion, claimed, and partial progress live in diary-related player fields/managers.
+- Load method:
+  - `QuestingPlayerSaveEntry.decode` calls `player.getQuesting().updateQuestProgressOnLoad(key, stage)`.
+  - `PlayerSave.loadGame` parses diary keys.
+- Save method:
+  - `QuestingPlayerSaveEntry.encode` writes quest stages.
+  - `PlayerSave.saveGameInstant` writes diary complete, claimed, and partial progress keys.
+- Login method, if any:
+  - Quest save entry login is no-op.
+- How default values are handled:
+  - Missing quest keys leave quest stages at defaults.
+  - Missing diary keys leave diary state incomplete or unclaimed.
+- How old saves are protected:
+  - Dynamic quest keys allow quest entries to be additive.
+  - Legacy diary keys are still written and read.
+- Safe extension points:
+  - Add quests through questing system definitions.
+  - Add diaries through existing diary enums and progress handlers.
+- Dangerous areas to avoid:
+  - Do not rename quest names used as save keys without migration.
+  - Do not remove legacy diary keys if old accounts still depend on them.
+
+## 25. Instance-Related Player State
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/content/instances/InstancedArea.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierController.java`
+  - `src/io/xeros/content/instances/aoe/AoeInstanceService.java`
+  - `src/io/xeros/content/bosses/instance/`
+- Save keys or save entry names:
+  - `instance-unlocks`
+  - `tier-unlocks`
+  - `tier-killcounts`
+  - `aoe-points`
+  - AOE save entry keys: `aoe_unlocked_tier`, `aoe_kc_#`.
+  - Not found in repo for saved `bestInstanceScores` or `bestInstanceTimes`. Searched terms: `bestInstanceScores`, `bestInstanceTimes`, `tier-killcounts`, `instance-unlocks`.
+- Runtime fields:
+  - `Player.unlockedInstances`
+  - `Player.unlockedBossTiers`
+  - `Player.tierKillCounts`
+  - `Player.bestInstanceScores`
+  - `Player.bestInstanceTimes`
+  - `Player.instancePerformanceTracker`
+  - Active instance pointers in attributes and instance managers.
+- Load method:
+  - `PlayerSave.loadGame` parses instance unlocks, tier unlocks, tier kill counts, and AOE points.
+  - `AoeTierProgressSaveEntry.decode` loads AOE tier progression.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes instance unlocks and tier kill count data.
+  - `AoeTierProgressSaveEntry.encode` writes AOE progression.
+- Login method, if any:
+  - Instance active state is not resumed from logout in the inspected flow.
+- How default values are handled:
+  - Missing instance keys leave no unlocks or zero tier kill counts.
+  - Runtime active instance state starts empty.
+- How old saves are protected:
+  - Unlock and tier count keys are additive.
+- Safe extension points:
+  - Add persistent unlocks through existing instance unlock structures.
+  - Use `InstancedArea` patterns for active runtime state and cleanup.
+- Dangerous areas to avoid:
+  - Do not save active instance references.
+  - Do not assume players can safely relog inside every instance unless that system explicitly supports it.
+
+## 26. Cooldowns And Timers
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/content/dailyrewards/DailyRewardsPlayerSaveEntry.java`
+  - `src/io/xeros/content/combat/stats/BossTimersPlayerSaveEntry.java`
+- Save keys or save entry names:
+  - `lastLoginDate`
+  - `LastLoginYear`
+  - `LastLoginMonth`
+  - `LastLoginDate`
+  - `LoginStreak`
+  - `lastVote`
+  - `lastVotePanelPoint`
+  - `dropBoostStart`
+  - `XpScrollTime`
+  - `halloweenCandy`
+  - `fasterClueScrollTime`
+  - `skillingPetRateTime`
+  - `BonusDmgTime`
+  - `serpHelmCombatTicks`
+  - `daily2xraid`
+  - `daily2x`
+  - `dailyddr`
+  - `dailyAgro`
+  - `dailyPray`
+  - `dailyOverload`
+  - `dailyRage`
+  - `eliteboost`
+  - `eliteboostc`
+  - `bonus-end`
+  - `safety-end`
+  - `island-end`
+  - `jail-end`
+  - `mute-end`
+  - `last-yell`
+  - `membershipStartDate`
+  - `daily_rewards_claim_date`
+  - `boss_kill_times`
+- Runtime fields:
+  - Matching date, timestamp, boost, jail, mute, membership, daily reward, and boss timer fields on `Player` or content managers.
+- Load method:
+  - `PlayerSave.loadGame` parses legacy timers.
+  - `DailyRewardsPlayerSaveEntry.decode` parses daily reward timestamps.
+  - `BossTimersPlayerSaveEntry.decode` parses boss timer data.
+- Save method:
+  - `PlayerSave.saveGameInstant` writes legacy timers.
+  - Save entries encode daily rewards and boss timers.
+- Login method, if any:
+  - `Player.finishLogin()` reports active boosts, handles daily rewards, and runs save entry login hooks.
+- How default values are handled:
+  - Missing timers default to zero, empty, or manager-specific defaults.
+- How old saves are protected:
+  - Timer keys are left as-is to preserve old cooldowns and punishments.
+- Safe extension points:
+  - Add cooldowns in a content-owned save entry when they must persist.
+  - Use attributes for short-lived cooldowns that do not need persistence.
+- Dangerous areas to avoid:
+  - Do not rename punishment or membership timer keys.
+  - Do not store wall-clock cooldowns without choosing a stable time representation.
+
+## 27. Login-Time Initialization
+
+- Main files:
+  - `src/io/xeros/net/login/RS2LoginProtocol.java`
+  - `src/io/xeros/model/entity/player/PlayerHandler.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/ServerStartup.java`
+- Save keys or save entry names:
+  - Login reads all applicable player save keys, collection log JSON, Task Master JSON, and save entry keys.
+- Runtime fields:
+  - Login initializes active `Player` state, rights, controllers, collection log state, task state, daily rewards, battlepass, achievements, and transient queues.
+- Load method:
+  - `ServerStartup.load()` calls `PlayerSave.loadPlayerSaveEntries()` during startup.
+  - `RS2LoginProtocol.login` creates `Player` and calls `loadPlayer`.
+  - `RS2LoginProtocol.loadPlayer` calls `PlayerSave.loadGame`.
+  - `RS2LoginProtocol.loadPlayer` calls collection log loading after character save loading.
+- Save method:
+  - Not applicable during login, except migration hooks may save content-owned files.
+- Login method, if any:
+  - `PlayerHandler.processLoginQueue()` adds player to the handler and calls `player.finishLogin()`.
+  - `Player.finishLogin()` runs manager login hooks, `getAchievements().onLogin()`, `getDailyRewards().onLogin()`, and `PlayerSave.login(this)`.
+- How default values are handled:
+  - `Player` is constructed before loading, so missing keys keep defaults.
+- How old saves are protected:
+  - Login contains compatibility cleanup and one-time fix flags.
+- Safe extension points:
+  - Use `PlayerSaveEntry.login` for new per-player post-load migration or initialization.
+  - Use content manager `onLogin` methods when the manager already owns login behavior.
+- Dangerous areas to avoid:
+  - Do not change login ordering unless needed for a specific bug.
+  - Do not add slow file IO to `Player.finishLogin()` unless the system already loads that way and is bounded.
+
+## 28. Logout And Save Timing
+
+- Main files:
+  - `src/io/xeros/model/entity/player/Player.java`
+  - `src/io/xeros/model/entity/player/PlayerHandler.java`
+  - `src/io/xeros/model/entity/player/PlayerSaveExecutor.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+- Save keys or save entry names:
+  - All legacy keys and save entry keys are written through logout/save timing.
+- Runtime fields:
+  - Active session state is cleaned before or around save depending on the logout path.
+- Load method:
+  - Not applicable.
+- Save method:
+  - `PlayerHandler.process()` queues `new PlayerSaveExecutor(player).request()` when a player is ready to logout.
+  - `PlayerHandler.processLogoutQueue()` waits for `PlayerSaveExecutor.finished()` before removing the player.
+  - `PlayerSave.saveGame(Player p)` queues a save.
+  - `PlayerSave.saveGameInstant(Player p)` writes immediately.
+  - `Player.resetOnDeath()` calls `PlayerSave.saveGame(this)`.
+- Login method, if any:
+  - Not applicable.
+- How default values are handled:
+  - Save skips invalid or unsafe states such as missing login name, bad password format, offline handler mismatch, or `saveCharacter` false.
+- How old saves are protected:
+  - Async executor prevents partial removal before save completion in the normal logout queue.
+- Safe extension points:
+  - Save content-owned JSON in the owning manager logout hook, as Task Master does through `Player.destruct()`.
+  - Use `PlayerSaveEntry` for character-file data that should save with the player.
+- Dangerous areas to avoid:
+  - Do not start independent asynchronous player save writes without understanding `PlayerSaveExecutor`.
+  - Do not mutate player state after queuing a save and expect it to persist.
+
+## 29. Migration And Backward Compatibility Risks
+
+- Main files:
+  - `src/io/xeros/model/entity/player/save/PlayerSave.java`
+  - `src/io/xeros/model/entity/player/save/PlayerSaveEntry.java`
+  - `src/io/xeros/model/entity/player/save/impl/TrouverParchmentPlayerSaveEntry.java`
+  - `src/io/xeros/content/achievement/AchievementHandler.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Save keys or save entry names:
+  - Migration-sensitive keys include all legacy token names, dynamic quest names, dynamic achievement names, `aoe_kc_#`, `character-skill`, `collect-log`, and content JSON field names.
+- Runtime fields:
+  - Migration may affect any progression fields hydrated from old saves.
+- Load method:
+  - Migration usually happens in `PlayerSave.loadGame`, manager `onLogin`, or `PlayerSaveEntry.login`.
+- Save method:
+  - After a migration, new saves are written through normal save methods.
+- Login method, if any:
+  - `Player.finishLogin()` handles several compatibility fixes.
+  - `PlayerSaveEntry.login` is the safest place for isolated save entry migrations.
+- How default values are handled:
+  - Missing values should remain safe defaults.
+  - New fields should be optional and additive.
+- How old saves are protected:
+  - Existing compatibility examples include old Slayer unlock keys, old achievement claimed rows, old page conversion, old removed Slayer task refund, ironman rights normalization, and Trouver parchment migration.
+- Safe extension points:
+  - Add migrations in the smallest owning save entry or manager.
+  - Use one-time flags when a migration must not repeat.
+- Dangerous areas to avoid:
+  - Do not rename save keys, enum names, quest names, achievement names, tier IDs, or JSON field names without explicit migration.
+  - Do not make new fields required for old accounts to log in.
+
+## A. Best Pattern For New Persistent Content
+
+- Create a content-owned manager or enum for runtime behavior.
+- Store one-session state in content-owned fields or attributes.
+- Persist durable player state with a new `PlayerSaveEntry`.
+- Keep save keys short, unique, and content-prefixed.
+- Add an optional `login(Player)` migration only if old accounts need initialization.
+- Use external JSON only when the system already has a per-player JSON save pattern or the data is not part of the character file.
+
+Best examples to copy:
+- `src/io/xeros/content/dailyrewards/DailyRewardsPlayerSaveEntry.java`
+- `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`
+- `src/io/xeros/content/donationrewards/DonationRewardsPlayerSaveEntry.java`
+- `src/io/xeros/model/entity/player/save/impl/AttackStyleSaveEntry.java`
+- `src/io/xeros/content/taskmaster/TaskMaster.java`
+- `src/io/xeros/content/collection_log/CollectionLog.java`
+
+## B. When To Use PlayerSaveEntry
+
+Use `PlayerSaveEntry` when:
+- The state belongs to one player.
+- The state should save in the character file.
+- The state has a small number of scalar keys.
+- The content can tolerate missing keys as defaults.
+- The state needs a small login migration.
+- The alternative would be adding another case to `PlayerSave.java`.
+
+## C. When Not To Use PlayerSaveEntry
+
+Do not use `PlayerSaveEntry` when:
+- The state is global, seasonal, or shared across players.
+- The state is a large collection better suited to JSON, such as collection logs.
+- The state is runtime-only, such as an active instance pointer.
+- The state is item container data already handled by `PlayerSave.java`.
+- The state is an external economy config or reward schedule.
+
+## D. When Legacy PlayerSave.java Must Be Touched
+
+Touch `PlayerSave.java` only when:
+- Modifying an existing legacy save key.
+- Maintaining old save compatibility for an existing legacy section.
+- Fixing a bug in current legacy load/save behavior.
+- Extending a section that is already legacy-only and cannot reasonably move to a save entry.
+
+Avoid touching `PlayerSave.java` when:
+- Adding a new content progression flag.
+- Adding a cooldown for a new system.
+- Adding a player unlock for a new boss.
+- Adding a points tracker for new content.
+- Adding new task, event, or reward progression.
+
+## E. Systems That Already Use Safe Save Entries
+
+- Daily rewards: `src/io/xeros/content/dailyrewards/DailyRewardsPlayerSaveEntry.java`
+- AOE tier progress: `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`
+- Donation rewards: `src/io/xeros/content/donationrewards/DonationRewardsPlayerSaveEntry.java`
+- Questing: `src/io/xeros/content/questing/QuestingPlayerSaveEntry.java`
+- Friends list: `src/io/xeros/content/privatemessaging/FriendsListPlayerSaveEntry.java`
+- Boss timers: `src/io/xeros/content/combat/stats/BossTimersPlayerSaveEntry.java`
+- Attack style: `src/io/xeros/model/entity/player/save/impl/AttackStyleSaveEntry.java`
+- Autocast: `src/io/xeros/model/entity/player/save/impl/AutocastPlayerSaveEntry.java`
+- Ironman revert type: `src/io/xeros/model/entity/player/save/impl/IronmanRevertTypeSaveEntry.java`
+- 200m skill timestamps: `src/io/xeros/model/entity/player/save/impl/Skill200mPlayerSaveEntry.java`
+- Style warning: `src/io/xeros/model/entity/player/save/impl/StyleWarningPlayerSaveEntry.java`
+- Trouver migration: `src/io/xeros/model/entity/player/save/impl/TrouverParchmentPlayerSaveEntry.java`
+- Lost property: `src/io/xeros/content/itemskeptondeath/perdu/LostPropertySave.java`
+- Collection box: `src/io/xeros/content/CollectionBox.java`
+- Wild anti-farm: `src/io/xeros/content/combat/pvp/WildAntiFarm.java`
+
+## F. Systems Still Using Fragile Legacy Save Keys
+
+- Core identity, password, rights, position, HP, prayer, run, skull, and teleblock state.
+- Inventory, equipment, cosmetics, bank, storage containers, death storage, trading post, and degradeables.
+- Skills, XP, skill locks, and prestige levels.
+- Most point and currency fields.
+- Slayer task, unlock, block, extension, streak, and point state.
+- Achievement tier rows and achievement points.
+- Battlepass player tier, XP, membership, and season.
+- Wraith charges.
+- Fire of Exchange points and dissolved item section.
+- Prestige points and prestige perks.
+- Donator totals, donor boss state, donor vault state, donor visibility, and donor points.
+- Diary completion, claimed diary rewards, and partial diary state.
+- Instance unlocks, tier unlocks, and tier kill counts.
+- Most cooldowns, boosts, timers, punishments, and daily-use flags.
+
+## G. Save Migration Checklist For Future Codex PRs
+
+- Search for the exact save key before adding or changing it.
+- Search for the runtime field and every getter/setter that mutates it.
+- Check whether the system already has a `PlayerSaveEntry`.
+- Check whether the system already saves to content JSON.
+- Keep new keys optional and default-safe.
+- Add migrations in `PlayerSaveEntry.login` or the owning manager when possible.
+- Do not remove or rename old keys in the same patch that adds new content.
+- Preserve old misspellings such as `disolve-item` if they are part of the save format.
+- Test with a new account and an existing account save.
+- Confirm logout waits for save completion through the normal save queue.
+
+## H. Local Test Checklist For Save/Load PRs
+
+- Start the server and confirm `PlayerSave.loadPlayerSaveEntries()` registers the new entry.
+- Log in on a new account and confirm defaults are safe.
+- Change the new progression state in game or with a safe local test command.
+- Log out normally and wait for save completion.
+- Log back in and confirm the state persisted.
+- Confirm the character file still ends with `[EOF]`.
+- Confirm an old character file without the new keys can still log in.
+- Confirm the new keys do not collide with existing legacy tokens or save entry keys.
+- Confirm no code writes active instance references, temporary attributes, or object pointers into the save.
+- For economy state, verify the reward source and spend sink before merging.

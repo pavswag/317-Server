@@ -1,0 +1,1178 @@
+# Turmoil Combat And Reward Pipeline Deep Dive
+
+This document maps the live combat-to-reward path for future content work. It is documentation only. The safe pattern is to extend data, enums, manager hooks, and boss-local classes instead of rewriting shared combat, death, drop, save, or process loops.
+
+## Pipeline Summary
+
+- Player attack input reaches `src/io/xeros/content/combat/core/AttackEntity.java`.
+- Player damage is calculated by `src/io/xeros/content/combat/core/HitDispatcher.java` with formula classes under `src/io/xeros/content/combat/formula/rework/`.
+- Player delayed hits are stored in `src/io/xeros/content/combat/EntityDamageQueue.java` and resolved by `src/io/xeros/content/combat/core/HitExecutor.java`.
+- NPC hits are applied through either `src/io/xeros/content/combat/npc/NPCAutoAttack.java` or older logic in `src/io/xeros/model/entity/npc/NPCHandler.java` and `src/io/xeros/model/entity/npc/actions/NPCHitPlayer.java`.
+- NPC death is detected in `src/io/xeros/model/entity/npc/NPCProcess.java`.
+- Standard NPC rewards pass through `src/io/xeros/content/combat/death/NPCDeath.java`.
+- Standard drops pass through `src/io/xeros/model/entity/npc/drops/DropManager.java` and `src/io/xeros/model/entity/npc/drops/TableGroup.java`.
+- Progression hooks are split across `src/io/xeros/content/achievement/`, `src/io/xeros/content/taskmaster/`, `src/io/xeros/content/collection_log/`, `src/io/xeros/content/battlepass/`, `src/io/xeros/content/skills/slayer/`, `src/io/xeros/content/instances/aoe/`, `src/io/xeros/content/activityboss/`, and `src/io/xeros/content/worldevent/`.
+
+## Safety Rules
+
+- Do not rewrite `src/io/xeros/content/combat/core/AttackEntity.java` for one boss.
+- Do not rewrite `src/io/xeros/model/entity/npc/NPCProcess.java`, `src/io/xeros/model/entity/npc/NPCHandler.java`, or `src/io/xeros/content/combat/death/NPCDeath.java` for isolated content unless there is no existing extension point.
+- Prefer `src/io/xeros/content/combat/npc/NPCAutoAttackBuilder.java` and boss-local classes under `src/io/xeros/content/bosses/` for new mechanics.
+- Prefer external drop YAML handled by `src/io/xeros/model/entity/npc/drops/DropManager.java` for ordinary NPC drops. The repo does not contain the runtime drop YAML directory used by `DropManager.read()`.
+- Prefer `src/io/xeros/content/bosspoints/BossPoints.java` config loading for boss points instead of hardcoding point rewards.
+- Prefer existing progression hooks such as `Achievements.increase(...)`, `TaskMaster.trackActivity(...)`, `CollectionLog.handleDrop(...)`, `Pass.addExperience(...)`, `Slayer.killTaskMonster(...)`, and `DemonHunterTaskManager.handleKill(...)`.
+- Use `src/io/xeros/model/entity/player/save/PlayerSaveEntry.java` for new saved combat/progression state.
+
+## 1. Player Attacks NPC
+
+- Main files:
+  - `src/io/xeros/content/combat/core/AttackEntity.java`
+  - `src/io/xeros/content/combat/core/HitDispatcher.java`
+  - `src/io/xeros/content/combat/core/HitDispatcherNpc.java`
+  - `src/io/xeros/content/combat/core/HitExecutor.java`
+  - `src/io/xeros/content/combat/core/HitExecutorNpc.java`
+  - `src/io/xeros/model/entity/npc/NPC.java`
+- Entry point method:
+  - `AttackEntity.attackEntity(Entity targetEntity)`
+- Important methods called in order:
+  - `attackEntityCheck(targetEntity, true)`
+  - `determineCombatStyle()`
+  - `hasDistanceAndPathToAttack(targetEntity, false)`
+  - `AOESystem.getSingleton().getAOEData(...)`
+  - `AoeManager.castAOE(attacker, targetEntity)` when an AOE weapon is equipped
+  - `handleItemChangesOnAttack(targetEntity)`
+  - `Specials.forWeaponId(...)` when `attacker.usingSpecial` is true
+  - `HitDispatcher.getHitEntity(attacker, targetEntity).playerHitEntity(getCombatType(), specialOrNull)`
+  - `EntityDamageQueue.add(Damage)`
+  - `PlayerHandler` later calls `player.getDamageQueue().execute()`
+  - `HitExecutor.getDelayedHit(...).hit()`
+  - `NPC.appendDamage(attacker, amount, hitmark)`
+- Player fields changed:
+  - `weaponUsedOnAttack`
+  - `arrowUsedOnAttack`
+  - `attackTimer`
+  - `hitDelay`
+  - `lastAttackedEntity`
+  - `logoutDelay`
+  - `usingSpecial`
+  - `specAmount`
+  - `usingMagic`
+  - Wraith charge fields through `WraithCharges.consumeCharge(...)`
+- NPC fields changed:
+  - `underAttackBy`
+  - `lastDamageTaken`
+  - `underAttack`
+  - `damageTaken` through `NPC.addDamageTaken(...)`
+  - health/current hit update fields through `NPC.appendDamage(...)`
+- Reward systems called:
+  - No final reward here. This flow only queues and applies damage. Rewards begin when NPC death processing runs.
+- Existing examples to copy:
+  - Boss-specific damage adjustments in `src/io/xeros/content/combat/core/HitDispatcherNpc.java`
+  - NPC-local damage response patterns in `src/io/xeros/content/combat/core/HitExecutorNpc.java`
+  - AOE weapon flow in `src/io/xeros/content/items/aoeweapons/AoeManager.java`
+- Safe extension points:
+  - Add weapon data in `src/io/xeros/content/items/aoeweapons/AoeWeapons.java` if the request is specifically AOE weapon content.
+  - Add boss-local mechanics through `NPCAutoAttackBuilder` or boss classes rather than broad player attack logic.
+  - Add reward/progression in death/drop hooks, not during attack input.
+- Dangerous areas to avoid:
+  - Reordering `AttackEntity.attackEntity(...)`.
+  - Adding ordinary boss rewards before damage resolves.
+  - Adding boss-specific branches to `AttackEntity.java` unless an existing branch already owns that exact boss family.
+
+## 2. NPC Attacks Player
+
+- Main files:
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+  - `src/io/xeros/model/entity/npc/NPC.java`
+  - `src/io/xeros/model/entity/npc/NPCHandler.java`
+  - `src/io/xeros/model/entity/npc/actions/NPCHitPlayer.java`
+  - `src/io/xeros/content/combat/npc/NPCAutoAttack.java`
+- Entry point method:
+  - `NPCProcess.process(int i)` then `NPCProcess.processing()`
+- Important methods called in order:
+  - `npc.getInstance().tick(npc)` when instanced
+  - `NpcAggression.doAggression(npc, npcHandler)`
+  - `npcHandler.followPlayer(npc, playerId)` for legacy following
+  - If `npc.getNpcAutoAttacks().isEmpty()`, `npcHandler.attackPlayer(player, npc)`
+  - Else `npc.selectAutoAttack(player)` then `npc.attack(player, npc.getCurrentAttack())`
+  - Legacy delayed path uses `npc.hitDelayTimer` then `NPCHitPlayer.applyDamage(npc, npcHandler)`
+  - Auto-attack path schedules a cycle event and calls `NPCHitPlayer.applyAutoAttackDamage(npc, player, npcAutoAttack)`
+- Player fields changed:
+  - `underAttackByNpc`
+  - `singleCombatDelay2`
+  - `logoutDelay`
+  - `npcAttackingIndex` when auto-retaliating
+  - `playerLevel[Player.playerPrayer]` for prayer-drain mechanics in older NPC hit logic
+  - damage/health state through `Player.appendDamage(...)`
+- NPC fields changed:
+  - `attackTimer`
+  - `hitDelayTimer`
+  - `oldIndex`
+  - `attackType`
+  - `currentAttack`
+  - `totalAttacks`
+- Reward systems called:
+  - None directly. NPC attacks only affect combat state and player damage.
+- Existing examples to copy:
+  - Modern builder attacks in boss classes using `NPCAutoAttackBuilder`.
+  - Legacy attacks still flow through `NPCHandler.attackPlayer(...)`, but new isolated bosses should prefer auto attacks.
+- Safe extension points:
+  - Add `NPCAutoAttack` definitions to the boss/NPC setup.
+  - Use `setOnAttack`, `setOnHit`, `setModifyDamage`, and `setPrayerProtectionPercentage` in `NPCAutoAttackBuilder`.
+- Dangerous areas to avoid:
+  - Editing `NPCHandler.attackPlayer(...)` for a single boss.
+  - Adding new boss IDs to legacy prayer/damage branches unless the boss already uses legacy attack handling.
+
+## 3. NPC Auto Attack Builder Flow
+
+- Main files:
+  - `src/io/xeros/content/combat/npc/NPCAutoAttack.java`
+  - `src/io/xeros/content/combat/npc/NPCAutoAttackBuilder.java`
+  - `src/io/xeros/model/entity/npc/NPC.java`
+  - `src/io/xeros/model/entity/npc/actions/NPCHitPlayer.java`
+- Entry point method:
+  - `NPC.selectAutoAttack(Entity entity)`
+- Important methods called in order:
+  - `NPC.selectAutoAttack(entity)` filters by `NPCAutoAttack.getSelectAutoAttack()`
+  - `NPC.attack(Player c, NPCAutoAttack npcAutoAttack)`
+  - `NPC.finishAutoAttack(Player c, NPCAutoAttack npcAutoAttack)`
+  - `npcAutoAttack.getOnAttack().accept(...)` if present
+  - Projectile/start graphic logic
+  - Cycle event waits `npcAutoAttack.getHitDelay()`
+  - `NPCHitPlayer.applyAutoAttackDamage(npc, c, npcAutoAttack)`
+  - `npcAutoAttack.getOnHit().accept(...)` if present
+- Player fields changed:
+  - `underAttackByNpc`
+  - `singleCombatDelay2`
+  - damage and prayer fields depending on attack behavior
+- NPC fields changed:
+  - `currentAttack`
+  - `attackTimer`
+  - `oldIndex`
+  - animation and graphics state
+- Reward systems called:
+  - None.
+- Existing examples to copy:
+  - `NPCAutoAttackBuilder.createNPCAutoAttack()`
+  - Builder setters in `src/io/xeros/content/combat/npc/NPCAutoAttackBuilder.java`
+- Safe extension points:
+  - `setAnimation(...)`
+  - `setProjectile(...)`
+  - `setCombatType(...)`
+  - `setHitDelay(...)`
+  - `setAttackDelay(...)`
+  - `setMaxHit(...)`
+  - `setDistanceRequiredForAttack(...)`
+  - `setMultiAttack(...)`
+  - `setSelectPlayersForMultiAttack(...)`
+  - `setSelectAutoAttack(...)`
+  - `setOnAttack(...)`
+  - `setOnHit(...)`
+  - `setModifyDamage(...)`
+  - `setPrayerProtectionPercentage(...)`
+- Dangerous areas to avoid:
+  - Mutating shared `NPCAutoAttack` behavior for one boss.
+  - Creating multi attacks without `setSelectPlayersForMultiAttack(...)`; `NPC.attack(...)` requires it.
+
+## 4. Damage Calculation Flow
+
+- Main files:
+  - `src/io/xeros/content/combat/core/HitDispatcher.java`
+  - `src/io/xeros/content/combat/core/HitDispatcherNpc.java`
+  - `src/io/xeros/content/combat/core/HitDispatcherPlayer.java`
+  - `src/io/xeros/content/combat/formula/rework/CombatFormula.java`
+  - `src/io/xeros/content/combat/formula/rework/MeleeCombatFormula.java`
+  - `src/io/xeros/content/combat/formula/rework/RangeCombatFormula.java`
+  - `src/io/xeros/content/combat/formula/rework/MagicCombatFormula.java`
+  - `src/io/xeros/model/entity/npc/actions/NPCHitPlayer.java`
+- Entry point method:
+  - Player hits: `HitDispatcher.playerHitEntity(CombatType combatType, Special special)`
+  - NPC auto hits: `NPCHitPlayer.applyAutoAttackDamage(NPC npc, Player c, NPCAutoAttack npcAutoAttack)`
+- Important methods called in order:
+  - Player melee uses `MeleeCombatFormula.get().getAccuracy(...)` and `MeleeCombatFormula.get().getMaxHit(...)`
+  - Player range uses `RangeCombatFormula.STANDARD.getAccuracy(...)` and `RangeCombatFormula.STANDARD.getMaxHit(...)`
+  - Player magic uses `MagicCombatFormula.STANDARD.getAccuracy(...)` and `MagicCombatFormula.STANDARD.getMaxHit(...)`
+  - `beforeDamageCalculated(combatType)`
+  - random damage roll and accuracy roll
+  - `afterDamageCalculated(combatType, successfulHit)`
+  - `Damage` object construction
+  - `EntityDamageQueue.add(...)`
+  - NPC auto damage also uses the same rework formula classes and then directly calls `Player.appendDamage(...)`
+- Player fields changed:
+  - XP through `HitDispatcher.addCombatXP(...)`
+  - healing/prayer side effects from gear, pets, and combat items
+  - `rubyBoltSpecial`, `ignoreDefence`, `multiAttacking`, `usingMagic` reset flags
+- NPC fields changed:
+  - `damageTaken` and health are changed later when the queued hit resolves.
+- Reward systems called:
+  - None directly except combat XP.
+- Existing examples to copy:
+  - Style-specific formula calls in `HitDispatcher.java`
+  - Boss immunity and damage gates in `HitDispatcherNpc.java`
+  - Auto-attack modifier hooks in `NPCHitPlayer.applyAutoAttackDamage(...)`
+- Safe extension points:
+  - For one boss, use `HitDispatcherNpc.afterDamageCalculated(...)` only if the boss already belongs to a similar hardcoded immunity family.
+  - Prefer `NPCAutoAttackBuilder.setModifyDamage(...)` for NPC attack damage changes.
+- Dangerous areas to avoid:
+  - Rewriting formula classes for content balancing.
+  - Adding global gear multipliers for a single item without checking existing item, perk, pet, and prestige multipliers.
+
+## 5. Hit Queue / Delayed Damage Flow
+
+- Main files:
+  - `src/io/xeros/content/combat/Damage.java`
+  - `src/io/xeros/content/combat/EntityDamageQueue.java`
+  - `src/io/xeros/content/combat/core/HitDispatcher.java`
+  - `src/io/xeros/content/combat/core/HitExecutor.java`
+  - `src/io/xeros/model/entity/player/PlayerHandler.java`
+  - `src/io/xeros/model/entity/player/Player.java`
+- Entry point method:
+  - `EntityDamageQueue.add(Damage damage)`
+- Important methods called in order:
+  - `HitDispatcher.playerHitEntity(...)` creates `Damage`
+  - `attacker.getDamageQueue().add(hit)`
+  - `PlayerHandler` calls `player.getDamageQueue().execute()`
+  - `EntityDamageQueue.execute()` decrements ticks with `Damage.removeTick()`
+  - When ticks reaches 1, `HitExecutor.getDelayedHit(player, damage.getTarget(), damage).hit()`
+  - `HitExecutor.hit()` calls `onHit()`
+  - `defender.appendDamage(...)`
+- Player fields changed:
+  - `EntityDamageQueue` contents
+  - `lastAttackedEntity`
+  - `lastDefend`, `lastDefendTime`, and `lastHitType` when the defender is a player
+  - combat reset flags after hit resolution
+- NPC fields changed:
+  - `damageTaken`
+  - health and hit update flags
+  - `underAttack` state through auto-retaliation
+- Reward systems called:
+  - None directly.
+- Existing examples to copy:
+  - Queued multi-hit construction in `HitDispatcher.java`
+  - Delayed spell/range effects in `HitExecutor.java`
+- Safe extension points:
+  - Add special attack behavior inside a `Special` implementation rather than editing queue mechanics.
+- Dangerous areas to avoid:
+  - Changing tick semantics in `EntityDamageQueue.execute()`.
+  - Applying final rewards inside hit resolution.
+
+## 6. Prayer / Protection Handling
+
+- Main files:
+  - `src/io/xeros/model/entity/npc/actions/NPCHitPlayer.java`
+  - `src/io/xeros/content/combat/npc/NPCAutoAttack.java`
+  - `src/io/xeros/content/combat/npc/NPCAutoAttackBuilder.java`
+  - `src/io/xeros/content/combat/core/HitDispatcherPlayer.java`
+  - `src/io/xeros/content/combat/formula/rework/MeleeCombatFormula.java`
+  - `src/io/xeros/content/combat/formula/rework/RangeCombatFormula.java`
+  - `src/io/xeros/content/combat/formula/rework/MagicCombatFormula.java`
+- Entry point method:
+  - `NPCHitPlayer.applyAutoAttackDamage(NPC npc, Player c, NPCAutoAttack npcAutoAttack)`
+- Important methods called in order:
+  - Auto attacks check `c.protectingMelee()`, `c.protectingMagic()`, or `c.protectingRange()`
+  - `npcAutoAttack.getPrayerProtectionPercentage()` controls protected damage percentage
+  - Legacy NPC attacks check `context.prayerProtectionIgnored(npc)` and prayer methods inside `NPCHitPlayer.applyDamage(...)`
+  - Player formula classes use `CombatPrayer.isPrayerOn(...)` for offensive and defensive multipliers
+  - `HitDispatcherPlayer.mageEffect(...)` checks `CombatPrayer.PROTECT_FROM_MAGIC` for teleblock duration
+- Player fields changed:
+  - `prayerActive`
+  - `playerLevel[Player.playerPrayer]`
+  - damage taken through protection-modified hits
+- NPC fields changed:
+  - None specific to prayer beyond attack resolution.
+- Reward systems called:
+  - None.
+- Existing examples to copy:
+  - `NPCAutoAttackBuilder.setPrayerProtectionPercentage(...)`
+  - Protection checks in `NPCHitPlayer.applyAutoAttackDamage(...)`
+- Safe extension points:
+  - Use builder-level prayer percentages for new NPC auto attacks.
+  - Use boss-local `onHit` effects for prayer drains.
+- Dangerous areas to avoid:
+  - Adding one-off prayer branches to legacy `NPCHitPlayer.applyDamage(...)` for a new auto-attack boss.
+
+## 7. Gear Bonus Handling
+
+- Main files:
+  - `src/io/xeros/content/combat/core/HitDispatcher.java`
+  - `src/io/xeros/content/combat/core/HitDispatcherNpc.java`
+  - `src/io/xeros/content/combat/formula/rework/MeleeCombatFormula.java`
+  - `src/io/xeros/content/combat/formula/rework/RangeCombatFormula.java`
+  - `src/io/xeros/content/combat/formula/rework/MagicCombatFormula.java`
+  - `src/io/xeros/model/entity/npc/actions/NPCHitPlayer.java`
+  - `src/io/xeros/model/entity/npc/drops/DropManager.java`
+- Entry point method:
+  - Damage: `HitDispatcher.playerHitEntity(...)`
+  - Drop-rate: `DropManager.getDropRateModifier(Player player)`
+- Important methods called in order:
+  - Combat formulas read entity bonuses through `getBonus(...)`
+  - `HitDispatcher` applies item, pet, perk, relic, bolt, scythe, and combat-item effects
+  - `NPCHitPlayer.applyAutoAttackDamage(...)` applies player defensive gear reductions and `elyProc()`
+  - `DropManager.getDropRateModifier(...)` applies perks, equipment, inventory items, pets, vote boost, Fortune thresholds, and donation rights
+- Player fields changed:
+  - combat flags such as `rubyBoltSpecial`, `bonusDmg`, `ignoreDefence`
+  - gear charges/degrade through `handleItemChangesOnAttack(...)`
+  - drop-rate is not saved directly; it is recalculated from state.
+- NPC fields changed:
+  - damage/health after modifiers.
+- Reward systems called:
+  - `DropManager.getDropRateModifier(...)` affects drop chance.
+- Existing examples to copy:
+  - Item-specific combat effects in `HitDispatcher.java`
+  - Drop-rate modifier pattern in `DropManager.getDropRateModifier(...)`
+- Safe extension points:
+  - For reward modifiers, copy existing modifier patterns and keep caps in mind.
+  - For damage modifiers, prefer item-specific content classes where possible.
+- Dangerous areas to avoid:
+  - Stacking unbounded damage or drop-rate multipliers.
+  - Adding hidden economy power to common items.
+
+## 8. Special Attacks
+
+- Main files:
+  - `src/io/xeros/content/combat/core/AttackEntity.java`
+  - `src/io/xeros/content/combat/core/HitDispatcher.java`
+  - `src/io/xeros/content/combat/core/HitExecutor.java`
+  - `src/io/xeros/content/combat/specials/Special.java`
+  - `src/io/xeros/content/combat/specials/Specials.java`
+  - `src/io/xeros/content/combat/specials/impl/`
+- Entry point method:
+  - `AttackEntity.attackEntity(Entity targetEntity)`
+- Important methods called in order:
+  - `Specials.forWeaponId(attacker.playerEquipment[Player.playerWeapon])`
+  - `special.getRequiredCost()`
+  - `attacker.specAmount -= special.getRequiredCost()`
+  - `HitDispatcher.getHitEntity(...).playerHitEntity(getCombatType(), special)`
+  - `special.activate(attacker, defender, hit1)`
+  - `HitExecutor.hit()`
+  - `damage.getSpecial().hit(attacker, defender, damage)`
+- Player fields changed:
+  - `usingSpecial`
+  - `specAmount`
+  - special bar interface state
+  - special-specific flags such as `dbowSpec`
+- NPC fields changed:
+  - damage/health and any special effect state.
+- Reward systems called:
+  - None directly.
+- Existing examples to copy:
+  - Implementations in `src/io/xeros/content/combat/specials/impl/`
+  - Registration in `src/io/xeros/content/combat/specials/Specials.java`
+- Safe extension points:
+  - Add a new `Special` implementation and register it through the existing special system.
+- Dangerous areas to avoid:
+  - Adding special attack behavior directly to `AttackEntity.attackEntity(...)`.
+
+## 9. AOE Weapon Damage
+
+- Main files:
+  - `src/io/xeros/content/items/aoeweapons/AOESystem.java`
+  - `src/io/xeros/content/items/aoeweapons/AoeWeapons.java`
+  - `src/io/xeros/content/items/aoeweapons/AoeManager.java`
+  - `src/io/xeros/content/combat/core/AttackEntity.java`
+  - `src/io/xeros/content/combat/core/HitDispatcher.java`
+  - `src/io/xeros/content/instances/aoe/`
+- Entry point method:
+  - `AttackEntity.attackEntity(Entity targetEntity)`
+- Important methods called in order:
+  - `AOESystem.getSingleton().getAOEData(weaponId)`
+  - `AoeManager.castAOE(attacker, targetEntity)`
+  - `AoeManager.castAOE(...)` scans `NPCHandler.npcs`
+  - For valid nearby NPCs, `next.appendDamage(player, calc, hitmark)`
+  - `next.attackEntity(player)`
+  - `player.attackTimer = delay`
+  - Standard `HitDispatcher` may still process the target attack path after the AOE cast
+- Player fields changed:
+  - `attackTimer`
+  - Wraith weapon charges if the AOE weapon is a Wraith weapon
+  - boss instance performance damage through `NPC.appendDamage(...)`
+- NPC fields changed:
+  - multiple NPC health values
+  - `damageTaken`
+  - `underAttack`/target state through `attackEntity(player)`
+- Reward systems called:
+  - Later through ordinary NPC death: `NPCDeath.dropItemsFor(...)`
+  - AOE drop interception through `AoeDropInterceptor.awardInsideAoe(...)`
+  - AOE tier kill progress through `AoeTierEvents.onNpcDeath(...)`
+- Existing examples to copy:
+  - Enum entries in `AoeWeapons.java`
+  - `AoeManager.canAOE(...)`
+  - `AoeManager.castAOE(...)`
+- Safe extension points:
+  - Add or tune AOE weapon definitions in `AoeWeapons.java` only when the task explicitly requires weapon content.
+  - Add AOE rewards through `data/aoe/aoe_tier_rewards.json` where supported.
+- Dangerous areas to avoid:
+  - Broadly relaxing zone checks in `AoeManager`.
+  - Adding item rewards directly in `AoeManager.castAOE(...)`.
+
+## 10. Wraith Charge Consumption
+
+- Main files:
+  - `src/io/xeros/content/wraith/WraithCharges.java`
+  - `src/io/xeros/content/combat/core/AttackEntity.java`
+  - `src/io/xeros/content/items/aoeweapons/AoeWeapons.java`
+- Entry point method:
+  - Charge gating: `AttackEntity.determineWeaponStyle()`
+  - Charge consumption: `AttackEntity.handleItemChangesOnAttack(Entity targetEntity)`
+- Important methods called in order:
+  - `WraithCharges.isWraithWeapon(weaponId)`
+  - `attacker.getWraithScytheCharge()`, `getWraithStaffCharge()`, or `getWraithBowCharge()`
+  - If zero, `attacker.attacking.reset()` and attack is stopped
+  - On attack, `WraithCharges.consumeCharge(attacker, weaponId)`
+  - Recharge path uses `WraithCharges.addChargesFromEssence(player, weaponId, essenceAmount)`
+- Player fields changed:
+  - `wraithScytheCharge`
+  - `wraithStaffCharge`
+  - `wraithBowCharge`
+  - inventory Wraith Essence through recharge behavior
+- NPC fields changed:
+  - None from charge consumption itself.
+- Reward systems called:
+  - None directly.
+- Existing examples to copy:
+  - `WraithCharges.addChargesFromEssence(...)`
+  - Wraith AOE enum entries in `AoeWeapons.java`
+- Safe extension points:
+  - Add Wraith milestone rewards through progression systems, not by changing charge consumption.
+  - Use existing Wraith charge getters/setters and `PlayerSaveEntry` patterns for new saved Wraith state.
+- Dangerous areas to avoid:
+  - Changing charge caps or charge-per-essence rates casually.
+  - Bypassing zero-charge checks in `AttackEntity.determineWeaponStyle()`.
+
+## 11. NPC Death Detection
+
+- Main files:
+  - `src/io/xeros/model/entity/npc/NPC.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+  - `src/io/xeros/model/entity/Entity.java`
+- Entry point method:
+  - `NPCProcess.processDeath()`
+- Important methods called in order:
+  - `NPC.appendDamage(...)` sets NPC dead when health reaches zero
+  - `NPCProcess.processing()` calls `processDeath()` when `npc.isDead()`
+  - First phase: remove clipping, set death animation, call `npc.calculateKiller()`
+  - `npc.killedBy = killer.getIndex()` if a killer exists
+  - `npc.applyDead = true`
+  - Second phase after death timer: `AoeNpcSpawner.onNpcDeath(npc)`
+  - Boss-specific reward branches or `NPCDeath.dropItems(npc)`
+  - `npc.onDeath()`
+  - post-reward progression and cleanup
+- Player fields changed:
+  - None directly until reward/progression hooks run.
+- NPC fields changed:
+  - `isDead`
+  - `applyDead`
+  - `needRespawn`
+  - `actionTimer`
+  - `killedBy`
+  - `freezeTimer`
+  - health reset during respawn cleanup
+- Reward systems called:
+  - `NPCDeath.dropItems(npc)` for standard deaths.
+  - Boss-local handlers for special bosses before the standard branch.
+- Existing examples to copy:
+  - Standard path through `NPCDeath.dropItems(...)`
+  - Boss-local death handlers already called from `NPCProcess.processDeath()`
+- Safe extension points:
+  - Use standard `NPCDeath.dropItemsFor(...)` unless the boss needs participant rewards or phase-specific cleanup.
+  - Add boss-local cleanup in the boss class when an existing branch already does that for the same content family.
+- Dangerous areas to avoid:
+  - Changing death phase timing.
+  - Adding ordinary drops directly to `NPCProcess.processDeath()`.
+
+## 12. Killer Attribution
+
+- Main files:
+  - `src/io/xeros/model/entity/Entity.java`
+  - `src/io/xeros/content/combat/core/HitExecutorNpc.java`
+  - `src/io/xeros/model/entity/npc/NPC.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+- Entry point method:
+  - `Entity.calculateKiller()`
+- Important methods called in order:
+  - Damage is recorded through `Entity.addDamageTaken(Entity entity, int damage)`
+  - `NPCProcess.processDeath()` calls `npc.calculateKiller()`
+  - `Entity.calculateKiller()` sums recent `Damage` objects from `damageTaken`
+  - NPCs use a five-minute valid damage window
+  - Players use a 90-second valid damage window
+  - Ironman NPC kill attribution can require at least 75 percent damage outside excluded boss areas
+  - `npc.killedBy` stores the killer index
+- Player fields changed:
+  - No player fields directly.
+- NPC fields changed:
+  - `damageTaken`
+  - `killedBy`
+- Reward systems called:
+  - Death reward systems use `npc.killedBy` to find the player.
+- Existing examples to copy:
+  - Damage contribution maps in `GlobalBossContributionTracker.getContributors(...)`
+  - Boss-specific damage maps in `HitExecutorNpc.onHit()`
+- Safe extension points:
+  - For contribution bosses, read `npc.getDamageTaken()` like `GlobalBossContributionTracker`.
+  - For single-killer bosses, let `calculateKiller()` decide.
+- Dangerous areas to avoid:
+  - Replacing `calculateKiller()` for one boss.
+  - Rewarding players who are not in the NPC damage map unless the content is explicitly participation-based.
+
+## 13. DropManager Reward Creation
+
+- Main files:
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/model/entity/npc/drops/DropManager.java`
+  - `src/io/xeros/model/entity/npc/drops/TableGroup.java`
+  - `src/io/xeros/model/entity/npc/drops/Table.java`
+  - `src/io/xeros/model/entity/npc/drops/Drop.java`
+  - `src/io/xeros/model/entity/npc/drops/TablePolicy.java`
+- Entry point method:
+  - `DropManager.create(Player player, NPC npc, Location3D location, int repeats, int npcId)`
+- Important methods called in order:
+  - `NPCDeath.dropItemsFor(...)`
+  - `Server.getDropManager().create(player, npc, location, amountOfDrops, npcId)`
+  - `DropManager.create(...)` finds a `TableGroup`
+  - `DropManager.getDropRateModifier(player)`
+  - `TableGroup.access(player, npc, modifier, repeats, npcId)`
+  - `DropManager.onDrop(player, item, npcId)`
+  - `Server.itemHandler.createGroundItem(...)`
+  - `DropManager.handle(player, npc, location, repeats, npcId)` for side drops
+- Player fields changed:
+  - Inventory/bank if `onDrop(...)` converts or intercepts rewards
+  - collection log when rare drops are registered
+  - drop-related counters through rare announcements
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - `AoeDropInterceptor.awardInsideAoe(...)`
+  - `CollectionLog.handleDrop(...)`
+  - `NPCDeath.announce(...)`
+  - side-drop systems in `DropManager.handle(...)`
+- Existing examples to copy:
+  - Table policy processing in `TableGroup.access(...)`
+  - Side-drop patterns in `DropManager.handle(...)`
+- Safe extension points:
+  - Add ordinary NPC drops through the external runtime drop YAML read by `DropManager.read()`.
+  - Add rare collection-log support by using existing rare drop table behavior.
+- Dangerous areas to avoid:
+  - Hardcoding ordinary drops in `NPCDeath.dropItemsFor(...)`.
+  - Creating ground items before `DropManager.onDrop(...)` runs.
+- Not found in repo:
+  - Runtime drop YAML data is external/not repo-local. Searched terms: `data drops`, `drops yaml`, `cfg/drops`, `npc_id`.
+
+## 14. Rare Drop Announcements
+
+- Main files:
+  - `src/io/xeros/model/entity/npc/drops/TableGroup.java`
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/model/items/GameItem.java`
+- Entry point method:
+  - `TableGroup.access(Player player, NPC npc, double modifier, int amountOfRolls, int npcId)`
+- Important methods called in order:
+  - `TableGroup.access(...)` rolls table policy
+  - Rare policies set `rareTableBroadcast`
+  - `player.getCollectionLog().handleDrop(player, npcId, item.getId(), item.getAmount())`
+  - `NPCDeath.announce(player, item, npcId)`
+  - `NPCDeath.announceKc(player, item, npcName, kc)` if player announcements are enabled
+  - `PlayerHandler.executeGlobalMessage(...)` for `RARE` or `VERY_RARE` item rarity
+- Player fields changed:
+  - `kcCounter`
+  - collection log state
+  - achievement progress for `AchievementType.UNIQUE_DROPS`
+  - battlepass XP every 200 unique-drop announcement increments
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - `Achievements.increase(player, AchievementType.UNIQUE_DROPS, 1)`
+  - `Pass.addExperience(player, 5)` when `player.kcCounter >= 200`
+  - `CollectionLog.handleDrop(...)`
+- Existing examples to copy:
+  - Rare policy handling in `TableGroup.access(...)`
+  - Announcement filtering in `NPCDeath.announce(...)`
+- Safe extension points:
+  - Use rare table policies and `GameItem` rarity data.
+  - Let collection log and announcements happen through the existing rare-table path.
+- Dangerous areas to avoid:
+  - Manually broadcasting common items.
+  - Incrementing unique-drop achievements outside the rare drop path.
+
+## 15. Collection Log Update
+
+- Main files:
+  - `src/io/xeros/content/collection_log/CollectionLog.java`
+  - `src/io/xeros/content/collection_log/CollectionRewards.java`
+  - `src/io/xeros/model/entity/npc/drops/TableGroup.java`
+  - `src/io/xeros/model/entity/npc/pets/PetHandler.java`
+- Entry point method:
+  - `CollectionLog.handleDrop(Player player, int npcId, int itemId, int amount)`
+- Important methods called in order:
+  - Rare NPC drops: `TableGroup.access(...)` calls `handleDrop(...)`
+  - AOE weapon drops: `TableGroup.access(...)` calls `handleDrop(player, 10, ...)` for specific AOE item IDs
+  - Pet drops: `PetHandler.roll(...)` calls `handleDrop(player, 5, p.itemId, 1)`
+  - `CollectionLog.handleDrop(...)` normalizes categories and NPC IDs
+  - New unique unlocks call `Achievements.increase(player, AchievementType.COLLECTOR, 1)`
+  - `saveToJSON()`
+- Player fields changed:
+  - collection log map
+  - per-player collection log JSON on save
+  - achievement progress for collector uniques
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - `Achievements.increase(player, AchievementType.COLLECTOR, 1)`
+  - `CollectionRewards` when rewards are claimed through collection-log UI flows
+- Existing examples to copy:
+  - Rare drop handling in `TableGroup.access(...)`
+  - Pet category handling in `PetHandler.roll(...)`
+  - Special category IDs in `CollectionLog.handleDrop(...)`
+- Safe extension points:
+  - Add drops through rare tables and collection config where possible.
+  - Use existing category IDs only after checking `docs/TURMOIL_IDS_AND_REGISTRATION_MAP.md`.
+- Dangerous areas to avoid:
+  - Directly editing collection save JSON structure.
+  - Calling `handleDrop(...)` for every common resource drop.
+
+## 16. Boss Point Reward
+
+- Main files:
+  - `src/io/xeros/content/bosspoints/BossPoints.java`
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/model/entity/npc/NPC.java`
+- Entry point method:
+  - `BossPoints.getPointsOnDeath(NPC npc)`
+- Important methods called in order:
+  - `NPCDeath.dropItemsFor(...)`
+  - `BossPoints.getPointsOnDeath(npc)`
+  - `BossPoints.addPoints(player, bossPoints, false)`
+  - `player.getNpcDeathTracker().add(..., bossPoints)`
+  - `player.getQuestTab().updateInformationTab()`
+- Player fields changed:
+  - `bossPoints`
+  - Demon Hunter skill XP through `player.getPA().addSkillXPMultiplied(..., Skill.DEMON_HUNTER.getId(), true)`
+  - leaderboard boss point count
+  - NPC death tracker state
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - Boss points
+  - Demon Hunter XP side reward
+  - event calendar boss-point progress
+  - leaderboard count
+- Existing examples to copy:
+  - `BossPoints.addPoints(...)`
+  - `BossPoints.addManualPoints(...)` for manually named systems
+- Safe extension points:
+  - Add boss point values through the runtime boss points config loaded by `BossPoints.init()`.
+- Dangerous areas to avoid:
+  - Hardcoding point values in `NPCDeath.dropItemsFor(...)`.
+  - Awarding boss points before the standard death path knows the killer.
+
+## 17. Slayer Task Progress
+
+- Main files:
+  - `src/io/xeros/content/skills/slayer/Slayer.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+  - `src/io/xeros/model/entity/npc/drops/DropManager.java`
+- Entry point method:
+  - `Slayer.killTaskMonster(NPC npc)`
+- Important methods called in order:
+  - `NPCProcess.processDeath()`
+  - Slayer party partner path calls `p.getSlayer().killTaskMonster(npc)`
+  - Main killer path calls `target.getSlayer().killTaskMonster(npc)`
+  - `Slayer.killTaskMonster(...)` validates task and NPC name/id
+  - `reduceTaskAmount(player)`
+  - Slayer XP through `player.getPA().addSkillXPMultiplied(..., Skill.SLAYER.getId(), true)`
+  - On task completion, points/streak rewards update
+  - `displayInterface()`
+- Player fields changed:
+  - Slayer `taskAmount`
+  - Slayer `points`
+  - Slayer `consecutiveTasks`
+  - `task`
+  - `lastTask`
+  - `TaskExtended`
+  - Slayer bracelet charge fields where relevant
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - Slayer XP
+  - Slayer points
+  - event calendar hard slayer assignment progress
+  - Larran key and other Slayer-related drop hooks
+  - `Pass` is imported in `Slayer.java`, but the inspected kill completion path uses XP/points/event progress rather than a general `Pass.addExperience(...)` call.
+- Existing examples to copy:
+  - `Slayer.killTaskMonster(...)`
+  - Task definitions in Slayer task enums/classes documented elsewhere in `docs/`
+- Safe extension points:
+  - Add new Slayer task definitions through existing Slayer task structures.
+  - Let `NPCProcess` call the existing kill hook.
+- Dangerous areas to avoid:
+  - Adding separate Slayer decrement calls inside boss death handlers.
+  - Editing Slayer save fields directly.
+
+## 18. Demon Hunter Progress
+
+- Main files:
+  - `src/io/xeros/content/skills/slayer/DemonHunterTaskManager.java`
+  - `src/io/xeros/content/skills/slayer/DemonSlayerMaster.java`
+  - `src/io/xeros/content/skills/slayer/DemonHunterPerks.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+- Entry point method:
+  - `DemonHunterTaskManager.handleKill(Player player, NPC npc)`
+- Important methods called in order:
+  - `NPCProcess.processDeath()`
+  - Partner and killer paths call `DemonHunterTaskManager.handleKill(...)`
+  - NPC name maps through `DemonSlayerMaster.BossTier.forName(name)`
+  - If the player has a matching task, progress is reduced by 1 or 2 with `DemonHunterPerks.Perk.FAST_TRACK`
+  - XP from `DemonHunterXPTable.getXPFor(...)`
+  - Contract match can double XP, complete contract, and add Demon Marks
+  - `player.addDemonHunterXP(xp)`
+  - `player.getPA().addSkillXPMultiplied(..., Skill.SLAYER.getId(), true)`
+  - `DemonSlayerLeaderboardManager.addXp(...)`
+  - `player.addDemonMarks(...)`
+  - On completion: streak, milestones, mark reward handler, leaderboard completion, task reset
+  - Off-task: `DemonHunterXPTable.getOffTaskXP(...)` and XP award
+- Player fields changed:
+  - Demon Hunter task
+  - Demon Hunter task progress
+  - Demon contract completion
+  - Demon Marks
+  - Demon Hunter XP
+  - Demon task streak
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - Demon Hunter XP
+  - Slayer XP
+  - Demon Marks
+  - Demon Slayer milestones
+  - Demon Slayer leaderboard
+- Existing examples to copy:
+  - `DemonHunterTaskManager.handleKill(...)`
+  - Boss tier mapping in `DemonSlayerMaster.BossTier`
+- Safe extension points:
+  - Add Demon Hunter boss names through the existing boss tier system if the boss should be a Demon Hunter target.
+- Dangerous areas to avoid:
+  - Awarding Demon Marks from random boss death code without checking task/contract balance.
+
+## 19. Achievement Progress
+
+- Main files:
+  - `src/io/xeros/content/achievement/Achievements.java`
+  - `src/io/xeros/content/achievement/AchievementHandler.java`
+  - `src/io/xeros/content/achievement/AchievementType.java`
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+- Entry point method:
+  - Generic kill hook: `AchievementHandler.kill(NPC npc)`
+  - Direct increments: `Achievements.increase(Player player, AchievementType type, int amount)`
+- Important methods called in order:
+  - `NPCDeath.dropItemsFor(...)` calls `player.getAchievements().kill(npc)`
+  - `AchievementHandler.kill(npc)` normalizes NPC name
+  - `Achievements.increase(player, AchievementType.SLAY_ANY_NPCS, 1)`
+  - Dragon and NPC-name-specific achievement checks
+  - `NPCDeath.dropItemsFor(...)` also calls many direct `Achievements.increase(...)` hooks for boss IDs
+  - Rare drops call `Achievements.increase(player, AchievementType.UNIQUE_DROPS, 1)`
+  - Collection log uniques call `Achievements.increase(player, AchievementType.COLLECTOR, 1)`
+  - `AchievementHandler.clickButton(...)` claims achievement rewards and can call `Pass.addExperience(...)`
+- Player fields changed:
+  - achievement remaining/completed state
+  - achievement points on completion
+  - achievement reward claim state
+  - battlepass XP on claim
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - Achievement rewards
+  - Battlepass XP on achievement reward claim
+- Existing examples to copy:
+  - `AchievementHandler.kill(...)`
+  - Direct boss kill achievement increments in `NPCDeath.dropItemsFor(...)`
+- Safe extension points:
+  - Add new achievement definitions and call `Achievements.increase(...)` from existing kill/reward hooks.
+- Dangerous areas to avoid:
+  - Incrementing achievements from every hit.
+  - Adding broad achievement logic to `HitExecutorNpc`.
+
+## 20. Task Master Progress
+
+- Main files:
+  - `src/io/xeros/content/taskmaster/TaskMaster.java`
+  - `src/io/xeros/content/taskmaster/Tasks.java`
+  - `src/io/xeros/content/taskmaster/TaskMasterKills.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+- Entry point method:
+  - `TaskMaster.trackActivity(Player player, TaskMasterKills taskMasterKills)`
+- Important methods called in order:
+  - `NPCProcess.processDeath()`
+  - Loop `target.getTaskMaster().taskMasterKillsList`
+  - Loop `Tasks.values()`
+  - Match `killz.getDesc()` against task descriptions and NPC names
+  - `killz.incrementAmountKilled(1)`
+  - `target.getTaskMaster().trackActivity(target, killz)`
+  - `TaskMaster.trackActivity(...)` calls `finishTask(...)` when complete
+  - `TaskMaster.finishTask(...)` gives item rewards and Fortune XP for daily combat tasks
+- Player fields changed:
+  - Task Master kill list progress
+  - Task claimed/completed state
+  - inventory/bank from rewards
+  - Fortune XP for supported daily combat rewards
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - Task Master rewards
+  - Fortune XP for the daily combat task path
+- Existing examples to copy:
+  - Kill matching in `NPCProcess.processDeath()`
+  - Reward completion in `TaskMaster.finishTask(...)`
+- Safe extension points:
+  - Add task definitions to `Tasks.java` using descriptions that the death hook can match.
+- Dangerous areas to avoid:
+  - Adding per-task logic to `NPCProcess` unless matching cannot be expressed through `Tasks`.
+  - Duplicating `trackActivity(...)` calls in boss-specific handlers.
+
+## 21. Battlepass Progress
+
+- Main files:
+  - `src/io/xeros/content/battlepass/Pass.java`
+  - `src/io/xeros/content/battlepass/Rewards.java`
+  - `src/io/xeros/content/battlepass/RewardList.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/content/achievement/AchievementHandler.java`
+- Entry point method:
+  - `Pass.addExperience(Player c, int exp)`
+- Important methods called in order:
+  - High-level NPC death chance in `NPCProcess.processDeath()` calls `Pass.addExperience(target, 3)`
+  - Rare drop milestone in `NPCDeath.announce(...)` calls `Pass.addExperience(player, 5)`
+  - Achievement reward claims in `AchievementHandler.clickButton(...)` call `Pass.addExperience(...)`
+  - Activity bosses such as `Groot.handleDeath(...)` can call `Pass.addExperience(player, 5)`
+  - `Pass.addExperience(...)` checks disallowed areas/instances and season state
+  - XP increments `c.xp`
+  - Tier threshold triggers `levelUp(c)`
+  - `grantRewards(player)` gives tier rewards
+- Player fields changed:
+  - `xp`
+  - `tier`
+  - battlepass reward state
+  - inventory/bank from rewards
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - Battlepass tier rewards through `Rewards` and `RewardList`
+- Existing examples to copy:
+  - Controlled XP grants from `NPCProcess`, `NPCDeath.announce`, and `AchievementHandler.clickButton`
+- Safe extension points:
+  - Award small battlepass XP from completion events, not every hit or common drop.
+- Dangerous areas to avoid:
+  - Calling `Pass.addExperience(...)` in high-frequency combat methods.
+  - Bypassing `Pass.addExperience(...)` area restrictions.
+
+## 22. Pet Rolls
+
+- Main files:
+  - `src/io/xeros/model/entity/npc/pets/PetHandler.java`
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/content/activityboss/Groot.java`
+- Entry point method:
+  - `PetHandler.rollOnNpcDeath(Player player, NPC npc)`
+- Important methods called in order:
+  - Standard path: `NPCDeath.dropItemsFor(...)`
+  - `PetHandler.rollOnNpcDeath(player, npc)`
+  - `PetHandler.getPet(...)`/enum parent name match through stream filter
+  - `PetHandler.roll(player, pet)`
+  - Ownership and drop-rate checks
+  - If successful, `player.getItems().addItemUnderAnyCircumstance(p.itemId, 1)`
+  - `player.getCollectionLog().handleDrop(player, 5, p.itemId, 1)`
+  - `PlayerHandler.executeGlobalMessage(...)`
+  - Some contribution bosses call `PetHandler.rollOnNpcDeath(...)` for participants, such as `Groot.handleDeath(...)`
+- Player fields changed:
+  - inventory item for pet
+  - collection log pet category
+  - pet state only when pet is spawned, not on roll
+- NPC fields changed:
+  - None.
+- Reward systems called:
+  - Collection log
+  - Global announcement
+- Existing examples to copy:
+  - `PetHandler.Pets` enum entries
+  - `PetHandler.rollOnNpcDeath(...)`
+- Safe extension points:
+  - Add pet definitions to the existing enum when an NPC should roll a pet.
+- Dangerous areas to avoid:
+  - Giving pet items through ordinary drop tables if the pet should follow pet roll rules.
+  - Rolling pets for every participant unless the boss is explicitly contribution-based.
+
+## 23. Instance Boss Cleanup
+
+- Main files:
+  - `src/io/xeros/content/instances/InstancedArea.java`
+  - `src/io/xeros/content/instances/BossInstanceManager.java`
+  - `src/io/xeros/content/instances/BossInstanceOverlayManager.java`
+  - `src/io/xeros/content/instances/TierRewardManager.java`
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+- Entry point method:
+  - `NPCDeath.dropItemsFor(NPC npc, Player player, int npcId)` for boss instance kill recording
+- Important methods called in order:
+  - `NPCProcess.processing()` calls `npc.getInstance().tick(npc)` while NPC is alive
+  - If instance is disposed, NPC unregisters
+  - On death, `NPCDeath.dropItemsFor(...)` checks `npc.getInstance() instanceof BossInstanceManager.BossInstanceArea`
+  - Preview mode sends overlay and returns
+  - Tier kill count map is updated
+  - `TierRewardManager.reward(...)` may reward tier milestones
+  - `area.recordKill(player)`
+  - `AoeManager.canAOE(player)` gates `area.recordAoeKill(player)` or `area.resetAoeStreak(player)`
+  - `BossInstanceOverlayManager.sendKillOverlay(player)`
+  - `InstanceMutatorManager.spikeGlobal(5)`
+- Player fields changed:
+  - boss instance kill counts
+  - instance overlay state
+  - instance performance tracker damage through `NPC.appendDamage(...)`
+- NPC fields changed:
+  - instance cleanup and unregister state.
+- Reward systems called:
+  - Tier reward manager
+  - boss points and normal drops still run around this flow
+- Existing examples to copy:
+  - Boss instance reward handling in `NPCDeath.dropItemsFor(...)`
+  - Instance teardown patterns in `src/io/xeros/content/instances/aoe/AoeInstanceService.java` for AOE instances
+- Safe extension points:
+  - Add instance-specific reward logic through existing instance manager classes.
+- Dangerous areas to avoid:
+  - Destroying maps/NPCs directly from general death code for one instance.
+  - Returning early before standard drops unless the content is explicitly preview/test mode.
+
+## 24. AOE Tier Kill Progress
+
+- Main files:
+  - `src/io/xeros/content/instances/aoe/AoeTierController.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierEvents.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierProgressSaveEntry.java`
+  - `src/io/xeros/content/instances/aoe/AoeDropInterceptor.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierRewardsLoader.java`
+  - `src/io/xeros/content/instances/aoe/AoeTierRewardsDef.java`
+  - `src/io/xeros/content/instances/aoe/AoeBossTierLoader.java`
+  - `src/io/xeros/content/instances/aoe/AoeNpcSpawner.java`
+  - `data/aoe/aoe_boss_tiers.json`
+  - `data/aoe/aoe_tier_rewards.json`
+  - `data/aoe/AoeZoneMapConfig.json`
+- Entry point method:
+  - `AoeTierEvents.onNpcDeath(Player player, NPC npc)`
+- Important methods called in order:
+  - Player enters with `AoeTierController.startTier(player, tier)`
+  - `AoeInstanceService.buildAndEnter(...)`
+  - `AoeNpcSpawner` manages spawned NPCs in the AOE instance
+  - NPC death path calls `AoeNpcSpawner.onNpcDeath(npc)` in `NPCProcess.processDeath()`
+  - Standard death path calls `AoeTierEvents.onNpcDeath(player, npc)` at the start of `NPCDeath.dropItemsFor(...)`
+  - `AoeTierController.getActiveTier(player)`
+  - `AoeTierRepo.byTier(tier)`
+  - If the killed NPC matches `def.boss.npcId`, `AoeTierController.incrementKill(player, tier)`
+  - `AoeTierRewardsLoader.forTier(tier)` can award `fortuneXpPerKill`, currently by calling `player.addDemonHunterXP(...)`
+  - `DropManager.onDrop(...)` calls `AoeDropInterceptor.awardInsideAoe(...)`
+  - `AoeTierController.endTier(player, showReport)` applies end-of-run bonus rewards and tears down the instance
+- Player fields changed:
+  - attributes `aoe_unlocked_tier`
+  - attributes `aoe_active_tier`
+  - attributes `aoe_kc_<tier>`
+  - attributes `aoe_reward_tracker`
+  - attributes `aoe_instance`
+  - bank/inventory from AOE reward banking
+  - Demon Hunter XP from current `fortuneXpPerKill` code path
+- NPC fields changed:
+  - AOE spawned NPC registration/unregister state
+  - damage/health through AOE hits
+- Reward systems called:
+  - AOE tier kill unlocks
+  - AOE drop interceptor
+  - AOE end-of-run rewards
+  - standard drops, collection log, boss points, and achievements as applicable
+- Existing examples to copy:
+  - `AoeTierController.incrementKill(...)`
+  - `AoeDropInterceptor.awardInsideAoe(...)`
+  - JSON reward fields in `AoeTierRewardsDef`
+- Safe extension points:
+  - JSON-only: `bonusRewards`, `endOfRunRolls`, `bankAllDrops`, `blacklist`, `whitelist`, `reportTitle`, and `fortuneXpPerKill` with current behavior.
+  - Java-supported reward changes should be isolated in `AoeTierRewardsDef`, `AoeTierRewardsLoader`, `AoeTierEvents`, or `AoeTierController`.
+- Dangerous areas to avoid:
+  - Rewriting `AoeInstanceService` map construction for reward-only changes.
+  - Changing saved attribute names without migration.
+
+## 25. Activity / Global Boss Contribution Rewards
+
+- Main files:
+  - `src/io/xeros/content/activityboss/GlobalBossActivityManager.java`
+  - `src/io/xeros/content/activityboss/GlobalBossContributionTracker.java`
+  - `src/io/xeros/content/activityboss/GlobalBossDropHandler.java`
+  - `src/io/xeros/content/activityboss/GlobalBossLootTable.java`
+  - `src/io/xeros/content/activityboss/GlobalBossRewardHandler.java`
+  - `src/io/xeros/content/activityboss/GlobalBossType.java`
+  - `src/io/xeros/content/activityboss/Groot.java`
+  - `src/io/xeros/content/combat/death/NPCDeath.java`
+  - `src/io/xeros/content/combat/core/HitExecutorNpc.java`
+- Entry point method:
+  - Newer global boss death: `GlobalBossActivityManager.onBossDeath(NPC npc, Player killer)`
+  - Legacy Groot death: `Groot.handleDeath(NPC npc)`
+- Important methods called in order:
+  - Activity progress calls `GlobalBossActivityManager.record(ActivityType type, int amount)`
+  - Threshold spawns boss through `GlobalBossActivityManager.forceSpawn(...)` or internal `spawn(...)`
+  - Combat damage is already stored in `npc.getDamageTaken()`
+  - Standard death path calls `GlobalBossActivityManager.onBossDeath(npc, player)` from `NPCDeath.dropItemsFor(...)`
+  - `GlobalBossDropHandler.rewardParticipants(npc)`
+  - `GlobalBossContributionTracker.getContributors(npc)`
+  - `GlobalBossLootTable.rollRewardFor(player)`
+  - Player receives item and message
+  - Legacy `Groot.handlePointIncrease(npc, target)` can spawn Groot from kill categories
+  - `HitExecutorNpc.onHit()` updates `Groot.damageCount`
+  - `Groot.handleDeath(npc)` rewards participants over its damage threshold using `Server.getDropManager().create(...)`, `Pass.addExperience(...)`, death tracker, and pet roll
+- Player fields changed:
+  - inventory/bank from global boss loot
+  - boss contribution records when `GlobalBossRewardHandler.handleDeath(...)` is used
+  - battlepass XP for Groot
+  - NPC death tracker for Groot participants
+- NPC fields changed:
+  - `damageTaken`
+  - activity boss active/cooldown state in manager maps
+  - legacy boss damage maps such as `Groot.damageCount`
+- Reward systems called:
+  - `GlobalBossDropHandler`
+  - `GlobalBossLootTable`
+  - `DropManager` for Groot
+  - `Pass`
+  - pet rolls
+- Existing examples to copy:
+  - New contribution tracking: `GlobalBossContributionTracker.getContributors(...)`
+  - New loot table: `GlobalBossLootTable.rollRewardFor(...)`
+  - Legacy participant reward: `Groot.handleDeath(...)`
+- Safe extension points:
+  - Add new global activity boss types in `GlobalBossType` after ID and economy review.
+  - Add contribution rewards in `GlobalBossLootTable` or an existing boss-local contribution handler.
+- Dangerous areas to avoid:
+  - Mixing standard single-killer drop logic with participant rewards without a clear design.
+  - Editing `HitExecutorNpc.onHit()` for a new activity boss if `npc.getDamageTaken()` is enough.
+- Not found in repo:
+  - A call from `GlobalBossActivityManager.onBossDeath(...)` to `GlobalBossRewardHandler.handleDeath(...)` was not found. Searched terms: `GlobalBossRewardHandler`, `handleDeath(GlobalBossType`, `rewardParticipants`.
+
+## 26. World Event Reward Hooks
+
+- Main files:
+  - `src/io/xeros/content/worldevent/WorldEvent.java`
+  - `src/io/xeros/content/worldevent/WorldEventContainer.java`
+  - `src/io/xeros/content/worldevent/WorldEventState.java`
+  - `src/io/xeros/content/worldevent/impl/HesporiWorldEvent.java`
+  - `src/io/xeros/content/worldevent/impl/WildernessBossWorldEvent.java`
+  - `src/io/xeros/content/worldevent/impl/TournamentWorldEvent.java`
+  - `src/io/xeros/content/worldevent/impl/WGWorldEvent.java`
+  - `src/io/xeros/content/bosses/hespori/Hespori.java`
+  - `src/io/xeros/content/events/monsterhunt/MonsterHunt.java`
+  - `src/io/xeros/model/entity/npc/NPCProcess.java`
+- Entry point method:
+  - Scheduling: `WorldEventContainer.initialise()`
+  - Event start: `WorldEventContainer.next()`
+  - Death-time rewards: boss-specific branches in `NPCProcess.processDeath()`
+- Important methods called in order:
+  - `WorldEventContainer.initialise()` loads state and calls `scheduleNext()`
+  - `scheduleNext()` schedules a cycle event
+  - `next()` calls `cancelCurrent()`, picks the next event, calls `worldEvent.init()`, announces, and schedules the next cycle
+  - `HesporiWorldEvent.init()` calls `HesporiSpawner.spawnNPC()`
+  - `HesporiWorldEvent.dispose()` calls `Hespori.rewardPlayers(false)` if not completed
+  - `WildernessBossWorldEvent.init()` calls `MonsterHunt.spawnNPC()`
+  - `WildernessBossWorldEvent.dispose()` calls `MonsterHunt.despawn()` if not completed
+  - `NPCProcess.processDeath()` has direct world/event boss reward branches such as `Hespori.rewardPlayers(true)`, `TheUnbearable.rewardPlayers()`, and `FragmentOfSeren.rewardPlayers()`
+  - Wildy boss death also clears Monster Hunt state in standard death handling
+- Player fields changed:
+  - Event-specific contribution/damage counters such as Hespori, Glod, and Ice Queen damage counters are updated from combat hooks in `HitExecutorNpc.onHit()`
+  - Rewards depend on each boss/event class
+- NPC fields changed:
+  - spawned/despawned event NPC state
+  - death/respawn state through normal NPC process
+- Reward systems called:
+  - Event-specific `rewardPlayers(...)` methods
+  - Broadcast and teleport prompt systems
+  - Standard death/drop systems for bosses that use normal death handling
+- Existing examples to copy:
+  - `HesporiWorldEvent`
+  - `WildernessBossWorldEvent`
+  - direct death reward calls in `NPCProcess.processDeath()`
+- Safe extension points:
+  - Add a new `WorldEvent` implementation and register it in `WorldEventContainer.WORLD_EVENT_LIST` only after owner review.
+  - Keep rewards inside the event/boss class rather than general combat classes.
+- Dangerous areas to avoid:
+  - Rewriting `WorldEventContainer` scheduling.
+  - Adding ordinary boss rewards to world event scheduling code.
+- Not found in repo:
+  - A generic `WorldEvent` reward callback was not found. Searched terms: `WorldEvent reward`, `WorldEvent onDeath`, `rewardPlayers`, `MonsterHunt`, `HesporiWorldEvent`.
+
+## A. Safest Ways To Add Boss Rewards
+
+- Add ordinary item drops through the external drop YAML consumed by `src/io/xeros/model/entity/npc/drops/DropManager.java`.
+- Add boss points through the runtime boss points config consumed by `src/io/xeros/content/bosspoints/BossPoints.java`.
+- Add rare reward visibility by using rare table policies so `TableGroup.access(...)` handles collection logs and announcements.
+- Add one-off non-drop progression with `Achievements.increase(...)`, `Pass.addExperience(...)`, or task systems from `NPCDeath.dropItemsFor(...)` only when the existing hook category matches.
+- For participant bosses, copy `GlobalBossContributionTracker` or a boss-local pattern such as `Groot.handleDeath(...)`.
+
+## B. Safest Ways To Add Combat Achievements
+
+- Add achievement definitions in the existing achievement enum/system.
+- Use `AchievementHandler.kill(NPC npc)` for name/type-based kills where possible.
+- Use `Achievements.increase(player, AchievementType.X, 1)` from `NPCDeath.dropItemsFor(...)` only for boss-specific kill milestones.
+- Use rare-drop hooks through `NPCDeath.announce(...)` for unique-drop achievements.
+- Avoid adding achievement increments to hit calculation or hit execution methods.
+
+## C. Safest Ways To Add Task Master Kill Tasks
+
+- Add the task to `src/io/xeros/content/taskmaster/Tasks.java`.
+- Match the task description to the NPC name matching already done in `NPCProcess.processDeath()`.
+- Use existing special matching patterns for grouped content such as Barrows and Dagannoth only when needed.
+- Let `TaskMaster.trackActivity(...)` and `TaskMaster.finishTask(...)` handle completion and rewards.
+- Avoid adding task-specific branches to combat or drop logic.
+
+## D. Safest Ways To Add AOE Combat Rewards
+
+- Prefer JSON-only reward changes in `data/aoe/aoe_tier_rewards.json`.
+- Use supported fields from `AoeTierRewardsDef`: `tier`, `name`, `endOfRunRolls`, `bonusRewards`, `bankAllDrops`, `blacklist`, `whitelist`, `fortuneXpPerKill`, and `reportTitle`.
+- Use `AoeDropInterceptor.awardInsideAoe(...)` for drop banking/interception.
+- Use `AoeTierEvents.onNpcDeath(...)` for per-kill tier progress.
+- Use `AoeTierController.endTier(...)` for end-of-run rewards.
+- Avoid changing `AoeInstanceService` or map teardown for reward-only patches.
+
+## E. Safest Ways To Add Wraith-Related Combat Rewards
+
+- Use `WraithCharges.isWraithWeapon(...)` only as a gate or detector.
+- Put milestone rewards in achievements, Task Master, collection log, AOE tier rewards, or a Wraith-specific manager.
+- Keep charge consumption in `AttackEntity.handleItemChangesOnAttack(...)`.
+- Keep recharge behavior in `WraithCharges.addChargesFromEssence(...)`.
+- Use player save entry patterns for any new saved Wraith milestone state.
+
+## F. Systems Future Codex Tasks Should Never Edit For One Boss
+
+- `src/io/xeros/content/combat/core/AttackEntity.java`
+- `src/io/xeros/content/combat/core/HitDispatcher.java`
+- `src/io/xeros/content/combat/core/HitExecutor.java`
+- `src/io/xeros/content/combat/EntityDamageQueue.java`
+- `src/io/xeros/model/entity/Entity.java`
+- `src/io/xeros/model/entity/npc/NPC.java`
+- `src/io/xeros/model/entity/npc/NPCProcess.java`
+- `src/io/xeros/model/entity/npc/NPCHandler.java`
+- `src/io/xeros/model/entity/npc/actions/NPCHitPlayer.java`
+- `src/io/xeros/content/combat/death/NPCDeath.java`
+- `src/io/xeros/model/entity/npc/drops/DropManager.java`
+- `src/io/xeros/model/entity/npc/drops/TableGroup.java`
+- `src/io/xeros/model/entity/player/save/PlayerSave.java`
+
+Use these only when the requested change is explicitly a core system change, not ordinary content.
+
+## G. Local Test Checklist For Combat / Reward PRs
+
+- Start from a clean diff and confirm only intended files changed.
+- Search for an existing boss, command, reward, or task pattern before coding.
+- Spawn or reach the NPC through an existing safe test/admin command documented in `docs/TURMOIL_TESTING_AND_DEBUG_TOOL_MAP.md`.
+- Attack the NPC with melee, range, and magic if the change touches combat behavior.
+- Confirm NPC auto attacks hit, miss, and respect protection prayers.
+- Confirm delayed hits resolve through the normal queue and do not duplicate.
+- Kill the NPC and confirm `npc.killedBy` selects the correct player.
+- Confirm `NPCDeath.dropItemsFor(...)` or the intended participant reward handler runs exactly once.
+- Confirm boss points, Slayer, Demon Hunter, achievements, Task Master, collection log, battlepass, pet roll, AOE tier, and activity boss hooks only fire when expected.
+- Confirm rare drops announce only through the rare table path.
+- Confirm AOE tier 1 through tier 3 still enter, kill-count, bank/intercept drops, and end cleanly after any AOE change.
+- Confirm Wraith weapons cannot attack at zero charges and consume one charge per valid attack.
+- Confirm no save keys changed unless a `PlayerSaveEntry` was intentionally added.
+- Do not test economy-affecting commands or mass reward simulations on a live economy.

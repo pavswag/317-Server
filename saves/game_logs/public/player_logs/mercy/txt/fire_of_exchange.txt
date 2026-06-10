@@ -1,0 +1,1 @@
+[FireOfExchangeLog] [2025-08-05T20:08:01.293383] Burned GameItem{name=Dragon claws, id=20784, amount=20}

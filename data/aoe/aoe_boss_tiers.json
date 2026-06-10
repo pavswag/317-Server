@@ -4,12 +4,12 @@
     "zoneName": "Unicow Pasture",
     "unlockKills": 10,
     "aoeGrid": {
-      "rows": 2,
-      "cols": 2,
+      "rows": 8,
+      "cols": 8,
       "spacing": 3
     },
     "aggroRange": 10,
-    "respawnSeconds": 25,
+    "respawnSeconds": 1,
     "boss": {
       "name": "Unicow",
       "npcId": 3601

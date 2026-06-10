@@ -1053,7 +1053,7 @@ public class AttackEntity {
             }
         }
 
-        int weapon = attacker.playerEquipment[Player.playerWeapon];
+       // int weapon = attacker.playerEquipment[Player.playerWeapon];
         if (weapon == WraithCharges.WRAITH_SCYTHE && attacker.getWraithScytheCharge() <= 0) {
             attacker.sendMessage("Your Wraith Scythe has no charges and cannot be used. Recharge it with Wraith Essence.");
             attacker.attacking.reset();

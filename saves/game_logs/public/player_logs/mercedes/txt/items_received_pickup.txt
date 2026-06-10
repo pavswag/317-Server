@@ -1,0 +1,129 @@
+[ItemPickupLog] [2025-09-01T17:20:51.0293946] Picked up GameItem{name=Grimy marrentil, id=201, amount=1} at Position{x=2285, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:20:51.0293946] Picked up GameItem{name=Grimy irit, id=209, amount=2} at Position{x=2285, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:20:51.0293946] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=2} at Position{x=2285, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:19.9545212] Picked up GameItem{name=Grimy guam, id=199, amount=3} at Position{x=2283, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:19.9545212] Picked up GameItem{name=Grimy kwuarm, id=213, amount=4} at Position{x=2283, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:19.9545212] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=3} at Position{x=2283, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3750659] Picked up GameItem{name=Grimy marrentil, id=201, amount=2} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3750659] Picked up GameItem{name=Grimy harralander, id=205, amount=2} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3750659] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=1} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3866437] Picked up GameItem{name=Grimy marrentil, id=201, amount=2} at Position{x=2281, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3866437] Picked up GameItem{name=Grimy harralander, id=205, amount=1} at Position{x=2281, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3876442] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=2} at Position{x=2281, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.389645] Picked up GameItem{name=Grimy tarromin, id=203, amount=2} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.389645] Picked up GameItem{name=Cosmic rune, id=564, amount=35} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3906455] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=4} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.394646] Picked up GameItem{name=Grimy guam, id=199, amount=1} at Position{x=2281, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.394646] Picked up GameItem{name=Grimy kwuarm, id=213, amount=1} at Position{x=2281, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3956466] Picked up GameItem{name=Grimy cadantine, id=215, amount=2} at Position{x=2281, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3976464] Picked up GameItem{name=Grimy guam, id=199, amount=1} at Position{x=2282, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3976464] Picked up GameItem{name=Grimy harralander, id=205, amount=4} at Position{x=2282, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.3986484] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=2} at Position{x=2282, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.4026473] Picked up GameItem{name=Pure essence, id=7937, amount=37} at Position{x=2283, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:22.4036481] Picked up GameItem{name=Grimy irit, id=209, amount=1} at Position{x=2283, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:24.7806838] Picked up GameItem{name=Grimy marrentil, id=201, amount=1} at Position{x=2280, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:24.7806838] Picked up GameItem{name=Grimy ranarr, id=207, amount=1} at Position{x=2280, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:24.7806838] Picked up GameItem{name=Torstol, id=219, amount=2} at Position{x=2280, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:24.7826859] Picked up GameItem{name=Grimy tarromin, id=203, amount=2} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:24.7826859] Picked up GameItem{name=Cosmic rune, id=564, amount=41} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:24.7826859] Picked up GameItem{name=Grimy cadantine, id=215, amount=3} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:24.7846852] Picked up GameItem{name=Grimy tarromin, id=203, amount=1} at Position{x=2285, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:24.7846852] Picked up GameItem{name=Grimy harralander, id=205, amount=1} at Position{x=2285, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.1952228] Picked up GameItem{name=Pure essence, id=7937, amount=58} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.1952228] Picked up GameItem{name=Grimy irit, id=209, amount=1} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.1952228] Picked up GameItem{name=Grimy cadantine, id=215, amount=1} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.1992222] Picked up GameItem{name=Grimy marrentil, id=201, amount=2} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.1992222] Picked up GameItem{name=Cosmic rune, id=564, amount=37} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.1992222] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=2} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.2022249] Picked up GameItem{name=Grimy tarromin, id=203, amount=2} at Position{x=2285, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.2022249] Picked up GameItem{name=Cosmic rune, id=564, amount=35} at Position{x=2285, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:27.2022249] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=2} at Position{x=2285, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:29.6057841] Picked up GameItem{name=Grimy tarromin, id=203, amount=4} at Position{x=2283, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:29.6057841] Picked up GameItem{name=Grimy kwuarm, id=213, amount=1} at Position{x=2283, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:29.6187859] Picked up GameItem{name=Grimy marrentil, id=201, amount=1} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:29.6187859] Picked up GameItem{name=Grimy irit, id=209, amount=2} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:29.6187859] Picked up GameItem{name=Grimy cadantine, id=215, amount=1} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:29.6237874] Picked up GameItem{name=Air rune, id=556, amount=117} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:29.6237874] Picked up GameItem{name=Grimy ranarr, id=207, amount=1} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:29.6237874] Picked up GameItem{name=Grimy cadantine, id=215, amount=2} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4103133] Picked up GameItem{name=Grimy marrentil, id=201, amount=1} at Position{x=2282, y=4766, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4103133] Picked up GameItem{name=Grimy kwuarm, id=213, amount=1} at Position{x=2282, y=4766, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4103133] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=1} at Position{x=2282, y=4766, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4123153] Picked up GameItem{name=Grimy tarromin, id=203, amount=2} at Position{x=2279, y=4773, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4123153] Picked up GameItem{name=Chaos rune, id=562, amount=75} at Position{x=2279, y=4773, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4123153] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=2} at Position{x=2279, y=4773, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4143141] Picked up GameItem{name=Grimy guam, id=199, amount=1} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4153142] Picked up GameItem{name=Grimy kwuarm, id=213, amount=4} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4153142] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=2} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.417315] Picked up GameItem{name=Grimy guam, id=199, amount=2} at Position{x=2283, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.417315] Picked up GameItem{name=Grimy ranarr, id=207, amount=4} at Position{x=2283, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.417315] Picked up GameItem{name=Torstol, id=219, amount=2} at Position{x=2283, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.419315] Picked up GameItem{name=Grimy guam, id=199, amount=1} at Position{x=2282, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.419315] Picked up GameItem{name=Cosmic rune, id=564, amount=49} at Position{x=2282, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.419315] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=2} at Position{x=2282, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4233183] Picked up GameItem{name=Air rune, id=556, amount=82} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4233183] Picked up GameItem{name=Grimy avantoe, id=211, amount=2} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:31.4233183] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=2} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:33.8173894] Picked up GameItem{name=Grimy tarromin, id=203, amount=4} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:33.8173894] Picked up GameItem{name=Grimy harralander, id=205, amount=2} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:33.8173894] Picked up GameItem{name=Grimy cadantine, id=215, amount=3} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:33.8213907] Picked up GameItem{name=Pure essence, id=7937, amount=97} at Position{x=2280, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:33.8213907] Picked up GameItem{name=Grimy kwuarm, id=213, amount=1} at Position{x=2280, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:33.8213907] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=1} at Position{x=2280, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2278069] Picked up GameItem{name=Grimy marrentil, id=201, amount=2} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2278069] Picked up GameItem{name=Cosmic rune, id=564, amount=41} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2278069] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=1} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2298075] Picked up GameItem{name=Air rune, id=556, amount=104} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2298075] Picked up GameItem{name=Chaos rune, id=562, amount=34} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2318083] Picked up GameItem{name=Pure essence, id=7937, amount=52} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2328081] Picked up GameItem{name=Grimy irit, id=209, amount=3} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2328081] Picked up GameItem{name=Torstol, id=219, amount=2} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2358094] Picked up GameItem{name=Grimy marrentil, id=201, amount=1} at Position{x=2281, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2358094] Picked up GameItem{name=Cosmic rune, id=564, amount=25} at Position{x=2281, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:36.2358094] Picked up GameItem{name=Grimy cadantine, id=215, amount=1} at Position{x=2281, y=4771, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6397012] Picked up GameItem{name=Grimy tarromin, id=203, amount=3} at Position{x=2284, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6397012] Picked up GameItem{name=Grimy irit, id=209, amount=1} at Position{x=2284, y=4770, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6417055] Picked up GameItem{name=Grimy guam, id=199, amount=2} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6417055] Picked up GameItem{name=Grimy avantoe, id=211, amount=2} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6417055] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=2} at Position{x=2282, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6457048] Picked up GameItem{name=Grimy marrentil, id=201, amount=2} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6457048] Picked up GameItem{name=Grimy ranarr, id=207, amount=1} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6457048] Picked up GameItem{name=Grimy cadantine, id=215, amount=1} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.647706] Picked up GameItem{name=Pure essence, id=7937, amount=100} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.647706] Picked up GameItem{name=Grimy irit, id=209, amount=2} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.647706] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=1} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6507065] Picked up GameItem{name=Air rune, id=556, amount=114} at Position{x=2280, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6507065] Picked up GameItem{name=Grimy harralander, id=205, amount=2} at Position{x=2280, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:38.6507065] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=2} at Position{x=2280, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.054554] Picked up GameItem{name=Grimy tarromin, id=203, amount=2} at Position{x=2282, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.054554] Picked up GameItem{name=Cosmic rune, id=564, amount=50} at Position{x=2282, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.054554] Picked up GameItem{name=Grimy lantadyme, id=2485, amount=2} at Position{x=2282, y=4767, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0555545] Picked up GameItem{name=Grimy guam, id=199, amount=1} at Position{x=2280, y=4772, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0555545] Picked up GameItem{name=Grimy kwuarm, id=213, amount=1} at Position{x=2280, y=4772, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0555545] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=1} at Position{x=2280, y=4772, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0575555] Picked up GameItem{name=Grimy tarromin, id=203, amount=3} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0575555] Picked up GameItem{name=Cosmic rune, id=564, amount=49} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0585564] Picked up GameItem{name=Fire rune, id=554, amount=170} at Position{x=2283, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0585564] Picked up GameItem{name=Cosmic rune, id=564, amount=46} at Position{x=2283, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0595563] Picked up GameItem{name=Grimy dwarf weed, id=217, amount=2} at Position{x=2283, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0635574] Picked up GameItem{name=Pure essence, id=7937, amount=34} at Position{x=2282, y=4775, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0635574] Picked up GameItem{name=Grimy harralander, id=205, amount=1} at Position{x=2282, y=4775, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0635574] Picked up GameItem{name=Grimy cadantine, id=215, amount=2} at Position{x=2282, y=4775, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0675582] Picked up GameItem{name=Grimy tarromin, id=203, amount=2} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0675582] Picked up GameItem{name=Grimy ranarr, id=207, amount=1} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0675582] Picked up GameItem{name=Grimy cadantine, id=215, amount=1} at Position{x=2283, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0705578] Picked up GameItem{name=Fire rune, id=554, amount=177} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0705578] Picked up GameItem{name=Grimy avantoe, id=211, amount=2} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:41.0705578] Picked up GameItem{name=Grimy cadantine, id=215, amount=1} at Position{x=2281, y=4768, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:51.885947] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2279, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:51.885947] Picked up GameItem{name=Grimy kwuarm, id=213, amount=2} at Position{x=2279, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:51.885947] Picked up GameItem{name=Mithril chainbody, id=1109, amount=1} at Position{x=2279, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6911555] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6921576] Picked up GameItem{name=Grimy irit, id=209, amount=2} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6921576] Picked up GameItem{name=Blood rune, id=565, amount=51} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6931585] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2278, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6931585] Picked up GameItem{name=Grimy avantoe, id=211, amount=2} at Position{x=2278, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6931585] Picked up GameItem{name=Mithril chainbody, id=1109, amount=1} at Position{x=2278, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6941574] Picked up GameItem{name=Bones, id=526, amount=1} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6941574] Picked up GameItem{name=Grimy avantoe, id=211, amount=2} at Position{x=2280, y=4769, z=0}, owner mercedes
+[ItemPickupLog] [2025-09-01T17:21:53.6941574] Picked up GameItem{name=Mithril chainbody, id=1109, amount=1} at Position{x=2280, y=4769, z=0}, owner mercedes

@@ -595,7 +595,7 @@ public class UseItem {
                                 || (useWith == WraithCharges.WRAITH_ESSENCE && WraithCharges.isWraithWeapon(itemUsed))) {
                         int weaponId = WraithCharges.isWraithWeapon(itemUsed) ? itemUsed : useWith;
                         int slot = c.getItems().getInventoryItemSlot(weaponId);
-                        int requested = c.getItems().getItemCount(WraithCharges.WRAITH_ESSENCE);
+                        int requested = c.getItems().getItemCount(WraithCharges.WRAITH_ESSENCE, true);
                         WraithCharges.addChargesFromEssence(c, slot, WraithCharges.WRAITH_ESSENCE, requested);
                         return;
                 }
